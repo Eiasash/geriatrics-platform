@@ -1,14 +1,14 @@
 import React, { useState, useEffect, FC, useRef } from 'react';
 import { 
     Brain, Pill, Accessibility, HeartPulse, 
-    FileText, Users, AlertTriangle, Calculator, 
-    Clock, Stethoscope, Activity, BookOpen, 
-    Lightbulb, User, ClipboardList, ShieldCheck, Target, PlusCircle, LayoutDashboard, Wifi, Server, Flag, TrendingUp, Copy
+    FileText, Calculator, 
+    BookOpen, 
+    Lightbulb, User, ClipboardList, PlusCircle, LayoutDashboard, Wifi, Server, Flag, Copy
 } from 'lucide-react';
 
 // --- Firebase Imports ---
 import { initializeApp, FirebaseApp } from 'firebase/app';
-import { getFirestore, doc, setDoc, collection, addDoc, Firestore, DocumentData, onSnapshot, Unsubscribe, arrayUnion, arrayRemove, updateDoc } from 'firebase/firestore';
+import { getFirestore, doc, collection, addDoc, Firestore, onSnapshot, Unsubscribe, arrayUnion, arrayRemove, updateDoc } from 'firebase/firestore';
 import { getAuth, onAuthStateChanged, signInAnonymously, signInWithCustomToken, Auth } from 'firebase/auth';
 
 // --- API Service Layer ---
@@ -76,8 +76,8 @@ const getFirebaseApiService = (db: Firestore, userId: string, appId: string): Ap
 
 // --- Simulated EMR Implementation ---
 const getEmrApiService = (): ApiService => ({
-    getPatientsList: (cb) => { cb([ { id: 'EMR_101', name: 'ישראל ישראלי (EMR)', age: 88, scores: { cfs: { total: 6 } } } ]); return () => {}; },
-    getPatientDetails: (id, cb) => { cb({ patient: { name: 'ישראל ישראלי (EMR)', age: 88, idNumber: '012345678', chiefComplaint: 'נפילה' }, medications: [], assessments: {}, scores: {}, interventions: [], scoreHistory: [] }); return () => {}; },
+    getPatientsList: (cb) => { cb([ { id: 'EMR_101', name: 'ישראל ישראלי (EMR)', age: 88, idNumber: '', chiefComplaint: '', scores: { cfs: { total: 6 } } } ]); return () => {}; },
+    getPatientDetails: (_id, cb) => { cb({ patient: { name: 'ישראל ישראלי (EMR)', age: 88, idNumber: '012345678', chiefComplaint: 'נפילה' }, medications: [], assessments: {}, scores: {}, interventions: [], scoreHistory: [] }); return () => {}; },
     getReviewList: (cb) => { cb([]); return () => {}; },
     createNewPatient: async () => Promise.reject("EMR mode is read-only."),
     savePatientData: async () => console.log("EMR mode is read-only."),
@@ -99,7 +99,7 @@ const TINETTI_BALANCE_ITEMS = [ { label: 'Sitting Balance', max: 1 }, { label: '
 const TINETTI_GAIT_ITEMS = [ { label: 'Initiation of Gait', max: 1 }, { label: 'Step Length and Height', max: 2 }, { label: 'Step Symmetry', max: 2 }, { label: 'Step Continuity', max: 2 }, { label: 'Path', max: 2 }, { label: 'Trunk', max: 2 }, { label: 'Walking Stance', max: 1 }];
 const GDS_QUESTIONS = [ "Are you basically satisfied with your life?", "Have you dropped many of your activities and interests?", "Do you feel that your life is empty?", "Do you often get bored?", "Are you in good spirits most of the time?", "Are you afraid that something bad is going to happen to you?", "Do you feel happy most of the time?", "Do you often feel helpless?", "Do you prefer to stay at home, rather than going out and doing new things?", "Do you feel you have more problems with memory than most?", "Do you think it is wonderful to be alive now?", "Do you feel pretty worthless the way you are now?", "Do you feel full of energy?", "Do you feel that your situation is hopeless?", "Do you think that most people are better off than you are?" ];
 const GDS_ANSWERS_FOR_POINT = [ false, true, true, true, false, true, false, true, true, true, false, true, false, true, true ];
-const CFS_OPTIONS = [ { val: 0, text: 'בחר...' }, { val: 1, text: '1 - Very Fit' }, { val: 2, text: '2 - Well' }, { val: 3, text: '3 - Managing Well' }, { val: 4, text: '4 - Vulnerable' }, { val: 5, text: '5 - Mildly Frail' }, { val: 6, text: '6 - Moderately Frail' }, { val: 7, text: '7 - Severely Frail' }, { val: 8, text: '8 - Very Severely Frail' }, { val: 9, text: '9 - Terminally Ill' }];
+// const CFS_OPTIONS = [ { val: 0, text: 'בחר...' }, { val: 1, text: '1 - Very Fit' }, { val: 2, text: '2 - Well' }, { val: 3, text: '3 - Managing Well' }, { val: 4, text: '4 - Vulnerable' }, { val: 5, text: '5 - Mildly Frail' }, { val: 6, text: '6 - Moderately Frail' }, { val: 7, text: '7 - Severely Frail' }, { val: 8, text: '8 - Very Severely Frail' }, { val: 9, text: '9 - Terminally Ill' }];
 const BEERS_CRITERIA_DRUGS = ['diazepam', 'lorazepam', 'clonazepam', 'amitriptyline', 'diphenhydramine', 'chlorpheniramine', 'glyburide', 'ketorolac', 'zopiclone'];
 const STATIC_PEARLS: GeriatricPearl[] = [
     { id: 1, pearl: "In older adults, delirium is a medical emergency, not just 'confusion'. Always search for an underlying cause (infection, metabolic, medication).", source: "Inouye SK, et al. Ann Intern Med. 1990." },
@@ -115,7 +115,7 @@ const ShaareZedekGeriatricsPlatform: FC = () => {
     const [activeModule, setActiveModule] = useState<string>('dashboard');
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [isSaving, setIsSaving] = useState<boolean>(false);
-    const [dataSource, setDataSource] = useState<'firebase' | 'emr'>('firebase');
+    const [dataSource] = useState<'firebase' | 'emr'>('firebase');
     
     const app = useRef<FirebaseApp | null>(null);
     const db = useRef<Firestore | null>(null);
@@ -133,14 +133,15 @@ const ShaareZedekGeriatricsPlatform: FC = () => {
     const [assessments, setAssessments] = useState<any>({});
     const [scores, setScores] = useState<any>({});
     const [interventions, setInterventions] = useState<Intervention[]>([]);
-    const [scoreHistory, setScoreHistory] = useState<ScoreHistoryItem[]>([]);
+    const [, setScoreHistory] = useState<ScoreHistoryItem[]>([]);
     
     const [currentPearl, setCurrentPearl] = useState<GeriatricPearl | null>(null);
     const [landmarkArticles, setLandmarkArticles] = useState<LandmarkArticle[]>(INITIAL_ARTICLES);
 
     // --- Firebase Initialization and Auth Effect ---
     useEffect(() => {
-        const firebaseConfig = JSON.parse(import.meta.env.VITE_FIREBASE_CONFIG);        const currentAppId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+        const firebaseConfig = JSON.parse(import.meta.env.VITE_FIREBASE_CONFIG || '{}');
+        const currentAppId = typeof (window as any).__app_id !== 'undefined' ? (window as any).__app_id : 'default-app-id';
         setAppId(currentAppId);
         
         if (Object.keys(firebaseConfig).length > 0 && !app.current) {
@@ -152,7 +153,7 @@ const ShaareZedekGeriatricsPlatform: FC = () => {
                 if (user) {
                     setUserId(user.uid);
                 } else {
-                    const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+                    const initialAuthToken = typeof (window as any).__initial_auth_token !== 'undefined' ? (window as any).__initial_auth_token : null;
                     try {
                         if (initialAuthToken) await signInWithCustomToken(auth.current!, initialAuthToken);
                         else await signInAnonymously(auth.current!);
@@ -243,7 +244,7 @@ const ShaareZedekGeriatricsPlatform: FC = () => {
     // --- Calculation & Intervention Logic ---
     const calculateAllScores = async () => {
         let newScores: any = {};
-        const gdsScore = GDS_QUESTIONS.reduce((score, question, index) => (assessments.gds?.[index] === GDS_ANSWERS_FOR_POINT[index] ? score + 1 : score), 0);
+        const gdsScore = GDS_QUESTIONS.reduce((score, _question, index) => (assessments.gds?.[index] === GDS_ANSWERS_FOR_POINT[index] ? score + 1 : score), 0);
         newScores.gds = { total: gdsScore };
         const balanceScore = TINETTI_BALANCE_ITEMS.reduce((s, item) => s + Number(assessments.tinetti?.balance?.[item.label] || 0), 0);
         const gaitScore = TINETTI_GAIT_ITEMS.reduce((s, item) => s + Number(assessments.tinetti?.gait?.[item.label] || 0), 0);
