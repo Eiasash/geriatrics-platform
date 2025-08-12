@@ -39,15 +39,17 @@ desktop.ini
 .claude/
 CLAUDE.md
 
-# Project specific - exclude everything except our React app files
-/*
-!/package.json
-!/package-lock.json
-!/ShaareZedekGeriatricsPlatform.tsx
-!/.gitignore
-!/tsconfig.json
-!/vite.config.ts
-!/tailwind.config.js
-!/postcss.config.js
-!/index.html
-!/src/
+# Temporary files
+New folder/
+Fixed Geriatrics App*
+22222*
+Continuing*
+*.docx
+*.xlsx
+*.pdf
+*.csv
+*.lnk
+*.url
+*.ico
+Stocks/
+nul
