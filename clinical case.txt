@@ -1,0 +1,16 @@
+Patient: John Smith, 35yo male
+CC: Headache x 4 days, worsening, 7/10 pain, frontal, throbbing
+No recent trauma, taking ibuprofen with minimal relief
+Feels tired, trouble concentrating, work stress, poor sleep
+No nausea, vomiting, vision changes
+
+Exam: Appears fatigued but alert
+Vitals: BP 128/82, HR 88, temp 98.6F
+HEENT: mild neck muscle tension, no nuchal rigidity  
+Neuro: normal, no focal deficits
+
+Assessment: Tension headache, stress-related
+
+Plan: Sleep hygiene, stress management, continue ibuprofen 400mg q6h
+Magnesium supplement, follow up 1 week if not improving
+Return for sudden severe headache, vision changes, neuro symptoms

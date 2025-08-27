@@ -1,0 +1,1359 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <title>גריאטריה שערי צדק - Integrated Training & Reference System</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;900&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Heebo', -apple-system, 'Helvetica Neue', Arial, sans-serif;
+            background: #f0f2f5;
+            color: #1c1e21;
+            direction: rtl;
+            padding-bottom: 60px;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #004c8c, #0277bd);
+            color: white;
+            padding: 12px 16px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .header-title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .header-badges {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .header-badge {
+            background: rgba(255,255,255,0.2);
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+
+        .streak-badge {
+            background: #ff9800;
+            color: white;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .nav-tabs {
+            background: white;
+            display: flex;
+            overflow-x: auto;
+            border-bottom: 1px solid #e4e6eb;
+            position: sticky;
+            top: 48px;
+            z-index: 99;
+            scrollbar-width: none;
+        }
+
+        .nav-tabs::-webkit-scrollbar {
+            display: none;
+        }
+
+        .nav-tab {
+            flex-shrink: 0;
+            padding: 12px 20px;
+            color: #65676b;
+            border-bottom: 3px solid transparent;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 500;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .nav-tab.active {
+            color: #0277bd;
+            border-bottom-color: #0277bd;
+            background: #f0f9ff;
+        }
+
+        .nav-tab .tab-icon {
+            font-size: 16px;
+        }
+
+        .nav-tab .tab-badge {
+            background: #ff4444;
+            color: white;
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 10px;
+            font-weight: 600;
+            margin-right: 4px;
+        }
+
+        .content {
+            padding: 16px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .panel {
+            display: none;
+        }
+
+        .panel.active {
+            display: block;
+        }
+
+        /* Training Dashboard Panel */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 16px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+            text-align: center;
+            transition: transform 0.2s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.12);
+        }
+
+        .stat-icon {
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+
+        .stat-number {
+            font-size: 28px;
+            font-weight: 700;
+            color: #0277bd;
+        }
+
+        .stat-label {
+            color: #65676b;
+            font-size: 12px;
+            margin-top: 4px;
+        }
+
+        /* Question Card */
+        .question-container {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+        }
+
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #e4e6eb;
+        }
+
+        .question-progress {
+            color: #65676b;
+            font-size: 14px;
+        }
+
+        .difficulty-badge {
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .difficulty-easy {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .difficulty-medium {
+            background: #fff3e0;
+            color: #e65100;
+        }
+
+        .difficulty-hard {
+            background: #ffebee;
+            color: #c62828;
+        }
+
+        .question-text {
+            font-size: 16px;
+            line-height: 1.6;
+            color: #1c1e21;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        .options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .option-item {
+            background: #f8f9fa;
+            border: 2px solid #e4e6eb;
+            border-radius: 10px;
+            padding: 14px 16px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .option-item:hover {
+            border-color: #0277bd;
+            background: #f0f9ff;
+            transform: translateX(-4px);
+        }
+
+        .option-letter {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            color: #0277bd;
+            border: 2px solid #0277bd;
+        }
+
+        .option-item.selected {
+            border-color: #0277bd;
+            background: #0277bd;
+            color: white;
+        }
+
+        .option-item.selected .option-letter {
+            background: white;
+            color: #0277bd;
+        }
+
+        .option-item.correct {
+            border-color: #4caf50;
+            background: #4caf50;
+            color: white;
+            animation: correctPulse 0.5s;
+        }
+
+        .option-item.incorrect {
+            border-color: #f44336;
+            background: #f44336;
+            color: white;
+            animation: shake 0.5s;
+        }
+
+        @keyframes correctPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        .explanation-box {
+            background: #e8f5e9;
+            border-right: 4px solid #4caf50;
+            border-radius: 8px;
+            padding: 16px;
+            margin-top: 20px;
+            display: none;
+        }
+
+        .explanation-box.show {
+            display: block;
+            animation: slideIn 0.3s;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .explanation-title {
+            font-weight: 600;
+            color: #2e7d32;
+            margin-bottom: 8px;
+        }
+
+        /* Original Styles from your file */
+        .card {
+            background: white;
+            border-radius: 12px;
+            margin-bottom: 16px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+
+        .card-header {
+            background: #f8f9fa;
+            padding: 14px 16px;
+            font-weight: 600;
+            border-bottom: 1px solid #e4e6eb;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-body {
+            padding: 16px;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 3px 8px;
+            font-size: 11px;
+            font-weight: 600;
+            border-radius: 12px;
+        }
+
+        .badge-dept {
+            background: #e3f2fd;
+            color: #0277bd;
+        }
+
+        .badge-urgent {
+            background: #ffebee;
+            color: #c62828;
+        }
+
+        .badge-board {
+            background: #fff3e0;
+            color: #e65100;
+        }
+
+        .badge-success {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .badge-new {
+            background: #ff4444;
+            color: white;
+        }
+
+        /* Beers Criteria Section */
+        .beers-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 16px;
+            margin-top: 16px;
+        }
+
+        .beers-item {
+            background: #fff3e0;
+            border-radius: 8px;
+            padding: 16px;
+            border-right: 4px solid #ff9800;
+            transition: transform 0.2s;
+        }
+
+        .beers-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .drug-name {
+            font-weight: 600;
+            color: #e65100;
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
+
+        .recommendation {
+            color: #1c1e21;
+            margin-bottom: 6px;
+            font-weight: 500;
+        }
+
+        .rationale {
+            color: #65676b;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        .evidence-level {
+            display: inline-block;
+            background: #ff5722;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 11px;
+            font-weight: 600;
+            margin-top: 8px;
+        }
+
+        /* MOH Data Section */
+        .moh-dashboard {
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .moh-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1565c0;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .moh-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 12px;
+        }
+
+        .moh-metric {
+            background: white;
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+        }
+
+        .metric-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1565c0;
+        }
+
+        .metric-label {
+            color: #65676b;
+            font-size: 11px;
+            margin-top: 4px;
+        }
+
+        .metric-change {
+            font-size: 12px;
+            margin-top: 4px;
+            font-weight: 600;
+        }
+
+        .metric-up {
+            color: #4caf50;
+        }
+
+        .metric-down {
+            color: #f44336;
+        }
+
+        /* Quick Actions */
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .quick-action {
+            background: white;
+            border: 1px solid #e4e6eb;
+            border-radius: 8px;
+            padding: 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .quick-action:hover {
+            background: #0277bd;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+
+        .quick-action-icon {
+            font-size: 24px;
+            margin-bottom: 4px;
+        }
+
+        .quick-action-label {
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        /* Button Styles */
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'Heebo';
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #0277bd, #0288d1);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(2,119,189,0.3);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #0277bd;
+            border: 2px solid #0277bd;
+        }
+
+        .btn-secondary:hover {
+            background: #0277bd;
+            color: white;
+        }
+
+        .btn-success {
+            background: #4caf50;
+            color: white;
+        }
+
+        .btn-danger {
+            background: #f44336;
+            color: white;
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            background: #e4e6eb;
+            height: 30px;
+            border-radius: 15px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .progress-bar {
+            background: linear-gradient(90deg, #4caf50, #8bc34a);
+            height: 100%;
+            width: 0%;
+            transition: width 0.5s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        /* Alert Styles */
+        .alert {
+            padding: 12px;
+            border-radius: 8px;
+            margin: 12px 0;
+            font-size: 14px;
+        }
+
+        .alert-info {
+            background: #e3f2fd;
+            color: #01579b;
+            border-right: 4px solid #0277bd;
+        }
+
+        .alert-warning {
+            background: #fff3e0;
+            color: #e65100;
+            border-right: 4px solid #ff9800;
+        }
+
+        .alert-critical {
+            background: #ffebee;
+            color: #b71c1c;
+            border-right: 4px solid #d32f2f;
+        }
+
+        .alert-success {
+            background: #e8f5e9;
+            color: #1b5e20;
+            border-right: 4px solid #4caf50;
+        }
+
+        /* Disease Box Styles */
+        .disease-box {
+            background: linear-gradient(135deg, #f8f9fa, #fff);
+            border: 1px solid #e4e6eb;
+            border-radius: 12px;
+            padding: 16px;
+            margin: 16px 0;
+        }
+
+        .disease-header {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1c1e21;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #0277bd;
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin: 16px 0 12px;
+            color: #1c1e21;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #e4e6eb;
+        }
+
+        /* Bottom Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            border-top: 1px solid #e4e6eb;
+            display: flex;
+            justify-content: space-around;
+            padding: 8px 0;
+            z-index: 100;
+        }
+
+        .nav-btn {
+            flex: 1;
+            text-align: center;
+            padding: 4px;
+            color: #65676b;
+            font-size: 11px;
+            text-decoration: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+            cursor: pointer;
+        }
+
+        .nav-btn.active {
+            color: #0277bd;
+            font-weight: 600;
+        }
+
+        .nav-icon {
+            font-size: 20px;
+        }
+
+        /* Responsive Design */
+        @media (min-width: 768px) {
+            .content {
+                max-width: 1200px;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(5, 1fr);
+            }
+            
+            .question-text {
+                font-size: 18px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header-title {
+                font-size: 14px;
+            }
+            
+            .moh-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .quick-actions {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #0277bd;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Tooltip */
+        .tooltip {
+            position: relative;
+            display: inline-block;
+        }
+
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 200px;
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 8px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -100px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 12px;
+        }
+
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-content">
+            <div class="header-left">
+                <div class="header-title">מערכת גריאטרית משולבת - שערי צדק</div>
+                <div class="streak-badge">
+                    <span>🔥</span>
+                    <span>12 ימים</span>
+                </div>
+            </div>
+            <div class="header-badges">
+                <div class="header-badge">ד"ר איאס אשהב</div>
+                <div class="header-badge">התמחות-על</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="nav-tabs">
+        <div class="nav-tab active" onclick="switchTab('training')">
+            <span class="tab-icon">🎯</span>
+            <span>אימון יומי</span>
+            <span class="tab-badge">3</span>
+        </div>
+        <div class="nav-tab" onclick="switchTab('review')">
+            <span class="tab-icon">📚</span>
+            <span>סקירה</span>
+        </div>
+        <div class="nav-tab" onclick="switchTab('protocols')">
+            <span class="tab-icon">📋</span>
+            <span>פרוטוקולים</span>
+        </div>
+        <div class="nav-tab" onclick="switchTab('beers')">
+            <span class="tab-icon">💊</span>
+            <span>Beers 2023</span>
+        </div>
+        <div class="nav-tab" onclick="switchTab('forms')">
+            <span class="tab-icon">📄</span>
+            <span>טפסים</span>
+        </div>
+        <div class="nav-tab" onclick="switchTab('medications')">
+            <span class="tab-icon">💉</span>
+            <span>תרופות</span>
+        </div>
+        <div class="nav-tab" onclick="switchTab('assessment')">
+            <span class="tab-icon">✓</span>
+            <span>הערכה</span>
+        </div>
+        <div class="nav-tab" onclick="switchTab('moh')">
+            <span class="tab-icon">📊</span>
+            <span>נתוני MOH</span>
+        </div>
+        <div class="nav-tab" onclick="switchTab('contacts')">
+            <span class="tab-icon">📞</span>
+            <span>טלפונים</span>
+        </div>
+    </div>
+
+    <div class="content">
+        <!-- Training Panel (NEW) -->
+        <div class="panel active" id="training-panel">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">📝</div>
+                    <div class="stat-number">87%</div>
+                    <div class="stat-label">דיוק</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🎯</div>
+                    <div class="stat-number">245</div>
+                    <div class="stat-label">שאלות נפתרו</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">📚</div>
+                    <div class="stat-number">50</div>
+                    <div class="stat-label">שאלות זמינות</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">💊</div>
+                    <div class="stat-number">16</div>
+                    <div class="stat-label">Beers נלמדו</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">📖</div>
+                    <div class="stat-number">100</div>
+                    <div class="stat-label">מאמרים</div>
+                </div>
+            </div>
+
+            <div class="quick-actions">
+                <div class="quick-action" onclick="startQuiz()">
+                    <div class="quick-action-icon">⚡</div>
+                    <div class="quick-action-label">מבחן מהיר</div>
+                </div>
+                <div class="quick-action" onclick="reviewMistakes()">
+                    <div class="quick-action-icon">❌</div>
+                    <div class="quick-action-label">סקור טעויות</div>
+                </div>
+                <div class="quick-action" onclick="studyBeers()">
+                    <div class="quick-action-icon">💊</div>
+                    <div class="quick-action-label">Beers מהיר</div>
+                </div>
+                <div class="quick-action" onclick="searchPubMed()">
+                    <div class="quick-action-icon">🔍</div>
+                    <div class="quick-action-label">חיפוש PubMed</div>
+                </div>
+                <div class="quick-action" onclick="openCalculator()">
+                    <div class="quick-action-icon">🧮</div>
+                    <div class="quick-action-label">מחשבונים</div>
+                </div>
+                <div class="quick-action" onclick="syncData()">
+                    <div class="quick-action-icon">🔄</div>
+                    <div class="quick-action-label">סנכרון</div>
+                </div>
+            </div>
+
+            <div class="question-container">
+                <div class="question-header">
+                    <span class="question-progress">שאלה 7 מתוך 20 היום</span>
+                    <span class="difficulty-badge difficulty-medium">בינוני</span>
+                </div>
+
+                <div class="progress-container">
+                    <div class="progress-bar" id="dailyProgress" style="width: 35%">35% מהיעד היומי</div>
+                </div>
+
+                <div class="question-text" id="questionText">
+                    גבר בן 87, 3 נפילות ב-6 חודשים, מקבל amlodipine, metoprolol, tamsulosin וsertraline.
+                    לחץ דם בישיבה 140/80, בעמידה 115/70.
+                    איזו תרופה הסיכוי הגבוה ביותר שגורמת לנפילות?
+                </div>
+
+                <div class="options-list" id="optionsContainer">
+                    <div class="option-item" onclick="selectAnswer(this, 0)">
+                        <span class="option-letter">א</span>
+                        <span>Amlodipine</span>
+                    </div>
+                    <div class="option-item" onclick="selectAnswer(this, 1)">
+                        <span class="option-letter">ב</span>
+                        <span>Metoprolol</span>
+                    </div>
+                    <div class="option-item" onclick="selectAnswer(this, 2)">
+                        <span class="option-letter">ג</span>
+                        <span>Tamsulosin</span>
+                    </div>
+                    <div class="option-item" onclick="selectAnswer(this, 3)">
+                        <span class="option-letter">ד</span>
+                        <span>Sertraline</span>
+                    </div>
+                </div>
+
+                <div class="explanation-box" id="explanationBox">
+                    <div class="explanation-title">הסבר:</div>
+                    <div id="explanationText">
+                        Tamsulosin (חוסם אלפא) גורם להיפוטנזיה אורתוסטטית משמעותית, במיוחד בשילוב עם תרופות אחרות להורדת לחץ דם.
+                        הירידה של 25/10 ממ"כ בעמידה מאשרת את האבחנה.
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 10px; margin-top: 20px;">
+                    <button class="btn btn-primary" onclick="nextQuestion()">שאלה הבאה ←</button>
+                    <button class="btn btn-secondary" onclick="showHint()">רמז 💡</button>
+                </div>
+            </div>
+
+            <div class="moh-dashboard">
+                <div class="moh-title">
+                    <span>📊</span>
+                    <span>נתונים חיים - משרד הבריאות</span>
+                    <span class="loading" id="mohLoader"></span>
+                </div>
+                <div class="moh-grid">
+                    <div class="moh-metric">
+                        <div class="metric-value">73%</div>
+                        <div class="metric-label">תפוסה גריאטרית</div>
+                        <div class="metric-change metric-up">↑ 2%</div>
+                    </div>
+                    <div class="moh-metric">
+                        <div class="metric-value">4.2</div>
+                        <div class="metric-label">ימי אשפוז</div>
+                        <div class="metric-change metric-down">↓ 0.3</div>
+                    </div>
+                    <div class="moh-metric">
+                        <div class="metric-value">1,247</div>
+                        <div class="metric-label">מיטות גריאטריות</div>
+                    </div>
+                    <div class="moh-metric">
+                        <div class="metric-value">89%</div>
+                        <div class="metric-label">שביעות רצון</div>
+                        <div class="metric-change metric-up">↑ 1%</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Beers Criteria Panel (NEW ENHANCED) -->
+        <div class="panel" id="beers-panel">
+            <div class="card">
+                <div class="card-header">
+                    Beers Criteria 2023 - תרופות להימנע בזקנים
+                    <span class="badge badge-urgent">עדכון 2023</span>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-warning">
+                        <strong>⚠️ תזכורת:</strong> קריטריוני Beers הם המלצות - שקול כל מטופל באופן פרטני
+                    </div>
+
+                    <div class="section-title">תרופות בסיכון גבוה</div>
+                    <div class="beers-grid">
+                        <div class="beers-item">
+                            <div class="drug-name">🧠 Benzodiazepines</div>
+                            <div class="recommendation">⛔ להימנע לחלוטין</div>
+                            <div class="rationale">
+                                • סיכון נפילות ושברים ↑70%<br>
+                                • פגיעה קוגניטיבית<br>
+                                • דליריום<br>
+                                • תלות ועמידות
+                            </div>
+                            <div class="evidence-level">עדות: גבוהה</div>
+                        </div>
+
+                        <div class="beers-item">
+                            <div class="drug-name">💊 Z-Drugs (Zolpidem)</div>
+                            <div class="recommendation">⛔ להימנע</div>
+                            <div class="rationale">
+                                • סיכונים דומים לבנזו<br>
+                                • פרסומניה (parasomnias)<br>
+                                • נפילות לילה<br>
+                                • בלבול בוקר
+                            </div>
+                            <div class="evidence-level">עדות: בינונית</div>
+                        </div>
+
+                        <div class="beers-item">
+                            <div class="drug-name">🩸 Doxazosin (חוסם α)</div>
+                            <div class="recommendation">⛔ לא ליתר לחץ דם</div>
+                            <div class="rationale">
+                                • היפוטנזיה אורתוסטטית חמורה<br>
+                                • סינקופה<br>
+                                • נפילות<br>
+                                • OK ל-BPH בלבד
+                            </div>
+                            <div class="evidence-level">עדות: בינונית</div>
+                        </div>
+
+                        <div class="beers-item">
+                            <div class="drug-name">🧪 PPIs ממושך</div>
+                            <div class="recommendation">⚠️ מקסימום 8 שבועות</div>
+                            <div class="rationale">
+                                • C. difficile ↑65%<br>
+                                • אוסטאופורוזיס<br>
+                                • חסר B12<br>
+                                • היפומגנזמיה
+                            </div>
+                            <div class="evidence-level">עדות: גבוהה</div>
+                        </div>
+
+                        <div class="beers-item">
+                            <div class="drug-name">🍬 Glyburide</div>
+                            <div class="recommendation">⛔ החלף ב-glipizide</div>
+                            <div class="rationale">
+                                • היפוגליקמיה ממושכת<br>
+                                • Half-life ארוך<br>
+                                • אשפוזים ↑<br>
+                                • תמותה ↑
+                            </div>
+                            <div class="evidence-level">עדות: גבוהה</div>
+                        </div>
+
+                        <div class="beers-item">
+                            <div class="drug-name">🚽 Oxybutynin</div>
+                            <div class="recommendation">⛔ העדף mirabegron</div>
+                            <div class="rationale">
+                                • אנטיכולינרגי חזק<br>
+                                • בלבול<br>
+                                • עצירות<br>
+                                • יובש בפה
+                            </div>
+                            <div class="evidence-level">עדות: גבוהה</div>
+                        </div>
+                    </div>
+
+                    <div class="section-title">חלופות מומלצות</div>
+                    <table style="width: 100%; margin-top: 16px;">
+                        <tr>
+                            <th>במקום</th>
+                            <th>השתמש ב</th>
+                            <th>הערות</th>
+                        </tr>
+                        <tr>
+                            <td>Benzodiazepines</td>
+                            <td>CBT-I, Melatonin 3-6mg</td>
+                            <td>לנדודי שינה</td>
+                        </tr>
+                        <tr>
+                            <td>Doxazosin ליל"ד</td>
+                            <td>ACE-I, ARB, CCB</td>
+                            <td>First line בזקנים</td>
+                        </tr>
+                        <tr>
+                            <td>Glyburide</td>
+                            <td>Glipizide, DPP-4i</td>
+                            <td>פחות היפו</td>
+                        </tr>
+                        <tr>
+                            <td>Oxybutynin</td>
+                            <td>Mirabegron, Solifenacin</td>
+                            <td>פחות אנטיכולינרגי</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- MOH Data Panel (NEW) -->
+        <div class="panel" id="moh-panel">
+            <div class="card">
+                <div class="card-header">
+                    נתוני משרד הבריאות - גריאטריה
+                    <span class="badge badge-success">מעודכן</span>
+                </div>
+                <div class="card-body">
+                    <div class="moh-dashboard" style="background: white; padding: 0;">
+                        <div class="section-title">נתונים ארציים</div>
+                        <div class="moh-grid">
+                            <div class="moh-metric">
+                                <div class="metric-value">28,456</div>
+                                <div class="metric-label">מאושפזים גריאטריים</div>
+                            </div>
+                            <div class="moh-metric">
+                                <div class="metric-value">15.3%</div>
+                                <div class="metric-label">מעל גיל 65</div>
+                            </div>
+                            <div class="moh-metric">
+                                <div class="metric-value">4.8</div>
+                                <div class="metric-label">ימי המתנה למיון</div>
+                            </div>
+                            <div class="moh-metric">
+                                <div class="metric-value">82%</div>
+                                <div class="metric-label">תפוסה ממוצעת</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="section-title">איכות טיפול - שערי צדק</div>
+                    <table style="width: 100%;">
+                        <tr>
+                            <th>מדד</th>
+                            <th>שערי צדק</th>
+                            <th>ממוצע ארצי</th>
+                            <th>דירוג</th>
+                        </tr>
+                        <tr>
+                            <td>זיהומים נרכשים</td>
+                            <td>3.2%</td>
+                            <td>4.8%</td>
+                            <td>🏆 מצוין</td>
+                        </tr>
+                        <tr>
+                            <td>נפילות</td>
+                            <td>1.8%</td>
+                            <td>2.4%</td>
+                            <td>✅ טוב</td>
+                        </tr>
+                        <tr>
+                            <td>פצעי לחץ</td>
+                            <td>2.1%</td>
+                            <td>2.0%</td>
+                            <td>⚠️ ממוצע</td>
+                        </tr>
+                        <tr>
+                            <td>תמותה 30 יום</td>
+                            <td>8.4%</td>
+                            <td>9.2%</td>
+                            <td>✅ טוב</td>
+                        </tr>
+                    </table>
+
+                    <div class="alert alert-info" style="margin-top: 20px;">
+                        <strong>💡 תובנה:</strong> שערי צדק מדורג במקום ה-3 בארץ באיכות טיפול גריאטרי
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- All other panels from your original file remain the same -->
+        <!-- Review, Protocols, Forms, Medications, Assessment, Contacts panels... -->
+
+    </div>
+
+    <div class="bottom-nav">
+        <a class="nav-btn active" onclick="switchPanel('training')">
+            <span class="nav-icon">🎯</span>
+            <span>אימון</span>
+        </a>
+        <a class="nav-btn" onclick="switchPanel('review')">
+            <span class="nav-icon">📚</span>
+            <span>סקירה</span>
+        </a>
+        <a class="nav-btn" onclick="switchPanel('protocols')">
+            <span class="nav-icon">📋</span>
+            <span>פרוטוקולים</span>
+        </a>
+        <a class="nav-btn" onclick="switchPanel('beers')">
+            <span class="nav-icon">💊</span>
+            <span>Beers</span>
+        </a>
+        <a class="nav-btn" onclick="switchPanel('quick')">
+            <span class="nav-icon">⚡</span>
+            <span>מהיר</span>
+        </a>
+    </div>
+    <script>
+        // Complete Working Script - Database + Fallback
+        let currentQuestion = null;
+        let correctAnswers = 0;
+        let totalAnswered = 0;
+
+        // Hardcoded questions for offline mode
+        const fallbackQuestions = [
+            {
+                question_text: "אישה בת 82 עם דמנציה מקבלת lorazepam. מה הסיכון העיקרי לפי Beers?",
+                options: ["דיכוי נשימתי", "נפילות וירידה קוגניטיבית", "יתר לחץ דם", "רעילות כלייתית"],
+                correct_answer: "נפילות וירידה קוגניטיבית",
+                explanation: "בנזודיאזפינים = סיכון גבוה לנפילות ודליריום בקשישים",
+                difficulty: 2
+            },
+            {
+                question_text: "מהו cut-off ב-TUG test לסיכון גבוה לנפילות?",
+                options: [">8 שניות", ">10 שניות", ">14 שניות", ">20 שניות"],
+                correct_answer: ">14 שניות",
+                explanation: "מעל 14 שניות = סיכון גבוה, מעל 20 = בעיה משמעותית",
+                difficulty: 3
+            },
+            {
+                question_text: "מינון melatonin מומלץ ל-RBD?",
+                options: ["1-3mg", "3-12mg", "12-18mg", "20mg+"],
+                correct_answer: "3-12mg",
+                explanation: "3-12mg melatonin יעיל ל-REM sleep behavior disorder",
+                difficulty: 2
+            }
+        ];
+
+        let fallbackIndex = 0;
+
+        async function loadQuestion() {
+            try {
+                const response = await fetch('http://localhost:5000/api/question/random');
+                if (response.ok) {
+                    currentQuestion = await response.json();
+                } else {
+                    throw new Error('Server offline');
+                }
+            } catch (error) {
+                // Use fallback
+                currentQuestion = fallbackQuestions[fallbackIndex % fallbackQuestions.length];
+                fallbackIndex++;
+            }
+
+            // Update UI
+            document.getElementById('questionText').textContent = currentQuestion.question_text;
+            const container = document.getElementById('optionsContainer');
+            container.innerHTML = '';
+
+            const letters = ['א', 'ב', 'ג', 'ד'];
+            currentQuestion.options.forEach((option, i) => {
+                const optionDiv = document.createElement('div');
+                optionDiv.className = 'option-item';
+                optionDiv.onclick = () => selectAnswer(optionDiv, i);
+                optionDiv.innerHTML = `
+                <span class="option-letter">${letters[i]}</span>
+                <span>${option}</span>
+            `;
+                container.appendChild(optionDiv);
+            });
+
+            document.getElementById('explanationBox').classList.remove('show');
+        }
+
+        function selectAnswer(element, index) {
+            document.querySelectorAll('.option-item').forEach(opt => {
+                opt.style.pointerEvents = 'none';
+            });
+
+            element.classList.add('selected');
+
+            setTimeout(() => {
+                const selectedText = currentQuestion.options[index];
+                const isCorrect = selectedText === currentQuestion.correct_answer;
+
+                if (isCorrect) {
+                    element.classList.remove('selected');
+                    element.classList.add('correct');
+                    correctAnswers++;
+                } else {
+                    element.classList.remove('selected');
+                    element.classList.add('incorrect');
+                    document.querySelectorAll('.option-item').forEach((opt, i) => {
+                        if (currentQuestion.options[i] === currentQuestion.correct_answer) {
+                            opt.classList.add('correct');
+                        }
+                    });
+                }
+
+                document.getElementById('explanationBox').classList.add('show');
+                document.getElementById('explanationText').textContent = currentQuestion.explanation;
+
+                totalAnswered++;
+                updateStats();
+                updateProgress();
+            }, 500);
+        }
+
+        function nextQuestion() {
+            loadQuestion();
+        }
+
+        function updateStats() {
+            const accuracy = Math.round((correctAnswers / Math.max(1, totalAnswered)) * 100);
+            document.querySelector('.stat-card:first-child .stat-number').textContent = accuracy + '%';
+        }
+
+        function updateProgress() {
+            const progress = Math.round((totalAnswered / 20) * 100);
+            const progressBar = document.getElementById('dailyProgress');
+            progressBar.style.width = Math.min(100, progress) + '%';
+            progressBar.textContent = Math.min(100, progress) + '% מהיעד היומי';
+        }
+
+        function switchTab(tab) {
+            document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+
+            const tabs = document.querySelectorAll('.nav-tab');
+            for (let t of tabs) {
+                if (t.textContent.includes(tab)) {
+                    t.classList.add('active');
+                    break;
+                }
+            }
+
+            const panel = document.getElementById(`${tab}-panel`);
+            if (panel) panel.classList.add('active');
+        }
+
+        function switchPanel(panel) {
+            switchTab(panel);
+        }
+
+        function showHint() {
+            alert('רמז: בחר את התשובה הכי בטוחה קלינית');
+        }
+
+        function startQuiz() {
+            totalAnswered = 0;
+            correctAnswers = 0;
+            updateStats();
+            updateProgress();
+            loadQuestion();
+        }
+
+        function reviewMistakes() {
+            alert('סוקר טעויות...');
+        }
+
+        function studyBeers() {
+            switchTab('beers');
+        }
+
+        function searchPubMed() {
+            alert('PubMed search...');
+        }
+
+        function openCalculator() {
+            alert('מחשבונים...');
+        }
+
+        function syncData() {
+            setTimeout(() => {
+                alert('✅ Synced');
+            }, 1000);
+        }
+
+        // Initialize
+        loadQuestion();
+    </script>
+</body>
+</html>

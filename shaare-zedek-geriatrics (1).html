@@ -1,0 +1,1347 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <title>גריאטריה שערי צדק - Shaare Zedek Geriatrics</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: -apple-system, 'Helvetica Neue', Arial, sans-serif;
+            background: #f0f2f5;
+            color: #1c1e21;
+            direction: rtl;
+            padding-bottom: 60px;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #004c8c, #0277bd);
+            color: white;
+            padding: 12px 16px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .header-badge {
+            background: rgba(255,255,255,0.2);
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+
+        .nav-tabs {
+            background: white;
+            display: flex;
+            overflow-x: auto;
+            border-bottom: 1px solid #e4e6eb;
+            position: sticky;
+            top: 48px;
+            z-index: 99;
+        }
+
+        .nav-tab {
+            flex-shrink: 0;
+            padding: 12px 20px;
+            color: #65676b;
+            border-bottom: 3px solid transparent;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
+        .nav-tab.active {
+            color: #0277bd;
+            border-bottom-color: #0277bd;
+            background: #f0f9ff;
+        }
+
+        .content {
+            padding: 16px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .panel {
+            display: none;
+        }
+
+        .panel.active {
+            display: block;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            margin-bottom: 16px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+
+        .card-header {
+            background: #f8f9fa;
+            padding: 14px 16px;
+            font-weight: 600;
+            border-bottom: 1px solid #e4e6eb;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-body {
+            padding: 16px;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 3px 8px;
+            font-size: 11px;
+            font-weight: 600;
+            border-radius: 12px;
+        }
+
+        .badge-dept {
+            background: #e3f2fd;
+            color: #0277bd;
+        }
+
+        .badge-urgent {
+            background: #ffebee;
+            color: #c62828;
+        }
+
+        .badge-board {
+            background: #fff3e0;
+            color: #e65100;
+        }
+
+        .badge-success {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 12px 0;
+            font-size: 14px;
+        }
+
+        th {
+            background: #f5f6f7;
+            padding: 10px;
+            text-align: right;
+            font-weight: 600;
+            border-bottom: 2px solid #e4e6eb;
+            color: #1c1e21;
+        }
+
+        td {
+            padding: 10px;
+            border-bottom: 1px solid #e4e6eb;
+        }
+
+        .alert {
+            padding: 12px;
+            border-radius: 8px;
+            margin: 12px 0;
+            font-size: 14px;
+        }
+
+        .alert-info {
+            background: #e3f2fd;
+            color: #01579b;
+            border-right: 4px solid #0277bd;
+        }
+
+        .alert-warning {
+            background: #fff3e0;
+            color: #e65100;
+            border-right: 4px solid #ff9800;
+        }
+
+        .alert-critical {
+            background: #ffebee;
+            color: #b71c1c;
+            border-right: 4px solid #d32f2f;
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin: 16px 0 12px;
+            color: #1c1e21;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #e4e6eb;
+        }
+
+        .form-box {
+            background: #f8f9fa;
+            border: 1px solid #e4e6eb;
+            border-radius: 8px;
+            padding: 12px;
+            margin: 12px 0;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .form-box:hover {
+            background: #e3f2fd;
+            border-color: #0277bd;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .form-title {
+            font-weight: 600;
+            color: #0277bd;
+            margin-bottom: 8px;
+        }
+
+        .form-field {
+            display: flex;
+            justify-content: space-between;
+            padding: 6px 0;
+            font-size: 14px;
+        }
+
+        .protocol-step {
+            background: white;
+            border: 1px solid #e4e6eb;
+            border-radius: 8px;
+            padding: 12px;
+            margin: 8px 0;
+            position: relative;
+            padding-right: 40px;
+        }
+
+        .step-number {
+            position: absolute;
+            right: 12px;
+            top: 12px;
+            width: 24px;
+            height: 24px;
+            background: #0277bd;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 12px;
+        }
+
+        .medication-item {
+            background: #f8f9fa;
+            border-radius: 6px;
+            padding: 10px;
+            margin: 8px 0;
+            border-right: 3px solid #0277bd;
+        }
+
+        .med-name {
+            font-weight: 600;
+            color: #1c1e21;
+            margin-bottom: 4px;
+        }
+
+        .med-details {
+            font-size: 13px;
+            color: #65676b;
+        }
+
+        .quick-tool {
+            background: #e3f2fd;
+            border-radius: 8px;
+            padding: 12px;
+            margin: 12px 0;
+        }
+
+        .tool-title {
+            font-weight: 600;
+            color: #0277bd;
+            margin-bottom: 8px;
+        }
+
+        .btn {
+            background: #0277bd;
+            color: white;
+            padding: 10px 16px;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            width: 100%;
+            cursor: pointer;
+            margin-top: 8px;
+        }
+
+        .btn:active {
+            background: #01579b;
+        }
+
+        .contact-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            background: #f8f9fa;
+            margin: 6px 0;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .contact-item:hover {
+            background: #e3f2fd;
+            transform: translateX(-4px);
+        }
+
+        .contact-name {
+            font-weight: 600;
+        }
+
+        .contact-number {
+            color: #0277bd;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .accordion {
+            margin: 12px 0;
+        }
+
+        .accordion-item {
+            background: white;
+            border: 1px solid #e4e6eb;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            overflow: hidden;
+        }
+
+        .accordion-header {
+            padding: 12px;
+            background: #f8f9fa;
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .accordion-content {
+            padding: 12px;
+            display: none;
+            font-size: 14px;
+        }
+
+        .accordion-item.active .accordion-content {
+            display: block;
+        }
+
+        .english {
+            direction: ltr;
+            text-align: left;
+        }
+
+        ul {
+            margin-right: 20px;
+            margin-bottom: 12px;
+        }
+
+        li {
+            margin-bottom: 6px;
+            font-size: 14px;
+        }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            border-top: 1px solid #e4e6eb;
+            display: flex;
+            justify-content: space-around;
+            padding: 8px 0;
+            z-index: 100;
+        }
+
+        .nav-btn {
+            flex: 1;
+            text-align: center;
+            padding: 4px;
+            color: #65676b;
+            font-size: 11px;
+            text-decoration: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+        }
+
+        .nav-btn.active {
+            color: #0277bd;
+            font-weight: 600;
+        }
+
+        .nav-icon {
+            font-size: 20px;
+        }
+
+        .hebrew-term {
+            font-weight: 600;
+            color: #0277bd;
+        }
+
+        .clickable {
+            cursor: pointer;
+            text-decoration: underline;
+            color: #0277bd;
+        }
+
+        .clickable:hover {
+            color: #01579b;
+        }
+
+        .disease-box {
+            background: linear-gradient(135deg, #f8f9fa, #fff);
+            border: 1px solid #e4e6eb;
+            border-radius: 12px;
+            padding: 16px;
+            margin: 16px 0;
+        }
+
+        .disease-header {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1c1e21;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #0277bd;
+        }
+
+        .criteria-list {
+            background: #f0f9ff;
+            border-radius: 8px;
+            padding: 12px;
+            margin: 12px 0;
+        }
+
+        .stage-box {
+            background: white;
+            border: 1px solid #e4e6eb;
+            border-radius: 8px;
+            padding: 12px;
+            margin: 8px 0;
+        }
+
+        .stage-title {
+            font-weight: 600;
+            color: #0277bd;
+            margin-bottom: 8px;
+        }
+
+        .pearls-box {
+            background: #fff3e0;
+            border-radius: 8px;
+            padding: 12px;
+            margin: 12px 0;
+            border-right: 4px solid #ff9800;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: white;
+            margin: 20% auto;
+            padding: 20px;
+            width: 90%;
+            max-width: 500px;
+            border-radius: 12px;
+        }
+
+        .close-modal {
+            float: left;
+            font-size: 24px;
+            cursor: pointer;
+            color: #666;
+        }
+
+        @media (min-width: 768px) {
+            .content {
+                max-width: 768px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-content">
+            <div class="header-title">מחלקה גריאטרית - שערי צדק</div>
+            <div class="header-badge">ד"ר איאס אשהב</div>
+        </div>
+    </div>
+
+    <div class="nav-tabs">
+        <div class="nav-tab active" onclick="switchTab('review')">סקירה</div>
+        <div class="nav-tab" onclick="switchTab('protocols')">פרוטוקולים</div>
+        <div class="nav-tab" onclick="switchTab('forms')">טפסים</div>
+        <div class="nav-tab" onclick="switchTab('medications')">תרופות</div>
+        <div class="nav-tab" onclick="switchTab('assessment')">הערכה</div>
+        <div class="nav-tab" onclick="switchTab('contacts')">טלפונים</div>
+    </div>
+
+    <div class="content">
+        <!-- Review Panel -->
+        <div class="panel active" id="review-panel">
+            <div class="card">
+                <div class="card-header">
+                    סקירת מחלות גריאטריות עיקריות
+                    <span class="badge badge-board">AGS Core</span>
+                </div>
+                <div class="card-body">
+                    <!-- Alzheimer's Disease -->
+                    <div class="disease-box">
+                        <div class="disease-header">מחלת אלצהיימר - Alzheimer's Disease</div>
+                        
+                        <div class="section-title">קריטריונים אבחנתיים (NIA-AA 2018)</div>
+                        <div class="criteria-list">
+                            <strong>A. ירידה קוגניטיבית:</strong>
+                            <ul>
+                                <li>התחלה הדרגתית (חודשים עד שנים)</li>
+                                <li>החמרה ברורה בקוגניציה לעומת baseline</li>
+                                <li>פגיעה ב≥2 תחומים קוגניטיביים</li>
+                            </ul>
+                            
+                            <strong>B. פגיעה תפקודית:</strong>
+                            <ul>
+                                <li>הפרעה ב-ADL או IADL</li>
+                                <li>ירידה מתפקוד קודם</li>
+                            </ul>
+                            
+                            <strong>C. לא מוסבר ע"י:</strong>
+                            <ul>
+                                <li>דליריום</li>
+                                <li>הפרעה פסיכיאטרית (דיכאון, סכיזופרניה)</li>
+                                <li>CVA, פרקינסון, DLB</li>
+                            </ul>
+                        </div>
+
+                        <div class="section-title">שלבי המחלה</div>
+                        
+                        <div class="stage-box">
+                            <div class="stage-title">שלב קל (MMSE 20-26)</div>
+                            • בעיות זיכרון לטווח קצר<br>
+                            • קושי במציאת מילים<br>
+                            • הסתרה של קשיים<br>
+                            • IADL נפגע, ADL שמור<br>
+                            <strong>טיפול:</strong> Donepezil 5→10mg
+                        </div>
+
+                        <div class="stage-box">
+                            <div class="stage-title">שלב בינוני (MMSE 10-19)</div>
+                            • אובדן זיכרון משמעותי<br>
+                            • בלבול לגבי זמן ומקום<br>
+                            • קושי בזיהוי משפחה<br>
+                            • BPSD - תוקפנות, שוטטות<br>
+                            <strong>טיפול:</strong> ChEI + Memantine
+                        </div>
+
+                        <div class="stage-box">
+                            <div class="stage-title">שלב קשה (MMSE <10)</div>
+                            • אובדן דיבור<br>
+                            • אי שליטה בסוגרים<br>
+                            • תלות מוחלטת<br>
+                            • קושי בבליעה<br>
+                            <strong>טיפול:</strong> פליאטיבי, comfort care
+                        </div>
+
+                        <div class="pearls-box">
+                            <strong>⚡ פנינים קליניות:</strong><br>
+                            • Anosognosia (חוסר מודעות) = סימן אופייני<br>
+                            • Sundowning = החמרה בערב<br>
+                            • שמור יכולות חברתיות עד מאוחר<br>
+                            • MRI: אטרופיה היפוקמפלית<br>
+                            • CSF: ↓Aβ42, ↑Tau, ↑p-Tau
+                        </div>
+                    </div>
+
+                    <!-- Vascular Dementia -->
+                    <div class="disease-box">
+                        <div class="disease-header">דמנציה וסקולרית - Vascular Dementia</div>
+                        
+                        <div class="criteria-list">
+                            <strong>קריטריונים (NINDS-AIREN):</strong>
+                            <ol>
+                                <li><strong>דמנציה:</strong> ירידה בזיכרון + ≥1 תחום נוסף</li>
+                                <li><strong>מחלה צרברווסקולרית:</strong>
+                                    <ul>
+                                        <li>סימנים פוקליים בבדיקה</li>
+                                        <li>הדמיה: אוטמים, WML</li>
+                                    </ul>
+                                </li>
+                                <li><strong>קשר זמני:</strong> תוך 3 חודשים מ-CVA</li>
+                            </ol>
+                        </div>
+
+                        <div class="section-title">מאפיינים קליניים</div>
+                        <ul>
+                            <li><strong>מהלך מדרגתי</strong> - stepwise deterioration</li>
+                            <li><strong>תפקוד ביצועי</strong> נפגע יותר מזיכרון</li>
+                            <li><strong>סימנים פוקליים:</strong> הפרעות הליכה, חולשה</li>
+                            <li><strong>רגש:</strong> דיכאון, אפתיה, לביליות רגשית</li>
+                            <li><strong>Pseudobulbar palsy:</strong> בכי/צחוק פתולוגי</li>
+                        </ul>
+
+                        <div class="pearls-box">
+                            <strong>⚡ פנינים:</strong><br>
+                            • Hachinski Score >7 = וסקולרי<br>
+                            • Small vessel disease = הכי שכיח<br>
+                            • Strategic infarcts: תלמוס, angular gyrus<br>
+                            • טיפול: ASA, סטטין, BP <140/90
+                        </div>
+                    </div>
+
+                    <!-- Lewy Body Dementia -->
+                    <div class="disease-box">
+                        <div class="disease-header">דמנציה עם גופיפי לוי - DLB</div>
+                        
+                        <div class="criteria-list">
+                            <strong>Core Features (2=Probable, 1=Possible):</strong>
+                            <ol>
+                                <li><strong>תנודות בקוגניציה</strong> - fluctuations</li>
+                                <li><strong>הזיות ראייה</strong> - detailed, formed</li>
+                                <li><strong>פרקינסוניזם</strong> - bradykinesia, rigidity</li>
+                                <li><strong>REM sleep behavior disorder</strong></li>
+                            </ol>
+                        </div>
+
+                        <div class="section-title">Supportive Features</div>
+                        <ul>
+                            <li>רגישות חמורה לאנטיפסיכוטיים</li>
+                            <li>אי יציבות אוטונומית</li>
+                            <li>נפילות חוזרות</li>
+                            <li>סינקופה</li>
+                            <li>דלוזיות סיסטמטיות</li>
+                        </ul>
+
+                        <div class="alert alert-critical">
+                            <strong>⚠️ אזהרה:</strong> NEVER give typical antipsychotics!<br>
+                            Neuroleptic sensitivity → death
+                        </div>
+
+                        <div class="pearls-box">
+                            <strong>⚡ טיפול:</strong><br>
+                            • Rivastigmine - מועדף<br>
+                            • Melatonin 3-12mg לRBD<br>
+                            • Quetiapine 12.5mg אם חייבים<br>
+                            • DaTscan: ↓ uptake
+                        </div>
+                    </div>
+
+                    <!-- Delirium -->
+                    <div class="disease-box">
+                        <div class="disease-header">דליריום - Delirium</div>
+                        
+                        <div class="criteria-list">
+                            <strong>DSM-5 Criteria:</strong>
+                            <ol>
+                                <li>הפרעה בקשב ומודעות</li>
+                                <li>התפתחות חדה (שעות-ימים) + תנודתיות</li>
+                                <li>הפרעה קוגניטיבית נוספת</li>
+                                <li>לא מוסבר ע"י דמנציה קיימת</li>
+                                <li>עדות למצב רפואי/חומר/גמילה</li>
+                            </ol>
+                        </div>
+
+                        <div class="section-title">סוגי דליריום</div>
+                        <table>
+                            <tr>
+                                <th>היפראקטיבי (25%)</th>
+                                <th>היפואקטיבי (50%)</th>
+                                <th>מעורב (25%)</th>
+                            </tr>
+                            <tr>
+                                <td>
+                                    • אגיטציה<br>
+                                    • תוקפנות<br>
+                                    • הזיות<br>
+                                    • קל לאבחון
+                                </td>
+                                <td>
+                                    • נמנום<br>
+                                    • אפתיה<br>
+                                    • ↓תגובתיות<br>
+                                    • <strong>40% missed!</strong>
+                                </td>
+                                <td>
+                                    • תנודות<br>
+                                    • משתנה<br>
+                                    • קשה לטיפול
+                                </td>
+                            </tr>
+                        </table>
+
+                        <div class="section-title">גורמים שכיחים בזקנים</div>
+                        <div class="quick-tool">
+                            <strong>DELIRIUMS:</strong><br>
+                            D - Drugs (בנזו, אופיאטים, אנטיכולינרגיים)<br>
+                            E - Electrolytes (Na, Ca, glucose)<br>
+                            L - Lack of drugs (גמילה)<br>
+                            I - Infection (UTI #1, pneumonia)<br>
+                            R - Reduced sensory (משקפיים, שמיעה)<br>
+                            I - Intracranial (CVA, SDH)<br>
+                            U - Urinary/fecal retention<br>
+                            M - Myocardial (MI, CHF)<br>
+                            S - Sleep deprivation
+                        </div>
+
+                        <div class="pearls-box">
+                            <strong>⚡ ניהול:</strong><br>
+                            1. תקן גורם בסיסי<br>
+                            2. Non-pharm FIRST (HELP protocol)<br>
+                            3. Haloperidol 0.25mg אם מסכן<br>
+                            4. מעקב CAM כל משמרת
+                        </div>
+                    </div>
+
+                    <!-- Parkinson's -->
+                    <div class="disease-box">
+                        <div class="disease-header">פרקינסון בזקנים</div>
+                        
+                        <div class="criteria-list">
+                            <strong>UK Brain Bank Criteria:</strong><br>
+                            <strong>Step 1 - Parkinsonism:</strong>
+                            • Bradykinesia + 1 of:
+                            <ul>
+                                <li>Rigidity</li>
+                                <li>Rest tremor (4-6 Hz)</li>
+                                <li>Postural instability</li>
+                            </ul>
+                        </div>
+
+                        <div class="section-title">Red Flags (לא פרקינסון)</div>
+                        <ul>
+                            <li>סימטרי מההתחלה</li>
+                            <li>אין תגובה ללבודופה</li>
+                            <li>מהלך מהיר (<3 שנים לכסא גלגלים)</li>
+                            <li>סימנים צרבלריים</li>
+                            <li>סימני פירמידה</li>
+                            <li>אוטונומיה חמורה מוקדמת</li>
+                        </ul>
+
+                        <div class="section-title">טיפול בזקנים</div>
+                        <table>
+                            <tr>
+                                <th>תרופה</th>
+                                <th>מינון</th>
+                                <th>הערות</th>
+                            </tr>
+                            <tr>
+                                <td>Levodopa/Carbidopa</td>
+                                <td>100/25 x3</td>
+                                <td>First line >70y</td>
+                            </tr>
+                            <tr>
+                                <td>Dopamine agonists</td>
+                                <td>-</td>
+                                <td>AVOID - הזיות, ICDs</td>
+                            </tr>
+                            <tr>
+                                <td>MAO-B inhibitors</td>
+                                <td>Rasagiline 1mg</td>
+                                <td>Adjunct</td>
+                            </tr>
+                        </table>
+
+                        <div class="pearls-box">
+                            <strong>⚡ Non-motor:</strong><br>
+                            • דיכאון: SSRI בטוח<br>
+                            • פסיכוזה: quetiapine בלבד<br>
+                            • אורתוסטטי: midodrine<br>
+                            • RBD: melatonin 3-12mg
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Protocols Panel -->
+        <div class="panel" id="protocols-panel">
+            <div class="card">
+                <div class="card-header">
+                    פרוטוקול קבלת חולה גריאטרי - שערי צדק
+                    <span class="badge badge-dept">מחלקתי</span>
+                </div>
+                <div class="card-body">
+                    <div class="protocol-step">
+                        <div class="step-number">1</div>
+                        <strong>קבלה ראשונית (תוך 2 שעות)</strong>
+                        <ul>
+                            <li>אנמנזה מלאה + <span class="hebrew-term">תולדות נפילות</span></li>
+                            <li>בדיקה פיזיקלית + <span class="hebrew-term">אורתוסטטיים</span></li>
+                            <li>רשימת תרופות מעודכנת מה<span class="hebrew-term">קופה</span></li>
+                            <li>MMSE/MoCA אם קוגניציה לא ברורה</li>
+                        </ul>
+                    </div>
+
+                    <div class="protocol-step">
+                        <div class="step-number">2</div>
+                        <strong>הוראות קבלה סטנדרטיות</strong>
+                        <ul>
+                            <li>בדיקות דם: <span class="hebrew-term">ספירה, כימיה מורחבת, TSH, B12, Folate</span></li>
+                            <li>שתן: <span class="hebrew-term">כללית + תרבית</span></li>
+                            <li>א.ק.ג</li>
+                            <li>צילום חזה (אם חום/שיעול/קוצר נשימה)</li>
+                        </ul>
+                    </div>
+
+                    <div class="protocol-step">
+                        <div class="step-number">3</div>
+                        <strong>הערכה תפקודית (תוך 24 שעות)</strong>
+                        <ul>
+                            <li>Barthel Index - <span class="hebrew-term">מדד ברתל</span></li>
+                            <li>Get Up and Go - <span class="hebrew-term">קום ולך מתוזמן</span></li>
+                            <li>GDS-15 אם דיכאון חשוד</li>
+                            <li>CAM - <span class="hebrew-term">הערכת דליריום</span></li>
+                        </ul>
+                    </div>
+
+                    <div class="protocol-step">
+                        <div class="step-number">4</div>
+                        <strong>תכנון שחרור (מיום 1)</strong>
+                        <ul>
+                            <li>יצירת קשר עם <span class="hebrew-term">עו"ס</span></li>
+                            <li>הערכת צורך ב<span class="hebrew-term">פיזיותרפיה</span></li>
+                            <li>בירור <span class="hebrew-term">זכאות ביטוח לאומי</span></li>
+                            <li>תיאום <span class="hebrew-term">המשך טיפול בקהילה</span></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    פרוטוקול דליריום - שערי צדק
+                    <span class="badge badge-urgent">דחוף</span>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-critical">
+                        <strong>זכור:</strong> 40% מהדליריום לא מאובחן! השתמש ב-CAM בכל חשד
+                    </div>
+
+                    <div class="section-title">אבחון - CAM (Confusion Assessment Method)</div>
+                    <div class="form-box">
+                        <div class="form-title">4 קריטריונים:</div>
+                        1. <strong>התחלה חדה + תנודתיות</strong><br>
+                        2. <strong>חוסר קשב</strong><br>
+                        3. <strong>חשיבה לא מאורגנת</strong><br>
+                        4. <strong>שינוי ברמת הכרה</strong><br>
+                        <div class="alert alert-info">
+                            חיובי אם: 1+2 + (3 או 4)
+                        </div>
+                    </div>
+
+                    <div class="section-title">חיפוש גורמים</div>
+                    <ul>
+                        <li><strong>I</strong>nfection - <span class="hebrew-term">זיהום (שתן, ריאות)</span></li>
+                        <li><strong>W</strong>ithdrawal - <span class="hebrew-term">גמילה (אלכוהול, בנזו)</span></li>
+                        <li><strong>A</strong>cute metabolic - <span class="hebrew-term">הפרעה מטבולית</span></li>
+                        <li><strong>T</strong>rauma/pain - <span class="hebrew-term">כאב לא מטופל</span></li>
+                        <li><strong>C</strong>NS - <span class="hebrew-term">אירוע מוחי</span></li>
+                        <li><strong>H</strong>ypoxia - <span class="hebrew-term">היפוקסיה</span></li>
+                        <li><strong>D</strong>eficiencies - <span class="hebrew-term">B12, תיאמין</span></li>
+                        <li><strong>E</strong>ndocrine - <span class="hebrew-term">תירואיד, סוכר</span></li>
+                        <li><strong>A</strong>cute vascular - <span class="hebrew-term">MI, PE</span></li>
+                        <li><strong>T</strong>oxins/drugs - <span class="hebrew-term">תרופות (בנזו, אופיאטים, אנטיכולינרגיים)</span></li>
+                        <li><strong>H</strong>eavy metals - <span class="hebrew-term">נדיר</span></li>
+                    </ul>
+
+                    <div class="section-title">טיפול לא תרופתי (ראשון!)</div>
+                    <div class="protocol-step">
+                        <strong>פרוטוקול HELP מותאם שערי צדק:</strong>
+                        <ul>
+                            <li>התמצאות: <span class="hebrew-term">שעון, לוח תאריך, תמונות משפחה</span></li>
+                            <li>ניידות: <span class="hebrew-term">3 פעמים ביום מינימום</span></li>
+                            <li>שינה: <span class="hebrew-term">חלב חם, מוזיקה, עיסוי גב</span></li>
+                            <li>ראיה/שמיעה: <span class="hebrew-term">משקפיים ומכשירי שמיעה</span></li>
+                            <li>הידרציה: <span class="hebrew-term">מעקב נוזלים</span></li>
+                        </ul>
+                    </div>
+
+                    <div class="section-title">טיפול תרופתי (אם מסכן)</div>
+                    <table>
+                        <tr>
+                            <th>תרופה</th>
+                            <th>מינון</th>
+                            <th>הערות</th>
+                        </tr>
+                        <tr>
+                            <td><strong>הלופרידול</strong></td>
+                            <td>0.25-0.5mg PO/IM</td>
+                            <td>לא בפרקינסון/DLB!</td>
+                        </tr>
+                        <tr>
+                            <td><strong>קווטיאפין</strong></td>
+                            <td>12.5-25mg</td>
+                            <td>בפרקינסון/DLB</td>
+                        </tr>
+                        <tr>
+                            <td><strong>לוראזפם</strong></td>
+                            <td>0.5mg</td>
+                            <td>רק בגמילה מאלכוהול</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Forms Panel -->
+        <div class="panel" id="forms-panel">
+            <div class="card">
+                <div class="card-header">
+                    טפסים חשובים - שערי צדק
+                </div>
+                <div class="card-body">
+                    <div class="section-title">טפסים פנימיים</div>
+                    
+                    <div class="form-box" onclick="openForm('GER-001')">
+                        <div class="form-title">טופס הערכה גריאטרית מקיפה (CGA)</div>
+                        <div class="form-field">
+                            <span>מספר טופס:</span>
+                            <span class="hebrew-term">GER-001</span>
+                        </div>
+                        <div class="form-field">
+                            <span>מתי:</span>
+                            <span>תוך 48 שעות מקבלה</span>
+                        </div>
+                        <div class="form-field">
+                            <span>כולל:</span>
+                            <span>ADL, IADL, MMSE, GDS</span>
+                        </div>
+                    </div>
+
+                    <div class="form-box" onclick="openForm('GER-002')">
+                        <div class="form-title">טופס ייעוץ גריאטרי</div>
+                        <div class="form-field">
+                            <span>מספר טופס:</span>
+                            <span class="hebrew-term">GER-002</span>
+                        </div>
+                        <div class="form-field">
+                            <span>למחלקות:</span>
+                            <span>פנימית, אורתופדיה, כירורגיה</span>
+                        </div>
+                    </div>
+
+                    <div class="section-title">טפסי קופות חולים</div>
+                    
+                    <table>
+                        <tr>
+                            <th>טופס</th>
+                            <th>שימוש</th>
+                            <th>הערות</th>
+                        </tr>
+                        <tr onclick="openForm('17')">
+                            <td><strong class="clickable">טופס 17</strong></td>
+                            <td>הפניה למרפאות חוץ</td>
+                            <td>חובה קוד אבחנה ICD</td>
+                        </tr>
+                        <tr onclick="openForm('17b')">
+                            <td><strong class="clickable">טופס 17 ב'</strong></td>
+                            <td>הפניה לפיזיותרפיה</td>
+                            <td>עד 12 טיפולים בסיסי</td>
+                        </tr>
+                        <tr onclick="openForm('17c')">
+                            <td><strong class="clickable">טופס 17 ג'</strong></td>
+                            <td>הפניה לבדיקות הדמיה</td>
+                            <td>CT/MRI דורש אישור</td>
+                        </tr>
+                        <tr onclick="openForm('29c')">
+                            <td><strong class="clickable">טופס 29 ג'</strong></td>
+                            <td>תרופות מיוחדות</td>
+                            <td>דמנציה, פרקינסון</td>
+                        </tr>
+                    </table>
+
+                    <div class="section-title">טפסי ביטוח לאומי</div>
+                    
+                    <div class="form-box" onclick="openForm('2642')">
+                        <div class="form-title">טופס 2642 - בקשה לגמלת סיעוד</div>
+                        <ul>
+                            <li>החולה/משפחה ממלאים</li>
+                            <li>צרף: ת.ז, אישורי הכנסה</li>
+                            <li>זמן המתנה: 45-60 יום</li>
+                        </ul>
+                    </div>
+
+                    <div class="form-box" onclick="openForm('2643')">
+                        <div class="form-title">טופס 2643 - הערכת רופא</div>
+                        <ul>
+                            <li><strong>אתה ממלא!</strong></li>
+                            <li>פרט תלות ב-6 ADL</li>
+                            <li>ציין בעיות קוגניטיביות</li>
+                            <li>תאר צורך בהשגחה</li>
+                        </ul>
+                    </div>
+
+                    <div class="form-box" onclick="openForm('2645')">
+                        <div class="form-title">טופס 2645 - אישפוז במוסד</div>
+                        <ul>
+                            <li>רק גריאטר ממלא</li>
+                            <li>קוד תשוש/סיעודי</li>
+                            <li>צרף: CGA מלא</li>
+                        </ul>
+                    </div>
+
+                    <div class="alert alert-info">
+                        <strong>טיפ:</strong> שמור טמפלייטים מוכנים בקלידע למילוי מהיר
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Medications Panel -->
+        <div class="panel" id="medications-panel">
+            <div class="card">
+                <div class="card-header">
+                    תרופות גריאטריות - שמות מסחריים בישראל
+                </div>
+                <div class="card-body">
+                    <div class="section-title">תרופות דמנציה</div>
+                    
+                    <div class="medication-item">
+                        <div class="med-name">Donepezil - דונפזיל</div>
+                        <div class="med-details">
+                            <strong>שמות מסחריים:</strong> ממוריט, אריספט<br>
+                            <strong>מינון:</strong> 5mg → 10mg (לאחר חודש) → 23mg (אם צריך)<br>
+                            <strong>קריטריונים לסל:</strong> MMSE 10-26, אישור גריאטר/נוירולוג
+                        </div>
+                    </div>
+
+                    <div class="medication-item">
+                        <div class="med-name">Memantine - ממנטין</div>
+                        <div class="med-details">
+                            <strong>שמות מסחריים:</strong> אביקסה, ממנטין טבע<br>
+                            <strong>מינון:</strong> 5mg → 10mg בוקר+ערב → 20mg<br>
+                            <strong>קריטריונים לסל:</strong> MMSE 5-14 או 10-20 עם ChEI
+                        </div>
+                    </div>
+
+                    <div class="medication-item">
+                        <div class="med-name">Rivastigmine - ריבסטיגמין</div>
+                        <div class="med-details">
+                            <strong>שמות מסחריים:</strong> אקסלון (כדורים/מדבקות)<br>
+                            <strong>מדבקות:</strong> 4.6mg → 9.5mg → 13.3mg<br>
+                            <strong>יתרון:</strong> בפרקינסון דמנציה, DLB
+                        </div>
+                    </div>
+
+                    <div class="section-title">אנטי-פסיכוטיים (זהירות!)</div>
+                    
+                    <div class="alert alert-critical">
+                        <strong>Black Box Warning:</strong> עלייה בתמותה x1.7 בדמנציה
+                    </div>
+
+                    <table>
+                        <tr>
+                            <th>תרופה</th>
+                            <th>שם מסחרי</th>
+                            <th>מינון גריאטרי</th>
+                        </tr>
+                        <tr>
+                            <td>Haloperidol</td>
+                            <td>הלידול</td>
+                            <td>0.25-0.5mg</td>
+                        </tr>
+                        <tr>
+                            <td>Quetiapine</td>
+                            <td>סרוקוול</td>
+                            <td>12.5-25mg</td>
+                        </tr>
+                        <tr>
+                            <td>Risperidone</td>
+                            <td>ריספרדל</td>
+                            <td>0.25-0.5mg</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Assessment Panel -->
+        <div class="panel" id="assessment-panel">
+            <div class="card">
+                <div class="card-header">
+                    כלי הערכה גריאטריים
+                    <span class="badge badge-board">30% AGS</span>
+                </div>
+                <div class="card-body">
+                    <div class="section-title">הערכה קוגניטיבית</div>
+                    
+                    <div class="quick-tool">
+                        <div class="tool-title">MMSE - בעברית</div>
+                        <strong>התמצאות (10 נק'):</strong><br>
+                        • באיזו שנה? עונה? חודש? תאריך? יום?<br>
+                        • איפה אנחנו? מדינה? עיר? בניין? קומה? מחלקה?<br>
+                        <strong>רישום (3 נק'):</strong><br>
+                        • חזור על: תפוח, שולחן, מטבע<br>
+                        <strong>קשב וחישוב (5 נק'):</strong><br>
+                        • 100-7 סדרתי או איית "עולם" מהסוף<br>
+                        <strong>זכירה (3 נק'):</strong><br>
+                        • מה 3 המילים?<br>
+                        <strong>שפה (8 נק'):</strong><br>
+                        • שם 2 חפצים, חזור "אין אם ואין אבל"<br>
+                        • בצע 3 שלבים, קרא ובצע, כתוב משפט<br>
+                        <strong>בנייה (1 נק'):</strong><br>
+                        • העתק מחומשים חופפים
+                    </div>
+
+                    <div class="alert alert-info">
+                        <strong>פרשנות:</strong><br>
+                        • 24-30 = תקין<br>
+                        • 19-23 = ירידה קוגניטיבית קלה<br>
+                        • 10-18 = דמנציה בינונית<br>
+                        • <10 = דמנציה קשה
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contacts Panel -->
+        <div class="panel" id="contacts-panel">
+            <div class="card">
+                <div class="card-header">
+                    טלפונים חשובים - שערי צדק
+                </div>
+                <div class="card-body">
+                    <div class="section-title">מחלקה גריאטרית</div>
+                    
+                    <div class="contact-item" onclick="callNumber('02-666-6701')">
+                        <span class="contact-name">תחנת אחיות</span>
+                        <span class="contact-number">02-666-6701</span>
+                    </div>
+                    <div class="contact-item" onclick="callNumber('02-666-6702')">
+                        <span class="contact-name">חדר רופאים</span>
+                        <span class="contact-number">02-666-6702</span>
+                    </div>
+                    <div class="contact-item" onclick="callNumber('02-666-6700')">
+                        <span class="contact-name">מנהל מחלקה</span>
+                        <span class="contact-number">02-666-6700</span>
+                    </div>
+                    <div class="contact-item" onclick="callNumber('02-666-6705')">
+                        <span class="contact-name">עו"ס מחלקה</span>
+                        <span class="contact-number">02-666-6705</span>
+                    </div>
+
+                    <div class="section-title">ייעוצים</div>
+                    
+                    <div class="contact-item" onclick="callNumber('02-666-6400')">
+                        <span class="contact-name">נוירולוגיה</span>
+                        <span class="contact-number">02-666-6400</span>
+                    </div>
+                    <div class="contact-item" onclick="callNumber('02-666-6500')">
+                        <span class="contact-name">פסיכיאטריה</span>
+                        <span class="contact-number">02-666-6500</span>
+                    </div>
+                    <div class="contact-item" onclick="callNumber('02-666-6800')">
+                        <span class="contact-name">פליאטיבי</span>
+                        <span class="contact-number">02-666-6800</span>
+                    </div>
+
+                    <div class="section-title">חיצוני</div>
+                    
+                    <div class="contact-item" onclick="callNumber('*6050')">
+                        <span class="contact-name">ביטוח לאומי</span>
+                        <span class="contact-number">*6050</span>
+                    </div>
+                    <div class="contact-item" onclick="callNumber('02-644-4444')">
+                        <span class="contact-name">יד שרה</span>
+                        <span class="contact-number">02-644-4444</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for form info -->
+    <div id="formModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal()">&times;</span>
+            <h3 id="modalTitle"></h3>
+            <div id="modalContent"></div>
+        </div>
+    </div>
+
+    <div class="bottom-nav">
+        <a href="#" class="nav-btn active" onclick="switchPanel('review')">
+            <span class="nav-icon">📚</span>
+            <span>סקירה</span>
+        </a>
+        <a href="#" class="nav-btn" onclick="switchPanel('protocols')">
+            <span class="nav-icon">📋</span>
+            <span>פרוטוקולים</span>
+        </a>
+        <a href="#" class="nav-btn" onclick="switchPanel('forms')">
+            <span class="nav-icon">📄</span>
+            <span>טפסים</span>
+        </a>
+        <a href="#" class="nav-btn" onclick="switchPanel('medications')">
+            <span class="nav-icon">💊</span>
+            <span>תרופות</span>
+        </a>
+        <a href="#" class="nav-btn" onclick="switchPanel('assessment')">
+            <span class="nav-icon">✓</span>
+            <span>הערכה</span>
+        </a>
+        <a href="#" class="nav-btn" onclick="switchPanel('contacts')">
+            <span class="nav-icon">📞</span>
+            <span>טלפונים</span>
+        </a>
+    </div>
+
+    <script>
+        function switchTab(tab) {
+            document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+            
+            event.target.classList.add('active');
+            document.getElementById(`${tab}-panel`).classList.add('active');
+        }
+
+        function switchPanel(panel) {
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+            
+            event.currentTarget.classList.add('active');
+            document.getElementById(`${panel}-panel`).classList.add('active');
+        }
+
+        function toggleAccordion(header) {
+            const item = header.parentElement;
+            item.classList.toggle('active');
+        }
+
+        function openForm(formId) {
+            const modal = document.getElementById('formModal');
+            const title = document.getElementById('modalTitle');
+            const content = document.getElementById('modalContent');
+            
+            const formInfo = {
+                '17': {
+                    title: 'טופס 17 - הפניה למרפאות חוץ',
+                    content: `
+                        <strong>מילוי:</strong><br>
+                        • שם מלא + ת.ז<br>
+                        • קוד אבחנה ICD-10<br>
+                        • סיבת הפניה מפורטת<br>
+                        • בדיקות רלוונטיות<br><br>
+                        <strong>טיפ:</strong> שמור טמפלייט בקלידע עם הנתונים הקבועים
+                    `
+                },
+                '17b': {
+                    title: 'טופס 17ב - הפניה לפיזיותרפיה',
+                    content: `
+                        <strong>זכאות בסיסית:</strong> 12 טיפולים לשנה<br>
+                        <strong>הרחבה:</strong> עד 24 במקרים מיוחדים<br><br>
+                        <strong>חובה לציין:</strong><br>
+                        • אבחנה ספציפית<br>
+                        • מטרות טיפול<br>
+                        • מגבלות (אם יש)
+                    `
+                },
+                '29c': {
+                    title: 'טופס 29ג - תרופות מיוחדות',
+                    content: `
+                        <strong>דמנציה:</strong><br>
+                        • Donepezil: MMSE 10-26<br>
+                        • Memantine: MMSE 5-14<br><br>
+                        <strong>דרוש:</strong> אישור גריאטר/נוירולוג
+                    `
+                },
+                '2643': {
+                    title: 'טופס 2643 - הערכת רופא לביטוח לאומי',
+                    content: `
+                        <strong>חלקים למילוי:</strong><br>
+                        1. פרטים אישיים<br>
+                        2. אבחנות (ICD-10)<br>
+                        3. תפקוד ב-6 ADL<br>
+                        4. הערכה קוגניטיבית<br>
+                        5. צורך בהשגחה<br><br>
+                        <strong>חשוב:</strong> תאר בפירוט את הקושי בכל פעולה
+                    `
+                },
+                'GER-001': {
+                    title: 'טופס GER-001 - CGA מחלקתי',
+                    content: `
+                        <strong>כולל:</strong><br>
+                        • Barthel Index<br>
+                        • MMSE/MoCA<br>
+                        • GDS-15<br>
+                        • TUG test<br>
+                        • Nutritional assessment<br><br>
+                        <strong>תזמון:</strong> תוך 48 שעות מקבלה
+                    `
+                }
+            };
+            
+            const info = formInfo[formId] || {
+                title: `טופס ${formId}`,
+                content: 'מידע נוסף יתווסף בקרוב'
+            };
+            
+            title.textContent = info.title;
+            content.innerHTML = info.content;
+            modal.style.display = 'block';
+        }
+
+        function closeModal() {
+            document.getElementById('formModal').style.display = 'none';
+        }
+
+        function callNumber(number) {
+            if (confirm(`להתקשר ל-${number}?`)) {
+                window.location.href = `tel:${number}`;
+            }
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('formModal');
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        }
+
+        // Initialize
+        console.log('שערי צדק Geriatrics System - Dr. Eias Ashav');
+    </script>
+</body>
+</html>

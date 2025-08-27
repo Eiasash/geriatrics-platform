@@ -53,3 +53,5 @@ Continuing*
 *.ico
 Stocks/
 nul
+# Local Netlify folder
+.netlify

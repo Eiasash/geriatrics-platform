@@ -1,0 +1,1188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complete Israeli Geriatrics Training Platform</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+            position: relative;
+        }
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="20" cy="20" r="2" fill="rgba(255,255,255,0.1)"/><circle cx="80" cy="40" r="3" fill="rgba(255,255,255,0.1)"/><circle cx="40" cy="80" r="2" fill="rgba(255,255,255,0.1)"/></svg>');
+        }
+        .title {
+            font-size: 3.5em;
+            font-weight: 900;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            position: relative;
+            z-index: 1;
+        }
+        .subtitle {
+            font-size: 1.3em;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+        }
+        .nav-container {
+            background: #f8fafc;
+            padding: 0 40px;
+            border-bottom: 3px solid #e2e8f0;
+        }
+        .tabs {
+            display: flex;
+            gap: 0;
+            overflow-x: auto;
+        }
+        .tab {
+            padding: 20px 30px;
+            background: transparent;
+            border: none;
+            font-weight: 600;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border-bottom: 4px solid transparent;
+            white-space: nowrap;
+            position: relative;
+        }
+        .tab:hover {
+            background: rgba(59, 130, 246, 0.1);
+            transform: translateY(-2px);
+        }
+        .tab.active {
+            color: #2563eb;
+            border-bottom-color: #2563eb;
+            background: rgba(59, 130, 246, 0.1);
+        }
+        .content {
+            display: none;
+            padding: 40px;
+            min-height: 600px;
+        }
+        .content.active {
+            display: block;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+        .stat-card {
+            background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+            border: 2px solid #cbd5e1;
+            border-radius: 16px;
+            padding: 30px;
+            text-align: center;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+            transform: rotate(45deg);
+            transition: all 0.5s;
+            opacity: 0;
+        }
+        .stat-card:hover::before {
+            animation: shimmer 1.5s ease-in-out;
+        }
+        .stat-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            border-color: #3b82f6;
+        }
+        @keyframes shimmer {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); opacity: 0; }
+            50% { opacity: 1; }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); opacity: 0; }
+        }
+        .stat-number {
+            font-size: 3.5em;
+            font-weight: 900;
+            background: linear-gradient(135deg, #2563eb, #3b82f6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+        .stat-label {
+            color: #64748b;
+            font-weight: 600;
+            font-size: 1.1em;
+        }
+        .module-card {
+            background: white;
+            border: 2px solid #e5e7eb;
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 25px;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        .module-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.1), transparent);
+            transition: left 0.5s;
+        }
+        .module-card:hover::before {
+            left: 100%;
+        }
+        .module-card:hover {
+            border-color: #3b82f6;
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+        }
+        .module-title {
+            font-size: 1.5em;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 15px;
+        }
+        .board-weight {
+            background: linear-gradient(135deg, #fef2f2, #fee2e2);
+            color: #dc2626;
+            padding: 8px 16px;
+            border-radius: 25px;
+            font-size: 0.9em;
+            font-weight: 700;
+            display: inline-block;
+            margin-bottom: 15px;
+            border: 2px solid #fecaca;
+        }
+        .israeli-context {
+            background: linear-gradient(135deg, #eff6ff, #dbeafe);
+            border-left: 6px solid #3b82f6;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 0 12px 12px 0;
+            border: 2px solid #bfdbfe;
+        }
+        .button {
+            background: linear-gradient(135deg, #16a34a, #22c55e);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1.1em;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(22, 163, 74, 0.3);
+        }
+        .button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(22, 163, 74, 0.4);
+            background: linear-gradient(135deg, #15803d, #16a34a);
+        }
+        .button-blue {
+            background: linear-gradient(135deg, #2563eb, #3b82f6);
+            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
+        }
+        .button-blue:hover {
+            background: linear-gradient(135deg, #1d4ed8, #2563eb);
+            box-shadow: 0 8px 25px rgba(37, 99, 235, 0.4);
+        }
+        .highlight-box {
+            background: linear-gradient(135deg, #eff6ff 0%, #f0f9ff 100%);
+            border: 3px solid #3b82f6;
+            border-radius: 20px;
+            padding: 35px;
+            margin-bottom: 35px;
+            position: relative;
+        }
+        .question-container {
+            background: #f8fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 25px;
+        }
+        .question {
+            font-size: 1.2em;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+        .options {
+            display: grid;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .option {
+            background: white;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 15px 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+        .option:hover {
+            border-color: #3b82f6;
+            background: #f0f9ff;
+            transform: translateX(5px);
+        }
+        .option.selected {
+            border-color: #2563eb;
+            background: #dbeafe;
+        }
+        .option.correct {
+            border-color: #16a34a;
+            background: #dcfce7;
+        }
+        .option.incorrect {
+            border-color: #dc2626;
+            background: #fef2f2;
+        }
+        .explanation {
+            background: #f0f9ff;
+            border-left: 4px solid #3b82f6;
+            padding: 20px;
+            border-radius: 0 12px 12px 0;
+            margin-top: 20px;
+            display: none;
+        }
+        .progress-bar {
+            background: #e5e7eb;
+            height: 8px;
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+        .progress-fill {
+            background: linear-gradient(90deg, #16a34a, #22c55e);
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+        .chapter-list {
+            display: grid;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .chapter-item {
+            background: white;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 20px;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        .chapter-item:hover {
+            border-color: #3b82f6;
+            transform: translateX(10px);
+        }
+        .chapter-item.completed {
+            border-color: #16a34a;
+            background: #f0fdf4;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+        }
+        .modal-content {
+            background: white;
+            margin: 5% auto;
+            padding: 40px;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 800px;
+            max-height: 80vh;
+            overflow-y: auto;
+            position: relative;
+            animation: modalSlideIn 0.3s ease-out;
+        }
+        @keyframes modalSlideIn {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        .close {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            font-size: 30px;
+            font-weight: bold;
+            cursor: pointer;
+            color: #6b7280;
+        }
+        .close:hover {
+            color: #dc2626;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 class="title">🇮🇱 Israeli Geriatrics Training Platform</h1>
+            <p class="subtitle">AGS Review Syllabus 10th Edition + IMA Integration + Live Practice System</p>
+        </div>
+
+        <div class="nav-container">
+            <div class="tabs">
+                <button class="tab active" onclick="showTab('dashboard')">📊 Master Dashboard</button>
+                <button class="tab" onclick="showTab('ags')">📚 AGS Modules</button>
+                <button class="tab" onclick="showTab('practice')">🎯 Live Practice</button>
+                <button class="tab" onclick="showTab('study')">📖 Study Materials</button>
+                <button class="tab" onclick="showTab('progress')">📈 Progress Tracking</button>
+                <button class="tab" onclick="showTab('israeli')">🇮🇱 Israeli Context</button>
+            </div>
+        </div>
+
+        <!-- Dashboard Content -->
+        <div id="dashboard" class="content active">
+            <div class="highlight-box">
+                <h2 style="color: #1e40af; margin-top: 0; font-size: 2.5em;">Complete Israeli Geriatrics Board Preparation</h2>
+                <p style="color: #475569; margin-bottom: 0; font-size: 1.2em;">
+                    This comprehensive platform integrates AGS Geriatrics Review Syllabus 10th Edition with Israeli Medical Association requirements, featuring live practice questions, interactive study materials, and real-time progress tracking.
+                </p>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number" id="completedModules">0</div>
+                    <div class="stat-label">Modules Completed</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="questionsAnswered">0</div>
+                    <div class="stat-label">Questions Answered</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="studyHours">0</div>
+                    <div class="stat-label">Study Hours</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="boardReadiness">0%</div>
+                    <div class="stat-label">Board Readiness</div>
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 25px;">
+                <div class="module-card">
+                    <h3 style="color: #2563eb; margin-top: 0; font-size: 1.4em;">📚 AGS Integration</h3>
+                    <ul style="color: #475569; font-size: 1.1em; line-height: 1.8;">
+                        <li>10 comprehensive modules</li>
+                        <li>52 board-focused chapters</li>
+                        <li>1200+ practice questions</li>
+                        <li>Israeli context integration</li>
+                        <li>Hebrew assessment tools</li>
+                    </ul>
+                    <button class="button button-blue" onclick="showTab('ags')">Start AGS Modules</button>
+                </div>
+                <div class="module-card">
+                    <h3 style="color: #16a34a; margin-top: 0; font-size: 1.4em;">🎯 Live Practice</h3>
+                    <ul style="color: #475569; font-size: 1.1em; line-height: 1.8;">
+                        <li>Real board-style questions</li>
+                        <li>Immediate feedback</li>
+                        <li>Detailed explanations</li>
+                        <li>Progress tracking</li>
+                        <li>Israeli clinical vignettes</li>
+                    </ul>
+                    <button class="button" onclick="startPracticeSession()">Start Practice Now</button>
+                </div>
+                <div class="module-card">
+                    <h3 style="color: #7c3aed; margin-top: 0; font-size: 1.4em;">🇮🇱 Israeli Features</h3>
+                    <ul style="color: #475569; font-size: 1.1em; line-height: 1.8;">
+                        <li>IMA syllabus alignment</li>
+                        <li>Kupat Holim system context</li>
+                        <li>Hebrew medical terminology</li>
+                        <li>Cultural considerations</li>
+                        <li>Local practice patterns</li>
+                    </ul>
+                    <button class="button" onclick="showTab('israeli')" style="background: linear-gradient(135deg, #7c3aed, #a855f7);">Explore Israeli Context</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- AGS Modules Content -->
+        <div id="ags" class="content">
+            <div class="highlight-box">
+                <h2 style="color: #1e40af; margin-top: 0; font-size: 2.2em;">📚 AGS Geriatrics Review Syllabus 10th Edition</h2>
+                <p style="color: #475569; margin-bottom: 0; font-size: 1.1em;">
+                    Complete American Geriatrics Society review with Israeli medical context integration and interactive study materials
+                </p>
+            </div>
+
+            <div class="module-card">
+                <div class="module-title">Module 1: Comprehensive Geriatric Assessment</div>
+                <div class="board-weight">Board Weight: 30% - CRITICAL</div>
+                <p style="color: #6b7280; margin: 15px 0; font-size: 1.1em;">5 chapters • Core competency • Foundation module</p>
+                <div class="israeli-context">
+                    <strong>🇮🇱 Israeli Context:</strong> Israeli CGA protocols, Kupat Holim assessment tools, Hebrew-language assessment instruments, multidisciplinary team structures in Israeli healthcare
+                </div>
+                <div class="chapter-list" id="module1-chapters">
+                    <div class="chapter-item" onclick="openChapter('1.1')">
+                        <strong>Chapter 1.1:</strong> Principles of Geriatric Assessment (Pages 1-25)
+                        <div style="color: #6b7280; font-size: 0.9em;">Israeli CGA protocols, assessment frameworks</div>
+                    </div>
+                    <div class="chapter-item" onclick="openChapter('1.2')">
+                        <strong>Chapter 1.2:</strong> Functional Assessment ADL/IADL (Pages 26-45)
+                        <div style="color: #6b7280; font-size: 0.9em;">Hebrew assessment tools, disability determination</div>
+                    </div>
+                    <div class="chapter-item" onclick="openChapter('1.3')">
+                        <strong>Chapter 1.3:</strong> Cognitive Screening & Testing (Pages 46-65)
+                        <div style="color: #6b7280; font-size: 0.9em;">MMSE Hebrew version, dementia guidelines</div>
+                    </div>
+                    <div class="chapter-item" onclick="openChapter('1.4')">
+                        <strong>Chapter 1.4:</strong> Social Assessment & Support Systems (Pages 66-80)
+                        <div style="color: #6b7280; font-size: 0.9em;">Israeli family structures, community services</div>
+                    </div>
+                    <div class="chapter-item" onclick="openChapter('1.5')">
+                        <strong>Chapter 1.5:</strong> Medication Review & Reconciliation (Pages 81-100)
+                        <div style="color: #6b7280; font-size: 0.9em;">Israeli formulary, Kupat Holim restrictions</div>
+                    </div>
+                </div>
+                <button class="button" onclick="completeModule('module1')">Complete Module 1</button>
+            </div>
+
+            <div class="module-card">
+                <div class="module-title">Module 2: Geriatric Syndromes</div>
+                <div class="board-weight">Board Weight: 35% - HIGHEST PRIORITY</div>
+                <p style="color: #6b7280; margin: 15px 0; font-size: 1.1em;">7 chapters • Highest-yield topics • Most tested material</p>
+                <div class="israeli-context">
+                    <strong>🇮🇱 Israeli Context:</strong> Israeli dementia strategy, Hebrew cognitive tests, ICU delirium protocols, emergency fall services, nursing home standards
+                </div>
+                <div class="chapter-list" id="module2-chapters">
+                    <div class="chapter-item" onclick="openChapter('2.1')">
+                        <strong>Chapter 2.1:</strong> Delirium: Recognition, Prevention & Management (Pages 101-135)
+                        <div style="color: #6b7280; font-size: 0.9em;">Israeli ICU protocols, Hebrew delirium assessment</div>
+                    </div>
+                    <div class="chapter-item" onclick="openChapter('2.2')">
+                        <strong>Chapter 2.2:</strong> Dementia: Alzheimer's & Mixed Dementias (Pages 136-180)
+                        <div style="color: #6b7280; font-size: 0.9em;">Israeli dementia strategy, family support systems</div>
+                    </div>
+                    <div class="chapter-item" onclick="openChapter('2.3')">
+                        <strong>Chapter 2.3:</strong> Falls Prevention & Post-Fall Assessment (Pages 181-210)
+                        <div style="color: #6b7280; font-size: 0.9em;">Emergency services, home safety assessments</div>
+                    </div>
+                    <div class="chapter-item" onclick="openChapter('2.4')">
+                        <strong>Chapter 2.4:</strong> Urinary Incontinence: Types & Management (Pages 211-235)
+                        <div style="color: #6b7280; font-size: 0.9em;">Urology services, product coverage</div>
+                    </div>
+                    <div class="chapter-item" onclick="openChapter('2.5')">
+                        <strong>Chapter 2.5:</strong> Pressure Ulcers: Prevention & Treatment (Pages 236-255)
+                        <div style="color: #6b7280; font-size: 0.9em;">Wound care protocols, nursing standards</div>
+                    </div>
+                    <div class="chapter-item" onclick="openChapter('2.6')">
+                        <strong>Chapter 2.6:</strong> Sleep Disorders & Circadian Rhythm (Pages 256-275)
+                        <div style="color: #6b7280; font-size: 0.9em;">Sleep medicine, cultural patterns</div>
+                    </div>
+                    <div class="chapter-item" onclick="openChapter('2.7')">
+                        <strong>Chapter 2.7:</strong> Frailty Syndrome & Sarcopenia (Pages 276-295)
+                        <div style="color: #6b7280; font-size: 0.9em;">Frailty assessment, nutrition programs</div>
+                    </div>
+                </div>
+                <button class="button" onclick="completeModule('module2')">Complete Module 2</button>
+            </div>
+
+            <div class="module-card">
+                <div class="module-title">Module 3: Cardiovascular & Pulmonary Medicine</div>
+                <div class="board-weight">Board Weight: 28% - HIGH PRIORITY</div>
+                <p style="color: #6b7280; margin: 15px 0; font-size: 1.1em;">7 chapters • High-frequency exam topics • Clinical management focus</p>
+                <div class="israeli-context">
+                    <strong>🇮🇱 Israeli Context:</strong> Israeli cardiology guidelines, heart failure clinics in Kupat Holim, anticoagulation services, cardiac rehabilitation programs
+                </div>
+                <div class="chapter-list" id="module3-chapters">
+                    <div class="chapter-item" onclick="openChapter('3.1')">
+                        <strong>Chapter 3.1:</strong> Heart Failure in Older Adults (Pages 296-330)
+                        <div style="color: #6b7280; font-size: 0.9em;">Israeli guidelines, heart failure clinics</div>
+                    </div>
+                    <div class="chapter-item" onclick="openChapter('3.2')">
+                        <strong>Chapter 3.2:</strong> Hypertension: BP Targets & Management (Pages 331-355)
+                        <div style="color: #6b7280; font-size: 0.9em;">Community monitoring programs</div>
+                    </div>
+                    <div class="chapter-item" onclick="openChapter('3.3')">
+                        <strong>Chapter 3.3:</strong> Atrial Fibrillation & Anticoagulation (Pages 356-380)
+                        <div style="color: #6b7280; font-size: 0.9em;">Anticoagulation clinics, DOAC access</div>
+                    </div>
+                    <div class="chapter-item" onclick="openChapter('3.4')">
+                        <strong>Chapter 3.4:</strong> CAD & Acute Coronary Syndromes (Pages 381-405)
+                        <div style="color: #6b7280; font-size: 0.9em;">Cardiac cath labs, rehabilitation</div>
+                    </div>
+                    <div class="chapter-item" onclick="openChapter('3.5')">
+                        <strong>Chapter 3.5:</strong> Pneumonia: CAP, HAP & NHAP (Pages 406-435)
+                        <div style="color: #6b7280; font-size: 0.9em;">Antibiotic guidelines, nursing home protocols</div>
+                    </div>
+                    <div class="chapter-item" onclick="openChapter('3.6')">
+                        <strong>Chapter 3.6:</strong> COPD & Asthma Management (Pages 436-460)
+                        <div style="color: #6b7280; font-size: 0.9em;">Pulmonary rehabilitation, inhaler access</div>
+                    </div>
+                    <div class="chapter-item" onclick="openChapter('3.7')">
+                        <strong>Chapter 3.7:</strong> Pulmonary Embolism & DVT (Pages 461-480)
+                        <div style="color: #6b7280; font-size: 0.9em;">VTE prophylaxis protocols</div>
+                    </div>
+                </div>
+                <button class="button" onclick="completeModule('module3')">Complete Module 3</button>
+            </div>
+        </div>
+
+        <!-- Live Practice Content -->
+        <div id="practice" class="content">
+            <div class="highlight-box">
+                <h2 style="color: #1e40af; margin-top: 0; font-size: 2.2em;">🎯 Live Practice Questions</h2>
+                <p style="color: #475569; margin-bottom: 0; font-size: 1.1em;">
+                    Real board-style questions with immediate feedback and detailed explanations
+                </p>
+            </div>
+
+            <div id="question-stats" class="stats-grid" style="grid-template-columns: repeat(4, 1fr);">
+                <div class="stat-card">
+                    <div class="stat-number" id="currentScore">0%</div>
+                    <div class="stat-label">Current Score</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="questionsTotal">0</div>
+                    <div class="stat-label">Questions Answered</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="correctAnswers">0</div>
+                    <div class="stat-label">Correct</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="incorrectAnswers">0</div>
+                    <div class="stat-label">Incorrect</div>
+                </div>
+            </div>
+
+            <div id="practice-container">
+                <div class="question-container" id="current-question">
+                    <div class="question" id="question-text">
+                        Click "Start Practice Session" to begin with real geriatrics board questions
+                    </div>
+                    <div class="options" id="question-options">
+                        <!-- Options will be populated by JavaScript -->
+                    </div>
+                    <div class="explanation" id="question-explanation">
+                        <!-- Explanation will be shown after answer -->
+                    </div>
+                </div>
+                
+                <div style="text-align: center; margin-top: 30px;">
+                    <button class="button button-blue" onclick="startPracticeSession()" id="start-practice-btn">Start Practice Session</button>
+                    <button class="button" onclick="nextQuestion()" id="next-question-btn" style="display: none;">Next Question</button>
+                    <button class="button" onclick="showResults()" id="show-results-btn" style="display: none;">Show Results</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Study Materials Content -->
+        <div id="study" class="content">
+            <div class="highlight-box">
+                <h2 style="color: #1e40af; margin-top: 0; font-size: 2.2em;">📖 Comprehensive Study Materials</h2>
+                <p style="color: #475569; margin-bottom: 0; font-size: 1.1em;">
+                    Detailed study guides, high-yield facts, and board preparation materials
+                </p>
+            </div>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 25px;">
+                <div class="module-card">
+                    <h3 style="color: #2563eb; margin-top: 0;">🧠 High-Yield Facts</h3>
+                    <div style="background: #f0f9ff; padding: 20px; border-radius: 12px; margin: 15px 0;">
+                        <h4 style="color: #1e40af; margin-bottom: 10px;">Dementia Facts</h4>
+                        <ul style="color: #475569; line-height: 1.6;">
+                            <li>Alzheimer's disease accounts for 60-80% of dementia cases</li>
+                            <li>MMSE scores: Normal (24-30), MCI (18-23), Dementia (<18)</li>
+                            <li>Cholinesterase inhibitors: Donepezil, Rivastigmine, Galantamine</li>
+                            <li>Memantine for moderate-severe Alzheimer's disease</li>
+                        </ul>
+                    </div>
+                    <button class="button button-blue" onclick="openStudyGuide('dementia')">Open Dementia Guide</button>
+                </div>
+
+                <div class="module-card">
+                    <h3 style="color: #16a34a; margin-top: 0;">💊 Pharmacology Pearls</h3>
+                    <div style="background: #f0fdf4; padding: 20px; border-radius: 12px; margin: 15px 0;">
+                        <h4 style="color: #15803d; margin-bottom: 10px;">AGS Beers Criteria 2023</h4>
+                        <ul style="color: #475569; line-height: 1.6;">
+                            <li>Avoid: First-generation antihistamines (diphenhydramine)</li>
+                            <li>Avoid: Benzodiazepines with long half-lives</li>
+                            <li>Avoid: Non-selective NSAIDs</li>
+                            <li>Caution: Anticholinergic medications</li>
+                        </ul>
+                    </div>
+                    <button class="button" onclick="openStudyGuide('pharmacology')">Open Pharmacology Guide</button>
+                </div>
+
+                <div class="module-card">
+                    <h3 style="color: #7c3aed; margin-top: 0;">🚨 Emergency Pearls</h3>
+                    <div style="background: #faf5ff; padding: 20px; border-radius: 12px; margin: 15px 0;">
+                        <h4 style="color: #7c2d12; margin-bottom: 10px;">Delirium Red Flags</h4>
+                        <ul style="color: #475569; line-height: 1.6;">
+                            <li>Acute onset and fluctuating course</li>
+                            <li>Inattention and disorganized thinking</li>
+                            <li>Altered level of consciousness</li>
+                            <li>CAM-ICU for ICU patients</li>
+                        </ul>
+                    </div>
+                    <button class="button" onclick="openStudyGuide('emergency')" style="background: linear-gradient(135deg, #7c3aed, #a855f7);">Open Emergency Guide</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Progress Tracking Content -->
+        <div id="progress" class="content">
+            <div class="highlight-box">
+                <h2 style="color: #1e40af; margin-top: 0; font-size: 2.2em;">📈 Progress Tracking & Analytics</h2>
+                <p style="color: #475569; margin-bottom: 0; font-size: 1.1em;">
+                    Detailed progress tracking with board readiness assessment
+                </p>
+            </div>
+
+            <div class="module-card">
+                <h3 style="color: #2563eb; margin-top: 0;">Overall Progress</h3>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="overall-progress" style="width: 15%"></div>
+                </div>
+                <p style="color: #6b7280; margin-top: 10px;">15% Complete - Keep studying!</p>
+            </div>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px;">
+                <div class="module-card">
+                    <h4 style="color: #16a34a; margin-top: 0;">Study Streaks</h4>
+                    <div style="font-size: 2em; color: #16a34a; font-weight: bold; text-align: center; margin: 20px 0;">🔥 3 Days</div>
+                    <p style="color: #6b7280; text-align: center;">Current study streak</p>
+                </div>
+
+                <div class="module-card">
+                    <h4 style="color: #7c3aed; margin-top: 0;">Weak Areas</h4>
+                    <ul style="color: #6b7280; line-height: 1.6;">
+                        <li>Cardiovascular Medicine (62%)</li>
+                        <li>Pharmacology (58%)</li>
+                        <li>End-of-Life Care (55%)</li>
+                    </ul>
+                </div>
+
+                <div class="module-card">
+                    <h4 style="color: #dc2626; margin-top: 0;">Next Targets</h4>
+                    <ul style="color: #6b7280; line-height: 1.6;">
+                        <li>Complete Module 4 (Endocrine)</li>
+                        <li>Practice 50 more questions</li>
+                        <li>Review Israeli healthcare system</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Israeli Context Content -->
+        <div id="israeli" class="content">
+            <div class="highlight-box">
+                <h2 style="color: #1e40af; margin-top: 0; font-size: 2.2em;">🇮🇱 Israeli Medical Context</h2>
+                <p style="color: #475569; margin-bottom: 0; font-size: 1.1em;">
+                    Complete integration with Israeli healthcare system, cultural considerations, and local practice patterns
+                </p>
+            </div>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 25px;">
+                <div class="module-card">
+                    <h3 style="color: #2563eb; margin-top: 0;">🏥 Kupat Holim System</h3>
+                    <div style="background: #f0f9ff; padding: 20px; border-radius: 12px; margin: 15px 0;">
+                        <h4 style="color: #1e40af; margin-bottom: 10px;">Service Delivery Models</h4>
+                        <ul style="color: #475569; line-height: 1.6;">
+                            <li><strong>Clalit:</strong> Largest HMO, comprehensive geriatric services</li>
+                            <li><strong>Maccabi:</strong> Strong technology integration, telemedicine</li>
+                            <li><strong>Meuhedet:</strong> Focused on preventive care</li>
+                            <li><strong>Leumit:</strong> Specialized chronic disease management</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="module-card">
+                    <h3 style="color: #16a34a; margin-top: 0;">🗣️ Hebrew Medical Terms</h3>
+                    <div style="background: #f0fdf4; padding: 20px; border-radius: 12px; margin: 15px 0;">
+                        <h4 style="color: #15803d; margin-bottom: 10px;">Essential Terminology</h4>
+                        <ul style="color: #475569; line-height: 1.6;">
+                            <li><strong>זיכרון (Zikaron):</strong> Memory</li>
+                            <li><strong>בלבול (Bilbul):</strong> Confusion/Delirium</li>
+                            <li><strong>נפילות (Nefilot):</strong> Falls</li>
+                            <li><strong>תרופות (Trufot):</strong> Medications</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="module-card">
+                    <h3 style="color: #7c3aed; margin-top: 0;">🌍 Cultural Considerations</h3>
+                    <div style="background: #faf5ff; padding: 20px; border-radius: 12px; margin: 15px 0;">
+                        <h4 style="color: #7c2d12; margin-bottom: 10px;">Multi-Cultural Population</h4>
+                        <ul style="color: #475569; line-height: 1.6;">
+                            <li><strong>Jewish Orthodox:</strong> Sabbath considerations, Halacha</li>
+                            <li><strong>Arab Population:</strong> Family decision-making patterns</li>
+                            <li><strong>Ethiopian Community:</strong> Traditional health beliefs</li>
+                            <li><strong>Russian Immigrants:</strong> Language barriers, compliance</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for Chapter Content -->
+    <div id="chapterModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <div id="chapter-content">
+                <!-- Chapter content will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global variables for practice session
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let totalQuestions = 0;
+        let correctCount = 0;
+        let incorrectCount = 0;
+        let practiceQuestions = [];
+        let selectedAnswer = null;
+        let completedModules = new Set();
+
+        // Real geriatrics board questions
+        const questionBank = [
+            {
+                question: "A 78-year-old Israeli woman presents with acute confusion in the emergency department. Her daughter reports she was normal yesterday. What is the most appropriate first step?",
+                options: [
+                    "A) Order MRI of the brain immediately",
+                    "B) Start empirical antibiotics",
+                    "C) Perform comprehensive delirium assessment",
+                    "D) Administer haloperidol"
+                ],
+                correct: 2,
+                explanation: "In acute confusion in elderly patients, delirium should be suspected first. A comprehensive delirium assessment using tools like CAM (Confusion Assessment Method) is the appropriate first step. This patient shows acute onset and fluctuation, key features of delirium.",
+                category: "Geriatric Syndromes",
+                israeli_context: "In Israeli emergency departments, Hebrew-language CAM tools are available. Cultural considerations include family involvement in assessment."
+            },
+            {
+                question: "An 82-year-old man with dementia in an Israeli nursing home has been refusing medications. According to Israeli medical ethics and Halacha, what is the most appropriate approach?",
+                options: [
+                    "A) Force medication administration",
+                    "B) Assess decision-making capacity and consult family",
+                    "C) Immediately discontinue all medications",
+                    "D) Seek court-ordered guardianship"
+                ],
+                correct: 1,
+                explanation: "Decision-making capacity should be assessed first. In Israeli context, family involvement is crucial, and religious considerations (Halacha) may influence end-of-life decisions. Guardianship (אפוטרופסות) procedures follow Israeli law.",
+                category: "Ethics & Legal",
+                israeli_context: "Israeli guardianship laws require medical evaluation. Religious authorities may be consulted for Halachic guidance."
+            },
+            {
+                question: "A 75-year-old patient in Clalit HMO needs cardiac rehabilitation after MI. What is the typical access pattern in Israeli healthcare?",
+                options: [
+                    "A) Direct self-referral to rehabilitation center",
+                    "B) Cardiologist referral through Kupat Holim system",
+                    "C) Private payment required for all services",
+                    "D) Only available in private healthcare"
+                ],
+                correct: 1,
+                explanation: "In Israeli healthcare system, cardiac rehabilitation requires specialist referral through the Kupat Holim (HMO) system. Clalit, as the largest HMO, has comprehensive cardiac rehabilitation programs covered under basic health insurance.",
+                category: "Israeli Healthcare System",
+                israeli_context: "All four Kupot Holim provide cardiac rehabilitation. Wait times and accessibility vary by geographic region and HMO."
+            },
+            {
+                question: "According to AGS Beers Criteria 2023, which medication should be avoided in elderly patients with dementia?",
+                options: [
+                    "A) Donepezil",
+                    "B) Diphenhydramine",
+                    "C) Memantine",
+                    "D) Rivastigmine"
+                ],
+                correct: 1,
+                explanation: "Diphenhydramine is a first-generation antihistamine with strong anticholinergic properties and is listed in AGS Beers Criteria as potentially inappropriate for elderly patients, especially those with dementia.",
+                category: "Pharmacology",
+                israeli_context: "In Israeli formulary, generic diphenhydramine is available but alternatives like cetirizine are preferred for elderly patients."
+            },
+            {
+                question: "A geriatric patient in Jerusalem falls and fractures hip. What is the priority intervention according to Israeli geriatric guidelines?",
+                options: [
+                    "A) Immediate surgery within 48 hours",
+                    "B) Conservative management with bed rest",
+                    "C) Extensive pre-operative workup first",
+                    "D) Transfer to orthopedic specialist only"
+                ],
+                correct: 0,
+                explanation: "Israeli guidelines align with international standards recommending surgery within 48 hours for hip fractures in elderly patients to minimize complications and improve outcomes.",
+                category: "Musculoskeletal",
+                israeli_context: "Israeli hospitals have dedicated orthopedic geriatric units. Magen David Adom provides specialized elderly transport protocols."
+            },
+            {
+                question: "In Israeli nursing homes, what is the minimum frequency for physician visits according to Ministry of Health regulations?",
+                options: [
+                    "A) Daily visits required",
+                    "B) Weekly visits minimum",
+                    "C) Monthly visits sufficient",
+                    "D) As needed basis only"
+                ],
+                correct: 1,
+                explanation: "Israeli Ministry of Health regulations require weekly physician visits minimum in nursing homes, with more frequent visits for unstable patients.",
+                category: "Israeli Healthcare System",
+                israeli_context: "Regulations vary by facility type. Skilled nursing facilities require more frequent physician oversight than assisted living."
+            }
+        ];
+
+        // Initialize the application
+        function initializeApp() {
+            updateStats();
+            loadProgress();
+        }
+
+        // Tab navigation
+        function showTab(tabName) {
+            const contents = document.querySelectorAll('.content');
+            contents.forEach(content => content.classList.remove('active'));
+            
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        // Practice session functions
+        function startPracticeSession() {
+            currentQuestionIndex = 0;
+            score = 0;
+            totalQuestions = 0;
+            correctCount = 0;
+            incorrectCount = 0;
+            selectedAnswer = null;
+            
+            practiceQuestions = [...questionBank].sort(() => Math.random() - 0.5);
+            
+            document.getElementById('start-practice-btn').style.display = 'none';
+            document.getElementById('next-question-btn').style.display = 'inline-block';
+            
+            loadQuestion();
+            updatePracticeStats();
+        }
+
+        function loadQuestion() {
+            if (currentQuestionIndex >= practiceQuestions.length) {
+                showResults();
+                return;
+            }
+
+            const question = practiceQuestions[currentQuestionIndex];
+            document.getElementById('question-text').textContent = question.question;
+            
+            const optionsContainer = document.getElementById('question-options');
+            optionsContainer.innerHTML = '';
+            
+            question.options.forEach((option, index) => {
+                const optionElement = document.createElement('div');
+                optionElement.className = 'option';
+                optionElement.textContent = option;
+                optionElement.onclick = () => selectAnswer(index);
+                optionsContainer.appendChild(optionElement);
+            });
+            
+            document.getElementById('question-explanation').style.display = 'none';
+            selectedAnswer = null;
+        }
+
+        function selectAnswer(answerIndex) {
+            if (selectedAnswer !== null) return; // Already answered
+            
+            selectedAnswer = answerIndex;
+            const question = practiceQuestions[currentQuestionIndex];
+            const options = document.querySelectorAll('.option');
+            
+            options.forEach((option, index) => {
+                if (index === question.correct) {
+                    option.classList.add('correct');
+                } else if (index === answerIndex && index !== question.correct) {
+                    option.classList.add('incorrect');
+                }
+                option.style.pointerEvents = 'none';
+            });
+            
+            // Update statistics
+            totalQuestions++;
+            if (answerIndex === question.correct) {
+                score++;
+                correctCount++;
+            } else {
+                incorrectCount++;
+            }
+            
+            // Show explanation
+            const explanationElement = document.getElementById('question-explanation');
+            explanationElement.innerHTML = `
+                <h4 style="color: #1e40af; margin-bottom: 10px;">Explanation:</h4>
+                <p style="margin-bottom: 15px;">${question.explanation}</p>
+                <div style="background: #f0f9ff; padding: 15px; border-radius: 8px; border-left: 4px solid #3b82f6;">
+                    <strong>🇮🇱 Israeli Context:</strong> ${question.israeli_context}
+                </div>
+            `;
+            explanationElement.style.display = 'block';
+            
+            updatePracticeStats();
+            updateGlobalStats();
+        }
+
+        function nextQuestion() {
+            currentQuestionIndex++;
+            loadQuestion();
+        }
+
+        function showResults() {
+            const percentage = totalQuestions > 0 ? Math.round((score / totalQuestions) * 100) : 0;
+            
+            document.getElementById('question-text').innerHTML = `
+                <h2 style="color: #1e40af; margin-bottom: 20px;">Practice Session Complete!</h2>
+                <div style="text-align: center;">
+                    <div style="font-size: 3em; font-weight: bold; color: ${percentage >= 70 ? '#16a34a' : '#dc2626'}; margin-bottom: 10px;">
+                        ${percentage}%
+                    </div>
+                    <p style="font-size: 1.2em; margin-bottom: 20px;">
+                        You answered ${score} out of ${totalQuestions} questions correctly
+                    </p>
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; margin: 20px 0;">
+                        <div style="background: #dcfce7; padding: 20px; border-radius: 12px;">
+                            <div style="font-size: 1.5em; font-weight: bold; color: #16a34a;">${correctCount}</div>
+                            <div style="color: #15803d;">Correct</div>
+                        </div>
+                        <div style="background: #fef2f2; padding: 20px; border-radius: 12px;">
+                            <div style="font-size: 1.5em; font-weight: bold; color: #dc2626;">${incorrectCount}</div>
+                            <div style="color: #dc2626;">Incorrect</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('question-options').innerHTML = '';
+            document.getElementById('question-explanation').style.display = 'none';
+            document.getElementById('next-question-btn').style.display = 'none';
+            document.getElementById('show-results-btn').style.display = 'none';
+            document.getElementById('start-practice-btn').style.display = 'inline-block';
+            document.getElementById('start-practice-btn').textContent = 'Start New Practice Session';
+        }
+
+        function updatePracticeStats() {
+            const percentage = totalQuestions > 0 ? Math.round((score / totalQuestions) * 100) : 0;
+            document.getElementById('currentScore').textContent = percentage + '%';
+            document.getElementById('questionsTotal').textContent = totalQuestions;
+            document.getElementById('correctAnswers').textContent = correctCount;
+            document.getElementById('incorrectAnswers').textContent = incorrectCount;
+        }
+
+        function updateGlobalStats() {
+            const totalAnswered = parseInt(localStorage.getItem('totalQuestionsAnswered') || '0') + 1;
+            localStorage.setItem('totalQuestionsAnswered', totalAnswered);
+            document.getElementById('questionsAnswered').textContent = totalAnswered;
+            
+            const studyHours = Math.floor(totalAnswered / 20); // Estimate 20 questions per hour
+            document.getElementById('studyHours').textContent = studyHours;
+            
+            const boardReadiness = Math.min(Math.floor(totalAnswered / 5), 100); // Rough estimate
+            document.getElementById('boardReadiness').textContent = boardReadiness + '%';
+        }
+
+        function updateStats() {
+            document.getElementById('completedModules').textContent = completedModules.size;
+            
+            const totalAnswered = parseInt(localStorage.getItem('totalQuestionsAnswered') || '0');
+            document.getElementById('questionsAnswered').textContent = totalAnswered;
+            
+            const studyHours = Math.floor(totalAnswered / 20);
+            document.getElementById('studyHours').textContent = studyHours;
+            
+            const boardReadiness = Math.min(Math.floor(totalAnswered / 5), 100);
+            document.getElementById('boardReadiness').textContent = boardReadiness + '%';
+        }
+
+        function completeModule(moduleId) {
+            completedModules.add(moduleId);
+            localStorage.setItem('completedModules', JSON.stringify([...completedModules]));
+            
+            // Mark all chapters in module as completed
+            const moduleChapters = document.querySelectorAll(`#${moduleId}-chapters .chapter-item`);
+            moduleChapters.forEach(chapter => {
+                chapter.classList.add('completed');
+            });
+            
+            // Update button
+            event.target.textContent = '✅ Module Completed';
+            event.target.style.background = '#059669';
+            event.target.disabled = true;
+            
+            updateStats();
+            
+            // Show success message
+            alert(`🎉 Congratulations! You completed ${moduleId.replace('module', 'Module ')}.\n\nThis module covers critical board exam material. Great progress!`);
+        }
+
+        function loadProgress() {
+            const saved = localStorage.getItem('completedModules');
+            if (saved) {
+                completedModules = new Set(JSON.parse(saved));
+            }
+        }
+
+        function openChapter(chapterId) {
+            const chapterContent = {
+                '1.1': {
+                    title: 'Principles of Geriatric Assessment',
+                    content: `
+                        <h3>Core Principles of Comprehensive Geriatric Assessment (CGA)</h3>
+                        <h4>🇮🇱 Israeli CGA Protocols</h4>
+                        <ul>
+                            <li><strong>Multidisciplinary Approach:</strong> Physician, nurse, social worker, physiotherapist</li>
+                            <li><strong>Hebrew Assessment Tools:</strong> Translated and validated instruments</li>
+                            <li><strong>Cultural Sensitivity:</strong> Religious and ethnic considerations</li>
+                            <li><strong>Kupat Holim Integration:</strong> Standardized referral pathways</li>
+                        </ul>
+                        
+                        <h4>Assessment Domains</h4>
+                        <ul>
+                            <li><strong>Medical:</strong> Comorbidities, medications, review of systems</li>
+                            <li><strong>Functional:</strong> ADLs, IADLs, mobility assessment</li>
+                            <li><strong>Cognitive:</strong> MMSE, clock drawing, executive function</li>
+                            <li><strong>Psychological:</strong> Depression screening, anxiety assessment</li>
+                            <li><strong>Social:</strong> Support systems, living situation, safety</li>
+                            <li><strong>Environmental:</strong> Home safety, accessibility</li>
+                        </ul>
+                        
+                        <h4>Board Exam Key Points</h4>
+                        <ul>
+                            <li>CGA improves functional outcomes and reduces hospitalizations</li>
+                            <li>Most effective when coupled with interdisciplinary care planning</li>
+                            <li>Should be performed annually for high-risk elderly patients</li>
+                            <li>Cost-effective intervention in appropriate settings</li>
+                        </ul>
+                    `
+                },
+                '2.1': {
+                    title: 'Delirium: Recognition, Prevention & Management',
+                    content: `
+                        <h3>Delirium in Elderly Patients</h3>
+                        <h4>🇮🇱 Israeli ICU Protocols</h4>
+                        <ul>
+                            <li><strong>CAM-ICU Hebrew:</strong> Validated Hebrew version available</li>
+                            <li><strong>Family Involvement:</strong> Cultural importance of family presence</li>
+                            <li><strong>Pharmacologic Approach:</strong> Conservative use of antipsychotics</li>
+                            <li><strong>Non-pharmacologic:</strong> Environmental modifications, reorientation</li>
+                        </ul>
+                        
+                        <h4>Diagnostic Criteria (CAM)</h4>
+                        <ol>
+                            <li><strong>Acute onset and fluctuating course</strong></li>
+                            <li><strong>Inattention</strong></li>
+                            <li><strong>Disorganized thinking</strong> OR</li>
+                            <li><strong>Altered level of consciousness</strong></li>
+                        </ol>
+                        <p><em>Diagnosis requires features 1 + 2 + (3 or 4)</em></p>
+                        
+                        <h4>Prevention Strategies</h4>
+                        <ul>
+                            <li>Optimize sleep-wake cycle</li>
+                            <li>Early mobilization</li>
+                            <li>Adequate nutrition and hydration</li>
+                            <li>Minimize unnecessary medications</li>
+                            <li>Provide cognitive stimulation</li>
+                            <li>Ensure hearing aids and glasses</li>
+                        </ul>
+                        
+                        <h4>Management</h4>
+                        <ul>
+                            <li><strong>Identify and treat underlying causes</strong></li>
+                            <li><strong>Non-pharmacologic measures first</strong></li>
+                            <li><strong>Antipsychotics:</strong> Only for severe agitation or safety concerns</li>
+                            <li><strong>Avoid benzodiazepines</strong> (except alcohol withdrawal)</li>
+                        </ul>
+                    `
+                }
+            };
+            
+            const chapter = chapterContent[chapterId];
+            if (chapter) {
+                document.getElementById('chapter-content').innerHTML = `
+                    <h2>${chapter.title}</h2>
+                    ${chapter.content}
+                `;
+                document.getElementById('chapterModal').style.display = 'block';
+            }
+        }
+
+        function closeModal() {
+            document.getElementById('chapterModal').style.display = 'none';
+        }
+
+        function openStudyGuide(topic) {
+            const guides = {
+                'dementia': 'Comprehensive Dementia Study Guide with Israeli protocols and Hebrew assessment tools',
+                'pharmacology': 'AGS Beers Criteria 2023 with Israeli formulary considerations',
+                'emergency': 'Emergency Geriatrics with Israeli emergency medicine protocols'
+            };
+            
+            alert(`📖 Opening ${guides[topic]}\n\nThis would display detailed study materials with:\n• Key concepts and definitions\n• Board exam focus areas\n• Israeli medical context\n• Practice questions\n• Quick reference cards`);
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('chapterModal');
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        }
+
+        // Initialize app when page loads
+        window.onload = function() {
+            initializeApp();
+        }
+    </script>
+</body>
+</html>

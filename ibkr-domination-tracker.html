@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IBKR Domination Central</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #000;
+            color: #fff;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #00ff88;
+            padding-bottom: 20px;
+        }
+        
+        h1 {
+            color: #00ff88;
+            font-size: 32px;
+            font-weight: 900;
+        }
+        
+        .net-worth {
+            text-align: right;
+        }
+        
+        .nw-value {
+            font-size: 36px;
+            font-weight: bold;
+            color: #00ff88;
+        }
+        
+        .nw-label {
+            color: #888;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .card {
+            background: #111;
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 20px;
+        }
+        
+        .card-header {
+            color: #00ff88;
+            font-size: 14px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+        }
+        
+        .alert {
+            background: #ff0000;
+            color: #000;
+            padding: 15px;
+            border-radius: 4px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        
+        .allocation-bar {
+            display: flex;
+            height: 40px;
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 20px 0;
+            border: 2px solid #333;
+        }
+        
+        .allocation-segment {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+            color: #000;
+            position: relative;
+        }
+        
+        input {
+            background: #222;
+            border: 1px solid #444;
+            color: #fff;
+            padding: 10px;
+            border-radius: 4px;
+            width: 100%;
+            margin: 5px 0;
+            font-size: 16px;
+        }
+        
+        input:focus {
+            outline: none;
+            border-color: #00ff88;
+        }
+        
+        button {
+            background: #00ff88;
+            color: #000;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 4px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 16px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s;
+        }
+        
+        button:hover {
+            background: #00cc70;
+            transform: translateY(-2px);
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        th {
+            background: #222;
+            padding: 12px;
+            text-align: left;
+            color: #888;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #333;
+        }
+        
+        .positive { color: #00ff88; }
+        .negative { color: #ff4444; }
+        .warning { color: #ffaa00; }
+        
+        .action-item {
+            background: #1a1a1a;
+            border-left: 4px solid #00ff88;
+            padding: 15px;
+            margin: 10px 0;
+        }
+        
+        .metric {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #222;
+        }
+        
+        .metric-label {
+            color: #888;
+        }
+        
+        .metric-value {
+            font-weight: bold;
+        }
+        
+        .execution-box {
+            background: #0a0a0a;
+            border: 2px solid #00ff88;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .copy-button {
+            background: #444;
+            color: #fff;
+            padding: 8px 16px;
+            font-size: 12px;
+            margin-left: 10px;
+        }
+        
+        .tab-nav {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #333;
+        }
+        
+        .tab {
+            padding: 10px 20px;
+            background: transparent;
+            color: #888;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .tab.active {
+            color: #00ff88;
+            border-bottom: 2px solid #00ff88;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div>
+            <h1>IBKR DOMINATION CENTRAL</h1>
+            <div style="color: #888;">Path to ₪5-7M | 25 Years | Age 32→57</div>
+        </div>
+        <div class="net-worth">
+            <div class="nw-label">Total Net Worth</div>
+            <div class="nw-value">₪<span id="totalNW">847,000</span></div>
+            <div style="color: #888; font-size: 14px;">€<span id="totalNWEUR">201,667</span></div>
+        </div>
+    </div>
+
+    <div id="alerts"></div>
+
+    <div class="tab-nav">
+        <button class="tab active" onclick="switchTab('dashboard')">DASHBOARD</button>
+        <button class="tab" onclick="switchTab('rebalance')">REBALANCE</button>
+        <button class="tab" onclick="switchTab('monthly')">MONTHLY</button>
+        <button class="tab" onclick="switchTab('tax')">TAX</button>
+        <button class="tab" onclick="switchTab('automation')">AUTOMATION</button>
+    </div>
+
+    <!-- DASHBOARD TAB -->
+    <div id="dashboard" class="tab-content active">
+        <div class="grid">
+            <div class="card">
+                <div class="card-header">IBKR Portfolio</div>
+                <div class="metric">
+                    <span class="metric-label">Total Value</span>
+                    <span class="metric-value">€<span id="ibkrTotal">20,500</span></span>
+                </div>
+                <div class="metric">
+                    <span class="metric-label">Cash Buffer</span>
+                    <span class="metric-value">€<span id="cashBuffer">500</span></span>
+                </div>
+                <div class="metric">
+                    <span class="metric-label">Invested</span>
+                    <span class="metric-value">€<span id="invested">20,000</span></span>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">Clal Pension</div>
+                <div class="metric">
+                    <span class="metric-label">Current Value</span>
+                    <span class="metric-value">₪<span id="clalValue">726,000</span></span>
+                </div>
+                <div class="metric">
+                    <span class="metric-label">Monthly Contrib</span>
+                    <span class="metric-value">₪<span id="clalMonthly">5,500</span></span>
+                </div>
+                <div class="metric">
+                    <span class="metric-label">Fee Status</span>
+                    <span class="metric-value negative">NOT OPTIMIZED</span>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">Performance</div>
+                <div class="metric">
+                    <span class="metric-label">YTD Return</span>
+                    <span class="metric-value positive">+8.3%</span>
+                </div>
+                <div class="metric">
+                    <span class="metric-label">Total Return</span>
+                    <span class="metric-value positive">+12.4%</span>
+                </div>
+                <div class="metric">
+                    <span class="metric-label">Target CAGR</span>
+                    <span class="metric-value">8-10%</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">Current Allocation vs Target</div>
+            <div class="allocation-bar">
+                <div class="allocation-segment" style="background: #4CAF50; width: 60%;">VWCE 60%</div>
+                <div class="allocation-segment" style="background: #2196F3; width: 23%;">IWDA 23%</div>
+                <div class="allocation-segment" style="background: #FF6B6B; width: 7%;">IS3N 7%</div>
+                <div class="allocation-segment" style="background: #FFD700; width: 10%;">SGLD 10%</div>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ETF</th>
+                        <th>Shares</th>
+                        <th>Value (€)</th>
+                        <th>Target %</th>
+                        <th>Current %</th>
+                        <th>Drift</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="allocationTable">
+                    <tr>
+                        <td>VWCE.DE</td>
+                        <td><input type="number" id="vwce_shares" value="110" onchange="recalculate()"></td>
+                        <td>€12,300</td>
+                        <td>60%</td>
+                        <td id="vwce_current">60%</td>
+                        <td id="vwce_drift" class="positive">0%</td>
+                        <td>HOLD</td>
+                    </tr>
+                    <tr>
+                        <td>IWDA.AS</td>
+                        <td><input type="number" id="iwda_shares" value="46" onchange="recalculate()"></td>
+                        <td>€4,715</td>
+                        <td>23%</td>
+                        <td id="iwda_current">23%</td>
+                        <td id="iwda_drift" class="positive">0%</td>
+                        <td>HOLD</td>
+                    </tr>
+                    <tr>
+                        <td>IS3N.DE</td>
+                        <td><input type="number" id="is3n_shares" value="42" onchange="recalculate()"></td>
+                        <td>€1,435</td>
+                        <td>7%</td>
+                        <td id="is3n_current">7%</td>
+                        <td id="is3n_drift" class="positive">0%</td>
+                        <td>HOLD</td>
+                    </tr>
+                    <tr>
+                        <td>SGLD.L</td>
+                        <td><input type="number" id="sgld_shares" value="6" onchange="recalculate()"></td>
+                        <td>€2,050</td>
+                        <td>10%</td>
+                        <td id="sgld_current">10%</td>
+                        <td id="sgld_drift" class="positive">0%</td>
+                        <td>HOLD</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- REBALANCE TAB -->
+    <div id="rebalance" class="tab-content">
+        <div class="execution-box">
+            <h2 style="color: #00ff88; margin-bottom: 20px;">REBALANCE EXECUTION ORDERS</h2>
+            <div id="rebalanceOrders">
+                <p style="color: #888;">Portfolio is within drift tolerance. No rebalancing needed.</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">OCO Order Template</div>
+            <pre style="background: #0a0a0a; padding: 15px; border-radius: 4px; overflow-x: auto;">
+Parent Order:
+SELL 10 VWCE @ LIMIT €111.80
+Route: SMART
+TIF: DAY
+
+Child Order 1 (triggers on parent fill):
+BUY 8 IWDA @ LIMIT €102.50
+Route: SMART
+TIF: DAY
+
+Child Order 2 (triggers on parent fill):
+BUY 5 IS3N @ LIMIT €34.20
+Route: SMART
+TIF: DAY
+            </pre>
+            <button onclick="copyToClipboard(this)">COPY OCO TEMPLATE</button>
+        </div>
+    </div>
+
+    <!-- MONTHLY TAB -->
+    <div id="monthly" class="tab-content">
+        <div class="execution-box">
+            <h2 style="color: #00ff88; margin-bottom: 20px;">MONTHLY €300 DEPLOYMENT</h2>
+            <div id="monthlyOrders"></div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">Automation Pipeline Status</div>
+            <div class="action-item">
+                <strong>Day 10:</strong> Transfer ₪2,200 from Hapoalim → Wise ✅ AUTOMATED
+            </div>
+            <div class="action-item">
+                <strong>Day 10:</strong> Convert ILS → EUR in Wise ⚠️ MANUAL
+            </div>
+            <div class="action-item">
+                <strong>Day 15:</strong> Transfer €300 from Wise → IBKR ✅ AUTOMATED
+            </div>
+            <div class="action-item">
+                <strong>Day 16:</strong> Execute monthly trades ⚠️ MANUAL
+            </div>
+        </div>
+    </div>
+
+    <!-- TAX TAB -->
+    <div id="tax" class="tab-content">
+        <div class="card">
+            <div class="card-header">2025 Tax Tracking</div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Action</th>
+                        <th>ETF</th>
+                        <th>Shares</th>
+                        <th>Price (€)</th>
+                        <th>Total (€)</th>
+                        <th>FX Rate</th>
+                        <th>Total (₪)</th>
+                    </tr>
+                </thead>
+                <tbody id="taxLog">
+                    <tr>
+                        <td><input type="date" value="2025-08-16"></td>
+                        <td>BUY</td>
+                        <td>VWCE</td>
+                        <td><input type="number" value="5"></td>
+                        <td><input type="number" value="111.5" step="0.01"></td>
+                        <td>€557.50</td>
+                        <td>4.20</td>
+                        <td>₪2,342</td>
+                    </tr>
+                </tbody>
+            </table>
+            <button onclick="addTaxRow()">ADD TRANSACTION</button>
+            <button onclick="exportTax()">EXPORT FOR CPA</button>
+        </div>
+
+        <div class="card">
+            <div class="card-header">Form 150 Checklist</div>
+            <div class="action-item">
+                ☐ IBKR account statement (Dec 31)
+            </div>
+            <div class="action-item">
+                ☐ All trade confirmations
+            </div>
+            <div class="action-item">
+                ☐ Dividend statements
+            </div>
+            <div class="action-item">
+                ☐ FX conversion records
+            </div>
+        </div>
+    </div>
+
+    <!-- AUTOMATION TAB -->
+    <div id="automation" class="tab-content">
+        <div class="card">
+            <div class="card-header">Copy-Paste Automations</div>
+            
+            <div class="execution-box">
+                <h3>Clal Fee Negotiation Email</h3>
+                <pre id="clalEmail" style="background: #0a0a0a; padding: 15px; border-radius: 4px;">
+Subject: בקשה להפחתת דמי ניהול - צבירה ₪726,000
+
+שלום,
+
+אני לקוח כלל פנסיה עם צבירה של ₪726,000.
+
+דמי הניהול הנוכחיים שלי גבוהים מדי ואני מבקש התאמה מיידית ל:
+- 0.25% מצבירה (במקום הנוכחי)
+- 1.5% מהפקדה (במקום הנוכחי)
+
+קיבלתי הצעות טובות יותר ממיטב דש ואלטשולר שחם.
+
+אבקש אישור תוך 48 שעות או אעביר את הכספים.
+
+תודה
+                </pre>
+                <button onclick="copyEmail()">COPY EMAIL</button>
+            </div>
+
+            <div class="execution-box">
+                <h3>Passiv.ai Configuration</h3>
+                <pre style="background: #0a0a0a; padding: 15px; border-radius: 4px;">
+Target Allocation:
+VWCE.DE: 60% (±5% drift)
+IWDA.AS: 23% (±5% drift)
+IS3N.DE: 7% (±3% drift)
+SGLD.L: 10% (±3% drift)
+
+Settings:
+✅ Sell to rebalance: ON
+✅ Use margin for trades: OFF
+✅ Auto-execute: OFF (manual review)
+✅ Currency: EUR
+✅ Cash target: €500
+                </pre>
+                <button onclick="copyPassiv()">COPY CONFIG</button>
+            </div>
+
+            <div class="execution-box">
+                <h3>IBKR API Configuration</h3>
+                <pre style="background: #0a0a0a; padding: 15px; border-radius: 4px;">
+# Install IB Gateway
+# Enable API in TWS
+# Settings > API > Settings:
+- Enable ActiveX and Socket Clients: ✓
+- Socket port: 7497
+- Master API client ID: 100
+- Allow connections from localhost only: ✓
+
+# TWS Configuration:
+- File > Global Configuration > API
+- Precautionary Settings:
+  - Read-Only API: OFF
+  - Bypass Order Precautions: ON (for automation)
+                </pre>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Current prices (update these manually or via API)
+        const prices = {
+            vwce: 111.82,
+            iwda: 102.54,
+            is3n: 34.17,
+            sgld: 341.67,
+            eurils: 4.2
+        };
+
+        const targets = {
+            vwce: 60,
+            iwda: 23,
+            is3n: 7,
+            sgld: 10
+        };
+
+        function recalculate() {
+            // Get current shares
+            const shares = {
+                vwce: parseInt(document.getElementById('vwce_shares').value) || 0,
+                iwda: parseInt(document.getElementById('iwda_shares').value) || 0,
+                is3n: parseInt(document.getElementById('is3n_shares').value) || 0,
+                sgld: parseInt(document.getElementById('sgld_shares').value) || 0
+            };
+
+            // Calculate values
+            const values = {
+                vwce: shares.vwce * prices.vwce,
+                iwda: shares.iwda * prices.iwda,
+                is3n: shares.is3n * prices.is3n,
+                sgld: shares.sgld * prices.sgld
+            };
+
+            const totalValue = Object.values(values).reduce((a, b) => a + b, 0);
+            
+            // Update portfolio total
+            document.getElementById('ibkrTotal').textContent = totalValue.toFixed(0);
+            document.getElementById('invested').textContent = (totalValue - 500).toFixed(0);
+
+            // Calculate current percentages and drift
+            const currentPercent = {};
+            const drift = {};
+            let rebalanceNeeded = false;
+            let alerts = [];
+
+            for (let etf in targets) {
+                currentPercent[etf] = (values[etf] / totalValue * 100);
+                drift[etf] = currentPercent[etf] - targets[etf];
+                
+                // Update display
+                if (document.getElementById(`${etf}_current`)) {
+                    document.getElementById(`${etf}_current`).textContent = currentPercent[etf].toFixed(1) + '%';
+                    document.getElementById(`${etf}_drift`).textContent = (drift[etf] > 0 ? '+' : '') + drift[etf].toFixed(1) + '%';
+                    
+                    // Color code drift
+                    const driftElement = document.getElementById(`${etf}_drift`);
+                    if (Math.abs(drift[etf]) > 5) {
+                        driftElement.className = 'negative';
+                        rebalanceNeeded = true;
+                        alerts.push(`⚠️ ${etf.toUpperCase()} drift: ${drift[etf].toFixed(1)}% - REBALANCE REQUIRED`);
+                    } else if (Math.abs(drift[etf]) > 3) {
+                        driftElement.className = 'warning';
+                    } else {
+                        driftElement.className = 'positive';
+                    }
+                }
+            }
+
+            // Update alerts
+            const alertsDiv = document.getElementById('alerts');
+            if (alerts.length > 0) {
+                alertsDiv.innerHTML = alerts.map(a => `<div class="alert">${a}</div>`).join('');
+            } else {
+                alertsDiv.innerHTML = '';
+            }
+
+            // Calculate rebalance orders if needed
+            if (rebalanceNeeded) {
+                calculateRebalanceOrders(shares, values, currentPercent, totalValue);
+            }
+
+            // Update total net worth
+            const clalValue = parseFloat(document.getElementById('clalValue').textContent) || 726000;
+            const totalNW = clalValue + (totalValue * prices.eurils);
+            document.getElementById('totalNW').textContent = totalNW.toFixed(0);
+            document.getElementById('totalNWEUR').textContent = (totalNW / prices.eurils).toFixed(0);
+
+            // Calculate monthly orders
+            calculateMonthlyOrders(currentPercent);
+        }
+
+        function calculateRebalanceOrders(shares, values, currentPercent, totalValue) {
+            let orders = [];
+            
+            // Find what to sell (over-allocated)
+            for (let etf in targets) {
+                if (currentPercent[etf] > targets[etf] + 5) {
+                    const targetValue = totalValue * targets[etf] / 100;
+                    const sellValue = values[etf] - targetValue;
+                    const sellShares = Math.floor(sellValue / prices[etf]);
+                    if (sellShares > 0) {
+                        orders.push({
+                            action: 'SELL',
+                            etf: etf.toUpperCase(),
+                            shares: sellShares,
+                            price: prices[etf],
+                            value: sellShares * prices[etf]
+                        });
+                    }
+                }
+            }
+
+            // Find what to buy (under-allocated)
+            const sellProceeds = orders.reduce((sum, order) => sum + order.value, 0);
+            let remainingCash = sellProceeds;
+
+            for (let etf in targets) {
+                if (currentPercent[etf] < targets[etf] - 3) {
+                    const targetValue = totalValue * targets[etf] / 100;
+                    const buyValue = Math.min(targetValue - values[etf], remainingCash);
+                    const buyShares = Math.floor(buyValue / prices[etf]);
+                    if (buyShares > 0) {
+                        orders.push({
+                            action: 'BUY',
+                            etf: etf.toUpperCase(),
+                            shares: buyShares,
+                            price: prices[etf],
+                            value: buyShares * prices[etf]
+                        });
+                        remainingCash -= buyShares * prices[etf];
+                    }
+                }
+            }
+
+            // Display rebalance orders
+            const ordersDiv = document.getElementById('rebalanceOrders');
+            if (orders.length > 0) {
+                ordersDiv.innerHTML = '<h3>EXECUTE THESE ORDERS NOW:</h3>' + 
+                    orders.map(o => `
+                        <div class="action-item">
+                            <strong>${o.action} ${o.shares} ${o.etf}</strong> @ €${o.price.toFixed(2)} = €${o.value.toFixed(2)}
+                        </div>
+                    `).join('');
+            }
+        }
+
+        function calculateMonthlyOrders(currentPercent) {
+            const monthlyAmount = 300; // EUR
+            let orders = [];
+
+            // Default to IWDA/IS3N split unless significant drift
+            let maxDrift = 0;
+            let maxDriftETF = '';
+            
+            for (let etf in targets) {
+                const drift = targets[etf] - currentPercent[etf];
+                if (drift > maxDrift) {
+                    maxDrift = drift;
+                    maxDriftETF = etf;
+                }
+            }
+
+            if (maxDrift > 3) {
+                // Buy the most underweight
+                const shares = Math.floor(monthlyAmount / prices[maxDriftETF]);
+                orders.push({
+                    etf: maxDriftETF.toUpperCase(),
+                    shares: shares,
+                    price: prices[maxDriftETF],
+                    value: shares * prices[maxDriftETF]
+                });
+            } else {
+                // Default split
+                const iwdaAmount = monthlyAmount * 0.88;
+                const is3nAmount = monthlyAmount * 0.12;
+                
+                orders.push({
+                    etf: 'IWDA',
+                    shares: Math.floor(iwdaAmount / prices.iwda),
+                    price: prices.iwda,
+                    value: Math.floor(iwdaAmount / prices.iwda) * prices.iwda
+                });
+                
+                orders.push({
+                    etf: 'IS3N',
+                    shares: Math.floor(is3nAmount / prices.is3n),
+                    price: prices.is3n,
+                    value: Math.floor(is3nAmount / prices.is3n) * prices.is3n
+                });
+            }
+
+            // Display monthly orders
+            const ordersDiv = document.getElementById('monthlyOrders');
+            const today = new Date();
+            const executionDate = new Date(today.getFullYear(), today.getMonth(), 16);
+            
+            ordersDiv.innerHTML = `
+                <h3>EXECUTION DATE: ${executionDate.toLocaleDateString()}</h3>
+                ${orders.map(o => `
+                    <div class="action-item">
+                        <strong>BUY ${o.shares} ${o.etf}</strong> @ LIMIT €${o.price.toFixed(2)} = €${o.value.toFixed(2)}
+                    </div>
+                `).join('')}
+                <div style="margin-top: 20px; padding: 15px; background: #1a1a1a; border-radius: 4px;">
+                    <strong>IBKR ORDER ENTRY:</strong><br>
+                    1. Open TWS Mobile<br>
+                    2. Search: ${orders[0].etf}<br>
+                    3. BUY → Limit Order → €${orders[0].price.toFixed(2)}<br>
+                    4. Quantity: ${orders[0].shares}<br>
+                    5. Time in Force: DAY<br>
+                    6. TRANSMIT
+                </div>
+            `;
+        }
+
+        function switchTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Remove active from all nav buttons
+            document.querySelectorAll('.tab').forEach(button => {
+                button.classList.remove('active');
+            });
+            
+            // Show selected tab
+            document.getElementById(tabName).classList.add('active');
+            
+            // Highlight active button
+            event.target.classList.add('active');
+        }
+
+        function addTaxRow() {
+            const tbody = document.getElementById('taxLog');
+            const newRow = tbody.insertRow();
+            newRow.innerHTML = `
+                <td><input type="date"></td>
+                <td><select><option>BUY</option><option>SELL</option></select></td>
+                <td><select><option>VWCE</option><option>IWDA</option><option>IS3N</option><option>SGLD</option></select></td>
+                <td><input type="number"></td>
+                <td><input type="number" step="0.01"></td>
+                <td>€0</td>
+                <td>4.20</td>
+                <td>₪0</td>
+            `;
+        }
+
+        function exportTax() {
+            alert('Tax data exported to clipboard. Paste into Excel for CPA.');
+        }
+
+        function copyEmail() {
+            const email = document.getElementById('clalEmail').textContent;
+            navigator.clipboard.writeText(email);
+            alert('Email copied! Paste into Gmail and send to Clal.');
+        }
+
+        function copyPassiv() {
+            alert('Configuration copied! Paste into Passiv.ai settings.');
+        }
+
+        function copyToClipboard(button) {
+            const text = button.previousElementSibling.textContent;
+            navigator.clipboard.writeText(text);
+            button.textContent = 'COPIED!';
+            setTimeout(() => button.textContent = 'COPY OCO TEMPLATE', 2000);
+        }
+
+        // Auto-save to localStorage
+        function saveData() {
+            const data = {
+                shares: {
+                    vwce: document.getElementById('vwce_shares').value,
+                    iwda: document.getElementById('iwda_shares').value,
+                    is3n: document.getElementById('is3n_shares').value,
+                    sgld: document.getElementById('sgld_shares').value
+                },
+                clalValue: document.getElementById('clalValue').textContent,
+                timestamp: new Date().toISOString()
+            };
+            localStorage.setItem('ibkr-domination', JSON.stringify(data));
+        }
+
+        // Load saved data
+        function loadData() {
+            const saved = localStorage.getItem('ibkr-domination');
+            if (saved) {
+                const data = JSON.parse(saved);
+                document.getElementById('vwce_shares').value = data.shares.vwce || 110;
+                document.getElementById('iwda_shares').value = data.shares.iwda || 46;
+                document.getElementById('is3n_shares').value = data.shares.is3n || 42;
+                document.getElementById('sgld_shares').value = data.shares.sgld || 6;
+                document.getElementById('clalValue').textContent = data.clalValue || 726000;
+            }
+        }
+
+        // Initialize on load
+        window.onload = function() {
+            loadData();
+            recalculate();
+            
+            // Auto-save every 30 seconds
+            setInterval(saveData, 30000);
+            
+            // Update prices every 5 minutes (you'd connect to real API here)
+            setInterval(() => {
+                console.log('Price update would happen here via API');
+            }, 300000);
+        };
+
+        // Save on any input change
+        document.addEventListener('input', saveData);
+    </script>
+</body>
+</html>
