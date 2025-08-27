@@ -366,7 +366,7 @@ const app = {
             `;
         };
         
-        window.app.checkAnswer = (correct) => {
+        app.checkAnswer = (correct) => {
             const selected = document.querySelector('input[name="answer"]:checked');
             if (!selected) {
                 alert('Please select an answer');
@@ -555,6 +555,9 @@ const app = {
         document.getElementById(`result-${calculatorKey}`).innerHTML = '';
     }
 };
+
+// Make app globally accessible
+window.app = app;
 
 // Initialize app when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
