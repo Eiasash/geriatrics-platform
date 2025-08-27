@@ -213,6 +213,17 @@ class UIEnhancement {
           <div class="fab-submenu-item" onclick="window.uiEnhancement.beersCriteria()">Beers Criteria</div>
           <div class="fab-submenu-item" onclick="window.uiEnhancement.fallsAssessment()">Falls Assessment</div>
         </div>
+
+        <!-- Settings -->
+        <div class="fab-item" onclick="window.uiEnhancement.toggleSubmenu('settings')">
+          <span class="fab-icon">⚙️</span>
+          <span>Settings</span>
+        </div>
+        <div class="fab-submenu" id="settings-submenu">
+          <div class="fab-submenu-item" onclick="window.uiEnhancement.apiStatus()">API Status</div>
+          <div class="fab-submenu-item" onclick="window.uiEnhancement.systemStatus()">System Status</div>
+          <div class="fab-submenu-item" onclick="window.uiEnhancement.exportData()">Export Data</div>
+        </div>
       </div>
     `;
     
@@ -697,47 +708,61 @@ class UIEnhancement {
   }
 
   startCase() {
-    if (!window.Fellowship || !window.Fellowship.caseSimulator) {
-      // Fallback case simulator
-      const fallbackCases = [
-        {
-          id: 'case_1',
-          presentation: '85yo woman with confusion after hip surgery. Vitals stable. No focal neuro findings.',
-          questions: [
-            {
-              prompt: 'Most appropriate initial assessment?',
-              options: ['Head CT', 'CAM assessment', 'Lumbar puncture', 'EEG'],
-              correct: 1,
-              explanation: 'CAM assessment first - delirium is most likely post-op. CT has low yield without focal findings.',
-              pearls: '90% of post-op confusion in elderly is delirium, not stroke'
-            }
-          ]
-        },
-        {
-          id: 'case_2',
-          presentation: '78yo man on 12 medications presents with falls. No orthostatic changes. Morse score 55.',
-          questions: [
-            {
-              prompt: 'Priority intervention?',
-              options: ['PT consult', 'Medication review', 'Hip protectors', 'Bed alarm'],
-              correct: 1,
-              explanation: 'Polypharmacy is likely contributor. Review for PIMs, especially psychotropics, antihypertensives.',
-              pearls: 'Each additional medication increases fall risk by 5-7%'
-            }
-          ]
-        }
-      ];
-      
-      const caseData = fallbackCases[Math.floor(Math.random() * fallbackCases.length)];
+    // Try enhanced case simulator first
+    if (window.CaseSimulator) {
+      const caseData = window.CaseSimulator.startCase();
+      this.currentCase = caseData;
+      this.currentQuestion = 0;
+      this.caseScore = 0;
+      this.showCaseQuestion();
+      return;
+    }
+    
+    // Fallback to Fellowship cases
+    if (window.Fellowship && window.Fellowship.caseSimulator) {
+      const caseData = window.Fellowship.caseSimulator.startCase();
       this.currentCase = caseData;
       this.currentQuestion = 0;
       this.showCaseQuestion();
       return;
     }
     
-    const caseData = window.Fellowship.caseSimulator.startCase();
+    // Ultimate fallback
+    const fallbackCases = [
+      {
+        id: 'case_1',
+        title: 'Post-operative Delirium',
+        presentation: '85yo woman with confusion after hip surgery. Vitals stable. No focal neuro findings.',
+        questions: [
+          {
+            prompt: 'Most appropriate initial assessment?',
+            options: ['Head CT', 'CAM assessment', 'Lumbar puncture', 'EEG'],
+            correct: 1,
+            explanation: 'CAM assessment first - delirium is most likely post-op. CT has low yield without focal findings.',
+            pearls: '90% of post-op confusion in elderly is delirium, not stroke'
+          }
+        ]
+      },
+      {
+        id: 'case_2',
+        title: 'Polypharmacy Falls',
+        presentation: '78yo man on 12 medications presents with falls. No orthostatic changes. Morse score 55.',
+        questions: [
+          {
+            prompt: 'Priority intervention?',
+            options: ['PT consult', 'Medication review', 'Hip protectors', 'Bed alarm'],
+            correct: 1,
+            explanation: 'Polypharmacy is likely contributor. Review for PIMs, especially psychotropics, antihypertensives.',
+            pearls: 'Each additional medication increases fall risk by 5-7%'
+          }
+        ]
+      }
+    ];
+    
+    const caseData = fallbackCases[Math.floor(Math.random() * fallbackCases.length)];
     this.currentCase = caseData;
     this.currentQuestion = 0;
+    this.caseScore = 0;
     this.showCaseQuestion();
   }
 
@@ -747,16 +772,22 @@ class UIEnhancement {
     
     const content = `
       <div class="card-container">
-        <p><strong>Case:</strong> ${caseData.presentation}</p>
+        <h3>${caseData.title || 'Clinical Case'}</h3>
+        <p><strong>Presentation:</strong> ${caseData.presentation}</p>
+        ${caseData.background ? `<p><strong>Background:</strong> ${caseData.background}</p>` : ''}
       </div>
       
       <div class="card-container">
+        <p><strong>Question ${this.currentQuestion + 1}/${caseData.questions.length}:</strong></p>
         <p><strong>${question.prompt}</strong></p>
-        ${question.options.map((opt, i) => `
-          <div class="result-item" onclick="window.uiEnhancement.submitCaseAnswer(${i})">
-            ${opt}
-          </div>
-        `).join('')}
+        <div style="margin-top: 15px;">
+          ${question.options.map((opt, i) => `
+            <div class="result-item" onclick="window.uiEnhancement.submitCaseAnswer(${i})" 
+                 style="margin: 8px 0; padding: 12px; border: 1px solid #ddd;">
+              <strong>${String.fromCharCode(65 + i)}.</strong> ${opt}
+            </div>
+          `).join('')}
+        </div>
       </div>
     `;
     
@@ -766,7 +797,10 @@ class UIEnhancement {
   submitCaseAnswer(answerIndex) {
     let result;
     
-    if (window.Fellowship && window.Fellowship.caseSimulator) {
+    // Try enhanced case simulator first
+    if (window.CaseSimulator) {
+      result = window.CaseSimulator.submitAnswer(this.currentQuestion, answerIndex);
+    } else if (window.Fellowship && window.Fellowship.caseSimulator) {
       result = window.Fellowship.caseSimulator.submitAnswer(this.currentQuestion, answerIndex);
     } else {
       // Fallback case evaluation
@@ -779,8 +813,9 @@ class UIEnhancement {
       result = {
         correct: correct,
         explanation: question.explanation,
-        pearl: question.pearls,
-        score: this.caseScore
+        pearls: question.pearls || question.pearls,
+        score: this.caseScore,
+        totalQuestions: this.currentCase.questions.length
       };
     }
     
@@ -814,35 +849,83 @@ class UIEnhancement {
 
   drugLookup() {
     const content = `
-      <input type="text" class="search-input" placeholder="Enter drug name (e.g., metoprolol)" 
+      <input type="text" class="search-input" placeholder="Enter drug name (e.g., metoprolol, warfarin, sertraline)" 
              id="drug-search" onkeyup="window.uiEnhancement.performDrugSearch()">
-      <div id="drug-results"></div>
+      <div id="drug-results">
+        <p>💡 Try searching for: metoprolol, warfarin, sertraline, lisinopril, furosemide, omeprazole, acetaminophen</p>
+      </div>
     `;
     this.showModal('Drug Lookup', content);
   }
 
   performDrugSearch() {
-    const drugName = document.getElementById('drug-search').value;
-    if (!drugName || !window.GeriatricsKnowledge) return;
+    const drugName = document.getElementById('drug-search').value.trim();
+    if (!drugName) return;
     
-    const drugInfo = window.GeriatricsKnowledge.getDrugInfo(drugName);
     const resultsDiv = document.getElementById('drug-results');
+    let drugInfo = null;
     
-    if (!drugInfo.error) {
+    // Try comprehensive database first
+    if (window.DrugDatabase) {
+      drugInfo = window.DrugDatabase.getDrugInfo(drugName);
+    }
+    
+    // Fallback to knowledge base
+    if ((!drugInfo || drugInfo.error) && window.GeriatricsKnowledge) {
+      drugInfo = window.GeriatricsKnowledge.getDrugInfo(drugName);
+    }
+    
+    if (drugInfo && !drugInfo.error) {
+      const beersConcerns = window.DrugDatabase?.getBeersConcerns(drugName) || [];
+      const alternatives = window.DrugDatabase?.getAlternatives(drugName) || [];
+      
       resultsDiv.innerHTML = `
         <div class="card-container">
+          <h3>${drugInfo.name || drugName}</h3>
           <p><strong>Class:</strong> ${drugInfo.class}</p>
-          <p><strong>Geriatric Considerations:</strong> ${drugInfo.geriatricConsiderations}</p>
+          <p><strong>Indication:</strong> ${drugInfo.indication || 'Not specified'}</p>
+          
+          <h4>Geriatric Dosing</h4>
           <p><strong>Start Dose:</strong> ${drugInfo.startDose}</p>
           <p><strong>Max Dose:</strong> ${drugInfo.maxDose}</p>
-          ${drugInfo.beersCriteria ? `<p>⚠️ <strong>Beers Criteria:</strong> ${drugInfo.beersCriteria}</p>` : ''}
-          ${drugInfo.stoppFlag ? `<p>⚠️ <strong>STOPP Flag:</strong> ${drugInfo.stoppFlag}</p>` : ''}
           <p><strong>Renal Dosing:</strong> ${drugInfo.renalDosing}</p>
-          <p><strong>Interactions:</strong> ${drugInfo.interactions.join(', ')}</p>
+          
+          <h4>Safety Considerations</h4>
+          <p><strong>Geriatric Notes:</strong> ${drugInfo.geriatricConsiderations}</p>
+          ${drugInfo.commonSideEffects ? `<p><strong>Common Side Effects:</strong> ${drugInfo.commonSideEffects}</p>` : ''}
+          ${drugInfo.monitoring ? `<p><strong>Monitoring:</strong> ${drugInfo.monitoring}</p>` : ''}
+          
+          ${beersConcerns.length > 0 ? `
+            <div style="background: #fee; padding: 10px; border-radius: 5px; margin: 10px 0;">
+              <h4>⚠️ Beers Criteria Concerns:</h4>
+              ${beersConcerns.map(concern => `<p>• ${concern}</p>`).join('')}
+            </div>
+          ` : ''}
+          
+          ${alternatives.length > 0 ? `
+            <div style="background: #efe; padding: 10px; border-radius: 5px; margin: 10px 0;">
+              <h4>🔄 Alternatives:</h4>
+              <p>${alternatives.join(', ')}</p>
+            </div>
+          ` : ''}
+          
+          <p><strong>Key Interactions:</strong> ${drugInfo.interactions?.join(', ') || 'See full database'}</p>
         </div>
       `;
     } else {
-      resultsDiv.innerHTML = '<p>Drug not found. Try: metoprolol, lisinopril, furosemide, warfarin, sertraline</p>';
+      resultsDiv.innerHTML = `
+        <div class="card-container">
+          <p>Drug "${drugName}" not found in database.</p>
+          <p><strong>Available drugs include:</strong></p>
+          <p>• <strong>Cardiac:</strong> metoprolol, lisinopril, amlodipine, furosemide</p>
+          <p>• <strong>Psychiatric:</strong> sertraline, mirtazapine, lorazepam</p>
+          <p>• <strong>Anticoagulants:</strong> warfarin, apixaban, rivaroxaban</p>
+          <p>• <strong>Pain:</strong> acetaminophen, ibuprofen, tramadol</p>
+          <p>• <strong>GI:</strong> omeprazole, famotidine</p>
+          <p>• <strong>Diabetes:</strong> metformin, glipizide</p>
+          <p>And 80+ more medications!</p>
+        </div>
+      `;
     }
   }
 
@@ -1234,6 +1317,68 @@ class UIEnhancement {
         this.closeModal();
       }
     });
+  }
+
+  // Settings Functions
+  apiStatus() {
+    if (window.apiManager) {
+      window.apiManager.showAPIStatus();
+    } else {
+      this.showModal('API Status', 'API Manager not loaded');
+    }
+  }
+
+  systemStatus() {
+    if (window.debug) {
+      window.debug.generateHealthReport();
+    } else {
+      const modules = {
+        'Drug Database': !!window.DrugDatabase,
+        'Case Simulator': !!window.CaseSimulator,
+        'Knowledge Base': !!window.GeriatricsKnowledge,
+        'Research Library': !!window.ResearchLibrary,
+        'API Manager': !!window.apiManager,
+        'Smart Study': !!window.smartStudy,
+        'Patient Tracker': !!window.patientTracker
+      };
+      
+      const content = `
+        <div class="card-container">
+          <h3>System Status</h3>
+          ${Object.entries(modules).map(([name, loaded]) => 
+            `<p>${loaded ? '✅' : '❌'} ${name}</p>`
+          ).join('')}
+          
+          <h4>Statistics</h4>
+          <p><strong>Drugs Available:</strong> ${window.DrugDatabase ? Object.keys(window.DrugDatabase.drugs).length : 'N/A'}</p>
+          <p><strong>Cases Available:</strong> ${window.CaseSimulator ? window.CaseSimulator.cases.length : 'N/A'}</p>
+          <p><strong>Study Cards:</strong> ${window.GeriatricsKnowledge ? window.GeriatricsKnowledge.studyCards.length : 'N/A'}</p>
+          <p><strong>Research Papers:</strong> ${window.ResearchLibrary ? window.ResearchLibrary.papers.length : 'N/A'}</p>
+        </div>
+      `;
+      this.showModal('System Status', content);
+    }
+  }
+
+  exportData() {
+    const data = {
+      timestamp: new Date().toISOString(),
+      studyProgress: window.smartStudy ? window.smartStudy.getDailyProgress() : null,
+      caseProgress: window.CaseSimulator ? window.CaseSimulator.getProgress() : null,
+      apiUsage: window.apiManager ? window.apiManager.getUsageStats() : null,
+      systemHealth: window.debug ? window.debug.generateHealthReport() : null
+    };
+    
+    const dataStr = JSON.stringify(data, null, 2);
+    const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr);
+    const exportFileDefaultName = `geriatrics-platform-export-${Date.now()}.json`;
+    
+    const linkElement = document.createElement('a');
+    linkElement.setAttribute('href', dataUri);
+    linkElement.setAttribute('download', exportFileDefaultName);
+    linkElement.click();
+    
+    this.showModal('Export Complete', `Data exported to ${exportFileDefaultName}`);
   }
 }
 
