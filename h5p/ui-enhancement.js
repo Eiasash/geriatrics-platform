@@ -203,6 +203,12 @@ class UIEnhancement {
           <div class="fab-submenu-item" onclick="window.uiEnhancement.performanceReport()">My Progress</div>
         </div>
         
+        <!-- Medical Hub - Direct Access -->
+        <div class="fab-item" onclick="window.uiEnhancement.showMedicalHub()" style="border-left: 3px solid #2196f3;">
+          <span class="fab-icon">🏥</span>
+          <span>Medical Knowledge Hub</span>
+        </div>
+        
         <!-- Quick Actions -->
         <div class="fab-item" onclick="window.uiEnhancement.toggleSubmenu('quick')">
           <span class="fab-icon">⚡</span>
@@ -1586,38 +1592,149 @@ class UIEnhancement {
 
   // Medical Knowledge Hub Integration
   showMedicalHub() {
-    if (window.medicalHub) {
+    if (window.medicalHub && typeof window.medicalHub.showMedicalHub === 'function') {
       window.medicalHub.showMedicalHub();
     } else {
-      this.showModal('Medical Knowledge Hub', `
+      // Provide immediate functionality even if main hub hasn't loaded
+      this.showModal('🏥 Medical Knowledge Hub', `
         <div class="card-container">
-          <h3>🏥 Medical Knowledge Hub</h3>
-          <p>The Medical Knowledge Hub is still loading. Please try again in a moment.</p>
+          <h3>🏥 Multi-Platform Medical Search</h3>
+          <p>Quick access to your institutional medical databases</p>
           
-          <h4>What's included:</h4>
-          <ul>
-            <li>📚 UpToDate institutional access</li>
-            <li>📖 NEJM evidence-based medicine</li>
-            <li>📋 DynaMed clinical topics</li>
-            <li>🏥 AccessMedicine resources</li>
-            <li>🔑 ClinicalKey comprehensive search</li>
-          </ul>
+          <div style="margin: 20px 0;">
+            <input type="text" id="quick-medical-search" 
+                   placeholder="Enter condition, drug, or topic (e.g., 'heart failure elderly')"
+                   class="search-input" style="width: 100%;">
+          </div>
           
-          <h4>Quick Links:</h4>
           <div class="button-row">
-            <button class="action-btn" onclick="window.open('https://www.uptodate.com', '_blank')">
+            <button class="action-btn" onclick="window.uiEnhancement.searchAllPlatforms()">
+              🚀 Search All Platforms
+            </button>
+            <button class="action-btn" onclick="window.uiEnhancement.searchGeriatricFocused()">
+              👴 Geriatric Search
+            </button>
+          </div>
+          
+          <h4>🎯 Quick Geriatric Topics:</h4>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 8px; margin: 15px 0;">
+            ${['Delirium', 'Falls', 'Frailty', 'Polypharmacy', 'Dementia', 'Heart Failure'].map(topic => 
+              `<button class="action-btn" style="padding: 8px; font-size: 12px;" 
+                       onclick="window.uiEnhancement.searchTopic('${topic}')">${topic}</button>`
+            ).join('')}
+          </div>
+          
+          <h4>📚 Individual Platforms:</h4>
+          <div class="button-row" style="flex-wrap: wrap;">
+            <button class="action-btn" onclick="window.open('https://www.uptodate.com', '_blank')" style="background: #0066cc;">
               📚 UpToDate
             </button>
-            <button class="action-btn" onclick="window.open('https://www.nejm.org', '_blank')">
+            <button class="action-btn" onclick="window.open('https://www.nejm.org', '_blank')" style="background: #8B0000;">
               📖 NEJM
             </button>
-            <button class="action-btn" onclick="window.open('https://www.dynamed.com', '_blank')">
+            <button class="action-btn" onclick="window.open('https://www.dynamed.com', '_blank')" style="background: #2E8B57;">
               📋 DynaMed
             </button>
+            <button class="action-btn" onclick="window.open('https://accessmedicine.mhmedical.com', '_blank')" style="background: #FF6B35;">
+              🏥 AccessMedicine
+            </button>
+            <button class="action-btn" onclick="window.open('https://www.clinicalkey.com', '_blank')" style="background: #4169E1;">
+              🔑 ClinicalKey
+            </button>
+          </div>
+          
+          <div style="background: #e3f2fd; padding: 15px; border-radius: 8px; margin: 15px 0;">
+            <h4>🔖 Bookmarklets (Drag to Bookmark Bar):</h4>
+            <p style="font-size: 12px; color: #666; margin-bottom: 10px;">Drag these links to your bookmark bar for one-click access from any page:</p>
+            <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+              <a href="javascript:(function(){const q=prompt('Medical topic:');if(q){['uptodate.com/contents/search?search=','nejm.org/search?q=','dynamed.com/search?q=','accessmedicine.mhmedical.com/SearchResults.aspx?q=','clinicalkey.com/#!/search/'].forEach(u=>window.open('https://www.'+u+encodeURIComponent(q),'_blank'))}})();" 
+                 style="background: #007bff; color: white; padding: 4px 8px; border-radius: 4px; text-decoration: none; font-size: 12px;">
+                📚 Search All
+              </a>
+              <a href="javascript:(function(){const d=prompt('Drug name:');if(d){window.open('https://www.uptodate.com/contents/search?search='+encodeURIComponent(d+' elderly geriatric'),'_blank')}})();" 
+                 style="background: #28a745; color: white; padding: 4px 8px; border-radius: 4px; text-decoration: none; font-size: 12px;">
+                💊 Drug Check
+              </a>
+            </div>
+          </div>
+          
+          <div style="background: #f8f9fa; padding: 10px; border-radius: 8px; font-size: 13px;">
+            <strong>💡 Pro Tips:</strong><br>
+            • Use your hospital's institutional access to login<br>
+            • Keyboard shortcuts: Ctrl+Shift+U (UpToDate), Ctrl+Shift+N (NEJM)<br>
+            • Mobile: Apps will open if installed, otherwise web browser
           </div>
         </div>
       `);
+      
+      // Focus on search input after modal appears
+      setTimeout(() => {
+        const searchInput = document.getElementById('quick-medical-search');
+        if (searchInput) searchInput.focus();
+      }, 100);
     }
+  }
+
+  // Quick search methods for the Medical Hub
+  searchAllPlatforms() {
+    const query = document.getElementById('quick-medical-search')?.value.trim();
+    if (!query) {
+      alert('Please enter a search term');
+      return;
+    }
+    
+    const platforms = [
+      'https://www.uptodate.com/contents/search?search=',
+      'https://www.nejm.org/search?q=',
+      'https://www.dynamed.com/search?q=',
+      'https://accessmedicine.mhmedical.com/SearchResults.aspx?q=',
+      'https://www.clinicalkey.com/#!/search/'
+    ];
+    
+    platforms.forEach(url => {
+      window.open(url + encodeURIComponent(query), '_blank');
+    });
+    
+    this.closeModal();
+  }
+
+  searchGeriatricFocused() {
+    const query = document.getElementById('quick-medical-search')?.value.trim();
+    if (!query) {
+      alert('Please enter a search term');
+      return;
+    }
+    
+    const geriatricQuery = query + ' elderly geriatric';
+    const platforms = [
+      'https://www.uptodate.com/contents/search?search=',
+      'https://www.nejm.org/search?q=',
+      'https://www.dynamed.com/search?q='
+    ];
+    
+    platforms.forEach(url => {
+      window.open(url + encodeURIComponent(geriatricQuery), '_blank');
+    });
+    
+    this.closeModal();
+  }
+
+  searchTopic(topic) {
+    const topicQueries = {
+      'Delirium': 'delirium elderly assessment prevention',
+      'Falls': 'falls elderly prevention assessment risk factors',
+      'Frailty': 'frailty syndrome elderly assessment',
+      'Polypharmacy': 'polypharmacy elderly medication review beers criteria',
+      'Dementia': 'dementia elderly alzheimer cognitive assessment',
+      'Heart Failure': 'heart failure elderly diastolic dysfunction'
+    };
+    
+    const query = topicQueries[topic] || topic + ' elderly';
+    
+    window.open('https://www.uptodate.com/contents/search?search=' + encodeURIComponent(query), '_blank');
+    window.open('https://www.nejm.org/search?q=' + encodeURIComponent(query), '_blank');
+    
+    this.closeModal();
   }
 }
 
