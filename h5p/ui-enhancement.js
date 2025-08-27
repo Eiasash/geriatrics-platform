@@ -164,6 +164,7 @@ class UIEnhancement {
           <div class="fab-submenu-item" onclick="window.uiEnhancement.getDueCards()">Due for Review</div>
           <div class="fab-submenu-item" onclick="window.uiEnhancement.searchCards()">Search Cards</div>
           <div class="fab-submenu-item" onclick="window.uiEnhancement.viewProgress()">View Progress</div>
+          <div class="fab-submenu-item" onclick="window.uiEnhancement.showPersonalKnowledge()">📝 Personal Notes</div>
         </div>
         
         <!-- Clinical Tools -->
@@ -186,6 +187,7 @@ class UIEnhancement {
         </div>
         <div class="fab-submenu" id="research-submenu">
           <div class="fab-submenu-item" onclick="window.uiEnhancement.showMedicalHub()">🏥 Medical Knowledge Hub</div>
+          <div class="fab-submenu-item" onclick="window.uiEnhancement.showOpenAccess()">🔓 Open Access Literature</div>
           <div class="fab-submenu-item" onclick="window.uiEnhancement.latestPapers()">Latest Papers</div>
           <div class="fab-submenu-item" onclick="window.uiEnhancement.highImpact()">High Impact</div>
           <div class="fab-submenu-item" onclick="window.uiEnhancement.guidelines()">Guidelines</div>
@@ -1847,6 +1849,53 @@ class UIEnhancement {
     
     openNext();
     this.closeModal();
+  }
+
+  // Personal Knowledge Manager Integration
+  showPersonalKnowledge() {
+    if (window.personalKnowledge && typeof window.personalKnowledge.showKnowledgeManager === 'function') {
+      window.personalKnowledge.showKnowledgeManager();
+    } else {
+      this.showModal('📝 Personal Knowledge Manager', `
+        <div class="card-container">
+          <h3>📝 Personal Medical Notes System</h3>
+          <p>The Personal Knowledge Manager is loading...</p>
+          <p>This feature provides:</p>
+          <ul style="text-align: left; margin: 10px 20px;">
+            <li>✅ Personal note-taking with categories</li>
+            <li>✅ Quiz generation from your notes</li>
+            <li>✅ Spaced repetition learning system</li>
+            <li>✅ Import from medical databases</li>
+            <li>✅ Export capabilities</li>
+          </ul>
+          <p>Please wait for all scripts to load, then try again.</p>
+        </div>
+      `);
+    }
+  }
+
+  // Open Access Integrator
+  showOpenAccess() {
+    if (window.openAccess && typeof window.openAccess.showOpenAccessIntegrator === 'function') {
+      window.openAccess.showOpenAccessIntegrator();
+    } else {
+      this.showModal('🔓 Open Access Medical Literature', `
+        <div class="card-container">
+          <h3>🔓 Free Medical Literature Access</h3>
+          <p>The Open Access Integrator is loading...</p>
+          <p>This feature provides:</p>
+          <ul style="text-align: left; margin: 10px 20px;">
+            <li>✅ PubMed Central full-text search</li>
+            <li>✅ Directory of Open Access Journals (DOAJ)</li>
+            <li>✅ WHO, CDC, and NIH guidelines</li>
+            <li>✅ Cochrane Library open access</li>
+            <li>✅ Save articles for reference</li>
+            <li>✅ Citation generation</li>
+          </ul>
+          <p>Please wait for all scripts to load, then try again.</p>
+        </div>
+      `);
+    }
   }
 }
 
