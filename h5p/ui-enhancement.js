@@ -185,6 +185,7 @@ class UIEnhancement {
           <span>Research</span>
         </div>
         <div class="fab-submenu" id="research-submenu">
+          <div class="fab-submenu-item" onclick="window.uiEnhancement.showMedicalHub()">🏥 Medical Knowledge Hub</div>
           <div class="fab-submenu-item" onclick="window.uiEnhancement.latestPapers()">Latest Papers</div>
           <div class="fab-submenu-item" onclick="window.uiEnhancement.highImpact()">High Impact</div>
           <div class="fab-submenu-item" onclick="window.uiEnhancement.guidelines()">Guidelines</div>
@@ -1581,6 +1582,42 @@ class UIEnhancement {
     linkElement.click();
     
     this.showModal('Export Complete', `Data exported to ${exportFileDefaultName}`);
+  }
+
+  // Medical Knowledge Hub Integration
+  showMedicalHub() {
+    if (window.medicalHub) {
+      window.medicalHub.showMedicalHub();
+    } else {
+      this.showModal('Medical Knowledge Hub', `
+        <div class="card-container">
+          <h3>🏥 Medical Knowledge Hub</h3>
+          <p>The Medical Knowledge Hub is still loading. Please try again in a moment.</p>
+          
+          <h4>What's included:</h4>
+          <ul>
+            <li>📚 UpToDate institutional access</li>
+            <li>📖 NEJM evidence-based medicine</li>
+            <li>📋 DynaMed clinical topics</li>
+            <li>🏥 AccessMedicine resources</li>
+            <li>🔑 ClinicalKey comprehensive search</li>
+          </ul>
+          
+          <h4>Quick Links:</h4>
+          <div class="button-row">
+            <button class="action-btn" onclick="window.open('https://www.uptodate.com', '_blank')">
+              📚 UpToDate
+            </button>
+            <button class="action-btn" onclick="window.open('https://www.nejm.org', '_blank')">
+              📖 NEJM
+            </button>
+            <button class="action-btn" onclick="window.open('https://www.dynamed.com', '_blank')">
+              📋 DynaMed
+            </button>
+          </div>
+        </div>
+      `);
+    }
   }
 }
 
