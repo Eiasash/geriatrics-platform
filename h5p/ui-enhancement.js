@@ -1609,10 +1609,13 @@ class UIEnhancement {
           
           <div class="button-row">
             <button class="action-btn" onclick="window.uiEnhancement.searchAllPlatforms()">
-              🚀 Search All Platforms
+              🚀 Search All Platforms (4 tabs)
             </button>
             <button class="action-btn" onclick="window.uiEnhancement.searchGeriatricFocused()">
-              👴 Geriatric Search
+              👴 Geriatric Search (3 tabs)
+            </button>
+            <button class="action-btn" onclick="window.uiEnhancement.testMultipleTabsSimple()">
+              🧪 Test Multiple Tabs
             </button>
           </div>
           
@@ -1710,6 +1713,8 @@ class UIEnhancement {
       return;
     }
     
+    console.log('🚀 Searching all platforms for:', query);
+    
     const platforms = [
       'https://www-uptodate-com.clalit.portium.org/contents/search?search=',
       'https://pubmed-ncbi-nlm-nih-gov.clalit.portium.org/?otool=iilclalib&term=',
@@ -1717,8 +1722,12 @@ class UIEnhancement {
       'https://www-tripdatabase-com.clalit.portium.org/search?q='
     ];
     
-    platforms.forEach(url => {
-      window.open(url + encodeURIComponent(query), '_blank');
+    // Add delay between opening tabs to prevent popup blocker
+    platforms.forEach((url, index) => {
+      setTimeout(() => {
+        console.log('Opening:', url + encodeURIComponent(query));
+        window.open(url + encodeURIComponent(query), '_blank');
+      }, index * 300); // 300ms delay between each tab
     });
     
     this.closeModal();
@@ -1784,6 +1793,60 @@ class UIEnhancement {
     
     // Open PubMed with institutional access
     window.open('https://pubmed-ncbi-nlm-nih-gov.clalit.portium.org/?otool=iilclalib&term=' + encodeURIComponent(topic), '_blank');
+  }
+
+  // Test function to check popup blocking
+  testMultipleTabsSimple() {
+    const testUrls = [
+      'https://www-uptodate-com.clalit.portium.org/contents/search?search=test',
+      'https://pubmed-ncbi-nlm-nih-gov.clalit.portium.org/?otool=iilclalib&term=test',
+      'https://www-clinicalkey-com.clalit.portium.org/'
+    ];
+
+    console.log('🧪 Testing multiple tabs...');
+    
+    // Method 1: Immediate opening
+    testUrls.forEach((url, index) => {
+      console.log(`Opening tab ${index + 1}:`, url);
+      const newWindow = window.open(url, '_blank');
+      if (!newWindow) {
+        console.warn(`Tab ${index + 1} was blocked by popup blocker`);
+        alert(`Popup blocker detected! Please allow popups for this site.\n\nTo fix:\n1. Click the popup blocker icon in your browser\n2. Select "Always allow popups from this site"\n3. Try again`);
+        return;
+      }
+    });
+    
+    this.closeModal();
+  }
+
+  // Alternative single-click method for popup-blocked browsers
+  openPlatformsOneByOne() {
+    const query = document.getElementById('quick-medical-search')?.value.trim() || 'delirium elderly';
+    
+    const platforms = [
+      { name: 'UpToDate', url: `https://www-uptodate-com.clalit.portium.org/contents/search?search=${encodeURIComponent(query)}` },
+      { name: 'PubMed', url: `https://pubmed-ncbi-nlm-nih-gov.clalit.portium.org/?otool=iilclalib&term=${encodeURIComponent(query)}` },
+      { name: 'ClinicalKey', url: `https://www-clinicalkey-com.clalit.portium.org/#!/search/${encodeURIComponent(query)}` },
+      { name: 'TRIP Database', url: `https://www-tripdatabase-com.clalit.portium.org/search?q=${encodeURIComponent(query)}` }
+    ];
+
+    let currentIndex = 0;
+    
+    const openNext = () => {
+      if (currentIndex < platforms.length) {
+        const platform = platforms[currentIndex];
+        console.log(`Opening ${platform.name}...`);
+        window.open(platform.url, '_blank');
+        currentIndex++;
+        
+        if (currentIndex < platforms.length) {
+          setTimeout(openNext, 500); // Wait 500ms between each tab
+        }
+      }
+    };
+    
+    openNext();
+    this.closeModal();
   }
 }
 
