@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Drug Database Feature Test</title>
+    <script src="h5p/israeli-drug-database.js"></script>
+</head>
+<body>
+    <h1>Testing Israeli Drug Database Features</h1>
+    <div id="results"></div>
+    
+    <script>
+        // Test function to display results
+        function displayResult(title, result) {
+            const div = document.createElement('div');
+            div.style.cssText = 'margin: 20px; padding: 15px; background: #f0f9ff; border-left: 4px solid #3b82f6;';
+            div.innerHTML = `<h3>${title}</h3><pre>${JSON.stringify(result, null, 2)}</pre>`;
+            document.getElementById('results').appendChild(div);
+        }
+
+        // Wait for database to load
+        setTimeout(() => {
+            console.log('Starting tests...');
+            
+            // Test 1: Hebrew medication search - fixing method name
+            try {
+                const hebrewResult = IsraeliDrugDatabase.searchHebrewMedication("ריבוטריל");
+                displayResult('Test 1: Hebrew Search - ריבוטריל (Rivotril)', hebrewResult);
+                console.log('Hebrew search:', hebrewResult);
+            } catch(e) {
+                console.error('Hebrew search error:', e);
+                // Try alternative method
+                const altResult = IsraeliDrugDatabase.getDrugInfo("ריבוטריל");
+                displayResult('Test 1 Alt: Hebrew Search - ריבוטריל', altResult);
+            }
+            
+            // Test 2: Brand name lookup
+            try {
+                const brandResult = IsraeliDrugDatabase.getDrugInfo("Tritace");
+                displayResult('Test 2: Brand Name - Tritace', brandResult);
+                console.log('Brand search:', brandResult);
+            } catch(e) {
+                console.error('Brand search error:', e);
+            }
+            
+            // Test 3: Dangerous interaction check
+            try {
+                const interactionResult = IsraeliDrugDatabase.checkInteractions(["warfarin", "fluconazole"]);
+                displayResult('Test 3: Warfarin + Fluconazole Interaction', interactionResult);
+                console.log('Interactions:', interactionResult);
+            } catch(e) {
+                console.error('Interaction check error:', e);
+            }
+            
+            // Test 4: Comprehensive review
+            try {
+                const reviewResult = IsraeliDrugDatabase.performComprehensiveMedicationReview({
+                    age: 78,
+                    medications: ["clonazepam", "warfarin", "metformin"],
+                    creatinine: 1.2,
+                    gender: 'M'
+                });
+                
+                // Create summary for display
+                const summary = {
+                    patient: reviewResult.patient,
+                    criticalFindings: {
+                        interactions: reviewResult.interactions.length,
+                        stoppViolations: reviewResult.stoppViolations.length,
+                        beersViolations: reviewResult.beersViolations.length,
+                        priorityActions: reviewResult.priorityActions.slice(0, 3)
+                    }
+                };
+                
+                displayResult('Test 4: Comprehensive Review (Age 78, Clonazepam+Warfarin+Metformin)', summary);
+                console.log('Review:', reviewResult);
+            } catch(e) {
+                console.error('Review error:', e);
+            }
+            
+            // Additional tests to verify all features
+            
+            // Test 5: Check multiple Hebrew medications
+            const hebrewMeds = ["אקמול", "פרמין", "קומדין", "ואליום"];
+            const hebrewResults = {};
+            hebrewMeds.forEach(med => {
+                try {
+                    const result = IsraeliDrugDatabase.searchHebrewMedication(med);
+                    hebrewResults[med] = result.genericName || result.error;
+                } catch(e) {
+                    hebrewResults[med] = 'Error';
+                }
+            });
+            displayResult('Test 5: Multiple Hebrew Medications', hebrewResults);
+            
+            // Test 6: Check STOPP criteria
+            try {
+                const stoppResult = IsraeliDrugDatabase.checkSTOPPCriteria(["diazepam", "omeprazole"]);
+                displayResult('Test 6: STOPP Criteria Check', stoppResult);
+            } catch(e) {
+                console.error('STOPP check error:', e);
+            }
+            
+            // Test 7: Check Beers criteria
+            try {
+                const beersResult = IsraeliDrugDatabase.checkBeersCriteria("clonazepam");
+                displayResult('Test 7: Beers Criteria - Clonazepam', beersResult);
+            } catch(e) {
+                console.error('Beers check error:', e);
+            }
+            
+            // Test 8: Check Sal coverage
+            try {
+                const salResult = IsraeliDrugDatabase.checkSalCoverage("apixaban");
+                displayResult('Test 8: Sal Coverage - Apixaban', salResult);
+            } catch(e) {
+                console.error('Sal check error:', e);
+            }
+            
+            // Test 9: Database statistics
+            const stats = IsraeliDrugDatabase.generateReport();
+            displayResult('Test 9: Database Statistics', stats);
+            
+            console.log('All tests completed!');
+            console.log('Database object:', IsraeliDrugDatabase);
+            
+        }, 1000);
+    </script>
+</body>
+</html>

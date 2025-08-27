@@ -861,13 +861,50 @@ class UIEnhancement {
 
   drugLookup() {
     const content = `
-      <input type="text" class="search-input" placeholder="Enter drug name (e.g., metoprolol, warfarin, sertraline)" 
+      <input type="text" class="search-input" placeholder="Enter drug name (Brand/Generic: Tritace, metoprolol)" 
              id="drug-search" onkeyup="window.uiEnhancement.performDrugSearch()">
       <div id="drug-results">
-        <p>💡 Try searching for: metoprolol, warfarin, sertraline, lisinopril, furosemide, omeprazole, acetaminophen</p>
+        <p>💡 Try: Tritace, Norvasc, Zoloft, metoprolol, warfarin, sertraline</p>
+        <p>🇮🇱 For Hebrew: use Hebrew Drug Search in menu</p>
       </div>
     `;
-    this.showModal('Drug Lookup', content);
+    this.showModal('💊 Israeli Drug Database', content);
+  }
+
+  hebrewDrugSearch() {
+    const content = `
+      <div style="direction: rtl; text-align: right;">
+        <input type="text" class="search-input" placeholder="הכנס שם תרופה בעברית (אקמול, פרמין, קומדין)" 
+               style="direction: rtl;" 
+               id="hebrew-drug-search" onkeyup="window.uiEnhancement.performHebrewDrugSearch()">
+      </div>
+      <div id="hebrew-drug-results">
+        <p style="direction: rtl;">💊 נסה: אקמול, פרמין, קומדין, ואליום, ריבוטריל, אליקוויס</p>
+      </div>
+    `;
+    this.showModal('🇮🇱 חיפוש תרופות בעברית', content);
+  }
+
+  medicationReview() {
+    const content = `
+      <h3>Comprehensive STOPP/START Review</h3>
+      <div style="display: flex; flex-direction: column; gap: 10px;">
+        <input type="number" id="review-age" placeholder="Age" value="75" class="search-input">
+        <input type="number" id="review-creatinine" placeholder="Creatinine" value="1.2" step="0.1" class="search-input">
+        <select id="review-gender" class="search-input">
+          <option value="M">Male</option>
+          <option value="F">Female</option>
+        </select>
+        <textarea id="review-meds" placeholder="Medications (one per line)" rows="4" class="search-input">warfarin
+metformin
+omeprazole</textarea>
+        <textarea id="review-conditions" placeholder="Conditions (one per line)" rows="2" class="search-input">atrial fibrillation
+diabetes</textarea>
+        <button onclick="window.uiEnhancement.runMedicationReview()" class="action-btn">Run Review</button>
+      </div>
+      <div id="review-results" style="margin-top: 20px;"></div>
+    `;
+    this.showModal('📋 STOPP/START Review', content);
   }
 
   performDrugSearch() {
