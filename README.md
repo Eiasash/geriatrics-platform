@@ -69,6 +69,10 @@ Comprehensive geriatrics fellowship preparation platform combining:
 
 ## 💡 Usage Examples
 
+## 📸 Platform Preview
+
+![Geriatrics Study Platform](https://github.com/user-attachments/assets/664075aa-bb65-4588-863f-3787ba8f29f1)
+
 ```javascript
 // Morning Study Session
 smartStudy.getNextDueCard()
