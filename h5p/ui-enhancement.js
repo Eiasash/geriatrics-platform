@@ -166,6 +166,7 @@ class UIEnhancement {
           <div class="fab-submenu-item" onclick="window.uiEnhancement.viewProgress()">View Progress</div>
           <div class="fab-submenu-item" onclick="window.uiEnhancement.showPersonalKnowledge()">📝 Personal Notes</div>
           <div class="fab-submenu-item" onclick="window.uiEnhancement.showAdvancedQuiz()">🎓 Advanced Quiz System</div>
+          <div class="fab-submenu-item" onclick="window.uiEnhancement.showEnhancedQuiz()">🏥 Clinical Case Quiz</div>
         </div>
         
         <!-- Clinical Tools -->
@@ -1945,6 +1946,32 @@ class UIEnhancement {
             <li>✅ Clinical calculation questions</li>
             <li>✅ Performance tracking & statistics</li>
             <li>✅ Spaced repetition recommendations</li>
+          </ul>
+          <p>Please wait for all scripts to load, then try again.</p>
+        </div>
+      `);
+    }
+  }
+
+  // Enhanced Clinical Case Quiz
+  showEnhancedQuiz() {
+    if (window.enhancedQuiz && typeof window.enhancedQuiz.showQuizSystem === 'function') {
+      window.enhancedQuiz.showQuizSystem();
+    } else {
+      this.showModal('🏥 Clinical Case Quiz System', `
+        <div class="card-container">
+          <h3>🏥 Real Clinical Cases with Adaptive Learning</h3>
+          <p>The Enhanced Clinical Quiz is loading...</p>
+          <p>This advanced system provides:</p>
+          <ul style="text-align: left; margin: 10px 20px;">
+            <li>✅ 4 Complete Clinical Scenarios from Shaare Zedek</li>
+            <li>✅ Multi-step case-based reasoning</li>
+            <li>✅ Confidence tracking (1-5 scale)</li>
+            <li>✅ Fibonacci spaced repetition (1, 2, 3, 5, 8 hours)</li>
+            <li>✅ 4 Quiz Modes: Practice, Cases, Rapid Fire, Exam</li>
+            <li>✅ Real patient presentations with labs & vitals</li>
+            <li>✅ CHA2DS2-VASc, FRAIL calculations in context</li>
+            <li>✅ Adaptive difficulty based on confidence vs accuracy</li>
           </ul>
           <p>Please wait for all scripts to load, then try again.</p>
         </div>
