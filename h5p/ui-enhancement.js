@@ -13,7 +13,7 @@ class UIEnhancement {
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', () => this.createUI());
     } else {
-      setTimeout(() => this.createUI(), 1000); // Give other scripts time to load
+      setTimeout(() => this.createUI(), 2000); // Give more time for scripts to load
     }
   }
 
@@ -624,7 +624,54 @@ class UIEnhancement {
   // Clinical Functions
   getPimpQuestion() {
     if (!window.Fellowship) {
-      this.showModal('Error', 'Fellowship module not loaded.');
+      // Fallback pimp questions if Fellowship module not loaded
+      const fallbackQuestions = [
+        {
+          q: "Beers criteria for benzodiazepines in elderly?",
+          a: "Avoid all benzodiazepines except for seizure disorders, rapid eye movement sleep disorders, benzodiazepine withdrawal, ethanol withdrawal, severe GAD, or end-of-life care",
+          pearls: "Increased sensitivity due to slower metabolism and increased fat distribution"
+        },
+        {
+          q: "Target blood pressure in frail elderly?",
+          a: "SBP 140-150 mmHg for frail (CFS ≥5). Avoid SBP <130 due to increased falls and mortality",
+          pearls: "J-curve relationship more pronounced in frail populations"
+        },
+        {
+          q: "Most common cause of delirium in hospitalized elderly?",
+          a: "Multifactorial, but infections (especially UTI) most common single cause (25-30%), followed by medications and metabolic disturbances",
+          pearls: "Always check for constipation and urinary retention"
+        },
+        {
+          q: "First-line treatment for behavioral symptoms of dementia?",
+          a: "Non-pharmacological: identify triggers, structured routine, music therapy, validation therapy. Avoid antipsychotics except for severe psychosis or aggression",
+          pearls: "Antipsychotics increase mortality by 1.6-1.7x in dementia"
+        },
+        {
+          q: "NNT for exercise to prevent falls?",
+          a: "NNT = 7 for preventing one fall over 12 months with multicomponent exercise program",
+          pearls: "Most effective single intervention for fall prevention"
+        }
+      ];
+      
+      const q = fallbackQuestions[Math.floor(Math.random() * fallbackQuestions.length)];
+      const content = `
+        <div class="card-container">
+          <div class="card-question">❓ ${q.q}</div>
+          <div class="card-answer" id="answer-div" style="display:none;">
+            <p><strong>Answer:</strong> ${q.a}</p>
+            ${q.pearls ? `<p><strong>💡 Pearl:</strong> ${q.pearls}</p>` : ''}
+          </div>
+          <div class="button-row">
+            <button class="action-btn" onclick="document.getElementById('answer-div').style.display='block'">
+              Show Answer
+            </button>
+            <button class="action-btn" onclick="window.uiEnhancement.getPimpQuestion()">
+              Next Question
+            </button>
+          </div>
+        </div>
+      `;
+      this.showModal('Pimp Question', content);
       return;
     }
     
@@ -651,7 +698,40 @@ class UIEnhancement {
 
   startCase() {
     if (!window.Fellowship || !window.Fellowship.caseSimulator) {
-      this.showModal('Error', 'Case simulator not available.');
+      // Fallback case simulator
+      const fallbackCases = [
+        {
+          id: 'case_1',
+          presentation: '85yo woman with confusion after hip surgery. Vitals stable. No focal neuro findings.',
+          questions: [
+            {
+              prompt: 'Most appropriate initial assessment?',
+              options: ['Head CT', 'CAM assessment', 'Lumbar puncture', 'EEG'],
+              correct: 1,
+              explanation: 'CAM assessment first - delirium is most likely post-op. CT has low yield without focal findings.',
+              pearls: '90% of post-op confusion in elderly is delirium, not stroke'
+            }
+          ]
+        },
+        {
+          id: 'case_2',
+          presentation: '78yo man on 12 medications presents with falls. No orthostatic changes. Morse score 55.',
+          questions: [
+            {
+              prompt: 'Priority intervention?',
+              options: ['PT consult', 'Medication review', 'Hip protectors', 'Bed alarm'],
+              correct: 1,
+              explanation: 'Polypharmacy is likely contributor. Review for PIMs, especially psychotropics, antihypertensives.',
+              pearls: 'Each additional medication increases fall risk by 5-7%'
+            }
+          ]
+        }
+      ];
+      
+      const caseData = fallbackCases[Math.floor(Math.random() * fallbackCases.length)];
+      this.currentCase = caseData;
+      this.currentQuestion = 0;
+      this.showCaseQuestion();
       return;
     }
     
@@ -684,7 +764,25 @@ class UIEnhancement {
   }
 
   submitCaseAnswer(answerIndex) {
-    const result = window.Fellowship.caseSimulator.submitAnswer(this.currentQuestion, answerIndex);
+    let result;
+    
+    if (window.Fellowship && window.Fellowship.caseSimulator) {
+      result = window.Fellowship.caseSimulator.submitAnswer(this.currentQuestion, answerIndex);
+    } else {
+      // Fallback case evaluation
+      const question = this.currentCase.questions[this.currentQuestion];
+      const correct = answerIndex === question.correct;
+      
+      if (!this.caseScore) this.caseScore = 0;
+      if (correct) this.caseScore++;
+      
+      result = {
+        correct: correct,
+        explanation: question.explanation,
+        pearl: question.pearls,
+        score: this.caseScore
+      };
+    }
     
     const content = `
       <div class="card-container">
@@ -783,12 +881,31 @@ class UIEnhancement {
   }
 
   renalDosing() {
-    if (!window.Fellowship) {
-      this.showModal('Error', 'Reference not available.');
-      return;
-    }
+    let dosing;
     
-    const dosing = window.Fellowship.quickRefs.renalDosing;
+    if (window.Fellowship && window.Fellowship.quickRefs) {
+      dosing = window.Fellowship.quickRefs.renalDosing;
+    } else {
+      // Fallback renal dosing data
+      dosing = {
+        'CrCl 30-50': {
+          metformin: 'Max 1000mg daily',
+          gabapentin: 'Reduce by 50%',
+          rivaroxaban: '15mg daily',
+          apixaban: 'No change unless other criteria met',
+          enoxaparin: 'No change for prophylaxis',
+          trimethoprim: 'Reduce by 50%'
+        },
+        'CrCl 15-30': {
+          metformin: 'Contraindicated',
+          gabapentin: 'Reduce by 75%',
+          rivaroxaban: '15mg daily',
+          apixaban: 'Consider 2.5mg BID',
+          enoxaparin: 'Reduce by 50%',
+          trimethoprim: 'Reduce by 50%'
+        }
+      };
+    }
     const content = `
       <div class="card-container">
         <h3>CrCl 30-50 mL/min</h3>
@@ -1000,12 +1117,20 @@ class UIEnhancement {
   }
 
   opioidCalc() {
-    if (!window.Fellowship) {
-      this.showModal('Error', 'Calculator not available.');
-      return;
-    }
+    let conversions;
     
-    const conversions = window.Fellowship.quickRefs.opioidConversion.conversions;
+    if (window.Fellowship && window.Fellowship.quickRefs) {
+      conversions = window.Fellowship.quickRefs.opioidConversion.conversions;
+    } else {
+      // Fallback opioid conversion data
+      conversions = {
+        'Morphine PO:IV': '3:1',
+        'Morphine:Oxycodone': '1.5:1',
+        'Morphine:Hydromorphone': '5:1',
+        'Morphine:Fentanyl patch': '100mg/day : 1mcg/hr',
+        'Morphine:Tramadol': '1:10'
+      };
+    }
     const content = `
       <div class="card-container">
         <h3>Opioid Conversion Ratios</h3>
