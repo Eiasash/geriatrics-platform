@@ -1684,11 +1684,10 @@ class UIEnhancement {
     }
     
     const platforms = [
-      'https://www.uptodate.com/contents/search?search=',
-      'https://www.nejm.org/search?q=',
-      'https://www.dynamed.com/search?q=',
-      'https://accessmedicine.mhmedical.com/SearchResults.aspx?q=',
-      'https://www.clinicalkey.com/#!/search/'
+      'https://www-uptodate-com.clalit.portium.org/contents/search?search=',
+      'https://pubmed-ncbi-nlm-nih-gov.clalit.portium.org/?otool=iilclalib&term=',
+      'https://www-clinicalkey-com.clalit.portium.org/#!/search/',
+      'https://www-tripdatabase-com.clalit.portium.org/search?q='
     ];
     
     platforms.forEach(url => {
@@ -1707,9 +1706,9 @@ class UIEnhancement {
     
     const geriatricQuery = query + ' elderly geriatric';
     const platforms = [
-      'https://www.uptodate.com/contents/search?search=',
-      'https://www.nejm.org/search?q=',
-      'https://www.dynamed.com/search?q='
+      'https://www-uptodate-com.clalit.portium.org/contents/search?search=',
+      'https://pubmed-ncbi-nlm-nih-gov.clalit.portium.org/?otool=iilclalib&term=',
+      'https://www-tripdatabase-com.clalit.portium.org/search?q='
     ];
     
     platforms.forEach(url => {
@@ -1731,8 +1730,8 @@ class UIEnhancement {
     
     const query = topicQueries[topic] || topic + ' elderly';
     
-    window.open('https://www.uptodate.com/contents/search?search=' + encodeURIComponent(query), '_blank');
-    window.open('https://www.nejm.org/search?q=' + encodeURIComponent(query), '_blank');
+    window.open('https://www-uptodate-com.clalit.portium.org/contents/search?search=' + encodeURIComponent(query), '_blank');
+    window.open('https://pubmed-ncbi-nlm-nih-gov.clalit.portium.org/?otool=iilclalib&term=' + encodeURIComponent(query), '_blank');
     
     this.closeModal();
   }

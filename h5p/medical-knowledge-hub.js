@@ -7,37 +7,74 @@ class MedicalKnowledgeHub {
       uptodate: {
         name: 'UpToDate',
         icon: '📚',
-        searchUrl: 'https://www.uptodate.com/contents/search?search=',
+        searchUrl: 'https://www-uptodate-com.clalit.portium.org/contents/search?search=',
+        directUrl: 'https://www-uptodate-com.clalit.portium.org',
         mobile: 'uptodate://search?term=',
-        color: '#0066cc'
+        color: '#0066cc',
+        israeliNotes: 'Clalit institutional access via Portium proxy'
       },
-      nejm: {
-        name: 'NEJM',
-        icon: '📖',
-        searchUrl: 'https://www.nejm.org/search?q=',
-        mobile: 'https://www.nejm.org/search?q=',
-        color: '#8B0000'
-      },
-      dynamed: {
-        name: 'DynaMed',
-        icon: '📋',
-        searchUrl: 'https://www.dynamed.com/search?q=',
-        mobile: 'dynamed://search?q=',
-        color: '#2E8B57'
-      },
-      accessmedicine: {
-        name: 'AccessMedicine',
-        icon: '🏥',
-        searchUrl: 'https://accessmedicine.mhmedical.com/SearchResults.aspx?q=',
-        mobile: 'https://accessmedicine.mhmedical.com/SearchResults.aspx?q=',
-        color: '#FF6B35'
+      pubmed: {
+        name: 'PubMed',
+        icon: '🔬',
+        searchUrl: 'https://pubmed-ncbi-nlm-nih-gov.clalit.portium.org/?otool=iilclalib&term=',
+        directUrl: 'https://pubmed-ncbi-nlm-nih-gov.clalit.portium.org',
+        mobile: 'https://pubmed-ncbi-nlm-nih-gov.clalit.portium.org/?otool=iilclalib&term=',
+        color: '#2E7D32',
+        israeliNotes: 'Full-text access through Clalit subscription'
       },
       clinicalkey: {
         name: 'ClinicalKey',
         icon: '🔑',
-        searchUrl: 'https://www.clinicalkey.com/#!/search/',
-        mobile: 'https://www.clinicalkey.com/#!/search/',
-        color: '#4169E1'
+        searchUrl: 'https://www-clinicalkey-com.clalit.portium.org/#!/search/',
+        directUrl: 'https://www-clinicalkey-com.clalit.portium.org',
+        mobile: 'https://www-clinicalkey-com.clalit.portium.org/#!/search/',
+        color: '#4169E1',
+        israeliNotes: 'Elsevier medical database - excellent for drugs'
+      },
+      accessmedicine: {
+        name: 'AccessMedicine',
+        icon: '🏥',
+        searchUrl: 'https://accessmedicine-mhmedical-com.clalit.portium.org/SearchResults.aspx?q=',
+        directUrl: 'https://accessmedicine-mhmedical-com.clalit.portium.org',
+        mobile: 'https://accessmedicine-mhmedical-com.clalit.portium.org/SearchResults.aspx?q=',
+        color: '#FF6B35',
+        israeliNotes: 'McGraw-Hill medical textbooks'
+      },
+      micromedex: {
+        name: 'Micromedex',
+        icon: '💊',
+        searchUrl: 'https://www-micromedexsolutions-com.clalit.portium.org/micromedex2/librarian?drug=',
+        directUrl: 'https://www-micromedexsolutions-com.clalit.portium.org',
+        mobile: 'https://www-micromedexsolutions-com.clalit.portium.org/micromedex2/librarian?drug=',
+        color: '#8E24AA',
+        israeliNotes: 'Best drug interaction checker - superior to Lexicomp'
+      },
+      jwatch: {
+        name: 'NEJM Journal Watch',
+        icon: '📰',
+        searchUrl: 'https://www-jwatch-org.clalit.portium.org/search?q=',
+        directUrl: 'https://www-jwatch-org.clalit.portium.org',
+        mobile: 'https://www-jwatch-org.clalit.portium.org/search?q=',
+        color: '#D32F2F',
+        israeliNotes: 'Perfect for staying current during fellowship'
+      },
+      tripdatabase: {
+        name: 'TRIP Database',
+        icon: '🎯',
+        searchUrl: 'https://www-tripdatabase-com.clalit.portium.org/search?q=',
+        directUrl: 'https://www-tripdatabase-com.clalit.portium.org',
+        mobile: 'https://www-tripdatabase-com.clalit.portium.org/search?q=',
+        color: '#00796B',
+        israeliNotes: 'Evidence pyramid search - finds systematic reviews first'
+      },
+      googlescholar: {
+        name: 'Google Scholar',
+        icon: '🎓',
+        searchUrl: 'https://scholar-google-co-il.clalit.portium.org/scholar?q=',
+        directUrl: 'https://scholar-google-co-il.clalit.portium.org',
+        mobile: 'https://scholar-google-co-il.clalit.portium.org/scholar?q=',
+        color: '#1976D2',
+        israeliNotes: 'Israeli Google Scholar with institutional access'
       }
     };
     
@@ -91,15 +128,40 @@ class MedicalKnowledgeHub {
         </div>
 
         <div class="platform-grid">
-          <h3>📚 Platform Quick Access</h3>
+          <h3>📚 Clalit Medical Database Access</h3>
+          <div class="clalit-info" style="background: #e3f2fd; padding: 15px; border-radius: 8px; margin: 15px 0;">
+            <p><strong>🏥 Clalit Institutional Access</strong></p>
+            <p>Login with your Teudat Zehut (9 digits) and Clalit password</p>
+            <p>Session stays active for 2-4 hours across all databases</p>
+          </div>
+          
           <div class="platform-buttons">
             ${Object.entries(this.platforms).map(([key, platform]) => `
               <button class="platform-btn" 
                       style="border-color: ${platform.color}; color: ${platform.color};"
-                      onclick="window.medicalHub.openPlatform('${key}')">
+                      onclick="window.medicalHub.openPlatform('${key}')"
+                      title="${platform.israeliNotes}">
                 ${platform.icon} ${platform.name}
+                <small style="display: block; font-size: 11px; color: #666; margin-top: 2px;">
+                  ${platform.israeliNotes}
+                </small>
               </button>
             `).join('')}
+          </div>
+        </div>
+
+        <div class="specialized-searches">
+          <h3>🎯 Specialized Searches</h3>
+          <div class="search-type-buttons">
+            <button class="action-btn" onclick="window.medicalHub.drugSearch()" style="background: #8E24AA;">
+              💊 Drug Search (Micromedex + UpToDate)
+            </button>
+            <button class="action-btn" onclick="window.medicalHub.evidenceSearch()" style="background: #00796B;">
+              📊 Evidence Search (TRIP + PubMed)
+            </button>
+            <button class="action-btn" onclick="window.medicalHub.currentAwareness()" style="background: #D32F2F;">
+              📰 Current Awareness (Journal Watch)
+            </button>
           </div>
         </div>
 
@@ -312,11 +374,10 @@ class MedicalKnowledgeHub {
         const query = prompt('Enter medical topic/condition:');
         if(query) {
           const platforms = [
-            'https://www.uptodate.com/contents/search?search=',
-            'https://www.nejm.org/search?q=',
-            'https://www.dynamed.com/search?q=',
-            'https://accessmedicine.mhmedical.com/SearchResults.aspx?q=',
-            'https://www.clinicalkey.com/#!/search/'
+            'https://www-uptodate-com.clalit.portium.org/contents/search?search=',
+            'https://pubmed-ncbi-nlm-nih-gov.clalit.portium.org/?otool=iilclalib&term=',
+            'https://www-clinicalkey-com.clalit.portium.org/#!/search/',
+            'https://www-tripdatabase-com.clalit.portium.org/search?q='
           ];
           platforms.forEach(url => {
             window.open(url + encodeURIComponent(query), '_blank');
@@ -328,7 +389,8 @@ class MedicalKnowledgeHub {
         const drug = prompt('Enter medication name:');
         if(drug) {
           const geriatricQuery = drug + ' elderly geriatric dosing interactions';
-          window.open('https://www.uptodate.com/contents/search?search=' + 
+          window.open('https://www-micromedexsolutions-com.clalit.portium.org/micromedx2/librarian?drug=' + encodeURIComponent(drug), '_blank');
+          window.open('https://www-uptodate-com.clalit.portium.org/contents/search?search=' + 
             encodeURIComponent(geriatricQuery), '_blank');
         }
       })();`,
@@ -355,10 +417,65 @@ class MedicalKnowledgeHub {
 
     this.saveRecentSearch(query);
 
-    Object.values(this.platforms).forEach(platform => {
+    // Search core platforms for comprehensive results
+    const corePlatforms = ['uptodate', 'pubmed', 'clinicalkey', 'tripdatabase'];
+    corePlatforms.forEach(platformKey => {
+      const platform = this.platforms[platformKey];
       const searchUrl = platform.searchUrl + encodeURIComponent(query);
       window.open(searchUrl, '_blank');
     });
+  }
+
+  // Specialized drug search using Micromedex + UpToDate
+  drugSearch(medication) {
+    if (!medication) {
+      medication = prompt('Enter medication name:');
+      if (!medication) return;
+    }
+    
+    this.saveRecentSearch(medication + ' (drug search)');
+    
+    const drug = encodeURIComponent(medication);
+    
+    // Open Micromedex for interactions/compatibility
+    window.open(this.platforms.micromedex.searchUrl + drug, '_blank');
+    
+    // Open UpToDate with elderly focus
+    window.open(this.platforms.uptodate.searchUrl + encodeURIComponent(medication + ' elderly'), '_blank');
+    
+    // Open ClinicalKey for geriatric dosing
+    window.open(this.platforms.clinicalkey.searchUrl + encodeURIComponent(medication + ' geriatric'), '_blank');
+  }
+
+  // Evidence-based medicine search
+  evidenceSearch(topic) {
+    if (!topic) {
+      topic = document.getElementById('medical-search-input')?.value.trim() || 
+             prompt('Enter topic for evidence search:');
+      if (!topic) return;
+    }
+    
+    this.saveRecentSearch(topic + ' (evidence search)');
+    
+    const query = encodeURIComponent(topic);
+    
+    // TRIP Database for evidence pyramid
+    window.open(this.platforms.tripdatabase.searchUrl + query, '_blank');
+    
+    // PubMed for latest research
+    window.open(this.platforms.pubmed.searchUrl + query, '_blank');
+    
+    // Google Scholar for citations
+    window.open(this.platforms.googlescholar.searchUrl + query, '_blank');
+  }
+
+  // Current awareness - Journal Watch for staying updated
+  currentAwareness() {
+    // Open Journal Watch main page
+    window.open(this.platforms.jwatch.directUrl, '_blank');
+    
+    // Open UpToDate What's New
+    window.open(this.platforms.uptodate.directUrl + '/whats-new', '_blank');
   }
 
   searchGeriatricFocused() {
