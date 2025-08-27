@@ -1,5 +1,5 @@
 [build]
-  publish = "."
+  publish = "h5p"
 
 [[headers]]
   for = "/*"
