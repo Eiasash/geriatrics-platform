@@ -865,8 +865,13 @@ class UIEnhancement {
     const resultsDiv = document.getElementById('drug-results');
     let drugInfo = null;
     
-    // Try comprehensive database first
-    if (window.DrugDatabase) {
+    // Try Israeli Drug Database first (most comprehensive)
+    if (window.IsraeliDrugDatabase) {
+      drugInfo = window.IsraeliDrugDatabase.getDrugInfo(drugName);
+    }
+    
+    // Try comprehensive database second
+    if ((!drugInfo || drugInfo.error) && window.DrugDatabase) {
       drugInfo = window.DrugDatabase.getDrugInfo(drugName);
     }
     
@@ -881,49 +886,64 @@ class UIEnhancement {
       
       resultsDiv.innerHTML = `
         <div class="card-container">
-          <h3>${drugInfo.name || drugName}</h3>
+          <h3>${drugInfo.genericName || drugInfo.name || drugName}</h3>
+          ${drugInfo.brandNames ? `<p><strong>🇮🇱 Brand Names:</strong> ${drugInfo.brandNames.join(', ')}</p>` : ''}
+          ${drugInfo.hebrewName ? `<p><strong>Hebrew:</strong> ${drugInfo.hebrewName}</p>` : ''}
           <p><strong>Class:</strong> ${drugInfo.class}</p>
           <p><strong>Indication:</strong> ${drugInfo.indication || 'Not specified'}</p>
           
           <h4>Geriatric Dosing</h4>
-          <p><strong>Start Dose:</strong> ${drugInfo.startDose}</p>
-          <p><strong>Max Dose:</strong> ${drugInfo.maxDose}</p>
-          <p><strong>Renal Dosing:</strong> ${drugInfo.renalDosing}</p>
+          ${drugInfo.dosing ? `
+            <p><strong>Start Dose:</strong> ${drugInfo.dosing.startDose || drugInfo.startDose}</p>
+            <p><strong>Max Dose:</strong> ${drugInfo.dosing.maxDose || drugInfo.maxDose}</p>
+            <p><strong>Geriatric Start:</strong> ${drugInfo.dosing.geriatricStart || 'Same as adult'}</p>
+          ` : `
+            <p><strong>Start Dose:</strong> ${drugInfo.startDose}</p>
+            <p><strong>Max Dose:</strong> ${drugInfo.maxDose}</p>
+          `}
           
           <h4>Safety Considerations</h4>
           <p><strong>Geriatric Notes:</strong> ${drugInfo.geriatricConsiderations}</p>
-          ${drugInfo.commonSideEffects ? `<p><strong>Common Side Effects:</strong> ${drugInfo.commonSideEffects}</p>` : ''}
+          ${drugInfo.contraindications ? `<p><strong>Contraindications:</strong> ${drugInfo.contraindications.join(', ')}</p>` : ''}
           ${drugInfo.monitoring ? `<p><strong>Monitoring:</strong> ${drugInfo.monitoring}</p>` : ''}
           
-          ${beersConcerns.length > 0 ? `
-            <div style="background: #fee; padding: 10px; border-radius: 5px; margin: 10px 0;">
-              <h4>⚠️ Beers Criteria Concerns:</h4>
-              ${beersConcerns.map(concern => `<p>• ${concern}</p>`).join('')}
+          ${drugInfo.beersCriteria ? `
+            <div style="background: #ffebee; border-left: 4px solid #f44336; padding: 10px; margin: 10px 0;">
+              <h4>🚫 Beers Criteria</h4>
+              <p><strong>${drugInfo.beersCriteria}</strong></p>
+              ${drugInfo.alternatives ? `<p><strong>Consider:</strong> ${drugInfo.alternatives.join(', ')}</p>` : ''}
             </div>
           ` : ''}
           
-          ${alternatives.length > 0 ? `
-            <div style="background: #efe; padding: 10px; border-radius: 5px; margin: 10px 0;">
-              <h4>🔄 Alternatives:</h4>
-              <p>${alternatives.join(', ')}</p>
+          ${drugInfo.israeliNotes ? `
+            <div style="background: #e3f2fd; border-left: 4px solid #2196f3; padding: 10px; margin: 10px 0;">
+              <h4>🇮🇱 Israeli Context</h4>
+              <p>${drugInfo.israeliNotes}</p>
             </div>
           ` : ''}
           
-          <p><strong>Key Interactions:</strong> ${drugInfo.interactions?.join(', ') || 'See full database'}</p>
+          <p><strong>Key Interactions:</strong> ${drugInfo.interactions?.join(', ') || 'See interaction checker'}</p>
+          
+          <div class="button-row" style="margin-top: 15px;">
+            <button class="action-btn" onclick="window.uiEnhancement.checkSingleDrugInteractions('${drugInfo.genericName || drugInfo.name || drugName}')">
+              🔍 Check Interactions
+            </button>
+          </div>
         </div>
       `;
     } else {
       resultsDiv.innerHTML = `
         <div class="card-container">
           <p>Drug "${drugName}" not found in database.</p>
-          <p><strong>Available drugs include:</strong></p>
-          <p>• <strong>Cardiac:</strong> metoprolol, lisinopril, amlodipine, furosemide</p>
-          <p>• <strong>Psychiatric:</strong> sertraline, mirtazapine, lorazepam</p>
-          <p>• <strong>Anticoagulants:</strong> warfarin, apixaban, rivaroxaban</p>
-          <p>• <strong>Pain:</strong> acetaminophen, ibuprofen, tramadol</p>
-          <p>• <strong>GI:</strong> omeprazole, famotidine</p>
-          <p>• <strong>Diabetes:</strong> metformin, glipizide</p>
-          <p>And 80+ more medications!</p>
+          ${drugInfo.suggestion ? `<p><strong>💡 Suggestion:</strong> ${drugInfo.suggestion}</p>` : ''}
+          <p><strong>🇮🇱 Try Israeli brand names:</strong></p>
+          <p>• <strong>Cardiac:</strong> Betaloc (metoprolol), Norvasc (amlodipine), Tritace (ramipril)</p>
+          <p>• <strong>Psychiatric:</strong> Zoloft (sertraline), Remeron (mirtazapine), Rivotril (clonazepam)</p>
+          <p>• <strong>Anticoagulants:</strong> Coumadin (warfarin), Xarelto (rivaroxaban)</p>
+          <p>• <strong>Pain:</strong> Tramal (tramadol)</p>
+          <p>• <strong>Antibiotics:</strong> Augmentin (amoxicillin/clavulanate)</p>
+          <p>• <strong>Other:</strong> Glucophage (metformin), Euthyrox (levothyroxine)</p>
+          <p>And many more generic names too!</p>
         </div>
       `;
     }
@@ -944,23 +964,205 @@ class UIEnhancement {
 
   performInteractionCheck() {
     const meds = document.getElementById('med-list').value.split('\n').filter(m => m.trim());
-    if (!meds.length || !window.GeriatricsKnowledge) return;
+    if (!meds.length) return;
     
-    const interactions = window.GeriatricsKnowledge.checkDrugInteractions(meds);
+    // Use Israeli Drug Database if available, fallback to regular database
+    let interactionSummary;
+    if (window.IsraeliDrugDatabase) {
+      interactionSummary = window.IsraeliDrugDatabase.getInteractionSummary(meds);
+    } else if (window.GeriatricsKnowledge) {
+      const interactions = window.GeriatricsKnowledge.checkDrugInteractions(meds);
+      interactionSummary = { interactions, totalInteractions: interactions.length };
+    } else {
+      document.getElementById('interaction-results').innerHTML = `
+        <div class="card-container">
+          <h4>⚠️ Database Loading</h4>
+          <p>Drug database is still loading. Please try again in a moment.</p>
+        </div>
+      `;
+      return;
+    }
+    
     const resultsDiv = document.getElementById('interaction-results');
     
-    if (interactions.length > 0) {
+    if (interactionSummary.totalInteractions > 0) {
+      const contraindicated = interactionSummary.interactions.filter(i => i.severity === 'CONTRAINDICATED');
+      const major = interactionSummary.interactions.filter(i => i.severity === 'MAJOR');
+      const moderate = interactionSummary.interactions.filter(i => i.severity === 'MODERATE');
+      
       resultsDiv.innerHTML = `
         <div class="card-container">
-          <h4>⚠️ Interactions Found:</h4>
-          ${interactions.map(int => `
-            <p><strong>${int.drugs.join(' + ')}:</strong> ${int.action}</p>
-          `).join('')}
+          <h4>⚠️ ${interactionSummary.totalInteractions} Interaction(s) Found</h4>
+          
+          ${contraindicated.length > 0 ? `
+            <div style="background: #ffebee; border-left: 4px solid #f44336; padding: 10px; margin: 10px 0;">
+              <h5>🚫 CONTRAINDICATED (${contraindicated.length})</h5>
+              ${contraindicated.map(int => `
+                <div style="margin: 10px 0; padding: 8px; background: white; border-radius: 4px;">
+                  <strong>${int.originalNames ? int.originalNames.join(' + ') : int.drugs.join(' + ')}</strong><br>
+                  <em>${int.effect}</em><br>
+                  <strong>Action:</strong> ${int.management}<br>
+                  ${int.timeframe ? `<small>⏱️ ${int.timeframe}</small>` : ''}
+                </div>
+              `).join('')}
+            </div>
+          ` : ''}
+          
+          ${major.length > 0 ? `
+            <div style="background: #fff3e0; border-left: 4px solid #ff9800; padding: 10px; margin: 10px 0;">
+              <h5>⚠️ MAJOR (${major.length})</h5>
+              ${major.map(int => `
+                <div style="margin: 10px 0; padding: 8px; background: white; border-radius: 4px;">
+                  <strong>${int.originalNames ? int.originalNames.join(' + ') : int.drugs.join(' + ')}</strong><br>
+                  <em>${int.effect}</em><br>
+                  <strong>Management:</strong> ${int.management}<br>
+                  ${int.frequency ? `<small>📊 ${int.frequency}</small>` : ''}
+                </div>
+              `).join('')}
+            </div>
+          ` : ''}
+          
+          ${moderate.length > 0 ? `
+            <div style="background: #f3e5f5; border-left: 4px solid #9c27b0; padding: 10px; margin: 10px 0;">
+              <h5>⚠️ MODERATE (${moderate.length})</h5>
+              ${moderate.map(int => `
+                <div style="margin: 10px 0; padding: 8px; background: white; border-radius: 4px;">
+                  <strong>${int.originalNames ? int.originalNames.join(' + ') : int.drugs.join(' + ')}</strong><br>
+                  <em>${int.effect}</em><br>
+                  <strong>Management:</strong> ${int.management}
+                </div>
+              `).join('')}
+            </div>
+          ` : ''}
+          
+          ${interactionSummary.recommendations && interactionSummary.recommendations.length > 0 ? `
+            <div style="background: #e8f5e8; border-left: 4px solid #4caf50; padding: 10px; margin: 10px 0;">
+              <h5>💡 Clinical Recommendations</h5>
+              ${interactionSummary.recommendations.map(rec => `
+                <p><strong>${rec.priority}:</strong> ${rec.action}<br>
+                <small>${rec.reason}</small></p>
+              `).join('')}
+            </div>
+          ` : ''}
         </div>
       `;
     } else {
       resultsDiv.innerHTML = '<p>✅ No significant interactions detected</p>';
     }
+  }
+
+  checkSingleDrugInteractions(drugName) {
+    if (!window.IsraeliDrugDatabase) {
+      this.showModal('Error', 'Israeli Drug Database not loaded. Please refresh the page.');
+      return;
+    }
+    
+    const drugInfo = window.IsraeliDrugDatabase.getDrugInfo(drugName);
+    if (!drugInfo || drugInfo.error) {
+      this.showModal('Error', `Drug "${drugName}" not found in database.`);
+      return;
+    }
+    
+    const content = `
+      <div class="card-container">
+        <h4>Known Interactions for ${drugInfo.genericName || drugName}</h4>
+        <p><strong>Brand Names:</strong> ${drugInfo.brandNames?.join(', ') || 'Generic only'}</p>
+        
+        ${drugInfo.interactions && drugInfo.interactions.length > 0 ? `
+          <h5>⚠️ Key Drug Interactions:</h5>
+          <ul>
+            ${drugInfo.interactions.map(interaction => `<li>${interaction}</li>`).join('')}
+          </ul>
+        ` : '<p>No specific interactions listed in database.</p>'}
+        
+        <div style="margin-top: 15px;">
+          <p><strong>To check for interactions with this drug:</strong></p>
+          <textarea class="search-input" rows="3" id="single-drug-check" 
+                    placeholder="Enter other medications (one per line)&#10;${drugName} will be automatically included"></textarea>
+          <button class="action-btn" onclick="window.uiEnhancement.performSingleDrugCheck('${drugName}')">
+            🔍 Check Interactions
+          </button>
+        </div>
+        
+        <div id="single-drug-results"></div>
+      </div>
+    `;
+    
+    this.showModal(`${drugInfo.genericName || drugName} Interactions`, content);
+  }
+
+  performSingleDrugCheck(baseDrug) {
+    const otherMeds = document.getElementById('single-drug-check').value.split('\n')
+      .filter(m => m.trim())
+      .map(m => m.trim());
+    
+    if (otherMeds.length === 0) {
+      document.getElementById('single-drug-results').innerHTML = 
+        '<p>Please enter at least one other medication to check interactions.</p>';
+      return;
+    }
+    
+    // Add the base drug to the list
+    const allMeds = [baseDrug, ...otherMeds];
+    const interactionSummary = window.IsraeliDrugDatabase.getInteractionSummary(allMeds);
+    
+    const resultsDiv = document.getElementById('single-drug-results');
+    
+    if (interactionSummary.totalInteractions > 0) {
+      const content = this.formatInteractionResults(interactionSummary);
+      resultsDiv.innerHTML = content;
+    } else {
+      resultsDiv.innerHTML = '<div style="background: #e8f5e8; padding: 10px; border-radius: 5px; margin: 10px 0;"><p>✅ No significant interactions detected with the entered medications.</p></div>';
+    }
+  }
+
+  formatInteractionResults(interactionSummary) {
+    const contraindicated = interactionSummary.interactions.filter(i => i.severity === 'CONTRAINDICATED');
+    const major = interactionSummary.interactions.filter(i => i.severity === 'MAJOR');
+    const moderate = interactionSummary.interactions.filter(i => i.severity === 'MODERATE');
+    
+    return `
+      <h5>⚠️ ${interactionSummary.totalInteractions} Interaction(s) Found</h5>
+      
+      ${contraindicated.length > 0 ? `
+        <div style="background: #ffebee; border-left: 4px solid #f44336; padding: 10px; margin: 10px 0;">
+          <h6>🚫 CONTRAINDICATED (${contraindicated.length})</h6>
+          ${contraindicated.map(int => `
+            <div style="margin: 8px 0; padding: 6px; background: white; border-radius: 4px; font-size: 14px;">
+              <strong>${int.originalNames ? int.originalNames.join(' + ') : int.drugs.join(' + ')}</strong><br>
+              <em>${int.effect}</em><br>
+              <strong>Action:</strong> ${int.management}
+            </div>
+          `).join('')}
+        </div>
+      ` : ''}
+      
+      ${major.length > 0 ? `
+        <div style="background: #fff3e0; border-left: 4px solid #ff9800; padding: 10px; margin: 10px 0;">
+          <h6>⚠️ MAJOR (${major.length})</h6>
+          ${major.map(int => `
+            <div style="margin: 8px 0; padding: 6px; background: white; border-radius: 4px; font-size: 14px;">
+              <strong>${int.originalNames ? int.originalNames.join(' + ') : int.drugs.join(' + ')}</strong><br>
+              <em>${int.effect}</em><br>
+              <strong>Management:</strong> ${int.management}
+            </div>
+          `).join('')}
+        </div>
+      ` : ''}
+      
+      ${moderate.length > 0 ? `
+        <div style="background: #f3e5f5; border-left: 4px solid #9c27b0; padding: 10px; margin: 10px 0;">
+          <h6>⚠️ MODERATE (${moderate.length})</h6>
+          ${moderate.map(int => `
+            <div style="margin: 8px 0; padding: 6px; background: white; border-radius: 4px; font-size: 14px;">
+              <strong>${int.originalNames ? int.originalNames.join(' + ') : int.drugs.join(' + ')}</strong><br>
+              <em>${int.effect}</em><br>
+              <strong>Management:</strong> ${int.management}
+            </div>
+          `).join('')}
+        </div>
+      ` : ''}
+    `;
   }
 
   renalDosing() {
