@@ -165,6 +165,7 @@ class UIEnhancement {
           <div class="fab-submenu-item" onclick="window.uiEnhancement.searchCards()">Search Cards</div>
           <div class="fab-submenu-item" onclick="window.uiEnhancement.viewProgress()">View Progress</div>
           <div class="fab-submenu-item" onclick="window.uiEnhancement.showPersonalKnowledge()">📝 Personal Notes</div>
+          <div class="fab-submenu-item" onclick="window.uiEnhancement.showAdvancedQuiz()">🎓 Advanced Quiz System</div>
         </div>
         
         <!-- Clinical Tools -->
@@ -176,6 +177,7 @@ class UIEnhancement {
           <div class="fab-submenu-item" onclick="window.uiEnhancement.getPimpQuestion()">Pimp Question</div>
           <div class="fab-submenu-item" onclick="window.uiEnhancement.startCase()">Case Simulator</div>
           <div class="fab-submenu-item" onclick="window.uiEnhancement.drugLookup()">Drug Lookup</div>
+          <div class="fab-submenu-item" onclick="window.uiEnhancement.showCalculators()">🧮 Clinical Calculators</div>
           <div class="fab-submenu-item" onclick="window.uiEnhancement.checkInteractions()">Check Interactions</div>
           <div class="fab-submenu-item" onclick="window.uiEnhancement.renalDosing()">Renal Dosing</div>
         </div>
@@ -1891,6 +1893,58 @@ class UIEnhancement {
             <li>✅ Cochrane Library open access</li>
             <li>✅ Save articles for reference</li>
             <li>✅ Citation generation</li>
+          </ul>
+          <p>Please wait for all scripts to load, then try again.</p>
+        </div>
+      `);
+    }
+  }
+
+  // Advanced Clinical Calculators
+  showCalculators() {
+    if (window.clinicalCalc && typeof window.clinicalCalc.showCalculators === 'function') {
+      window.clinicalCalc.showCalculators();
+    } else {
+      this.showModal('🧮 Advanced Clinical Calculators', `
+        <div class="card-container">
+          <h3>🧮 Comprehensive Geriatric Assessment Tools</h3>
+          <p>The Advanced Clinical Calculators are loading...</p>
+          <p>This feature provides:</p>
+          <ul style="text-align: left; margin: 10px 20px;">
+            <li>✅ CHA2DS2-VASc stroke risk calculator</li>
+            <li>✅ HAS-BLED bleeding risk assessment</li>
+            <li>✅ FRAIL scale frailty evaluation</li>
+            <li>✅ Charlson Comorbidity Index</li>
+            <li>✅ Morse Fall Scale</li>
+            <li>✅ STOPP/START medication criteria</li>
+            <li>✅ Hebrew-English drug translation</li>
+            <li>✅ Israeli healthcare context</li>
+          </ul>
+          <p>Please wait for all scripts to load, then try again.</p>
+        </div>
+      `);
+    }
+  }
+
+  // Advanced Quiz System
+  showAdvancedQuiz() {
+    if (window.advancedQuiz && typeof window.advancedQuiz.showQuizSystem === 'function') {
+      window.advancedQuiz.showQuizSystem();
+    } else {
+      this.showModal('🎓 Advanced Quiz System', `
+        <div class="card-container">
+          <h3>🎓 Hebrew-English Medical Education</h3>
+          <p>The Advanced Quiz System is loading...</p>
+          <p>This feature provides:</p>
+          <ul style="text-align: left; margin: 10px 20px;">
+            <li>✅ Bilingual Hebrew-English questions</li>
+            <li>✅ Israeli healthcare context integration</li>
+            <li>✅ Multiple difficulty levels</li>
+            <li>✅ Topic-specific question banks</li>
+            <li>✅ Hebrew medication recognition</li>
+            <li>✅ Clinical calculation questions</li>
+            <li>✅ Performance tracking & statistics</li>
+            <li>✅ Spaced repetition recommendations</li>
           </ul>
           <p>Please wait for all scripts to load, then try again.</p>
         </div>
