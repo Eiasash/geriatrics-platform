@@ -1624,22 +1624,49 @@ class UIEnhancement {
             ).join('')}
           </div>
           
-          <h4>📚 Individual Platforms:</h4>
+          <h4>🏥 Clalit Medical Databases (Portium Access):</h4>
+          
+          <div style="background: #e8f5e8; padding: 15px; border-radius: 8px; margin: 15px 0;">
+            <h5>🔐 How to Login:</h5>
+            <p><strong>Username:</strong> Your Teudat Zehut (9 digits) - e.g., 123456789</p>
+            <p><strong>Password:</strong> Same as your Clalit Ofek/medical systems password</p>
+            <p><strong>Session:</strong> Once logged in, stays active 2-4 hours across all databases</p>
+          </div>
+          
           <div class="button-row" style="flex-wrap: wrap;">
-            <button class="action-btn" onclick="window.open('https://www.uptodate.com', '_blank')" style="background: #0066cc;">
-              📚 UpToDate
+            <button class="action-btn" onclick="window.open('https://www-uptodate-com.clalit.portium.org', '_blank')" style="background: #0066cc;">
+              📚 UpToDate (Clalit)
             </button>
-            <button class="action-btn" onclick="window.open('https://www.nejm.org', '_blank')" style="background: #8B0000;">
-              📖 NEJM
+            <button class="action-btn" onclick="window.open('https://pubmed-ncbi-nlm-nih-gov.clalit.portium.org', '_blank')" style="background: #2E7D32;">
+              🔬 PubMed (Full Text)
             </button>
-            <button class="action-btn" onclick="window.open('https://www.dynamed.com', '_blank')" style="background: #2E8B57;">
-              📋 DynaMed
+            <button class="action-btn" onclick="window.open('https://www-clinicalkey-com.clalit.portium.org', '_blank')" style="background: #4169E1;">
+              🔑 ClinicalKey
             </button>
-            <button class="action-btn" onclick="window.open('https://accessmedicine.mhmedical.com', '_blank')" style="background: #FF6B35;">
+            <button class="action-btn" onclick="window.open('https://www-micromedexsolutions-com.clalit.portium.org', '_blank')" style="background: #8E24AA;">
+              💊 Micromedex (Drug Interactions)
+            </button>
+            <button class="action-btn" onclick="window.open('https://www-tripdatabase-com.clalit.portium.org', '_blank')" style="background: #00796B;">
+              🎯 TRIP Database (Evidence)
+            </button>
+            <button class="action-btn" onclick="window.open('https://www-jwatch-org.clalit.portium.org', '_blank')" style="background: #D32F2F;">
+              📰 NEJM Journal Watch
+            </button>
+            <button class="action-btn" onclick="window.open('https://accessmedicine-mhmedical-com.clalit.portium.org', '_blank')" style="background: #FF6B35;">
               🏥 AccessMedicine
             </button>
-            <button class="action-btn" onclick="window.open('https://www.clinicalkey.com', '_blank')" style="background: #4169E1;">
-              🔑 ClinicalKey
+            <button class="action-btn" onclick="window.open('https://scholar-google-co-il.clalit.portium.org', '_blank')" style="background: #1976D2;">
+              🎓 Google Scholar (IL)
+            </button>
+          </div>
+          
+          <h4>🚀 Quick Actions:</h4>
+          <div class="button-row">
+            <button class="action-btn" onclick="window.uiEnhancement.openClalitDrugSearch()" style="background: #8E24AA;">
+              💊 Drug Search (Micromedex + UpToDate)
+            </button>
+            <button class="action-btn" onclick="window.uiEnhancement.openClalitEvidenceSearch()" style="background: #00796B;">
+              📊 Evidence Search (TRIP + PubMed)
             </button>
           </div>
           
@@ -1647,13 +1674,13 @@ class UIEnhancement {
             <h4>🔖 Bookmarklets (Drag to Bookmark Bar):</h4>
             <p style="font-size: 12px; color: #666; margin-bottom: 10px;">Drag these links to your bookmark bar for one-click access from any page:</p>
             <div style="display: flex; flex-wrap: wrap; gap: 8px;">
-              <a href="javascript:(function(){const q=prompt('Medical topic:');if(q){['uptodate.com/contents/search?search=','nejm.org/search?q=','dynamed.com/search?q=','accessmedicine.mhmedical.com/SearchResults.aspx?q=','clinicalkey.com/#!/search/'].forEach(u=>window.open('https://www.'+u+encodeURIComponent(q),'_blank'))}})();" 
+              <a href="javascript:(function(){const q=prompt('🔍 Medical topic:');if(q){['www-uptodate-com.clalit.portium.org/contents/search?search=','pubmed-ncbi-nlm-nih-gov.clalit.portium.org/?otool=iilclalib&term=','www-clinicalkey-com.clalit.portium.org/#!/search/','www-tripdatabase-com.clalit.portium.org/search?q='].forEach(u=>window.open('https://'+u+encodeURIComponent(q),'_blank'))}})();" 
                  style="background: #007bff; color: white; padding: 4px 8px; border-radius: 4px; text-decoration: none; font-size: 12px;">
-                📚 Search All
+                📚 Search All (Clalit)
               </a>
-              <a href="javascript:(function(){const d=prompt('Drug name:');if(d){window.open('https://www.uptodate.com/contents/search?search='+encodeURIComponent(d+' elderly geriatric'),'_blank')}})();" 
-                 style="background: #28a745; color: white; padding: 4px 8px; border-radius: 4px; text-decoration: none; font-size: 12px;">
-                💊 Drug Check
+              <a href="javascript:(function(){const d=prompt('💊 Drug name:');if(d){window.open('https://www-micromedexsolutions-com.clalit.portium.org/micromedx2/librarian?drug='+encodeURIComponent(d),'_blank');window.open('https://www-uptodate-com.clalit.portium.org/contents/search?search='+encodeURIComponent(d+' elderly geriatric'),'_blank')}})();" 
+                 style="background: #8E24AA; color: white; padding: 4px 8px; border-radius: 4px; text-decoration: none; font-size: 12px;">
+                💊 Drug Check (Clalit)
               </a>
             </div>
           </div>
@@ -1734,6 +1761,29 @@ class UIEnhancement {
     window.open('https://pubmed-ncbi-nlm-nih-gov.clalit.portium.org/?otool=iilclalib&term=' + encodeURIComponent(query), '_blank');
     
     this.closeModal();
+  }
+
+  // Clalit-specific search methods
+  openClalitDrugSearch() {
+    const drug = prompt('💊 Enter medication name:');
+    if (!drug) return;
+    
+    // Open Micromedex for interactions
+    window.open('https://www-micromedexsolutions-com.clalit.portium.org/micromedx2/librarian?drug=' + encodeURIComponent(drug), '_blank');
+    
+    // Open UpToDate with elderly focus
+    window.open('https://www-uptodate-com.clalit.portium.org/contents/search?search=' + encodeURIComponent(drug + ' elderly geriatric'), '_blank');
+  }
+
+  openClalitEvidenceSearch() {
+    const topic = prompt('📊 Enter topic for evidence search:');
+    if (!topic) return;
+    
+    // Open TRIP Database for evidence pyramid
+    window.open('https://www-tripdatabase-com.clalit.portium.org/search?q=' + encodeURIComponent(topic), '_blank');
+    
+    // Open PubMed with institutional access
+    window.open('https://pubmed-ncbi-nlm-nih-gov.clalit.portium.org/?otool=iilclalib&term=' + encodeURIComponent(topic), '_blank');
   }
 }
 
