@@ -19,6 +19,8 @@ import { OnCallSurvivalKit } from './onCallSurvival/OnCallSurvivalKit.jsx';
 // Import Language Support
 import { LanguageProvider, useLanguage } from './localization/LanguageProvider.jsx';
 import { LanguageSelector } from './components/LanguageSelector.jsx';
+// Import Textbook Library
+import { TextbookLibrary } from './components/TextbookLibrary.jsx';
 
 const AppContent = () => {
   // Initialize enhanced systems
@@ -218,7 +220,7 @@ Keep the response practical and actionable for emergency/urgent care settings.
           </p>
           
           <nav style={{ marginTop: '20px', display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-            {['dashboard', 'quiz', 'flashcards', 'ai-assistant', 'medications', 'protocols', 'calculators', 'emergency', 'articles', 'resources', 'patients', 'on-call', 'settings'].map(tab => (
+            {['dashboard', 'quiz', 'flashcards', 'ai-assistant', 'medications', 'protocols', 'calculators', 'emergency', 'articles', 'textbooks', 'resources', 'patients', 'on-call', 'settings'].map(tab => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
@@ -235,6 +237,7 @@ Keep the response practical and actionable for emergency/urgent care settings.
                  tab === 'calculators' ? t('navigation.calculators', 'Calculators') :
                  tab === 'patients' ? t('navigation.patients', 'Patients') :
                  tab === 'on-call' ? t('navigation.onCall', 'On-Call Kit') :
+                 tab === 'textbooks' ? t('navigation.textbooks', 'Textbooks') :
                  tab === 'settings' ? t('navigation.settings', 'Settings') :
                  t(`navigation.${tab}`, tab.charAt(0).toUpperCase() + tab.slice(1))}
               </button>
@@ -745,6 +748,8 @@ Keep the response practical and actionable for emergency/urgent care settings.
         )}
 
         {/* Articles Tab */}
+        {activeTab === 'textbooks' && <TextbookLibrary />}
+
         {activeTab === 'articles' && (
           <ArticlesTab 
             articleManager={articleManager}
