@@ -2,7 +2,7 @@
 // Allows users to switch between supported languages
 
 import React, { useState } from 'react';
-import { useLanguage } from '../localization/LanguageProvider.js';
+import { useLanguage } from '../localization/LanguageProvider.jsx';
 
 export const LanguageSelector = ({ compact = false }) => {
   const { currentLanguage, supportedLanguages, changeLanguage, t } = useLanguage();

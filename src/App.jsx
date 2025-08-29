@@ -17,7 +17,7 @@ import { PatientManagementTab } from './patientManagement/PatientManagementUI.js
 // Import On-Call Survival Kit
 import { OnCallSurvivalKit } from './onCallSurvival/OnCallSurvivalKit.jsx';
 // Import Language Support
-import { LanguageProvider, useLanguage } from './localization/LanguageProvider.js';
+import { LanguageProvider, useLanguage } from './localization/LanguageProvider.jsx';
 import { LanguageSelector } from './components/LanguageSelector.jsx';
 
 const AppContent = () => {
