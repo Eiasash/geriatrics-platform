@@ -1,6 +1,7 @@
 // Enhanced AI Backend with Medical NLP, Clinical Reasoning, and Knowledge Graph
 // Provides human-like medical intelligence with typo tolerance and context awareness
 
+// Import fetch for Node.js
 const fetch = (...args) => import('node-fetch').then(({ default: fetch }) => fetch(...args));
 
 // Medical NLP for typo tolerance and context understanding
@@ -247,170 +248,6 @@ class ClinicalProcessor {
   }
 }
 
-// Build enhanced medical prompt
-function buildEnhancedPrompt(nlpResult, clinicalContext, patientInfo) {
-  let prompt = `You are an experienced geriatrics specialist with expertise in polypharmacy management, frailty assessment, and evidence-based geriatric medicine. You are consulting in an Israeli healthcare setting where patients may be multilingual and cultural considerations matter.
-
-CLINICAL CONTEXT:
-- Patient Information: ${patientInfo}
-- Question Intent: ${nlpResult.intent.type}
-- Risk Level: ${clinicalContext.riskLevel}
-- Age Group: ${nlpResult.context.ageGroup || 'not specified'}`;
-
-  if (nlpResult.corrected) {
-    prompt += `\n- Note: Input was corrected from common medical typos/variations`;
-  }
-
-  if (nlpResult.context.medications.length > 0) {
-    prompt += `\n- Medications mentioned: ${nlpResult.context.medications.join(', ')}`;
-  }
-
-  if (nlpResult.context.conditions.length > 0) {
-    prompt += `\n- Conditions mentioned: ${nlpResult.context.conditions.join(', ')}`;
-  }
-
-  if (clinicalContext.considerations.length > 0) {
-    prompt += `\n- Clinical Considerations: ${clinicalContext.considerations.join('; ')}`;
-  }
-
-  prompt += `\n\nCLINICAL QUESTION: ${nlpResult.enhancement}
-
-Please provide a comprehensive response that includes:
-
-1. IMMEDIATE CLINICAL GUIDANCE
-   - Direct answer to the question
-   - Key clinical considerations
-   - Urgency level and next steps
-
-2. GERIATRIC-SPECIFIC CONSIDERATIONS
-   - Age-related factors
-   - Polypharmacy implications
-   - Functional status considerations
-
-3. EVIDENCE-BASED RECOMMENDATIONS
-   - Current guidelines and best practices
-   - Israeli healthcare context when relevant
-   - Alternative approaches if applicable
-
-4. MONITORING AND FOLLOW-UP
-   - What to monitor
-   - When to reassess
-   - Red flags or concerning signs
-
-5. PRACTICAL IMPLEMENTATION
-   - How to apply recommendations bedside
-   - Communication with patient/family
-   - Documentation considerations
-
-Provide specific, actionable guidance while acknowledging when additional clinical assessment is needed. If the question involves high-risk situations, emphasize safety and the need for senior physician consultation.`;
-
-  return prompt;
-}
-
-// Call AI service with enhanced error handling
-async function callAIService(model, enhancedPrompt) {
-  let response, data;
-  
-  try {
-    switch(model) {
-      case 'gemini':
-        response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${process.env.GEMINI_API_KEY}`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            contents: [{ parts: [{ text: enhancedPrompt }] }],
-            generationConfig: {
-              temperature: 0.7,
-              maxOutputTokens: 2048,
-              candidateCount: 1
-            }
-          })
-        });
-        data = await response.json();
-        
-        if (!data.candidates || !data.candidates[0]) {
-          throw new Error('Invalid Gemini response structure');
-        }
-        
-        return {
-          answer: data.candidates[0].content.parts[0].text,
-          model: 'Gemini Pro (Enhanced)'
-        };
-
-      case 'claude':
-        response = await fetch('https://api.anthropic.com/v1/messages', {
-          method: 'POST',
-          headers: {
-            'x-api-key': process.env.ANTHROPIC_API_KEY,
-            'anthropic-version': '2023-06-01',
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            model: 'claude-3-5-sonnet-20241022',
-            max_tokens: 2048,
-            temperature: 0.7,
-            messages: [{ role: 'user', content: enhancedPrompt }]
-          })
-        });
-        data = await response.json();
-        
-        if (!data.content || !data.content[0]) {
-          throw new Error('Invalid Claude response structure');
-        }
-        
-        return {
-          answer: data.content[0].text,
-          model: 'Claude 3.5 Sonnet (Enhanced)'
-        };
-
-      case 'openai':
-        response = await fetch('https://api.openai.com/v1/chat/completions', {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`,
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            model: 'gpt-4o',
-            temperature: 0.7,
-            max_tokens: 2048,
-            messages: [{ role: 'user', content: enhancedPrompt }]
-          })
-        });
-        data = await response.json();
-        
-        if (!data.choices || !data.choices[0]) {
-          throw new Error('Invalid OpenAI response structure');
-        }
-        
-        return {
-          answer: data.choices[0].message.content,
-          model: 'GPT-4o (Enhanced)'
-        };
-
-      default:
-        throw new Error('Invalid model specified');
-    }
-  } catch (aiError) {
-    console.error(`${model} API Error:`, aiError);
-    
-    // Fallback response with clinical safety
-    return {
-      answer: `I encountered an issue processing your medical query. For clinical safety, please:
-
-1. Consult with a senior physician or specialist
-2. Refer to current clinical guidelines
-3. Consider patient safety as the top priority
-
-Your question requires professional medical evaluation.
-
-If this is an urgent clinical situation, please seek immediate medical consultation.`,
-      model: `${model} (Fallback Mode)`,
-      error: true
-    };
-  }
-}
-
 // Main handler with enhanced AI processing
 exports.handler = async (event) => {
   // CORS headers
@@ -449,10 +286,10 @@ exports.handler = async (event) => {
     const clinicalContext = processor.processContext(nlpResult, patientInfo);
 
     // Build enhanced prompt with medical intelligence
-    const enhancedPrompt = buildEnhancedPrompt(nlpResult, clinicalContext, patientInfo);
+    const enhancedPrompt = this.buildEnhancedPrompt(nlpResult, clinicalContext, patientInfo);
 
     // Get AI response with enhanced context
-    const aiResponse = await callAIService(model, enhancedPrompt);
+    const aiResponse = await this.callAIService(model, enhancedPrompt);
 
     // Return enhanced response
     return {
@@ -484,5 +321,169 @@ exports.handler = async (event) => {
         fallbackAdvice: 'Please consult with a senior physician for clinical guidance'
       })
     };
+  }
+
+  // Build enhanced medical prompt
+  buildEnhancedPrompt(nlpResult, clinicalContext, patientInfo) {
+    let prompt = `You are an experienced geriatrics specialist with expertise in polypharmacy management, frailty assessment, and evidence-based geriatric medicine. You are consulting in an Israeli healthcare setting where patients may be multilingual and cultural considerations matter.
+
+CLINICAL CONTEXT:
+- Patient Information: ${patientInfo}
+- Question Intent: ${nlpResult.intent.type}
+- Risk Level: ${clinicalContext.riskLevel}
+- Age Group: ${nlpResult.context.ageGroup || 'not specified'}`;
+
+    if (nlpResult.corrected) {
+      prompt += `\n- Note: Input was corrected from common medical typos/variations`;
+    }
+
+    if (nlpResult.context.medications.length > 0) {
+      prompt += `\n- Medications mentioned: ${nlpResult.context.medications.join(', ')}`;
+    }
+
+    if (nlpResult.context.conditions.length > 0) {
+      prompt += `\n- Conditions mentioned: ${nlpResult.context.conditions.join(', ')}`;
+    }
+
+    if (clinicalContext.considerations.length > 0) {
+      prompt += `\n- Clinical Considerations: ${clinicalContext.considerations.join('; ')}`;
+    }
+
+    prompt += `\n\nCLINICAL QUESTION: ${nlpResult.enhancement}
+
+Please provide a comprehensive response that includes:
+
+1. IMMEDIATE CLINICAL GUIDANCE
+   - Direct answer to the question
+   - Key clinical considerations
+   - Urgency level and next steps
+
+2. GERIATRIC-SPECIFIC CONSIDERATIONS
+   - Age-related factors
+   - Polypharmacy implications
+   - Functional status considerations
+
+3. EVIDENCE-BASED RECOMMENDATIONS
+   - Current guidelines and best practices
+   - Israeli healthcare context when relevant
+   - Alternative approaches if applicable
+
+4. MONITORING AND FOLLOW-UP
+   - What to monitor
+   - When to reassess
+   - Red flags or concerning signs
+
+5. PRACTICAL IMPLEMENTATION
+   - How to apply recommendations bedside
+   - Communication with patient/family
+   - Documentation considerations
+
+Provide specific, actionable guidance while acknowledging when additional clinical assessment is needed. If the question involves high-risk situations, emphasize safety and the need for senior physician consultation.`;
+
+    return prompt;
+  }
+
+  // Call AI service with enhanced error handling
+  async callAIService(model, enhancedPrompt) {
+    let response, data;
+    
+    try {
+      switch(model) {
+        case 'gemini':
+          response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${process.env.GEMINI_API_KEY}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              contents: [{ parts: [{ text: enhancedPrompt }] }],
+              generationConfig: {
+                temperature: 0.7,
+                maxOutputTokens: 2048,
+                candidateCount: 1
+              }
+            })
+          });
+          data = await response.json();
+          
+          if (!data.candidates || !data.candidates[0]) {
+            throw new Error('Invalid Gemini response structure');
+          }
+          
+          return {
+            answer: data.candidates[0].content.parts[0].text,
+            model: 'Gemini Pro (Enhanced)'
+          };
+
+        case 'claude':
+          response = await fetch('https://api.anthropic.com/v1/messages', {
+            method: 'POST',
+            headers: {
+              'x-api-key': process.env.ANTHROPIC_API_KEY,
+              'anthropic-version': '2023-06-01',
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              model: 'claude-3-5-sonnet-20241022',
+              max_tokens: 2048,
+              temperature: 0.7,
+              messages: [{ role: 'user', content: enhancedPrompt }]
+            })
+          });
+          data = await response.json();
+          
+          if (!data.content || !data.content[0]) {
+            throw new Error('Invalid Claude response structure');
+          }
+          
+          return {
+            answer: data.content[0].text,
+            model: 'Claude 3.5 Sonnet (Enhanced)'
+          };
+
+        case 'openai':
+          response = await fetch('https://api.openai.com/v1/chat/completions', {
+            method: 'POST',
+            headers: {
+              'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`,
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              model: 'gpt-4o',
+              temperature: 0.7,
+              max_tokens: 2048,
+              messages: [{ role: 'user', content: enhancedPrompt }]
+            })
+          });
+          data = await response.json();
+          
+          if (!data.choices || !data.choices[0]) {
+            throw new Error('Invalid OpenAI response structure');
+          }
+          
+          return {
+            answer: data.choices[0].message.content,
+            model: 'GPT-4o (Enhanced)'
+          };
+
+        default:
+          throw new Error('Invalid model specified');
+      }
+    } catch (aiError) {
+      console.error(`${model} API Error:`, aiError);
+      
+      // Fallback response with clinical safety
+      return {
+        answer: `I encountered an issue processing your medical query. For clinical safety, please:
+
+1. Consult with a senior physician or specialist
+2. Refer to current clinical guidelines
+3. Consider patient safety as the top priority
+
+Your question about: "${enhancedPrompt.substring(0, 100)}..." requires professional medical evaluation.
+
+If this is an urgent clinical situation, please seek immediate medical consultation.`,
+        model: `${model} (Fallback Mode)`,
+        error: true
+      };
+    }
   }
 };
