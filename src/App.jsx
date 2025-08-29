@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
 // Import from the correct files
 import { boardQuestions } from './Questions.js';
-import { medications as medicationDatabase } from './data/medications.js';
-import { protocols } from './data/protocols.js';
+import { medicationDatabase } from './data/medications.js';
+import protocols from './data/protocols.js';
 // Import our enhanced quiz system
 import { expandedQuizDatabase, EnhancedQuizSystem } from './data/expandedQuizDatabase.js';
 import ClinicalAI from './utils/aiAssistantFix.js';
+// Import new features
+import MedicationMatcher from './utils/medicationMatcher.js';
+import ClinicalCalculators from './utils/clinicalCalculators.js';
 
 const App = () => {
   // Initialize enhanced systems
@@ -17,11 +20,8 @@ const App = () => {
     questions.map(q => ({...q, category, id: q.id}))
   );
   
-  // Flatten all medications
-  const allMedications = Object.entries(medicationDatabase).flatMap(([category, meds]) => {
-    if (Array.isArray(meds)) return meds;
-    return Object.values(meds).flat();
-  });
+  // Use medication database array directly
+  const allMedications = medicationDatabase || [];
 
   const [activeTab, setActiveTab] = useState('dashboard');
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -30,6 +30,9 @@ const App = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedProtocol, setSelectedProtocol] = useState(null);
   const [language, setLanguage] = useState('en');
+  const [selectedCalculator, setSelectedCalculator] = useState(null);
+  const [calculatorInput, setCalculatorInput] = useState({});
+  const [calculatorResult, setCalculatorResult] = useState(null);
 
   const submitAnswer = (questionId, answer) => {
     setUserAnswers({ ...userAnswers, [questionId]: answer });
@@ -65,7 +68,7 @@ const App = () => {
           </p>
           
           <nav style={{ marginTop: '20px', display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-            {['dashboard', 'quiz', 'ai-assistant', 'medications', 'protocols', 'resources'].map(tab => (
+            {['dashboard', 'quiz', 'ai-assistant', 'medications', 'protocols', 'calculators', 'resources'].map(tab => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
@@ -78,7 +81,9 @@ const App = () => {
                   cursor: 'pointer',
                   fontWeight: activeTab === tab ? 'bold' : 'normal'
                 }}>
-                {tab === 'ai-assistant' ? 'AI Assistant' : tab.charAt(0).toUpperCase() + tab.slice(1)}
+                {tab === 'ai-assistant' ? 'AI Assistant' : 
+                 tab === 'calculators' ? 'Calculators' :
+                 tab.charAt(0).toUpperCase() + tab.slice(1)}
               </button>
             ))}
           </nav>
@@ -235,35 +240,61 @@ const App = () => {
           </div>
         )}
 
-        {/* Medications Tab */}
+        {/* Medications Tab with Fuzzy Matching */}
         {activeTab === 'medications' && (
           <div>
-            <input
-              type="text"
-              placeholder="Search medications..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              style={{ width: '100%', padding: '12px', marginBottom: '20px', fontSize: '16px', border: '1px solid #ddd', borderRadius: '4px' }}
-            />
+            <div style={{ marginBottom: '20px' }}>
+              <input
+                type="text"
+                placeholder="Search medications (supports typos: coumadine, eliqis, plaviks...)..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                style={{ width: '100%', padding: '12px', fontSize: '16px', border: '1px solid #ddd', borderRadius: '4px' }}
+              />
+              {searchTerm && (
+                <div style={{ marginTop: '10px', fontSize: '14px', color: '#666' }}>
+                  💡 Tip: Try "coumadine" → "coumadin", "eliqis" → "eliquis", or Hebrew names like "קומדין"
+                </div>
+              )}
+            </div>
             
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '20px' }}>
-              {allMedications.filter(med => 
-                JSON.stringify(med).toLowerCase().includes(searchTerm.toLowerCase())
-              ).slice(0, 50).map((med, idx) => (
-                <div key={idx} style={{ backgroundColor: 'white', padding: '20px', borderRadius: '8px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
-                  <h4 style={{ marginTop: 0, color: '#667eea' }}>
-                    {med.generic || med.name} {med.hebrew && `(${med.hebrew})`}
-                  </h4>
-                  {med.brands && <p><strong>Brands:</strong> {Array.isArray(med.brands) ? med.brands.join(', ') : med.brands}</p>}
-                  {med.elderlyStart && <p><strong>Elderly Starting Dose:</strong> {med.elderlyStart}</p>}
-                  {med.renal && <p><strong>Renal Adjustment:</strong> {typeof med.renal === 'object' ? JSON.stringify(med.renal) : med.renal}</p>}
-                  {med.israeliGuideline && (
-                    <p style={{ backgroundColor: '#e7f3ff', padding: '8px', borderRadius: '4px' }}>
-                      <strong>🇮🇱 Israeli Guideline:</strong> {med.israeliGuideline}
-                    </p>
-                  )}
-                </div>
-              ))}
+              {(() => {
+                if (!searchTerm) {
+                  return allMedications.slice(0, 50).map((med, idx) => renderMedicationCard(med, idx));
+                }
+                
+                // Use fuzzy matching for search
+                const searchResults = MedicationMatcher.searchMedications(searchTerm, allMedications, 50);
+                
+                if (searchResults.length === 0) {
+                  return [(
+                    <div key="no-results" style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '40px', backgroundColor: 'white', borderRadius: '8px' }}>
+                      <h3>No medications found for "{searchTerm}"</h3>
+                      <p>Try a different spelling or Hebrew name</p>
+                    </div>
+                  )];
+                }
+                
+                return searchResults.map((result, idx) => (
+                  <div key={idx} style={{ position: 'relative' }}>
+                    {renderMedicationCard(result.medication, idx)}
+                    <div style={{
+                      position: 'absolute',
+                      top: '10px',
+                      right: '10px',
+                      backgroundColor: result.confidence === 'high' ? '#28a745' : result.confidence === 'medium' ? '#ffc107' : '#17a2b8',
+                      color: 'white',
+                      padding: '2px 6px',
+                      borderRadius: '4px',
+                      fontSize: '12px'
+                    }}>
+                      {Math.round(result.score * 100)}% match
+                    </div>
+                  </div>
+                ));
+              })()
+              }
             </div>
           </div>
         )}
@@ -271,35 +302,162 @@ const App = () => {
         {/* Protocols Tab */}
         {activeTab === 'protocols' && (
           <div>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '20px' }}>
-              {Object.entries(protocols).map(([category, items]) => (
-                <div key={category} style={{ backgroundColor: 'white', padding: '20px', borderRadius: '8px' }}>
-                  <h3 style={{ color: '#667eea', marginTop: 0 }}>
-                    {category.charAt(0).toUpperCase() + category.slice(1)} Protocols
+            <div style={{ marginBottom: '20px', padding: '15px', backgroundColor: 'white', borderRadius: '8px' }}>
+              <h2 style={{ margin: '0 0 10px 0', color: '#667eea' }}>Clinical Protocols</h2>
+              <p>Evidence-based protocols for common geriatric conditions. Click any protocol to view detailed steps.</p>
+            </div>
+            
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '20px' }}>
+              {Object.entries(protocols).map(([protocolName, protocolData]) => (
+                <div key={protocolName} style={{ backgroundColor: 'white', padding: '20px', borderRadius: '8px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
+                  <h3 style={{ color: '#667eea', marginTop: 0, marginBottom: '10px' }}>
+                    {protocolData.title}
                   </h3>
-                  {Object.keys(items).map(protocol => (
-                    <button
-                      key={protocol}
-                      onClick={() => setSelectedProtocol(items[protocol])}
-                      style={{ display: 'block', width: '100%', padding: '10px', marginBottom: '10px', textAlign: 'left', backgroundColor: '#f0f2f5', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>
-                      {protocol}
-                    </button>
-                  ))}
+                  <p style={{ fontSize: '14px', color: '#666', marginBottom: '15px' }}>
+                    {protocolData.description}
+                  </p>
+                  <button
+                    onClick={() => setSelectedProtocol(protocolData)}
+                    style={{
+                      width: '100%',
+                      padding: '10px',
+                      backgroundColor: '#667eea',
+                      color: 'white',
+                      border: 'none',
+                      borderRadius: '4px',
+                      cursor: 'pointer',
+                      fontSize: '14px',
+                      fontWeight: 'bold'
+                    }}>
+                    View Protocol Details
+                  </button>
                 </div>
               ))}
             </div>
             
             {selectedProtocol && (
-              <div style={{ position: 'fixed', top: '10%', left: '10%', right: '10%', bottom: '10%', backgroundColor: 'white', padding: '30px', borderRadius: '8px', boxShadow: '0 10px 40px rgba(0,0,0,0.2)', overflow: 'auto' }}>
-                <button
-                  onClick={() => setSelectedProtocol(null)}
-                  style={{ float: 'right', padding: '5px 10px', backgroundColor: '#dc3545', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>
-                  Close
-                </button>
-                <pre style={{ whiteSpace: 'pre-wrap' }}>
-                  {JSON.stringify(selectedProtocol, null, 2)}
-                </pre>
+              <div style={{ position: 'fixed', top: '5%', left: '5%', right: '5%', bottom: '5%', backgroundColor: 'white', padding: '30px', borderRadius: '8px', boxShadow: '0 10px 40px rgba(0,0,0,0.3)', overflow: 'auto', zIndex: 1000 }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', borderBottom: '2px solid #667eea', paddingBottom: '10px' }}>
+                  <h2 style={{ margin: 0, color: '#667eea' }}>{selectedProtocol.title}</h2>
+                  <button
+                    onClick={() => setSelectedProtocol(null)}
+                    style={{ padding: '8px 15px', backgroundColor: '#dc3545', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer', fontSize: '16px' }}>
+                    ✕ Close
+                  </button>
+                </div>
+                
+                <div style={{ marginBottom: '20px' }}>
+                  <p style={{ fontSize: '16px', fontStyle: 'italic', color: '#666' }}>{selectedProtocol.description}</p>
+                </div>
+                
+                {selectedProtocol.steps && (
+                  <div style={{ marginBottom: '25px' }}>
+                    <h3 style={{ color: '#667eea' }}>Protocol Steps:</h3>
+                    <ol style={{ lineHeight: '1.6' }}>
+                      {selectedProtocol.steps.map((step, idx) => (
+                        <li key={idx} style={{ marginBottom: '10px' }}>{step}</li>
+                      ))}
+                    </ol>
+                  </div>
+                )}
+                
+                {selectedProtocol.riskFactors && (
+                  <div style={{ marginBottom: '20px', padding: '15px', backgroundColor: '#fff3cd', borderRadius: '4px' }}>
+                    <h4 style={{ margin: '0 0 10px 0', color: '#856404' }}>⚠️ Risk Factors:</h4>
+                    <ul>
+                      {selectedProtocol.riskFactors.map((factor, idx) => (
+                        <li key={idx}>{factor}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+                
+                {selectedProtocol.medications && (
+                  <div style={{ marginBottom: '20px', padding: '15px', backgroundColor: '#d1ecf1', borderRadius: '4px' }}>
+                    <h4 style={{ margin: '0 0 10px 0', color: '#0c5460' }}>💊 Medications:</h4>
+                    {typeof selectedProtocol.medications === 'object' ? (
+                      <div>
+                        {Object.entries(selectedProtocol.medications).map(([key, value]) => (
+                          <p key={key}><strong>{key}:</strong> {value}</p>
+                        ))}
+                      </div>
+                    ) : (
+                      <p>{selectedProtocol.medications}</p>
+                    )}
+                  </div>
+                )}
+                
+                {selectedProtocol.interventions && (
+                  <div style={{ marginBottom: '20px', padding: '15px', backgroundColor: '#d4edda', borderRadius: '4px' }}>
+                    <h4 style={{ margin: '0 0 10px 0', color: '#155724' }}>🎯 Interventions:</h4>
+                    <ul>
+                      {selectedProtocol.interventions.map((intervention, idx) => (
+                        <li key={idx}>{intervention}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+                
+                {selectedProtocol.references && (
+                  <div style={{ marginTop: '20px', padding: '10px', backgroundColor: '#f8f9fa', borderRadius: '4px', fontSize: '14px' }}>
+                    <strong>References:</strong> {selectedProtocol.references}
+                  </div>
+                )}
               </div>
+            )}
+          </div>
+        )}
+
+        {/* Calculators Tab */}
+        {activeTab === 'calculators' && (
+          <div>
+            <div style={{ marginBottom: '20px', padding: '15px', backgroundColor: 'white', borderRadius: '8px' }}>
+              <h2 style={{ margin: '0 0 10px 0', color: '#667eea' }}>Clinical Calculators</h2>
+              <p>Evidence-based assessment tools and scoring systems for geriatric medicine.</p>
+            </div>
+            
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '20px', marginBottom: '20px' }}>
+              {Object.entries(ClinicalCalculators).map(([calcName, calcData]) => (
+                <div key={calcName} style={{ backgroundColor: 'white', padding: '20px', borderRadius: '8px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
+                  <h3 style={{ color: '#667eea', marginTop: 0, marginBottom: '10px' }}>
+                    {calcData.name}
+                  </h3>
+                  <p style={{ fontSize: '14px', color: '#666', marginBottom: '15px' }}>
+                    {calcData.description}
+                  </p>
+                  <button
+                    onClick={() => {
+                      setSelectedCalculator(calcName);
+                      setCalculatorInput({});
+                      setCalculatorResult(null);
+                    }}
+                    style={{
+                      width: '100%',
+                      padding: '10px',
+                      backgroundColor: '#28a745',
+                      color: 'white',
+                      border: 'none',
+                      borderRadius: '4px',
+                      cursor: 'pointer',
+                      fontSize: '14px',
+                      fontWeight: 'bold'
+                    }}>
+                    Use Calculator
+                  </button>
+                </div>
+              ))}
+            </div>
+            
+            {selectedCalculator && (
+              <CalculatorInterface 
+                calculator={ClinicalCalculators[selectedCalculator]}
+                calculatorName={selectedCalculator}
+                input={calculatorInput}
+                setInput={setCalculatorInput}
+                result={calculatorResult}
+                setResult={setCalculatorResult}
+                onClose={() => setSelectedCalculator(null)}
+              />
             )}
           </div>
         )}
@@ -592,6 +750,289 @@ const AIAssistantTab = ({ clinicalAI }) => {
               <h4 style={{ color: '#721c24' }}>❌ Analysis Error</h4>
               <p>{analysisResult.error}</p>
             </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// Medication Card Renderer Function
+const renderMedicationCard = (med, idx) => (
+  <div key={idx} style={{ backgroundColor: 'white', padding: '20px', borderRadius: '8px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
+    <h4 style={{ marginTop: 0, color: '#667eea' }}>
+      {med.name} {med.heName && `(${med.heName})`}
+    </h4>
+    {med.brand && <p><strong>Brand:</strong> {med.brand}</p>}
+    {med.israeliBrand && <p><strong>🇮🇱 Israeli Brand:</strong> {med.israeliBrand}</p>}
+    {med.category && <p><strong>Category:</strong> {med.category}</p>}
+    {med.dose && (
+      <div style={{ marginBottom: '10px' }}>
+        <strong>Dosing:</strong>
+        <ul style={{ margin: '5px 0', paddingLeft: '20px' }}>
+          <li><strong>Standard:</strong> {med.dose.standard}</li>
+          {med.dose.geriatric && <li><strong>Geriatric:</strong> {med.dose.geriatric}</li>}
+          {med.dose.renal && <li><strong>Renal:</strong> {med.dose.renal}</li>}
+        </ul>
+      </div>
+    )}
+    {med.israeliGuidelines && (
+      <p style={{ backgroundColor: '#e7f3ff', padding: '8px', borderRadius: '4px' }}>
+        <strong>🇮🇱 Israeli Guideline:</strong> {med.israeliGuidelines}
+      </p>
+    )}
+    {med.beersRating && (
+      <p style={{ 
+        backgroundColor: med.beersRating.includes('Avoid') ? '#f8d7da' : '#d4edda', 
+        padding: '8px', 
+        borderRadius: '4px' 
+      }}>
+        <strong>Beers Criteria:</strong> {med.beersRating}
+      </p>
+    )}
+    {med.geriatricConsiderations && (
+      <p style={{ fontSize: '14px', color: '#666', fontStyle: 'italic' }}>
+        <strong>Geriatric Notes:</strong> {med.geriatricConsiderations}
+      </p>
+    )}
+  </div>
+);
+
+// Calculator Interface Component
+const CalculatorInterface = ({ calculator, calculatorName, input, setInput, result, setResult, onClose }) => {
+  const handleCalculate = () => {
+    try {
+      const calcResult = calculator.calculate(input[calculatorName] || {});
+      setResult(calcResult);
+    } catch (error) {
+      setResult({ error: error.message });
+    }
+  };
+
+  const updateInput = (field, value) => {
+    setInput({
+      ...input,
+      [calculatorName]: {
+        ...input[calculatorName],
+        [field]: value
+      }
+    });
+  };
+
+  const renderInputFields = () => {
+    switch (calculatorName) {
+      case 'MMSE':
+        return (
+          <div>
+            <p><strong>Enter scores for each domain:</strong></p>
+            {['Orientation (0-10)', 'Registration (0-3)', 'Attention (0-5)', 'Recall (0-3)', 'Language (0-9)'].map((domain, idx) => (
+              <div key={idx} style={{ marginBottom: '10px' }}>
+                <label style={{ display: 'block', marginBottom: '5px' }}>{domain}:</label>
+                <input
+                  type="number"
+                  min="0"
+                  max={domain.includes('10') ? 10 : domain.includes('3') ? 3 : domain.includes('5') ? 5 : 9}
+                  value={input[calculatorName]?.scores?.[idx] || ''}
+                  onChange={(e) => {
+                    const scores = [...(input[calculatorName]?.scores || new Array(5).fill(''))];
+                    scores[idx] = parseInt(e.target.value) || 0;
+                    updateInput('scores', scores);
+                  }}
+                  style={{ width: '60px', padding: '5px', borderRadius: '4px', border: '1px solid #ddd' }}
+                />
+              </div>
+            ))}
+          </div>
+        );
+
+      case 'CAM':
+        return (
+          <div>
+            <p><strong>Assess each feature:</strong></p>
+            {calculator.features.map((feature, idx) => (
+              <div key={idx} style={{ marginBottom: '10px' }}>
+                <label style={{ display: 'block', marginBottom: '5px' }}>
+                  <input
+                    type="checkbox"
+                    checked={input[calculatorName]?.features?.[idx] || false}
+                    onChange={(e) => {
+                      const features = [...(input[calculatorName]?.features || new Array(4).fill(false))];
+                      features[idx] = e.target.checked;
+                      updateInput('features', features);
+                    }}
+                    style={{ marginRight: '10px' }}
+                  />
+                  {feature}
+                </label>
+              </div>
+            ))}
+          </div>
+        );
+
+      case 'MorseFallScale':
+        return (
+          <div>
+            <div style={{ marginBottom: '10px' }}>
+              <label>
+                <input
+                  type="checkbox"
+                  checked={input[calculatorName]?.history || false}
+                  onChange={(e) => updateInput('history', e.target.checked)}
+                  style={{ marginRight: '10px' }}
+                />
+                Fall in past 3 months (25 points)
+              </label>
+            </div>
+            <div style={{ marginBottom: '10px' }}>
+              <label>
+                <input
+                  type="checkbox"
+                  checked={input[calculatorName]?.secondary || false}
+                  onChange={(e) => updateInput('secondary', e.target.checked)}
+                  style={{ marginRight: '10px' }}
+                />
+                More than one medical diagnosis (15 points)
+              </label>
+            </div>
+            <div style={{ marginBottom: '10px' }}>
+              <label style={{ display: 'block', marginBottom: '5px' }}>Ambulatory aid:</label>
+              <select
+                value={input[calculatorName]?.aid || 'none'}
+                onChange={(e) => updateInput('aid', e.target.value)}
+                style={{ width: '100%', padding: '5px', borderRadius: '4px', border: '1px solid #ddd' }}
+              >
+                <option value="none">None/Bedrest (0)</option>
+                <option value="crutch">Crutches/Walker/Cane (15)</option>
+                <option value="furniture">Furniture (30)</option>
+              </select>
+            </div>
+            <div style={{ marginBottom: '10px' }}>
+              <label>
+                <input
+                  type="checkbox"
+                  checked={input[calculatorName]?.iv || false}
+                  onChange={(e) => updateInput('iv', e.target.checked)}
+                  style={{ marginRight: '10px' }}
+                />
+                IV/Heparin lock (20 points)
+              </label>
+            </div>
+            <div style={{ marginBottom: '10px' }}>
+              <label style={{ display: 'block', marginBottom: '5px' }}>Gait:</label>
+              <select
+                value={input[calculatorName]?.gait || 'normal'}
+                onChange={(e) => updateInput('gait', e.target.value)}
+                style={{ width: '100%', padding: '5px', borderRadius: '4px', border: '1px solid #ddd' }}
+              >
+                <option value="normal">Normal/Wheelchair (0)</option>
+                <option value="weak">Weak (10)</option>
+                <option value="impaired">Impaired (20)</option>
+              </select>
+            </div>
+            <div style={{ marginBottom: '10px' }}>
+              <label>
+                <input
+                  type="checkbox"
+                  checked={input[calculatorName]?.overestimatesAbility || false}
+                  onChange={(e) => updateInput('overestimatesAbility', e.target.checked)}
+                  style={{ marginRight: '10px' }}
+                />
+                Overestimates ability/forgets limitations (15 points)
+              </label>
+            </div>
+          </div>
+        );
+
+      case 'TimedUpAndGo':
+        return (
+          <div>
+            <div style={{ marginBottom: '10px' }}>
+              <label style={{ display: 'block', marginBottom: '5px' }}>Time in seconds:</label>
+              <input
+                type="number"
+                min="0"
+                step="0.1"
+                value={input[calculatorName]?.seconds || ''}
+                onChange={(e) => updateInput('seconds', parseFloat(e.target.value) || 0)}
+                style={{ width: '100px', padding: '5px', borderRadius: '4px', border: '1px solid #ddd' }}
+              />
+            </div>
+            <p style={{ fontSize: '14px', color: '#666' }}>
+              <strong>Instructions:</strong> Time how long it takes patient to rise from chair, 
+              walk 3 meters, turn around, walk back, and sit down.
+            </p>
+          </div>
+        );
+
+      default:
+        return <p>Calculator interface not implemented yet.</p>;
+    }
+  };
+
+  return (
+    <div style={{ backgroundColor: 'white', padding: '20px', borderRadius: '8px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)', marginTop: '20px' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+        <h3 style={{ margin: 0, color: '#667eea' }}>{calculator.name}</h3>
+        <button
+          onClick={onClose}
+          style={{ padding: '5px 10px', backgroundColor: '#dc3545', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>
+          Close
+        </button>
+      </div>
+
+      <p style={{ marginBottom: '20px', color: '#666' }}>{calculator.description}</p>
+
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+        <div>
+          <h4>Input:</h4>
+          {renderInputFields()}
+          <button
+            onClick={handleCalculate}
+            style={{
+              width: '100%',
+              padding: '10px',
+              backgroundColor: '#28a745',
+              color: 'white',
+              border: 'none',
+              borderRadius: '4px',
+              cursor: 'pointer',
+              fontSize: '16px',
+              fontWeight: 'bold',
+              marginTop: '20px'
+            }}>
+            Calculate
+          </button>
+        </div>
+
+        <div>
+          <h4>Result:</h4>
+          {result ? (
+            <div style={{ padding: '15px', backgroundColor: result.error ? '#f8d7da' : '#d4edda', borderRadius: '4px' }}>
+              {result.error ? (
+                <p style={{ color: '#721c24', margin: 0 }}><strong>Error:</strong> {result.error}</p>
+              ) : (
+                <div>
+                  {result.score !== undefined && (
+                    <p><strong>Score:</strong> {result.score}{result.maxScore ? `/${result.maxScore}` : ''}</p>
+                  )}
+                  {result.interpretation && <p><strong>Interpretation:</strong> {result.interpretation}</p>}
+                  {result.recommendation && <p><strong>Recommendation:</strong> {result.recommendation}</p>}
+                  {result.risk && <p><strong>Risk Level:</strong> {result.risk}</p>}
+                  {result.interventions && result.interventions.length > 0 && (
+                    <div>
+                      <strong>Interventions:</strong>
+                      <ul style={{ margin: '5px 0', paddingLeft: '20px' }}>
+                        {result.interventions.map((intervention, idx) => (
+                          <li key={idx}>{intervention}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          ) : (
+            <p style={{ color: '#666', fontStyle: 'italic' }}>Enter values and click Calculate to see results.</p>
           )}
         </div>
       </div>
