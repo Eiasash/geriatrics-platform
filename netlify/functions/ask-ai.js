@@ -1,6 +1,36 @@
+// Option 1: For Node 18+ (Netlify uses this)
+const fetch = (...args) => import('node-fetch').then(({ default: fetch }) => fetch(...args));
+
+// Rest of your code...
+exports.handler = async (event) => {
+    // your existing code
+}
 exports.handler = async (event) => {
   const { question, patientInfo, model = 'gemini' } = JSON.parse(event.body);
-  
+    exports.handler = async (event) => {
+        // Add CORS headers
+        const headers = {
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Headers': 'Content-Type'
+        };
+
+        // Handle OPTIONS preflight
+        if (event.httpMethod === 'OPTIONS') {
+            return { statusCode: 200, headers, body: '' };
+        }
+
+        const { question, patientInfo, model = 'gemini' } = JSON.parse(event.body);
+
+        // ... rest of your code
+        // Then in ALL your return statements, add headers:
+        return {
+            statusCode: 200,
+            headers,  // <-- Add this line
+            body: JSON.stringify({
+                answer: data.candidates[0].content.parts[0].text,
+                model: 'Gemini Pro'
+            })
+        };
   try {
     let response, data;
     
