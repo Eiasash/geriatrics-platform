@@ -21,6 +21,8 @@ import { LanguageProvider, useLanguage } from './localization/LanguageProvider.j
 import { LanguageSelector } from './components/LanguageSelector.jsx';
 // Import Textbook Library
 import { TextbookLibrary } from './components/TextbookLibrary.jsx';
+// Import PubMed Research
+import { PubMedResearch } from './components/PubMedResearch.jsx';
 
 const AppContent = () => {
   // Initialize enhanced systems
@@ -219,25 +221,35 @@ Keep the response practical and actionable for emergency/urgent care settings.
             {allQuestions.length} Board Questions | {allMedications.length} Medications | {Object.keys(protocols).length} Protocols
           </p>
           
-          <nav style={{ marginTop: '20px', display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-            {['dashboard', 'quiz', 'flashcards', 'ai-assistant', 'medications', 'protocols', 'calculators', 'emergency', 'articles', 'textbooks', 'resources', 'patients', 'on-call', 'settings'].map(tab => (
+          <nav style={{ 
+            marginTop: '20px', 
+            display: 'flex', 
+            gap: '8px', 
+            flexWrap: 'wrap',
+            justifyContent: 'center'
+          }}>
+            {['dashboard', 'quiz', 'flashcards', 'ai-assistant', 'medications', 'protocols', 'calculators', 'emergency', 'articles', 'textbooks', 'research', 'resources', 'patients', 'on-call', 'settings'].map(tab => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
                 style={{
-                  padding: '10px 20px',
+                  padding: '8px 16px',
+                  minWidth: '100px',
                   backgroundColor: activeTab === tab ? 'white' : 'rgba(255,255,255,0.2)',
                   color: activeTab === tab ? '#667eea' : 'white',
                   border: 'none',
                   borderRadius: '8px 8px 0 0',
                   cursor: 'pointer',
-                  fontWeight: activeTab === tab ? 'bold' : 'normal'
+                  fontWeight: activeTab === tab ? 'bold' : 'normal',
+                  fontSize: '14px',
+                  whiteSpace: 'nowrap'
                 }}>
                 {tab === 'ai-assistant' ? t('navigation.aiAssistant', 'AI Assistant') : 
                  tab === 'calculators' ? t('navigation.calculators', 'Calculators') :
                  tab === 'patients' ? t('navigation.patients', 'Patients') :
                  tab === 'on-call' ? t('navigation.onCall', 'On-Call Kit') :
                  tab === 'textbooks' ? t('navigation.textbooks', 'Textbooks') :
+                 tab === 'research' ? t('navigation.research', 'Research') :
                  tab === 'settings' ? t('navigation.settings', 'Settings') :
                  t(`navigation.${tab}`, tab.charAt(0).toUpperCase() + tab.slice(1))}
               </button>
@@ -749,6 +761,8 @@ Keep the response practical and actionable for emergency/urgent care settings.
 
         {/* Articles Tab */}
         {activeTab === 'textbooks' && <TextbookLibrary />}
+
+        {activeTab === 'research' && <PubMedResearch />}
 
         {activeTab === 'articles' && (
           <ArticlesTab 
