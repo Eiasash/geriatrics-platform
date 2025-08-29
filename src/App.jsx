@@ -1,12 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import { boardQuestions } from './data/questions.js';
+// Import from the correct files
+import { boardQuestions } from './Questions.js';
 import { medications as medicationDatabase } from './data/medications.js';
 import { protocols } from './data/protocols.js';
+// Import our enhanced quiz system
+import { expandedQuizDatabase, EnhancedQuizSystem } from './data/expandedQuizDatabase.js';
+import ClinicalAI from './utils/aiAssistantFix.js';
 
 const App = () => {
-  // Flatten all questions from categories
-  const allQuestions = Object.entries(boardQuestions).flatMap(([category, questions]) => 
-    questions.map(q => ({...q, category}))
+  // Initialize enhanced systems
+  const [clinicalAI] = useState(() => new ClinicalAI());
+  const [quizSystem] = useState(() => new EnhancedQuizSystem());
+  
+  // Use expanded quiz database (150+ questions) instead of old 3-question system
+  const allQuestions = Object.entries(expandedQuizDatabase).flatMap(([category, questions]) => 
+    questions.map(q => ({...q, category, id: q.id}))
   );
   
   // Flatten all medications
@@ -57,7 +65,7 @@ const App = () => {
           </p>
           
           <nav style={{ marginTop: '20px', display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-            {['dashboard', 'quiz', 'medications', 'protocols', 'resources'].map(tab => (
+            {['dashboard', 'quiz', 'ai-assistant', 'medications', 'protocols', 'resources'].map(tab => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
@@ -70,7 +78,7 @@ const App = () => {
                   cursor: 'pointer',
                   fontWeight: activeTab === tab ? 'bold' : 'normal'
                 }}>
-                {tab.charAt(0).toUpperCase() + tab.slice(1)}
+                {tab === 'ai-assistant' ? 'AI Assistant' : tab.charAt(0).toUpperCase() + tab.slice(1)}
               </button>
             ))}
           </nav>
@@ -105,12 +113,15 @@ const App = () => {
             </div>
 
             <div style={{ backgroundColor: 'white', padding: '20px', borderRadius: '8px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
-              <h3 style={{ color: '#667eea', marginTop: 0 }}>Question Categories</h3>
-              {Object.entries(boardQuestions).map(([category, questions]) => (
+              <h3 style={{ color: '#667eea', marginTop: 0 }}>Question Categories (Expanded Database)</h3>
+              {Object.entries(expandedQuizDatabase).map(([category, questions]) => (
                 <p key={category}>
                   {category.charAt(0).toUpperCase() + category.slice(1)}: {questions.length} questions
                 </p>
               ))}
+              <div style={{ marginTop: '15px', padding: '10px', backgroundColor: '#e7f3ff', borderRadius: '4px' }}>
+                <strong>Total: {allQuestions.length} Questions</strong>
+              </div>
             </div>
           </div>
         )}
@@ -128,36 +139,60 @@ const App = () => {
                 </div>
                 
                 <div style={{ marginBottom: '20px', padding: '20px', backgroundColor: '#f9f9f9', borderRadius: '4px' }}>
-                  <p style={{ fontSize: '18px', marginBottom: '20px' }}>
-                    {allQuestions[currentQuestionIndex].question}
+                  <p style={{ fontSize: '18px', marginBottom: '20px', fontWeight: 'bold' }}>
+                    {allQuestions[currentQuestionIndex].q || allQuestions[currentQuestionIndex].question}
                   </p>
                   
-                  {allQuestions[currentQuestionIndex].options.map((option, idx) => (
-                    <label key={idx} style={{ display: 'block', marginBottom: '10px', cursor: 'pointer', padding: '10px', backgroundColor: 'white', borderRadius: '4px' }}>
-                      <input
-                        type="radio"
-                        name={`question-${currentQuestionIndex}`}
-                        value={idx}
-                        checked={userAnswers[allQuestions[currentQuestionIndex].id] === idx}
-                        onChange={() => submitAnswer(allQuestions[currentQuestionIndex].id, idx)}
-                        style={{ marginRight: '10px' }}
+                  {/* Handle both old format (options array) and new format (text input) */}
+                  {allQuestions[currentQuestionIndex].options ? (
+                    // Old format with multiple choice
+                    allQuestions[currentQuestionIndex].options.map((option, idx) => (
+                      <label key={idx} style={{ display: 'block', marginBottom: '10px', cursor: 'pointer', padding: '10px', backgroundColor: 'white', borderRadius: '4px' }}>
+                        <input
+                          type="radio"
+                          name={`question-${currentQuestionIndex}`}
+                          value={idx}
+                          checked={userAnswers[allQuestions[currentQuestionIndex].id] === idx}
+                          onChange={() => submitAnswer(allQuestions[currentQuestionIndex].id, idx)}
+                          style={{ marginRight: '10px' }}
+                        />
+                        {String.fromCharCode(65 + idx)}. {option}
+                      </label>
+                    ))
+                  ) : (
+                    // New format with text input for open-ended questions
+                    <div>
+                      <textarea
+                        placeholder="Type your answer here..."
+                        style={{ width: '100%', height: '80px', padding: '10px', fontSize: '16px', borderRadius: '4px', border: '2px solid #ddd' }}
+                        value={userAnswers[allQuestions[currentQuestionIndex].id] || ''}
+                        onChange={(e) => submitAnswer(allQuestions[currentQuestionIndex].id, e.target.value)}
                       />
-                      {String.fromCharCode(65 + idx)}. {option}
-                    </label>
-                  ))}
+                      <div style={{ marginTop: '10px', fontSize: '14px', color: '#666' }}>
+                        This is an open-ended question. Type your answer and click Next to see the correct answer.
+                      </div>
+                    </div>
+                  )}
                 </div>
                 
                 {userAnswers[allQuestions[currentQuestionIndex].id] !== undefined && (
                   <div style={{ 
                     padding: '15px', 
-                    backgroundColor: userAnswers[allQuestions[currentQuestionIndex].id] === allQuestions[currentQuestionIndex].answer ? '#d4edda' : '#f8d7da',
+                    backgroundColor: '#e7f3ff',
                     borderRadius: '4px',
                     marginBottom: '20px'
                   }}>
-                    {userAnswers[allQuestions[currentQuestionIndex].id] === allQuestions[currentQuestionIndex].answer ? '✓ Correct!' : '✗ Incorrect'}
+                    <div style={{ marginBottom: '10px', color: '#28a745', fontWeight: 'bold' }}>
+                      ✓ Answer recorded
+                    </div>
                     <p style={{ marginTop: '10px' }}>
-                      <strong>Explanation:</strong> {allQuestions[currentQuestionIndex].explanation}
+                      <strong>Correct Answer:</strong> {allQuestions[currentQuestionIndex].a || allQuestions[currentQuestionIndex].explanation}
                     </p>
+                    {allQuestions[currentQuestionIndex].difficulty && (
+                      <p style={{ fontSize: '12px', color: '#666', marginTop: '5px' }}>
+                        Difficulty: {allQuestions[currentQuestionIndex].difficulty}
+                      </p>
+                    )}
                   </div>
                 )}
                 
@@ -269,6 +304,9 @@ const App = () => {
           </div>
         )}
 
+        {/* AI Assistant Tab */}
+        {activeTab === 'ai-assistant' && <AIAssistantTab clinicalAI={clinicalAI} />}
+
         {/* Resources Tab */}
         {activeTab === 'resources' && (
           <div style={{ backgroundColor: 'white', padding: '20px', borderRadius: '8px' }}>
@@ -281,6 +319,282 @@ const App = () => {
           </div>
         )}
       </main>
+    </div>
+  );
+};
+
+// AI Assistant Component
+const AIAssistantTab = ({ clinicalAI }) => {
+  const [patientData, setPatientData] = useState({
+    age: '',
+    gender: '',
+    conditions: [],
+    medications: [],
+    livingStatus: '',
+    functionalStatus: ''
+  });
+  const [analysisResult, setAnalysisResult] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [query, setQuery] = useState('');
+
+  const analyzePatient = async () => {
+    setLoading(true);
+    try {
+      // Convert string inputs to appropriate types
+      const processedData = {
+        ...patientData,
+        age: parseInt(patientData.age) || 0,
+        conditions: patientData.conditions.filter(c => c.trim()),
+        medications: patientData.medications.filter(m => m.trim())
+      };
+
+      const result = clinicalAI.analyzePatient(processedData);
+      setAnalysisResult(result);
+    } catch (error) {
+      setAnalysisResult({
+        success: false,
+        error: error.message,
+        demographics: { ageGroup: 'Error', riskFactors: [], recommendations: [] }
+      });
+    }
+    setLoading(false);
+  };
+
+  const addCondition = () => {
+    setPatientData({
+      ...patientData,
+      conditions: [...patientData.conditions, '']
+    });
+  };
+
+  const updateCondition = (index, value) => {
+    const newConditions = [...patientData.conditions];
+    newConditions[index] = value;
+    setPatientData({
+      ...patientData,
+      conditions: newConditions
+    });
+  };
+
+  const addMedication = () => {
+    setPatientData({
+      ...patientData,
+      medications: [...patientData.medications, '']
+    });
+  };
+
+  const updateMedication = (index, value) => {
+    const newMedications = [...patientData.medications];
+    newMedications[index] = value;
+    setPatientData({
+      ...patientData,
+      medications: newMedications
+    });
+  };
+
+  return (
+    <div style={{ backgroundColor: 'white', padding: '20px', borderRadius: '8px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
+      <h2 style={{ color: '#667eea', marginBottom: '20px' }}>🤖 Clinical AI Assistant</h2>
+      
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+        {/* Input Form */}
+        <div>
+          <h3>Patient Information</h3>
+          
+          <div style={{ marginBottom: '15px' }}>
+            <label style={{ display: 'block', marginBottom: '5px' }}>Age:</label>
+            <input
+              type="number"
+              value={patientData.age}
+              onChange={(e) => setPatientData({...patientData, age: e.target.value})}
+              style={{ width: '100%', padding: '8px', borderRadius: '4px', border: '1px solid #ddd' }}
+            />
+          </div>
+
+          <div style={{ marginBottom: '15px' }}>
+            <label style={{ display: 'block', marginBottom: '5px' }}>Gender:</label>
+            <select
+              value={patientData.gender}
+              onChange={(e) => setPatientData({...patientData, gender: e.target.value})}
+              style={{ width: '100%', padding: '8px', borderRadius: '4px', border: '1px solid #ddd' }}
+            >
+              <option value="">Select gender</option>
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+            </select>
+          </div>
+
+          <div style={{ marginBottom: '15px' }}>
+            <label style={{ display: 'block', marginBottom: '5px' }}>Living Status:</label>
+            <select
+              value={patientData.livingStatus}
+              onChange={(e) => setPatientData({...patientData, livingStatus: e.target.value})}
+              style={{ width: '100%', padding: '8px', borderRadius: '4px', border: '1px solid #ddd' }}
+            >
+              <option value="">Select status</option>
+              <option value="alone">Lives alone</option>
+              <option value="family">Lives with family</option>
+              <option value="assisted">Assisted living</option>
+            </select>
+          </div>
+
+          <div style={{ marginBottom: '15px' }}>
+            <label style={{ display: 'block', marginBottom: '5px' }}>Functional Status:</label>
+            <select
+              value={patientData.functionalStatus}
+              onChange={(e) => setPatientData({...patientData, functionalStatus: e.target.value})}
+              style={{ width: '100%', padding: '8px', borderRadius: '4px', border: '1px solid #ddd' }}
+            >
+              <option value="">Select status</option>
+              <option value="independent">Independent</option>
+              <option value="partially_dependent">Partially dependent</option>
+              <option value="dependent">Dependent</option>
+            </select>
+          </div>
+
+          <div style={{ marginBottom: '15px' }}>
+            <label style={{ display: 'block', marginBottom: '5px' }}>Conditions:</label>
+            {patientData.conditions.map((condition, index) => (
+              <input
+                key={index}
+                type="text"
+                value={condition}
+                onChange={(e) => updateCondition(index, e.target.value)}
+                placeholder="e.g., diabetes, hypertension"
+                style={{ width: '100%', padding: '8px', marginBottom: '5px', borderRadius: '4px', border: '1px solid #ddd' }}
+              />
+            ))}
+            <button
+              onClick={addCondition}
+              style={{ padding: '5px 10px', backgroundColor: '#667eea', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
+            >
+              Add Condition
+            </button>
+          </div>
+
+          <div style={{ marginBottom: '15px' }}>
+            <label style={{ display: 'block', marginBottom: '5px' }}>Medications:</label>
+            {patientData.medications.map((medication, index) => (
+              <input
+                key={index}
+                type="text"
+                value={medication}
+                onChange={(e) => updateMedication(index, e.target.value)}
+                placeholder="e.g., metformin, lisinopril"
+                style={{ width: '100%', padding: '8px', marginBottom: '5px', borderRadius: '4px', border: '1px solid #ddd' }}
+              />
+            ))}
+            <button
+              onClick={addMedication}
+              style={{ padding: '5px 10px', backgroundColor: '#667eea', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
+            >
+              Add Medication
+            </button>
+          </div>
+
+          <button
+            onClick={analyzePatient}
+            disabled={loading || !patientData.age}
+            style={{
+              width: '100%',
+              padding: '15px',
+              backgroundColor: loading ? '#ccc' : '#28a745',
+              color: 'white',
+              border: 'none',
+              borderRadius: '4px',
+              cursor: loading ? 'not-allowed' : 'pointer',
+              fontSize: '16px',
+              fontWeight: 'bold'
+            }}
+          >
+            {loading ? 'Analyzing...' : '🔍 Analyze Patient'}
+          </button>
+        </div>
+
+        {/* Results */}
+        <div>
+          <h3>AI Analysis Results</h3>
+          
+          {!analysisResult && (
+            <div style={{ padding: '20px', backgroundColor: '#f8f9fa', borderRadius: '4px', textAlign: 'center', color: '#666' }}>
+              Enter patient information and click "Analyze Patient" to get AI-powered clinical insights.
+            </div>
+          )}
+
+          {analysisResult && analysisResult.success && (
+            <div>
+              {/* Demographics */}
+              <div style={{ marginBottom: '20px', padding: '15px', backgroundColor: '#e7f3ff', borderRadius: '4px' }}>
+                <h4 style={{ margin: '0 0 10px 0', color: '#0056b3' }}>👤 Demographics</h4>
+                <p><strong>Age Group:</strong> {analysisResult.demographics.ageGroup}</p>
+                <p><strong>Risk Factors:</strong> {analysisResult.demographics.riskFactors.join(', ') || 'None identified'}</p>
+              </div>
+
+              {/* Risk Score */}
+              <div style={{ marginBottom: '20px', padding: '15px', backgroundColor: '#fff3cd', borderRadius: '4px' }}>
+                <h4 style={{ margin: '0 0 10px 0', color: '#856404' }}>⚠️ Risk Assessment</h4>
+                <p><strong>Overall Risk:</strong> {analysisResult.riskScore.category} (Score: {analysisResult.riskScore.overall})</p>
+                <p><strong>Risk Factors:</strong></p>
+                <ul>
+                  {analysisResult.riskScore.factors?.map((factor, index) => (
+                    <li key={index}>{factor}</li>
+                  ))}
+                </ul>
+              </div>
+
+              {/* Recommendations */}
+              <div style={{ marginBottom: '20px', padding: '15px', backgroundColor: '#d4edda', borderRadius: '4px' }}>
+                <h4 style={{ margin: '0 0 10px 0', color: '#155724' }}>💡 Clinical Recommendations</h4>
+                {analysisResult.recommendations.map((rec, index) => (
+                  <div key={index} style={{ marginBottom: '10px' }}>
+                    <span style={{
+                      backgroundColor: rec.priority === 'high' ? '#dc3545' : rec.priority === 'moderate' ? '#ffc107' : '#28a745',
+                      color: 'white',
+                      padding: '2px 8px',
+                      borderRadius: '4px',
+                      fontSize: '12px',
+                      marginRight: '10px'
+                    }}>
+                      {rec.priority?.toUpperCase()}
+                    </span>
+                    <strong>{rec.text}</strong>
+                    {rec.rationale && <p style={{ fontSize: '14px', color: '#666', margin: '5px 0' }}>{rec.rationale}</p>}
+                  </div>
+                ))}
+              </div>
+
+              {/* Clinical Alerts */}
+              {analysisResult.alerts && analysisResult.alerts.length > 0 && (
+                <div style={{ marginBottom: '20px', padding: '15px', backgroundColor: '#f8d7da', borderRadius: '4px' }}>
+                  <h4 style={{ margin: '0 0 10px 0', color: '#721c24' }}>🚨 Clinical Alerts</h4>
+                  {analysisResult.alerts.map((alert, index) => (
+                    <div key={index} style={{ marginBottom: '10px' }}>
+                      <strong>{alert.message}</strong>
+                      <p style={{ fontSize: '14px', color: '#666', margin: '5px 0' }}>Action: {alert.action}</p>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {/* Summary */}
+              {analysisResult.summary && (
+                <div style={{ padding: '15px', backgroundColor: '#f8f9fa', borderRadius: '4px' }}>
+                  <h4 style={{ margin: '0 0 10px 0' }}>📋 Summary</h4>
+                  <p>{analysisResult.summary.overview}</p>
+                  <p><strong>Action Items:</strong> {analysisResult.summary.actionItems}</p>
+                </div>
+              )}
+            </div>
+          )}
+
+          {analysisResult && !analysisResult.success && (
+            <div style={{ padding: '15px', backgroundColor: '#f8d7da', borderRadius: '4px' }}>
+              <h4 style={{ color: '#721c24' }}>❌ Analysis Error</h4>
+              <p>{analysisResult.error}</p>
+            </div>
+          )}
+        </div>
+      </div>
     </div>
   );
 };
