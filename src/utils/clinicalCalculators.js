@@ -374,6 +374,103 @@ export const ClinicalCalculators = {
     scoring: "1 point for each factor present. Score ≥3 indicates high bleeding risk."
   },
 
+  CHADS2VASc: {
+    name: "CHA₂DS₂-VASc Score",
+    description: "Stroke risk assessment for atrial fibrillation anticoagulation decisions",
+    factors: [
+      "Congestive heart failure/LV dysfunction (1 point)",
+      "Hypertension (1 point)",
+      "Age ≥75 years (2 points)",
+      "Diabetes mellitus (1 point)",
+      "Stroke/TIA/thromboembolism history (2 points)",
+      "Vascular disease (MI, PAD, aortic plaque) (1 point)",
+      "Age 65-74 years (1 point)",
+      "Sex category (female) (1 point)"
+    ],
+    calculate: function(factors) {
+      if (!factors || typeof factors !== 'object') {
+        return { error: "Invalid factors object" };
+      }
+      
+      let score = 0;
+      
+      // C - Congestive heart failure
+      if (factors.heartFailure) score += 1;
+      
+      // H - Hypertension
+      if (factors.hypertension) score += 1;
+      
+      // A₂ - Age ≥75 (2 points)
+      if (factors.age >= 75) {
+        score += 2;
+      } else if (factors.age >= 65) {
+        // Age 65-74 (1 point)
+        score += 1;
+      }
+      
+      // D - Diabetes
+      if (factors.diabetes) score += 1;
+      
+      // S₂ - Stroke/TIA/thromboembolism (2 points)
+      if (factors.strokeHistory) score += 2;
+      
+      // V - Vascular disease
+      if (factors.vascularDisease) score += 1;
+      
+      // Sc - Sex category (female)
+      if (factors.female) score += 1;
+      
+      let risk, strokeRate, recommendation;
+      
+      if (score === 0) {
+        risk = "Very Low Risk";
+        strokeRate = "0.2%";
+        recommendation = "No anticoagulation recommended. Consider aspirin or no therapy.";
+      } else if (score === 1) {
+        risk = "Low Risk";
+        strokeRate = "0.6%";
+        recommendation = "Consider anticoagulation. Shared decision-making with patient.";
+      } else if (score === 2) {
+        risk = "Moderate Risk";
+        strokeRate = "2.2%";
+        recommendation = "Anticoagulation recommended unless contraindicated.";
+      } else if (score >= 3 && score <= 4) {
+        risk = "High Risk";
+        strokeRate = "3.2-4.8%";
+        recommendation = "Anticoagulation strongly recommended unless contraindicated.";
+      } else {
+        risk = "Very High Risk";
+        strokeRate = ">6%";
+        recommendation = "Anticoagulation strongly recommended. Consider additional stroke prevention measures.";
+      }
+      
+      return {
+        score: score,
+        maxScore: 9,
+        risk: risk,
+        annualStrokeRate: strokeRate,
+        recommendation: recommendation,
+        interpretation: `Annual stroke risk approximately ${strokeRate} without anticoagulation`,
+        breakdown: {
+          heartFailure: factors.heartFailure ? 1 : 0,
+          hypertension: factors.hypertension ? 1 : 0,
+          age: factors.age >= 75 ? 2 : (factors.age >= 65 ? 1 : 0),
+          diabetes: factors.diabetes ? 1 : 0,
+          strokeHistory: factors.strokeHistory ? 2 : 0,
+          vascularDisease: factors.vascularDisease ? 1 : 0,
+          female: factors.female ? 1 : 0
+        }
+      };
+    },
+    
+    guidelines: {
+      esc2020: "Score 0: No therapy, Score 1: Consider anticoagulation, Score ≥2: Anticoagulation recommended",
+      aha2019: "Score 0-1: No anticoagulation or shared decision, Score ≥2: Anticoagulation recommended"
+    },
+    
+    scoring: "Maximum 9 points. Higher scores indicate increased stroke risk and stronger anticoagulation recommendation."
+  },
+
   FRAIL: {
     name: "FRAIL Scale",
     description: "Frailty screening tool",
