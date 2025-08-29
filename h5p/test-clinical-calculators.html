@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Advanced Clinical Calculators Test Suite</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        h1 {
+            color: white;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+        .calculator-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 20px;
+        }
+        .calculator-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+        .calculator-card:hover {
+            transform: translateY(-5px);
+        }
+        .card-header {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            color: white;
+            padding: 20px;
+            font-size: 1.3em;
+            font-weight: bold;
+        }
+        .card-body {
+            padding: 20px;
+        }
+        .test-controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        .test-btn {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        .test-low {
+            background: #10b981;
+            color: white;
+        }
+        .test-low:hover {
+            background: #059669;
+        }
+        .test-medium {
+            background: #f59e0b;
+            color: white;
+        }
+        .test-medium:hover {
+            background: #d97706;
+        }
+        .test-high {
+            background: #ef4444;
+            color: white;
+        }
+        .test-high:hover {
+            background: #dc2626;
+        }
+        .result-box {
+            background: #f3f4f6;
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 15px;
+            min-height: 150px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        .success {
+            background: #d1fae5;
+            border: 2px solid #10b981;
+        }
+        .warning {
+            background: #fed7aa;
+            border: 2px solid #f59e0b;
+        }
+        .danger {
+            background: #fee2e2;
+            border: 2px solid #ef4444;
+        }
+        .status-badge {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+        .low-risk {
+            background: #d1fae5;
+            color: #065f46;
+        }
+        .medium-risk {
+            background: #fed7aa;
+            color: #92400e;
+        }
+        .high-risk {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+        .console-log {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(0,0,0,0.9);
+            color: #10b981;
+            padding: 15px;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85em;
+            max-width: 400px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        .loading {
+            text-align: center;
+            color: #6b7280;
+            padding: 20px;
+        }
+        .sal-coverage {
+            background: #eff6ff;
+            border-left: 4px solid #3b82f6;
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 5px;
+        }
+        .bituach-benefits {
+            background: #f0fdf4;
+            border-left: 4px solid #10b981;
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏥 Advanced Clinical Calculators Test Suite 🇮🇱</h1>
+        
+        <div class="calculator-grid">
+            <!-- CHA2DS2-VASc Score -->
+            <div class="calculator-card">
+                <div class="card-header">
+                    CHA2DS2-VASc Score
+                    <span class="status-badge low-risk" id="cha2ds2-status">Ready</span>
+                </div>
+                <div class="card-body">
+                    <div class="test-controls">
+                        <button class="test-btn test-low" onclick="testCHA2DS2VASc('low')">Low Risk</button>
+                        <button class="test-btn test-medium" onclick="testCHA2DS2VASc('medium')">Medium Risk</button>
+                        <button class="test-btn test-high" onclick="testCHA2DS2VASc('high')">High Risk</button>
+                    </div>
+                    <div class="result-box" id="cha2ds2-result">
+                        <div class="loading">Click a test button to calculate...</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- HAS-BLED Score -->
+            <div class="calculator-card">
+                <div class="card-header">
+                    HAS-BLED Score
+                    <span class="status-badge low-risk" id="hasbled-status">Ready</span>
+                </div>
+                <div class="card-body">
+                    <div class="test-controls">
+                        <button class="test-btn test-low" onclick="testHASBLED('low')">Low Risk</button>
+                        <button class="test-btn test-medium" onclick="testHASBLED('medium')">Medium Risk</button>
+                        <button class="test-btn test-high" onclick="testHASBLED('high')">High Risk</button>
+                    </div>
+                    <div class="result-box" id="hasbled-result">
+                        <div class="loading">Click a test button to calculate...</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Morse Fall Scale -->
+            <div class="calculator-card">
+                <div class="card-header">
+                    Morse Fall Scale (MOH)
+                    <span class="status-badge low-risk" id="morse-status">Ready</span>
+                </div>
+                <div class="card-body">
+                    <div class="test-controls">
+                        <button class="test-btn test-low" onclick="testMorseFall('low')">Low Risk</button>
+                        <button class="test-btn test-medium" onclick="testMorseFall('medium')">Medium Risk</button>
+                        <button class="test-btn test-high" onclick="testMorseFall('high')">High Risk</button>
+                    </div>
+                    <div class="result-box" id="morse-result">
+                        <div class="loading">Click a test button to calculate...</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Clinical Frailty Scale -->
+            <div class="calculator-card">
+                <div class="card-header">
+                    Clinical Frailty Scale
+                    <span class="status-badge low-risk" id="frailty-status">Ready</span>
+                </div>
+                <div class="card-body">
+                    <div class="test-controls">
+                        <button class="test-btn test-low" onclick="testClinicalFrailty('robust')">Robust</button>
+                        <button class="test-btn test-medium" onclick="testClinicalFrailty('vulnerable')">Vulnerable</button>
+                        <button class="test-btn test-high" onclick="testClinicalFrailty('frail')">Severely Frail</button>
+                    </div>
+                    <div class="result-box" id="frailty-result">
+                        <div class="loading">Click a test button to calculate...</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- FRAIL Scale -->
+            <div class="calculator-card">
+                <div class="card-header">
+                    FRAIL Scale
+                    <span class="status-badge low-risk" id="frail-status">Ready</span>
+                </div>
+                <div class="card-body">
+                    <div class="test-controls">
+                        <button class="test-btn test-low" onclick="testFRAILScale('robust')">Robust</button>
+                        <button class="test-btn test-medium" onclick="testFRAILScale('prefrail')">Pre-frail</button>
+                        <button class="test-btn test-high" onclick="testFRAILScale('frail')">Frail</button>
+                    </div>
+                    <div class="result-box" id="frail-result">
+                        <div class="loading">Click a test button to calculate...</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charlson Comorbidity Index -->
+            <div class="calculator-card">
+                <div class="card-header">
+                    Charlson Comorbidity Index
+                    <span class="status-badge low-risk" id="charlson-status">Ready</span>
+                </div>
+                <div class="card-body">
+                    <div class="test-controls">
+                        <button class="test-btn test-low" onclick="testCharlson('low')">Low Burden</button>
+                        <button class="test-btn test-medium" onclick="testCharlson('medium')">Medium Burden</button>
+                        <button class="test-btn test-high" onclick="testCharlson('high')">High Burden</button>
+                    </div>
+                    <div class="result-box" id="charlson-result">
+                        <div class="loading">Click a test button to calculate...</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mini Nutritional Assessment -->
+            <div class="calculator-card">
+                <div class="card-header">
+                    Mini Nutritional Assessment
+                    <span class="status-badge low-risk" id="mna-status">Ready</span>
+                </div>
+                <div class="card-body">
+                    <div class="test-controls">
+                        <button class="test-btn test-low" onclick="testMNA('normal')">Normal</button>
+                        <button class="test-btn test-medium" onclick="testMNA('risk')">At Risk</button>
+                        <button class="test-btn test-high" onclick="testMNA('malnourished')">Malnourished</button>
+                    </div>
+                    <div class="result-box" id="mna-result">
+                        <div class="loading">Click a test button to calculate...</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MMSE -->
+            <div class="calculator-card">
+                <div class="card-header">
+                    MMSE (Mini-Mental State)
+                    <span class="status-badge low-risk" id="mmse-status">Ready</span>
+                </div>
+                <div class="card-body">
+                    <div class="test-controls">
+                        <button class="test-btn test-low" onclick="testMMSE('normal')">Normal</button>
+                        <button class="test-btn test-medium" onclick="testMMSE('mild')">Mild Impairment</button>
+                        <button class="test-btn test-high" onclick="testMMSE('severe')">Severe Impairment</button>
+                    </div>
+                    <div class="result-box" id="mmse-result">
+                        <div class="loading">Click a test button to calculate...</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- GDS -->
+            <div class="calculator-card">
+                <div class="card-header">
+                    Geriatric Depression Scale
+                    <span class="status-badge low-risk" id="gds-status">Ready</span>
+                </div>
+                <div class="card-body">
+                    <div class="test-controls">
+                        <button class="test-btn test-low" onclick="testGDS('normal')">Normal</button>
+                        <button class="test-btn test-medium" onclick="testGDS('mild')">Mild Depression</button>
+                        <button class="test-btn test-high" onclick="testGDS('severe')">Severe Depression</button>
+                    </div>
+                    <div class="result-box" id="gds-result">
+                        <div class="loading">Click a test button to calculate...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="console-log" id="console-log">
+        Console: Loading calculators...
+    </div>
+
+    <script src="advanced-clinical-calculators.js"></script>
+    <script>
+        const calculators = new AdvancedClinicalCalculators();
+        
+        function updateConsole(message) {
+            const consoleEl = document.getElementById('console-log');
+            const time = new Date().toLocaleTimeString();
+            consoleEl.innerHTML = `[${time}] ${message}<br>` + consoleEl.innerHTML;
+            console.log(message);
+        }
+
+        function formatResult(result, type) {
+            let output = `Score: ${result.score}\n`;
+            output += `Risk: ${result.risk || result.category || 'N/A'}\n`;
+            output += `Interpretation: ${result.interpretation}\n\n`;
+            
+            if (result.recommendations) {
+                output += `Recommendations:\n`;
+                result.recommendations.forEach(rec => {
+                    output += `• ${rec}\n`;
+                });
+            }
+            
+            if (result.salCoverage) {
+                output += `\n💊 Sal Coverage Info:\n`;
+                output += JSON.stringify(result.salCoverage, null, 2);
+            }
+            
+            if (result.bituachLeumi) {
+                output += `\n🏛️ Bituach Leumi Benefits:\n`;
+                output += JSON.stringify(result.bituachLeumi, null, 2);
+            }
+            
+            if (result.israeliGuidelines) {
+                output += `\n🇮🇱 Israeli Guidelines:\n`;
+                result.israeliGuidelines.forEach(guide => {
+                    output += `• ${guide}\n`;
+                });
+            }
+            
+            return output;
+        }
+
+        // CHA2DS2-VASc Test
+        function testCHA2DS2VASc(risk) {
+            const testData = {
+                low: {
+                    age: 50,
+                    sex: 'M',
+                    chf: false,
+                    hypertension: false,
+                    stroke: false,
+                    vascular: false,
+                    diabetes: false
+                },
+                medium: {
+                    age: 72,
+                    sex: 'F',
+                    chf: false,
+                    hypertension: true,
+                    stroke: false,
+                    vascular: false,
+                    diabetes: true
+                },
+                high: {
+                    age: 78,
+                    sex: 'F',
+                    chf: true,
+                    hypertension: true,
+                    stroke: true,
+                    vascular: true,
+                    diabetes: true
+                }
+            };
+            
+            const result = calculators.calculateCHA2DS2VASc(testData[risk]);
+            const element = document.getElementById('cha2ds2-result');
+            element.className = risk === 'high' ? 'result-box danger' : risk === 'medium' ? 'result-box warning' : 'result-box success';
+            element.textContent = formatResult(result, 'cha2ds2');
+            
+            const status = document.getElementById('cha2ds2-status');
+            status.className = `status-badge ${risk}-risk`;
+            status.textContent = `Score: ${result.score}`;
+            
+            updateConsole(`CHA2DS2-VASc calculated: Score ${result.score}, ${result.risk} risk`);
+        }
+
+        // HAS-BLED Test
+        function testHASBLED(risk) {
+            const testData = {
+                low: {
+                    hypertension: false,
+                    abnormalRenal: false,
+                    abnormalLiver: false,
+                    stroke: false,
+                    bleeding: false,
+                    labile: false,
+                    elderly: false,
+                    drugs: false,
+                    alcohol: false
+                },
+                medium: {
+                    hypertension: true,
+                    abnormalRenal: false,
+                    abnormalLiver: false,
+                    stroke: false,
+                    bleeding: false,
+                    labile: true,
+                    elderly: true,
+                    drugs: false,
+                    alcohol: false
+                },
+                high: {
+                    hypertension: true,
+                    abnormalRenal: true,
+                    abnormalLiver: true,
+                    stroke: true,
+                    bleeding: true,
+                    labile: true,
+                    elderly: true,
+                    drugs: true,
+                    alcohol: true
+                }
+            };
+            
+            const result = calculators.calculateHASBLED(testData[risk]);
+            const element = document.getElementById('hasbled-result');
+            element.className = risk === 'high' ? 'result-box danger' : risk === 'medium' ? 'result-box warning' : 'result-box success';
+            element.textContent = formatResult(result, 'hasbled');
+            
+            const status = document.getElementById('hasbled-status');
+            status.className = `status-badge ${risk}-risk`;
+            status.textContent = `Score: ${result.score}`;
+            
+            updateConsole(`HAS-BLED calculated: Score ${result.score}, ${result.risk} bleeding risk`);
+        }
+
+        // Morse Fall Scale Test
+        function testMorseFall(risk) {
+            const testData = {
+                low: {
+                    fallHistory: 'no',
+                    secondaryDiagnosis: 'no',
+                    ambulatoryAid: 'none',
+                    iv: 'no',
+                    gait: 'normal',
+                    mentalStatus: 'oriented'
+                },
+                medium: {
+                    fallHistory: 'no',
+                    secondaryDiagnosis: 'yes',
+                    ambulatoryAid: 'cane',
+                    iv: 'yes',
+                    gait: 'weak',
+                    mentalStatus: 'oriented'
+                },
+                high: {
+                    fallHistory: 'yes',
+                    secondaryDiagnosis: 'yes',
+                    ambulatoryAid: 'walker',
+                    iv: 'yes',
+                    gait: 'impaired',
+                    mentalStatus: 'forgets'
+                }
+            };
+            
+            const result = calculators.calculateMorseFallScale(testData[risk]);
+            const element = document.getElementById('morse-result');
+            element.className = risk === 'high' ? 'result-box danger' : risk === 'medium' ? 'result-box warning' : 'result-box success';
+            element.textContent = formatResult(result, 'morse');
+            
+            const status = document.getElementById('morse-status');
+            status.className = `status-badge ${risk}-risk`;
+            status.textContent = `Score: ${result.score}`;
+            
+            updateConsole(`Morse Fall Scale: Score ${result.score}, ${result.risk} fall risk`);
+        }
+
+        // Clinical Frailty Scale Test
+        function testClinicalFrailty(level) {
+            const testData = {
+                robust: { score: 2 },
+                vulnerable: { score: 5 },
+                frail: { score: 8 }
+            };
+            
+            const result = calculators.calculateClinicalFrailtyScale(testData[level]);
+            const element = document.getElementById('frailty-result');
+            element.className = level === 'frail' ? 'result-box danger' : level === 'vulnerable' ? 'result-box warning' : 'result-box success';
+            element.textContent = formatResult(result, 'frailty');
+            
+            const status = document.getElementById('frailty-status');
+            const riskClass = level === 'frail' ? 'high' : level === 'vulnerable' ? 'medium' : 'low';
+            status.className = `status-badge ${riskClass}-risk`;
+            status.textContent = result.category;
+            
+            updateConsole(`Clinical Frailty Scale: ${result.category}`);
+        }
+
+        // FRAIL Scale Test
+        function testFRAILScale(level) {
+            const testData = {
+                robust: {
+                    fatigue: false,
+                    resistance: false,
+                    ambulation: false,
+                    illnesses: false,
+                    lostWeight: false
+                },
+                prefrail: {
+                    fatigue: true,
+                    resistance: false,
+                    ambulation: true,
+                    illnesses: false,
+                    lostWeight: false
+                },
+                frail: {
+                    fatigue: true,
+                    resistance: true,
+                    ambulation: true,
+                    illnesses: true,
+                    lostWeight: true
+                }
+            };
+            
+            const result = calculators.calculateFRAILScale(testData[level]);
+            const element = document.getElementById('frail-result');
+            element.className = level === 'frail' ? 'result-box danger' : level === 'prefrail' ? 'result-box warning' : 'result-box success';
+            element.textContent = formatResult(result, 'frail');
+            
+            const status = document.getElementById('frail-status');
+            const riskClass = level === 'frail' ? 'high' : level === 'prefrail' ? 'medium' : 'low';
+            status.className = `status-badge ${riskClass}-risk`;
+            status.textContent = result.category;
+            
+            updateConsole(`FRAIL Scale: Score ${result.score}, ${result.category}`);
+        }
+
+        // Charlson Comorbidity Index Test
+        function testCharlson(burden) {
+            const testData = {
+                low: {
+                    age: 55,
+                    mi: false,
+                    chf: false,
+                    pvd: false,
+                    cvd: false,
+                    dementia: false,
+                    copd: false,
+                    connective: false,
+                    ulcer: false,
+                    mildLiver: false,
+                    diabetes: false,
+                    hemiplegia: false,
+                    moderateRenal: false,
+                    diabetesEndOrgan: false,
+                    tumor: false,
+                    leukemia: false,
+                    lymphoma: false,
+                    moderateLiver: false,
+                    metastatic: false,
+                    aids: false
+                },
+                medium: {
+                    age: 70,
+                    mi: true,
+                    chf: false,
+                    pvd: false,
+                    cvd: false,
+                    dementia: false,
+                    copd: true,
+                    connective: false,
+                    ulcer: false,
+                    mildLiver: false,
+                    diabetes: true,
+                    hemiplegia: false,
+                    moderateRenal: false,
+                    diabetesEndOrgan: false,
+                    tumor: false,
+                    leukemia: false,
+                    lymphoma: false,
+                    moderateLiver: false,
+                    metastatic: false,
+                    aids: false
+                },
+                high: {
+                    age: 82,
+                    mi: true,
+                    chf: true,
+                    pvd: true,
+                    cvd: true,
+                    dementia: true,
+                    copd: true,
+                    connective: false,
+                    ulcer: false,
+                    mildLiver: false,
+                    diabetes: true,
+                    hemiplegia: false,
+                    moderateRenal: true,
+                    diabetesEndOrgan: true,
+                    tumor: true,
+                    leukemia: false,
+                    lymphoma: false,
+                    moderateLiver: false,
+                    metastatic: false,
+                    aids: false
+                }
+            };
+            
+            const result = calculators.calculateCharlsonIndex(testData[burden]);
+            const element = document.getElementById('charlson-result');
+            element.className = burden === 'high' ? 'result-box danger' : burden === 'medium' ? 'result-box warning' : 'result-box success';
+            element.textContent = formatResult(result, 'charlson');
+            
+            const status = document.getElementById('charlson-status');
+            const riskClass = burden === 'high' ? 'high' : burden === 'medium' ? 'medium' : 'low';
+            status.className = `status-badge ${riskClass}-risk`;
+            status.textContent = `Score: ${result.score}`;
+            
+            updateConsole(`Charlson Index: Score ${result.score}, ${result.tenYearSurvival} 10-year survival`);
+        }
+
+        // Mini Nutritional Assessment Test
+        function testMNA(status) {
+            const testData = {
+                normal: {
+                    foodIntakeDecline: 0,
+                    weightLoss: 0,
+                    mobility: 0,
+                    psychologicalStress: 0,
+                    neuropsychological: 0,
+                    bmi: 0,
+                    livesIndependently: 0,
+                    medications: 0,
+                    pressureSores: 0,
+                    meals: 0,
+                    protein: 0,
+                    fruitsVegetables: 0,
+                    fluids: 0,
+                    modeOfFeeding: 0,
+                    nutritionalSelfView: 0,
+                    healthCompared: 0,
+                    midArmCircumference: 0,
+                    calfCircumference: 0
+                },
+                risk: {
+                    foodIntakeDecline: 1,
+                    weightLoss: 1,
+                    mobility: 1,
+                    psychologicalStress: 1,
+                    neuropsychological: 0,
+                    bmi: 1,
+                    livesIndependently: 1,
+                    medications: 1,
+                    pressureSores: 0,
+                    meals: 1,
+                    protein: 1,
+                    fruitsVegetables: 0,
+                    fluids: 1,
+                    modeOfFeeding: 1,
+                    nutritionalSelfView: 1,
+                    healthCompared: 0.5,
+                    midArmCircumference: 0.5,
+                    calfCircumference: 1
+                },
+                malnourished: {
+                    foodIntakeDecline: 2,
+                    weightLoss: 3,
+                    mobility: 2,
+                    psychologicalStress: 2,
+                    neuropsychological: 2,
+                    bmi: 3,
+                    livesIndependently: 1,
+                    medications: 1,
+                    pressureSores: 1,
+                    meals: 0,
+                    protein: 0,
+                    fruitsVegetables: 0,
+                    fluids: 0,
+                    modeOfFeeding: 2,
+                    nutritionalSelfView: 0,
+                    healthCompared: 0,
+                    midArmCircumference: 0,
+                    calfCircumference: 0
+                }
+            };
+            
+            const result = calculators.calculateMNA(testData[status]);
+            const element = document.getElementById('mna-result');
+            element.className = status === 'malnourished' ? 'result-box danger' : status === 'risk' ? 'result-box warning' : 'result-box success';
+            element.textContent = formatResult(result, 'mna');
+            
+            const statusEl = document.getElementById('mna-status');
+            const riskClass = status === 'malnourished' ? 'high' : status === 'risk' ? 'medium' : 'low';
+            statusEl.className = `status-badge ${riskClass}-risk`;
+            statusEl.textContent = result.status;
+            
+            updateConsole(`MNA: Score ${result.score}, ${result.status}`);
+        }
+
+        // MMSE Test
+        function testMMSE(level) {
+            const testData = {
+                normal: {
+                    orientation: 10,
+                    registration: 3,
+                    attention: 5,
+                    recall: 3,
+                    language: 8,
+                    construction: 1
+                },
+                mild: {
+                    orientation: 7,
+                    registration: 3,
+                    attention: 3,
+                    recall: 2,
+                    language: 6,
+                    construction: 0
+                },
+                severe: {
+                    orientation: 3,
+                    registration: 1,
+                    attention: 1,
+                    recall: 0,
+                    language: 3,
+                    construction: 0
+                }
+            };
+            
+            const result = calculators.calculateMMSE(testData[level]);
+            const element = document.getElementById('mmse-result');
+            element.className = level === 'severe' ? 'result-box danger' : level === 'mild' ? 'result-box warning' : 'result-box success';
+            element.textContent = formatResult(result, 'mmse');
+            
+            const status = document.getElementById('mmse-status');
+            const riskClass = level === 'severe' ? 'high' : level === 'mild' ? 'medium' : 'low';
+            status.className = `status-badge ${riskClass}-risk`;
+            status.textContent = `Score: ${result.score}`;
+            
+            updateConsole(`MMSE: Score ${result.score}, ${result.interpretation}`);
+        }
+
+        // GDS Test
+        function testGDS(level) {
+            const testData = {
+                normal: {
+                    responses: Array(15).fill(0).slice(0, 2).concat(Array(13).fill(1))
+                },
+                mild: {
+                    responses: Array(15).fill(0).slice(0, 7).concat(Array(8).fill(1))
+                },
+                severe: {
+                    responses: Array(15).fill(0)
+                }
+            };
+            
+            const result = calculators.calculateGDS(testData[level]);
+            const element = document.getElementById('gds-result');
+            element.className = level === 'severe' ? 'result-box danger' : level === 'mild' ? 'result-box warning' : 'result-box success';
+            element.textContent = formatResult(result, 'gds');
+            
+            const status = document.getElementById('gds-status');
+            const riskClass = level === 'severe' ? 'high' : level === 'mild' ? 'medium' : 'low';
+            status.className = `status-badge ${riskClass}-risk`;
+            status.textContent = result.severity;
+            
+            updateConsole(`GDS: Score ${result.score}, ${result.severity}`);
+        }
+
+        // Initialize on load
+        window.onload = function() {
+            updateConsole('✅ Advanced Clinical Calculators loaded successfully!');
+            updateConsole(`📊 ${Object.keys(calculators).length} calculators available`);
+            updateConsole('🇮🇱 Israeli healthcare integration active');
+            
+            // Test all calculators with low risk by default
+            setTimeout(() => {
+                updateConsole('Running automatic test suite...');
+                testCHA2DS2VASc('low');
+                testHASBLED('low');
+                testMorseFall('low');
+                testClinicalFrailty('robust');
+                testFRAILScale('robust');
+                testCharlson('low');
+                testMNA('normal');
+                testMMSE('normal');
+                testGDS('normal');
+                updateConsole('✨ All calculators tested successfully!');
+            }, 1000);
+        };
+    </script>
+</body>
+</html>

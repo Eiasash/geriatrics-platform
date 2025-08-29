@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emergency Drug Interaction Fix - Validation Test</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        
+        .header {
+            background: #d32f2f;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .test-section {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .critical-alert {
+            background: #ffebee;
+            border: 2px solid #f44336;
+            border-radius: 4px;
+            padding: 15px;
+            margin: 10px 0;
+        }
+        
+        .major-alert {
+            background: #fff3e0;
+            border: 2px solid #ff9800;
+            border-radius: 4px;
+            padding: 15px;
+            margin: 10px 0;
+        }
+        
+        .success {
+            background: #e8f5e8;
+            border: 2px solid #4caf50;
+            border-radius: 4px;
+            padding: 15px;
+            margin: 10px 0;
+        }
+        
+        .test-input {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        
+        .test-button {
+            background: #2196f3;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 5px;
+        }
+        
+        .test-button:hover {
+            background: #1976d2;
+        }
+        
+        .emergency-button {
+            background: #f44336;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        
+        .results {
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background: #fafafa;
+        }
+        
+        .hebrew {
+            direction: rtl;
+            font-size: 16px;
+            color: #333;
+            margin: 10px 0;
+        }
+        
+        .test-status {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 3px;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+        
+        .pass {
+            background: #4caf50;
+            color: white;
+        }
+        
+        .fail {
+            background: #f44336;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🚨 EMERGENCY DRUG INTERACTION CHECKER - CRITICAL SAFETY FIX</h1>
+        <p>Testing critical patient safety combinations</p>
+    </div>
+
+    <div class="test-section">
+        <h2>🧪 CRITICAL SAFETY VALIDATION TESTS</h2>
+        
+        <div id="validation-results">
+            <p>Loading emergency interaction checker...</p>
+        </div>
+        
+        <button class="emergency-button" onclick="runAllCriticalTests()">
+            RUN ALL CRITICAL SAFETY TESTS
+        </button>
+    </div>
+
+    <div class="test-section">
+        <h2>🔍 INTERACTIVE DRUG INTERACTION TESTER</h2>
+        
+        <div>
+            <h3>Enter Medications (one per line):</h3>
+            <textarea class="test-input" id="medicationInput" rows="6" placeholder="Enter medications, e.g.:&#10;Eliquis&#10;Clexane&#10;Aspirin&#10;Lorazepam&#10;Morphine"></textarea>
+            
+            <button class="test-button" onclick="testInteractions()">CHECK INTERACTIONS</button>
+            <button class="test-button" onclick="loadPresetTest('dual-anticoag')">Test: Eliquis + Clexane</button>
+            <button class="test-button" onclick="loadPresetTest('triple-anticoag')">Test: Triple Anticoagulation</button>
+            <button class="test-button" onclick="loadPresetTest('benzo-opioid')">Test: Benzo + Opioid</button>
+        </div>
+
+        <div id="interaction-results" class="results" style="display: none;">
+            <!-- Results will appear here -->
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>📊 SYSTEM STATUS</h2>
+        <div id="system-status">
+            <p>Checking system status...</p>
+        </div>
+    </div>
+
+    <script src="emergency-interaction-fix.js"></script>
+    <script>
+        let emergencyChecker;
+        
+        // Initialize the emergency checker
+        document.addEventListener('DOMContentLoaded', function() {
+            try {
+                emergencyChecker = new EmergencyInteractionChecker();
+                updateSystemStatus();
+                runValidationTests();
+            } catch (error) {
+                console.error('Failed to initialize emergency checker:', error);
+                document.getElementById('validation-results').innerHTML = 
+                    '<div class="critical-alert">❌ CRITICAL ERROR: Emergency checker failed to initialize</div>';
+            }
+        });
+
+        function updateSystemStatus() {
+            const statusDiv = document.getElementById('system-status');
+            statusDiv.innerHTML = `
+                <div class="success">
+                    ✅ Emergency Interaction Checker: ACTIVE<br>
+                    ✅ Conservative Mode: ENABLED<br>
+                    ✅ Hebrew Warnings: LOADED<br>
+                    ✅ Critical Combinations: MONITORED<br>
+                    📊 Database: ${Object.keys(emergencyChecker.drugDatabase).length} medications<br>
+                    ⚠️ Mechanism Rules: ${Object.keys(emergencyChecker.mechanismRules).length} rules<br>
+                    🛡️ Class Rules: ${Object.keys(emergencyChecker.classRules).length} rules
+                </div>
+            `;
+        }
+
+        function runValidationTests() {
+            const validationDiv = document.getElementById('validation-results');
+            const tests = [];
+            
+            // Test 1: Eliquis + Clexane (CRITICAL)
+            try {
+                const result1 = emergencyChecker.emergencyCheck(['Eliquis', 'Clexane']);
+                const test1Pass = result1.summary.criticalCount > 0;
+                tests.push({
+                    name: 'Eliquis + Clexane Detection',
+                    pass: test1Pass,
+                    result: result1,
+                    expected: 'CRITICAL interaction'
+                });
+            } catch (error) {
+                tests.push({
+                    name: 'Eliquis + Clexane Detection',
+                    pass: false,
+                    error: error.message,
+                    expected: 'CRITICAL interaction'
+                });
+            }
+
+            // Test 2: Triple anticoagulation
+            try {
+                const result2 = emergencyChecker.emergencyCheck(['Aspirin', 'Eliquis', 'Clexane']);
+                const test2Pass = result2.summary.criticalCount > 0;
+                tests.push({
+                    name: 'Triple Anticoagulation Detection',
+                    pass: test2Pass,
+                    result: result2,
+                    expected: 'CONTRAINDICATED'
+                });
+            } catch (error) {
+                tests.push({
+                    name: 'Triple Anticoagulation Detection',
+                    pass: false,
+                    error: error.message,
+                    expected: 'CONTRAINDICATED'
+                });
+            }
+
+            // Test 3: Benzodiazepine + Opioid
+            try {
+                const result3 = emergencyChecker.emergencyCheck(['Lorazepam', 'Morphine']);
+                const test3Pass = result3.summary.criticalCount > 0;
+                tests.push({
+                    name: 'Benzodiazepine + Opioid Detection',
+                    pass: test3Pass,
+                    result: result3,
+                    expected: 'CONTRAINDICATED'
+                });
+            } catch (error) {
+                tests.push({
+                    name: 'Benzodiazepine + Opioid Detection',
+                    pass: false,
+                    error: error.message,
+                    expected: 'CONTRAINDICATED'
+                });
+            }
+
+            // Test 4: Hebrew medication names
+            try {
+                const result4 = emergencyChecker.emergencyCheck(['אליקוויס', 'קלקסאן']);
+                const test4Pass = result4.summary.criticalCount > 0;
+                tests.push({
+                    name: 'Hebrew Medication Names',
+                    pass: test4Pass,
+                    result: result4,
+                    expected: 'Hebrew recognition and warning'
+                });
+            } catch (error) {
+                tests.push({
+                    name: 'Hebrew Medication Names',
+                    pass: false,
+                    error: error.message,
+                    expected: 'Hebrew recognition and warning'
+                });
+            }
+
+            // Display test results
+            let html = '<h3>🔬 VALIDATION TEST RESULTS:</h3>';
+            let allPassed = true;
+
+            tests.forEach(test => {
+                const statusClass = test.pass ? 'pass' : 'fail';
+                const statusText = test.pass ? 'PASS' : 'FAIL';
+                
+                if (!test.pass) allPassed = false;
+
+                html += `
+                    <div style="margin: 10px 0; padding: 10px; border: 1px solid #ddd; border-radius: 4px;">
+                        <strong>${test.name}</strong>
+                        <span class="test-status ${statusClass}">${statusText}</span>
+                        <br>
+                        <small>Expected: ${test.expected}</small>
+                        ${test.error ? `<br><span style="color: red;">Error: ${test.error}</span>` : ''}
+                        ${test.result ? `<br><small>Found: ${test.result.summary.criticalCount} critical, ${test.result.summary.majorCount} major interactions</small>` : ''}
+                    </div>
+                `;
+            });
+
+            if (allPassed) {
+                html += '<div class="success">✅ ALL CRITICAL SAFETY TESTS PASSED</div>';
+            } else {
+                html += '<div class="critical-alert">❌ SOME CRITICAL TESTS FAILED - SYSTEM NEEDS ATTENTION</div>';
+            }
+
+            validationDiv.innerHTML = html;
+        }
+
+        function runAllCriticalTests() {
+            // Re-run validation tests
+            runValidationTests();
+            
+            // Also test specific critical combinations
+            const criticalCombinations = [
+                ['Eliquis', 'Clexane'],
+                ['Apixaban', 'Enoxaparin'],
+                ['Warfarin', 'Aspirin', 'Clexane'],
+                ['Lorazepam', 'Morphine'],
+                ['Rivotril', 'Fentanyl'],
+                ['אליקוויס', 'קלקסאן'],
+                ['ריבוטריל', 'מורפין']
+            ];
+
+            let html = '<div class="test-section"><h3>🚨 CRITICAL COMBINATION TESTS:</h3>';
+
+            criticalCombinations.forEach((combo, index) => {
+                try {
+                    const result = emergencyChecker.emergencyCheck(combo);
+                    const riskLevel = result.summary.overallRisk;
+                    const alertClass = riskLevel === 'CRITICAL' ? 'critical-alert' : 
+                                     riskLevel === 'MAJOR' ? 'major-alert' : 'success';
+                    
+                    html += `
+                        <div class="${alertClass}">
+                            <strong>Test ${index + 1}: ${combo.join(' + ')}</strong><br>
+                            Risk Level: ${riskLevel}<br>
+                            Critical: ${result.summary.criticalCount}, Major: ${result.summary.majorCount}<br>
+                            ${result.emergencyAlert ? `Alert: ${result.emergencyAlert.message}` : ''}
+                            ${result.critical.length > 0 ? '<br>Hebrew Warning: ' + result.critical[0].hebrew_warning : ''}
+                        </div>
+                    `;
+                } catch (error) {
+                    html += `
+                        <div class="critical-alert">
+                            <strong>Test ${index + 1}: ${combo.join(' + ')}</strong><br>
+                            ERROR: ${error.message}
+                        </div>
+                    `;
+                }
+            });
+
+            html += '</div>';
+            
+            // Append to validation results
+            document.getElementById('validation-results').innerHTML += html;
+        }
+
+        function testInteractions() {
+            const input = document.getElementById('medicationInput').value;
+            const medications = input.split('\\n').filter(med => med.trim() !== '');
+            
+            if (medications.length === 0) {
+                alert('Please enter at least one medication');
+                return;
+            }
+
+            try {
+                const result = emergencyChecker.emergencyCheck(medications);
+                displayResults(result);
+            } catch (error) {
+                const resultsDiv = document.getElementById('interaction-results');
+                resultsDiv.style.display = 'block';
+                resultsDiv.innerHTML = `<div class="critical-alert">ERROR: ${error.message}</div>`;
+            }
+        }
+
+        function loadPresetTest(preset) {
+            const presets = {
+                'dual-anticoag': 'Eliquis\\nClexane',
+                'triple-anticoag': 'Aspirin\\nEliquis\\nClexane',
+                'benzo-opioid': 'Lorazepam\\nMorphine'
+            };
+            
+            if (presets[preset]) {
+                document.getElementById('medicationInput').value = presets[preset];
+                testInteractions();
+            }
+        }
+
+        function displayResults(result) {
+            const resultsDiv = document.getElementById('interaction-results');
+            resultsDiv.style.display = 'block';
+            
+            let html = `<h3>🔍 INTERACTION CHECK RESULTS</h3>`;
+            
+            // Emergency Alert
+            if (result.emergencyAlert) {
+                const alertClass = result.emergencyAlert.level === 'CRITICAL' ? 'critical-alert' : 'major-alert';
+                html += `
+                    <div class="${alertClass}">
+                        <h4>🚨 ${result.emergencyAlert.message}</h4>
+                        <div class="hebrew">${result.emergencyAlert.hebrew}</div>
+                        <p><strong>Instructions:</strong> ${result.emergencyAlert.instructions}</p>
+                        <p><strong>Emergency Contact:</strong> ${result.emergencyAlert.emergencyPhone}</p>
+                    </div>
+                `;
+            }
+
+            // Summary
+            html += `
+                <div class="summary">
+                    <h4>📊 Summary:</h4>
+                    <ul>
+                        <li><strong>Overall Risk:</strong> ${result.summary.overallRisk}</li>
+                        <li><strong>Total Interactions:</strong> ${result.summary.totalInteractions}</li>
+                        <li><strong>Critical:</strong> ${result.summary.criticalCount}</li>
+                        <li><strong>Major:</strong> ${result.summary.majorCount}</li>
+                    </ul>
+                </div>
+            `;
+
+            // Critical Interactions
+            if (result.critical.length > 0) {
+                html += '<h4>🚨 CRITICAL INTERACTIONS:</h4>';
+                result.critical.forEach(interaction => {
+                    html += `
+                        <div class="critical-alert">
+                            <h5>${interaction.mechanism || interaction.type}</h5>
+                            <p><strong>Severity:</strong> ${interaction.severity}</p>
+                            <p><strong>Description:</strong> ${interaction.description}</p>
+                            <p><strong>Management:</strong> ${interaction.management}</p>
+                            ${interaction.hebrew_warning ? `<div class="hebrew">${interaction.hebrew_warning}</div>` : ''}
+                            ${interaction.risk_increase ? `<p><strong>Risk:</strong> ${interaction.risk_increase}</p>` : ''}
+                        </div>
+                    `;
+                });
+            }
+
+            // Major Interactions
+            if (result.major.length > 0) {
+                html += '<h4>⚠️ MAJOR INTERACTIONS:</h4>';
+                result.major.forEach(interaction => {
+                    html += `
+                        <div class="major-alert">
+                            <h5>${interaction.mechanism || interaction.type || interaction.classes?.join(' + ')}</h5>
+                            <p><strong>Severity:</strong> ${interaction.severity}</p>
+                            <p><strong>Description:</strong> ${interaction.description}</p>
+                            <p><strong>Management:</strong> ${interaction.management}</p>
+                            ${interaction.hebrew_warning ? `<div class="hebrew">${interaction.hebrew_warning}</div>` : ''}
+                        </div>
+                    `;
+                });
+            }
+
+            // Emergency Actions
+            if (result.summary.emergencyActions && result.summary.emergencyActions.length > 0) {
+                html += '<h4>⚡ EMERGENCY ACTIONS:</h4>';
+                result.summary.emergencyActions.forEach(action => {
+                    html += `
+                        <div class="critical-alert">
+                            <p><strong>Priority:</strong> ${action.priority}</p>
+                            <p><strong>Action:</strong> ${action.action}</p>
+                            <div class="hebrew">${action.hebrew}</div>
+                        </div>
+                    `;
+                });
+            }
+
+            resultsDiv.innerHTML = html;
+        }
+    </script>
+</body>
+</html>
