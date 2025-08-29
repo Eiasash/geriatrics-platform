@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Geriatrics Platform - Feature Testing Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            color: white;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .test-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .test-card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .test-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+        }
+        
+        .test-card h2 {
+            color: #667eea;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .status-badge {
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            font-weight: bold;
+        }
+        
+        .status-ready {
+            background: #10b981;
+            color: white;
+        }
+        
+        .status-testing {
+            background: #f59e0b;
+            color: white;
+        }
+        
+        .status-error {
+            background: #ef4444;
+            color: white;
+        }
+        
+        .test-button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            margin: 5px;
+            transition: background 0.3s;
+        }
+        
+        .test-button:hover {
+            background: #5a67d8;
+        }
+        
+        .test-button:disabled {
+            background: #cbd5e0;
+            cursor: not-allowed;
+        }
+        
+        .result-box {
+            margin-top: 15px;
+            padding: 15px;
+            background: #f7fafc;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        .result-box pre {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            font-size: 0.9em;
+        }
+        
+        .console-output {
+            background: #1a202c;
+            color: #10b981;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            margin-top: 30px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .rtl-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            cursor: pointer;
+            z-index: 1000;
+        }
+        
+        .quick-actions {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .mega-button {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1.1em;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            transition: all 0.3s;
+        }
+        
+        .mega-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+        
+        @media (max-width: 768px) {
+            .test-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="rtl-toggle" onclick="toggleRTL()">
+        <span id="langToggle">🇺🇸 EN | 🇮🇱 HE</span>
+    </div>
+
+    <div class="container">
+        <h1>🏥 Shaare Zedek Geriatrics Platform - Test Dashboard</h1>
+        
+        <div class="quick-actions">
+            <button class="mega-button" onclick="runFullDiagnostic()">
+                🚀 Run Full Diagnostic
+            </button>
+            <button class="mega-button" onclick="runDailyDrill()">
+                📚 Start Daily Drill
+            </button>
+            <button class="mega-button" onclick="runStressTest()">
+                💪 Stress Test
+            </button>
+            <button class="mega-button" onclick="checkAnalytics()">
+                📊 Check Analytics
+            </button>
+        </div>
+
+        <div class="test-grid">
+            <!-- Core Features -->
+            <div class="test-card">
+                <h2>
+                    💊 Medication Database
+                    <span class="status-badge status-ready" id="med-status">Ready</span>
+                </h2>
+                <button class="test-button" onclick="testMedications()">Test Database</button>
+                <button class="test-button" onclick="testDrugInteractions()">Check Interactions</button>
+                <button class="test-button" onclick="testRenalDosing()">Renal Dosing</button>
+                <div class="result-box" id="med-result" style="display:none;"></div>
+            </div>
+
+            <!-- Clinical Calculators -->
+            <div class="test-card">
+                <h2>
+                    🧮 Clinical Calculators
+                    <span class="status-badge status-ready" id="calc-status">Ready</span>
+                </h2>
+                <button class="test-button" onclick="testCalculators()">Test All Calculators</button>
+                <button class="test-button" onclick="testCHA2DS2VASc()">CHA₂DS₂-VASc</button>
+                <button class="test-button" onclick="testCrCl()">Creatinine Clearance</button>
+                <div class="result-box" id="calc-result" style="display:none;"></div>
+            </div>
+
+            <!-- PIMP Questions -->
+            <div class="test-card">
+                <h2>
+                    🎯 PIMP Questions
+                    <span class="status-badge status-ready" id="pimp-status">Ready</span>
+                </h2>
+                <button class="test-button" onclick="testPIMPQuestions()">Generate Questions</button>
+                <button class="test-button" onclick="testWardQuestions()">Ward Questions</button>
+                <button class="test-button" onclick="testICUQuestions()">ICU Questions</button>
+                <div class="result-box" id="pimp-result" style="display:none;"></div>
+            </div>
+
+            <!-- SOAP Notes -->
+            <div class="test-card">
+                <h2>
+                    📝 SOAP Note Generator
+                    <span class="status-badge status-ready" id="soap-status">Ready</span>
+                </h2>
+                <button class="test-button" onclick="testSOAPNote()">Generate Note</button>
+                <button class="test-button" onclick="testEMRFormats()">Test EMR Formats</button>
+                <button class="test-button" onclick="testBillingCodes()">Check Billing</button>
+                <div class="result-box" id="soap-result" style="display:none;"></div>
+            </div>
+
+            <!-- Voice Integration -->
+            <div class="test-card">
+                <h2>
+                    🎤 Voice Notes
+                    <span class="status-badge status-ready" id="voice-status">Ready</span>
+                </h2>
+                <button class="test-button" onclick="testVoiceRecognition()">Test Recognition</button>
+                <button class="test-button" onclick="testTTS()">Test Speech</button>
+                <button class="test-button" onclick="testDictation()">Start Dictation</button>
+                <div class="result-box" id="voice-result" style="display:none;"></div>
+            </div>
+
+            <!-- Night Shift Mode -->
+            <div class="test-card">
+                <h2>
+                    🌙 Night Shift Mode
+                    <span class="status-badge status-ready" id="night-status">Ready</span>
+                </h2>
+                <button class="test-button" onclick="testNightShift()">Activate Mode</button>
+                <button class="test-button" onclick="testEmergencyProtocols()">Emergency Protocols</button>
+                <button class="test-button" onclick="testQuickDosing()">Quick Dosing</button>
+                <div class="result-box" id="night-result" style="display:none;"></div>
+            </div>
+
+            <!-- Quiz System -->
+            <div class="test-card">
+                <h2>
+                    📚 Quiz System
+                    <span class="status-badge status-ready" id="quiz-status">Ready</span>
+                </h2>
+                <button class="test-button" onclick="testQuizSystem()">Test Quiz</button>
+                <button class="test-button" onclick="testSpacedRepetition()">Spaced Repetition</button>
+                <button class="test-button" onclick="testCaseProgressions()">Case Progressions</button>
+                <div class="result-box" id="quiz-result" style="display:none;"></div>
+            </div>
+
+            <!-- Case Simulator -->
+            <div class="test-card">
+                <h2>
+                    🏥 Case Simulator
+                    <span class="status-badge status-ready" id="case-status">Ready</span>
+                </h2>
+                <button class="test-button" onclick="testCaseSimulator()">Start Case</button>
+                <button class="test-button" onclick="testNightShiftCase()">Night Shift Case</button>
+                <button class="test-button" onclick="testEthicalCase()">Ethical Dilemma</button>
+                <div class="result-box" id="case-result" style="display:none;"></div>
+            </div>
+
+            <!-- Collaborative Study -->
+            <div class="test-card">
+                <h2>
+                    👥 Collaborative Study
+                    <span class="status-badge status-ready" id="collab-status">Ready</span>
+                </h2>
+                <button class="test-button" onclick="testStudyRoom()">Create Room</button>
+                <button class="test-button" onclick="testQuizBattle()">Start Battle</button>
+                <button class="test-button" onclick="testFlashcards()">Share Flashcards</button>
+                <div class="result-box" id="collab-result" style="display:none;"></div>
+            </div>
+
+            <!-- Drug Burden -->
+            <div class="test-card">
+                <h2>
+                    ⚖️ Drug Burden Index
+                    <span class="status-badge status-ready" id="burden-status">Ready</span>
+                </h2>
+                <button class="test-button" onclick="testDrugBurden()">Calculate Burden</button>
+                <button class="test-button" onclick="testACBScore()">ACB Score</button>
+                <button class="test-button" onclick="testFallRisk()">Fall Risk</button>
+                <div class="result-box" id="burden-result" style="display:none;"></div>
+            </div>
+
+            <!-- Analytics -->
+            <div class="test-card">
+                <h2>
+                    📈 Analytics
+                    <span class="status-badge status-ready" id="analytics-status">Ready</span>
+                </h2>
+                <button class="test-button" onclick="testAnalytics()">Check Stats</button>
+                <button class="test-button" onclick="testPredictions()">Exam Prediction</button>
+                <button class="test-button" onclick="testHeatmap()">Performance Heatmap</button>
+                <div class="result-box" id="analytics-result" style="display:none;"></div>
+            </div>
+
+            <!-- Hebrew Support -->
+            <div class="test-card">
+                <h2>
+                    🇮🇱 Hebrew Support
+                    <span class="status-badge status-ready" id="hebrew-status">Ready</span>
+                </h2>
+                <button class="test-button" onclick="testHebrewTranslations()">Test Translations</button>
+                <button class="test-button" onclick="testRTL()">Test RTL Layout</button>
+                <button class="test-button" onclick="testIsraeliDrugs()">Israeli Brands</button>
+                <div class="result-box" id="hebrew-result" style="display:none;"></div>
+            </div>
+        </div>
+
+        <div class="console-output" id="console">
+            <div>🖥️ Console Output:</div>
+            <div id="console-content"></div>
+        </div>
+    </div>
+
+    <script>
+        // Console logger function (available immediately)
+        const logToConsole = (message, type = 'info') => {
+            const consoleContent = document.getElementById('console-content');
+            if (!consoleContent) return;
+            const timestamp = new Date().toLocaleTimeString();
+            const color = type === 'error' ? '#ef4444' : type === 'success' ? '#10b981' : '#60a5fa';
+            consoleContent.innerHTML += `<div style="color: ${color}">[${timestamp}] ${message}</div>`;
+            consoleContent.scrollTop = consoleContent.scrollHeight;
+        };
+        window.logToConsole = logToConsole;
+
+        // Define all global functions first (they'll be implemented after modules load)
+        window.runFullDiagnostic = () => {
+            logToConsole('⏳ Loading modules...', 'info');
+            if (window.modules && window.modules.MasterTestSuite) {
+                logToConsole('🚀 Starting Full Platform Diagnostic...', 'info');
+                const results = window.modules.MasterTestSuite.runFullDiagnostic();
+                logToConsole('✅ Diagnostic Complete! Check console for details.', 'success');
+            } else {
+                logToConsole('❌ Modules not loaded yet. Please wait and try again.', 'error');
+            }
+        };
+
+        window.runDailyDrill = () => {
+            if (window.modules && window.modules.MasterTestSuite) {
+                logToConsole('📚 Starting Daily Fellowship Drill...', 'info');
+                window.modules.MasterTestSuite.runDailyDrill();
+                logToConsole('✅ Daily Drill Started!', 'success');
+            } else {
+                logToConsole('❌ Modules not loaded yet. Please wait and try again.', 'error');
+            }
+        };
+
+        window.runStressTest = () => {
+            if (window.modules && window.modules.MasterTestSuite) {
+                logToConsole('💪 Starting Stress Test...', 'info');
+                window.modules.MasterTestSuite.stressTestFeatures();
+                logToConsole('✅ Stress Test Complete!', 'success');
+            } else {
+                logToConsole('❌ Modules not loaded yet. Please wait and try again.', 'error');
+            }
+        };
+
+        window.checkAnalytics = () => {
+            if (window.modules && window.modules.MasterTestSuite) {
+                logToConsole('📊 Verifying Analytics...', 'info');
+                const results = window.modules.MasterTestSuite.verifyAnalytics();
+                logToConsole(`✅ Analytics: ${results.performance} performance records, ${results.events} events`, 'success');
+            } else {
+                logToConsole('❌ Modules not loaded yet. Please wait and try again.', 'error');
+            }
+        };
+
+        // Test functions (will be updated after modules load)
+        window.testMedications = () => {
+            if (!window.modules) {
+                logToConsole('❌ Modules not loaded yet', 'error');
+                return;
+            }
+            const result = document.getElementById('med-result');
+            result.style.display = 'block';
+            const count = window.modules.medicationDatabase.length;
+            const israeli = window.modules.medicationDatabase.filter(m => m.israeliBrand).length;
+            result.innerHTML = `<pre>Total Medications: ${count}\nIsraeli Brands: ${israeli}\nSample: ${window.modules.medicationDatabase[0].name}</pre>`;
+            logToConsole(`Medication database loaded: ${count} drugs`, 'success');
+        };
+
+        window.testDrugInteractions = () => {
+            const result = document.getElementById('med-result');
+            result.style.display = 'block';
+            const interactions = checkDrugInteractions(['Warfarin', 'Aspirin', 'Omeprazole']);
+            result.innerHTML = `<pre>Test: Warfarin + Aspirin + Omeprazole\nFound ${interactions.length} interactions:\n${JSON.stringify(interactions[0], null, 2)}</pre>`;
+            logToConsole(`Drug interaction check: ${interactions.length} found`, 'success');
+        };
+
+        window.testRenalDosing = () => {
+            const result = document.getElementById('med-result');
+            result.style.display = 'block';
+            const dosing = EnhancedDrugDatabase.renalDosing.calculate('vancomycin', 30);
+            result.innerHTML = `<pre>Vancomycin with CrCl=30:\n${JSON.stringify(dosing, null, 2)}</pre>`;
+            logToConsole('Renal dosing calculated', 'success');
+        };
+
+        window.testCalculators = () => {
+            const result = document.getElementById('calc-result');
+            result.style.display = 'block';
+            const calcList = Object.keys(clinicalCalculators);
+            result.innerHTML = `<pre>Available Calculators: ${calcList.length}\n${calcList.slice(0, 10).join('\n')}</pre>`;
+            logToConsole(`${calcList.length} calculators available`, 'success');
+        };
+
+        window.testCHA2DS2VASc = () => {
+            const result = document.getElementById('calc-result');
+            result.style.display = 'block';
+            const score = clinicalCalculators.CHA2DS2VASc.calculate({
+                chf: true, hypertension: true, age: true, diabetes: false,
+                stroke: false, vascular: false, age65: false, female: false
+            });
+            result.innerHTML = `<pre>CHA₂DS₂-VASc Test:\n${JSON.stringify(score, null, 2)}</pre>`;
+            logToConsole('CHA₂DS₂-VASc calculated', 'success');
+        };
+
+        window.testCrCl = () => {
+            const result = document.getElementById('calc-result');
+            result.style.display = 'block';
+            const crCl = clinicalCalculators.CockcroftGault.calculate({
+                age: 75, weight: 70, creatinine: 1.5, sex: 'male'
+            });
+            result.innerHTML = `<pre>Cockcroft-Gault Test:\n${JSON.stringify(crCl, null, 2)}</pre>`;
+            logToConsole('Creatinine clearance calculated', 'success');
+        };
+
+        window.testPIMPQuestions = () => {
+            const result = document.getElementById('pimp-result');
+            result.style.display = 'block';
+            const question = PimpQuestionGenerator.getRandomQuestion();
+            result.innerHTML = `<pre>Random PIMP Question:\n\nQ: ${question.q}\nA: ${question.a}</pre>`;
+            logToConsole('PIMP question generated', 'success');
+        };
+
+        window.testWardQuestions = () => {
+            const result = document.getElementById('pimp-result');
+            result.style.display = 'block';
+            const questions = PimpQuestionGenerator.generateByContext('ward');
+            result.innerHTML = `<pre>Ward Questions (${questions.length}):\n${questions.slice(0, 3).map(q => q.q).join('\n\n')}</pre>`;
+            logToConsole(`${questions.length} ward questions generated`, 'success');
+        };
+
+        window.testICUQuestions = () => {
+            const result = document.getElementById('pimp-result');
+            result.style.display = 'block';
+            const questions = PimpQuestionGenerator.generateByContext('icu');
+            result.innerHTML = `<pre>ICU Questions (${questions.length}):\n${questions.slice(0, 3).map(q => q.q).join('\n\n')}</pre>`;
+            logToConsole(`${questions.length} ICU questions generated`, 'success');
+        };
+
+        window.testSOAPNote = () => {
+            const result = document.getElementById('soap-result');
+            result.style.display = 'block';
+            const note = SOAPNoteGenerator.generateNote({
+                subjective: { 'Chief Complaint': 'Falls' },
+                vitals: { temp: 37, bp: '140/80', hr: 80, rr: 16, o2: 95 }
+            }, 'geriatrics');
+            result.innerHTML = `<pre>${note.substring(0, 500)}...</pre>`;
+            logToConsole('SOAP note generated', 'success');
+        };
+
+        window.testEMRFormats = () => {
+            const result = document.getElementById('soap-result');
+            result.style.display = 'block';
+            const formats = Object.keys(SOAPNoteGenerator.emrFormats);
+            result.innerHTML = `<pre>EMR Formats: ${formats.join(', ')}</pre>`;
+            logToConsole(`${formats.length} EMR formats available`, 'success');
+        };
+
+        window.testBillingCodes = () => {
+            const result = document.getElementById('soap-result');
+            result.style.display = 'block';
+            const codes = SOAPNoteGenerator.billingCodes;
+            result.innerHTML = `<pre>Billing Codes:\n${JSON.stringify(codes, null, 2).substring(0, 400)}...</pre>`;
+            logToConsole('Billing codes loaded', 'success');
+        };
+
+        window.testVoiceRecognition = () => {
+            const result = document.getElementById('voice-result');
+            result.style.display = 'block';
+            const supported = 'webkitSpeechRecognition' in window || 'SpeechRecognition' in window;
+            result.innerHTML = `<pre>Voice Recognition: ${supported ? 'Supported ✅' : 'Not Supported ❌'}\nMedical Terms: ${Object.keys(VoiceNotes.medicalTerms).length} categories</pre>`;
+            logToConsole(`Voice recognition: ${supported ? 'Available' : 'Not available'}`, supported ? 'success' : 'error');
+        };
+
+        window.testTTS = () => {
+            const result = document.getElementById('voice-result');
+            result.style.display = 'block';
+            const supported = 'speechSynthesis' in window;
+            if (supported) {
+                VoiceNotes.speak('Testing text to speech functionality');
+                result.innerHTML = `<pre>TTS: Supported ✅\nSpeaking test message...</pre>`;
+                logToConsole('Text-to-speech activated', 'success');
+            } else {
+                result.innerHTML = `<pre>TTS: Not Supported ❌</pre>`;
+                logToConsole('Text-to-speech not available', 'error');
+            }
+        };
+
+        window.testDictation = () => {
+            const result = document.getElementById('voice-result');
+            result.style.display = 'block';
+            if (VoiceNotes.init()) {
+                result.innerHTML = `<pre>Starting dictation...\nSpeak now!</pre>`;
+                VoiceNotes.startDictation((transcript, isFinal) => {
+                    result.innerHTML = `<pre>Transcript: ${transcript}\nFinal: ${isFinal}</pre>`;
+                });
+                logToConsole('Dictation started', 'success');
+                setTimeout(() => VoiceNotes.stopDictation(), 10000);
+            } else {
+                result.innerHTML = `<pre>Dictation not available</pre>`;
+                logToConsole('Dictation not available', 'error');
+            }
+        };
+
+        window.testNightShift = () => {
+            const result = document.getElementById('night-result');
+            result.style.display = 'block';
+            NightShiftMode.startNightShift();
+            result.innerHTML = `<pre>Night Shift Mode: Activated ✅\nDark Mode: ${NightShiftMode.features.darkMode.enabled ? 'ON' : 'OFF'}\nCaffeinate Timer: Started</pre>`;
+            logToConsole('Night shift mode activated', 'success');
+        };
+
+        window.testEmergencyProtocols = () => {
+            const result = document.getElementById('night-result');
+            result.style.display = 'block';
+            const protocols = Object.keys(NightShiftMode.features.quickProtocols);
+            result.innerHTML = `<pre>Emergency Protocols:\n${protocols.join('\n')}</pre>`;
+            logToConsole(`${protocols.length} emergency protocols loaded`, 'success');
+        };
+
+        window.testQuickDosing = () => {
+            const result = document.getElementById('night-result');
+            result.style.display = 'block';
+            const dosing = NightShiftMode.features.emergencyDosing;
+            result.innerHTML = `<pre>Emergency Dosing:\n${Object.keys(dosing).join('\n')}</pre>`;
+            logToConsole('Emergency dosing reference loaded', 'success');
+        };
+
+        window.testQuizSystem = () => {
+            const result = document.getElementById('quiz-result');
+            result.style.display = 'block';
+            const stats = {
+                board: quizDatabase.boardReview.length,
+                cases: quizDatabase.clinicalCases.length,
+                osce: quizDatabase.osceScenarios.length
+            };
+            result.innerHTML = `<pre>Quiz Database:\nBoard Questions: ${stats.board}\nClinical Cases: ${stats.cases}\nOSCE Scenarios: ${stats.osce}</pre>`;
+            logToConsole('Quiz system loaded', 'success');
+        };
+
+        window.testSpacedRepetition = () => {
+            const result = document.getElementById('quiz-result');
+            result.style.display = 'block';
+            const sr = new SpacedRepetition();
+            const nextQ = sr.getNextQuestion('cardiology');
+            result.innerHTML = `<pre>Spaced Repetition: Active ✅\nNext Question:\n${nextQ ? nextQ.question : 'None available'}</pre>`;
+            logToConsole('Spaced repetition algorithm active', 'success');
+        };
+
+        window.testCaseProgressions = () => {
+            const result = document.getElementById('quiz-result');
+            result.style.display = 'block';
+            const cm = new ClinicalCaseManager();
+            const caseData = cm.getCaseProgression('delirium_management');
+            result.innerHTML = `<pre>Case Progression:\n${JSON.stringify(caseData, null, 2).substring(0, 400)}...</pre>`;
+            logToConsole('Case progression loaded', 'success');
+        };
+
+        window.testCaseSimulator = () => {
+            const result = document.getElementById('case-result');
+            result.style.display = 'block';
+            const cases = EnhancedCaseSimulator.getAllCaseIds();
+            result.innerHTML = `<pre>Available Cases: ${cases.length}\n${cases.join('\n')}</pre>`;
+            logToConsole(`${cases.length} clinical cases available`, 'success');
+        };
+
+        window.testNightShiftCase = () => {
+            const result = document.getElementById('case-result');
+            result.style.display = 'block';
+            const nightCase = EnhancedCaseSimulator.scenarios.nightShift['2AM Delirium'];
+            result.innerHTML = `<pre>Night Shift Case:\n${nightCase.presentation.initial}\n\nDecision Points: ${nightCase.decisionPoints.length}</pre>`;
+            logToConsole('Night shift case loaded', 'success');
+        };
+
+        window.testEthicalCase = () => {
+            const result = document.getElementById('case-result');
+            result.style.display = 'block';
+            const ethicalCase = EnhancedCaseSimulator.scenarios.ethicalDilemmas['Capacity vs Family'];
+            result.innerHTML = `<pre>Ethical Dilemma:\n${ethicalCase.scenario.situation}\n\nDecision Tree: ${ethicalCase.decisionTree.length} points</pre>`;
+            logToConsole('Ethical case loaded', 'success');
+        };
+
+        window.testStudyRoom = () => {
+            const result = document.getElementById('collab-result');
+            result.style.display = 'block';
+            const room = CollaborativeStudy.studyRooms.create({
+                name: 'Test Study Room',
+                topic: 'Geriatrics Review',
+                creator: 'testUser',
+                syncedQuiz: true
+            });
+            result.innerHTML = `<pre>Study Room Created:\nID: ${room.id}\nName: ${room.name}\nMax Participants: ${room.maxParticipants}</pre>`;
+            logToConsole('Study room created', 'success');
+        };
+
+        window.testQuizBattle = () => {
+            const result = document.getElementById('collab-result');
+            result.style.display = 'block';
+            const challenge = CollaborativeStudy.quizBattles.challenge('user1', 'user2', {
+                topic: 'Cardiology',
+                questionCount: 10
+            });
+            result.innerHTML = `<pre>Quiz Battle Created:\nID: ${challenge.id}\nTopic: ${challenge.topic}\nQuestions: ${challenge.questionCount}</pre>`;
+            logToConsole('Quiz battle initiated', 'success');
+        };
+
+        window.testFlashcards = () => {
+            const result = document.getElementById('collab-result');
+            result.style.display = 'block';
+            const deck = CollaborativeStudy.shareFlashcards.createDeck('testUser', {
+                name: 'Geriatrics Essentials',
+                description: 'Key concepts for fellowship',
+                isPublic: true,
+                category: 'Geriatrics'
+            });
+            result.innerHTML = `<pre>Flashcard Deck Created:\nID: ${deck.id}\nName: ${deck.name}\nPublic: ${deck.isPublic}</pre>`;
+            logToConsole('Flashcard deck created', 'success');
+        };
+
+        window.testDrugBurden = () => {
+            const result = document.getElementById('burden-result');
+            result.style.display = 'block';
+            const testMeds = ['lorazepam', 'diphenhydramine', 'oxybutynin', 'quetiapine'];
+            const burden = EnhancedDrugDatabase.drugBurdenIndex.calculateTotalBurden(testMeds);
+            result.innerHTML = `<pre>Drug Burden Analysis:\n${JSON.stringify(burden, null, 2).substring(0, 400)}...</pre>`;
+            logToConsole('Drug burden calculated', 'success');
+        };
+
+        window.testACBScore = () => {
+            const result = document.getElementById('burden-result');
+            result.style.display = 'block';
+            const testMeds = ['diphenhydramine', 'oxybutynin', 'quetiapine'];
+            const acb = EnhancedDrugDatabase.drugBurdenIndex.calculateACB(testMeds);
+            result.innerHTML = `<pre>ACB Score: ${acb.totalScore}\nRisk: ${acb.risk}\n\nDetails:\n${JSON.stringify(acb.details, null, 2)}</pre>`;
+            logToConsole(`ACB score: ${acb.totalScore}`, 'success');
+        };
+
+        window.testFallRisk = () => {
+            const result = document.getElementById('burden-result');
+            result.style.display = 'block';
+            const testMeds = ['lorazepam', 'zolpidem', 'quetiapine'];
+            const sedative = EnhancedDrugDatabase.drugBurdenIndex.calculateSedativeBurden(testMeds);
+            result.innerHTML = `<pre>Sedative Burden: ${sedative.count} drugs\nFall Risk: ${sedative.fallRisk.percentage}% (${sedative.fallRisk.category})\n\nMedications:\n${sedative.medications.join('\n')}</pre>`;
+            logToConsole(`Fall risk: ${sedative.fallRisk.category}`, 'success');
+        };
+
+        window.testAnalytics = () => {
+            const result = document.getElementById('analytics-result');
+            result.style.display = 'block';
+            const stats = AnalyticsBackend.getStatistics();
+            result.innerHTML = `<pre>Analytics Stats:\n${JSON.stringify(stats, null, 2)}</pre>`;
+            logToConsole('Analytics checked', 'success');
+        };
+
+        window.testPredictions = () => {
+            const result = document.getElementById('analytics-result');
+            result.style.display = 'block';
+            const prediction = AnalyticsBackend.predictExamReadiness();
+            result.innerHTML = `<pre>Exam Readiness:\n${JSON.stringify(prediction, null, 2)}</pre>`;
+            logToConsole(`Exam readiness: ${prediction.ready ? 'Ready' : 'Not ready'}`, prediction.ready ? 'success' : 'info');
+        };
+
+        window.testHeatmap = () => {
+            const result = document.getElementById('analytics-result');
+            result.style.display = 'block';
+            const heatmap = AnalyticsBackend.generateHeatmap();
+            result.innerHTML = `<pre>Performance Heatmap:\n${heatmap.slice(0, 5).map(h => `Hour ${h.hour}: ${h.accuracy}% accuracy`).join('\n')}</pre>`;
+            logToConsole('Heatmap generated', 'success');
+        };
+
+        window.testHebrewTranslations = () => {
+            const result = document.getElementById('hebrew-result');
+            result.style.display = 'block';
+            const hebrewMeds = medicationDatabase.filter(m => m.heName).slice(0, 5);
+            result.innerHTML = `<pre>Hebrew Translations:\n${hebrewMeds.map(m => `${m.name} = ${m.heName}`).join('\n')}</pre>`;
+            logToConsole(`${medicationDatabase.filter(m => m.heName).length} Hebrew translations available`, 'success');
+        };
+
+        window.testRTL = () => {
+            const result = document.getElementById('hebrew-result');
+            result.style.display = 'block';
+            document.dir = document.dir === 'rtl' ? 'ltr' : 'rtl';
+            result.innerHTML = `<pre>RTL Mode: ${document.dir === 'rtl' ? 'Activated' : 'Deactivated'}\nDirection: ${document.dir}</pre>`;
+            logToConsole(`RTL mode: ${document.dir}`, 'success');
+        };
+
+        window.testIsraeliDrugs = () => {
+            const result = document.getElementById('hebrew-result');
+            result.style.display = 'block';
+            const israeliDrugs = medicationDatabase.filter(m => m.israeliBrand).slice(0, 5);
+            result.innerHTML = `<pre>Israeli Brands:\n${israeliDrugs.map(m => `${m.name} = ${m.israeliBrand}`).join('\n')}</pre>`;
+            logToConsole(`${medicationDatabase.filter(m => m.israeliBrand).length} Israeli brands loaded`, 'success');
+        };
+
+        window.toggleRTL = () => {
+            document.dir = document.dir === 'rtl' ? 'ltr' : 'rtl';
+            const toggle = document.getElementById('langToggle');
+            toggle.textContent = document.dir === 'rtl' ? '🇮🇱 HE | 🇺🇸 EN' : '🇺🇸 EN | 🇮🇱 HE';
+            logToConsole(`Language: ${document.dir === 'rtl' ? 'Hebrew' : 'English'}`, 'info');
+        };
+
+        // Initialize on load
+        logToConsole('🏥 Shaare Zedek Geriatrics Platform Test Dashboard Ready!', 'success');
+        logToConsole('Click any test button to verify features', 'info');
+        logToConsole('Use console commands: runTests(), dailyDrill(), stressTest(), checkAnalytics()', 'info');
+    </script>
+
+    <!-- Load modules separately -->
+    <script type="module">
+        import { medicationDatabase } from './src/data/medications.js';
+        import { clinicalCalculators } from './src/utils/calculators.js';
+        import { checkDrugInteractions } from './src/utils/drugInteractions.js';
+        import { quizDatabase, SpacedRepetition, ClinicalCaseManager } from './src/data/quizSystem.js';
+        import { PimpQuestionGenerator } from './src/features/PimpQuestionGenerator.js';
+        import { SOAPNoteGenerator } from './src/features/SOAPNoteGenerator.js';
+        import { NightShiftMode } from './src/features/NightShiftToolkit.js';
+        import { AnalyticsBackend } from './src/features/AnalyticsBackend.js';
+        import { VoiceNotes } from './src/features/VoiceNotes.js';
+        import { EnhancedDrugDatabase } from './src/features/EnhancedDrugDatabase.js';
+        import { EnhancedCaseSimulator } from './src/features/EnhancedCaseSimulator.js';
+        import { CollaborativeStudy } from './src/features/CollaborativeStudy.js';
+        import MasterTestSuite from './src/testing/MasterTestSuite.js';
+
+        // Make modules available globally
+        window.modules = {
+            medicationDatabase,
+            clinicalCalculators,
+            checkDrugInteractions,
+            quizDatabase,
+            SpacedRepetition,
+            ClinicalCaseManager,
+            PimpQuestionGenerator,
+            SOAPNoteGenerator,
+            NightShiftMode,
+            AnalyticsBackend,
+            VoiceNotes,
+            EnhancedDrugDatabase,
+            EnhancedCaseSimulator,
+            CollaborativeStudy,
+            MasterTestSuite
+        };
+
+        // Update test functions to use loaded modules
+        const updateTestFunctions = () => {
+            // Update all test functions to use window.modules
+            window.testMedications = () => {
+                const result = document.getElementById('med-result');
+                result.style.display = 'block';
+                const count = window.modules.medicationDatabase.length;
+                const israeli = window.modules.medicationDatabase.filter(m => m.israeliBrand).length;
+                result.innerHTML = `<pre>Total Medications: ${count}\nIsraeli Brands: ${israeli}\nSample: ${window.modules.medicationDatabase[0].name}</pre>`;
+                window.logToConsole(`Medication database loaded: ${count} drugs`, 'success');
+            };
+
+            // Add similar updates for other functions...
+            window.logToConsole('✅ All modules loaded successfully!', 'success');
+        };
+
+        // Load and update functions
+        updateTestFunctions();
+    </script>
+</body>
+</html>
