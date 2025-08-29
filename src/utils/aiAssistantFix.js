@@ -20,11 +20,65 @@ export class ClinicalAI {
         return { type: 'drug', ready: true };
     }
 
-    analyzeDemographics(patient) {
+    async analyzeDemographics(patient) {
+        try {
+            // First, provide basic analysis while AI processes
+            const basicAnalysis = {
+                ageGroup: this.categorizeAge(patient.age),
+                riskFactors: [],
+                recommendations: [],
+                isAIEnhanced: false
+            };
+
+            // Age-based initial assessment
+            if (patient.age >= 85) {
+                basicAnalysis.riskFactors.push('Very elderly (≥85 years)');
+                basicAnalysis.recommendations.push('Consider frailty assessment');
+            } else if (patient.age >= 75) {
+                basicAnalysis.riskFactors.push('Elderly (75-84 years)');
+                basicAnalysis.recommendations.push('Annual comprehensive geriatric assessment');
+            }
+
+            // Call AI backend for enhanced analysis
+            const response = await fetch('/.netlify/functions/ask-ai', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    model: 'gemini',
+                    question: `Analyze this geriatric patient demographics and provide clinical insights including risk factors and evidence-based recommendations. Patient data: Age: ${patient.age}, Gender: ${patient.gender || 'Not specified'}, Living Status: ${patient.livingStatus || 'Not specified'}, Functional Status: ${patient.functionalStatus || 'Not specified'}, Cognitive Status: ${patient.cognitiveStatus || 'Not specified'}. Please provide a detailed clinical assessment with specific recommendations.`,
+                    patientInfo: JSON.stringify(patient)
+                })
+            });
+
+            if (response.ok) {
+                const aiData = await response.json();
+                
+                // Parse AI response and enhance our analysis
+                return {
+                    ...basicAnalysis,
+                    aiInsights: aiData.answer,
+                    isAIEnhanced: true,
+                    aiModel: aiData.model,
+                    timestamp: new Date().toISOString()
+                };
+            } else {
+                // Fallback to basic analysis if AI fails
+                console.warn('AI analysis failed, using basic analysis');
+                return this.getBasicAnalysis(patient);
+            }
+        } catch (error) {
+            console.error('Error in AI demographics analysis:', error);
+            // Fallback to basic analysis
+            return this.getBasicAnalysis(patient);
+        }
+    }
+
+    getBasicAnalysis(patient) {
         const analysis = {
             ageGroup: this.categorizeAge(patient.age),
             riskFactors: [],
-            recommendations: []
+            recommendations: [],
+            isAIEnhanced: false
         };
 
         // Age-based risk assessment
@@ -103,6 +157,40 @@ export class ClinicalAI {
         }
 
         return analysis;
+    }
+
+    // General AI assistant method for any clinical question
+    async askAI(question, context = '', model = 'gemini') {
+        try {
+            const response = await fetch('/.netlify/functions/ask-ai', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    model,
+                    question: context ? `${context}\n\nQuestion: ${question}` : question,
+                    patientInfo: context
+                })
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                return {
+                    success: true,
+                    answer: data.answer,
+                    model: data.model,
+                    timestamp: new Date().toISOString()
+                };
+            } else {
+                throw new Error(`AI request failed: ${response.status}`);
+            }
+        } catch (error) {
+            console.error('AI assistant error:', error);
+            return {
+                success: false,
+                error: error.message,
+                timestamp: new Date().toISOString()
+            };
+        }
     }
 
     categorizeAge(age) {

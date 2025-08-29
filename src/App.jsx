@@ -58,6 +58,123 @@ const App = () => {
   const [selectedArticle, setSelectedArticle] = useState(null);
   const [articleSearchQuery, setArticleSearchQuery] = useState('');
 
+  // AI Assistant state
+  const [showAIChat, setShowAIChat] = useState(false);
+  const [aiQuestion, setAiQuestion] = useState('');
+  const [aiResponse, setAiResponse] = useState(null);
+  const [aiLoading, setAiLoading] = useState(false);
+
+  // Quiz explanation state
+  const [quizExplanations, setQuizExplanations] = useState({});
+  const [loadingExplanation, setLoadingExplanation] = useState(null);
+
+  // Emergency protocol AI guidance state
+  const [protocolGuidance, setProtocolGuidance] = useState({});
+  const [loadingProtocolGuidance, setLoadingProtocolGuidance] = useState(null);
+
+  // AI Assistant functions
+  const handleAIQuestion = async () => {
+    if (!aiQuestion.trim()) return;
+    
+    setAiLoading(true);
+    const contextInfo = `Current tab: ${activeTab}. User is studying geriatrics medicine.`;
+    
+    try {
+      const response = await clinicalAI.askAI(aiQuestion, contextInfo);
+      setAiResponse(response);
+    } catch (error) {
+      setAiResponse({
+        success: false,
+        error: 'Failed to get AI response. Please try again.',
+        timestamp: new Date().toISOString()
+      });
+    }
+    
+    setAiLoading(false);
+  };
+
+  const closeAIChat = () => {
+    setShowAIChat(false);
+    setAiQuestion('');
+    setAiResponse(null);
+  };
+
+  // Quiz explanation function
+  const getQuizExplanation = async (question, userAnswer, correctAnswer) => {
+    const questionKey = `${question.id || question.q}`;
+    
+    if (quizExplanations[questionKey]) {
+      return; // Already have explanation
+    }
+    
+    setLoadingExplanation(questionKey);
+    
+    try {
+      const explanationPrompt = `
+Question: ${question.q || question.question}
+User answered: ${userAnswer}
+Correct answer: ${correctAnswer}
+Explanation: ${question.explanation || 'Not provided'}
+
+Please provide a clear, educational explanation of why the correct answer is right and why the user's answer (if different) is incorrect. Focus on the clinical reasoning and educational value for geriatrics medicine. Keep it concise but informative.
+`;
+
+      const response = await clinicalAI.askAI(explanationPrompt, 'Geriatrics quiz explanation');
+      
+      if (response.success) {
+        setQuizExplanations(prev => ({
+          ...prev,
+          [questionKey]: response.answer
+        }));
+      }
+    } catch (error) {
+      console.error('Failed to get quiz explanation:', error);
+    }
+    
+    setLoadingExplanation(null);
+  };
+
+  // Protocol AI guidance function
+  const getProtocolGuidance = async (protocol, question, patientContext = '') => {
+    const guidanceKey = `${protocol.title}_${question}`;
+    
+    if (protocolGuidance[guidanceKey]) {
+      return; // Already have guidance
+    }
+    
+    setLoadingProtocolGuidance(guidanceKey);
+    
+    try {
+      const guidancePrompt = `
+Protocol: ${protocol.title}
+Clinical Question: ${question}
+Patient Context: ${patientContext || 'General geriatric patient'}
+
+Based on this emergency protocol for geriatric patients, provide specific clinical guidance. Include:
+1. Key assessment points
+2. Immediate actions to take
+3. Red flags to watch for
+4. Special considerations for elderly patients
+5. Next steps in management
+
+Keep the response practical and actionable for emergency/urgent care settings.
+`;
+
+      const response = await clinicalAI.askAI(guidancePrompt, `Emergency protocol guidance: ${protocol.title}`);
+      
+      if (response.success) {
+        setProtocolGuidance(prev => ({
+          ...prev,
+          [guidanceKey]: response.answer
+        }));
+      }
+    } catch (error) {
+      console.error('Failed to get protocol guidance:', error);
+    }
+    
+    setLoadingProtocolGuidance(null);
+  };
+
   const submitAnswer = (questionId, answer) => {
     setUserAnswers({ ...userAnswers, [questionId]: answer });
   };
@@ -242,23 +359,127 @@ const App = () => {
             )}
             
             {showResults && (
-              <div style={{ textAlign: 'center' }}>
-                <h2>Quiz Complete!</h2>
-                <div style={{ fontSize: '48px', margin: '20px 0' }}>
-                  {calculateScore().correct} / {calculateScore().total}
+              <div>
+                {/* Summary */}
+                <div style={{ textAlign: 'center', marginBottom: '30px', padding: '20px', backgroundColor: '#f8f9fa', borderRadius: '8px' }}>
+                  <h2>Quiz Complete!</h2>
+                  <div style={{ fontSize: '48px', margin: '20px 0' }}>
+                    {calculateScore().correct} / {calculateScore().total}
+                  </div>
+                  <p style={{ fontSize: '24px', color: calculateScore().correct/calculateScore().total >= 0.8 ? '#28a745' : '#dc3545' }}>
+                    {(calculateScore().correct/calculateScore().total * 100).toFixed(1)}%
+                  </p>
+                  <button
+                    onClick={() => {
+                      setCurrentQuestionIndex(0);
+                      setUserAnswers({});
+                      setShowResults(false);
+                      setQuizExplanations({});
+                    }}
+                    style={{ padding: '15px 30px', backgroundColor: '#667eea', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>
+                    Start New Quiz
+                  </button>
                 </div>
-                <p style={{ fontSize: '24px', color: calculateScore().correct/calculateScore().total >= 0.8 ? '#28a745' : '#dc3545' }}>
-                  {(calculateScore().correct/calculateScore().total * 100).toFixed(1)}%
-                </p>
-                <button
-                  onClick={() => {
-                    setCurrentQuestionIndex(0);
-                    setUserAnswers({});
-                    setShowResults(false);
-                  }}
-                  style={{ padding: '15px 30px', backgroundColor: '#667eea', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>
-                  Start New Quiz
-                </button>
+
+                {/* Detailed Review */}
+                <div>
+                  <h3 style={{ marginBottom: '20px' }}>📊 Detailed Review</h3>
+                  {allQuestions.slice(0, currentQuestionIndex).map((question, idx) => {
+                    const questionKey = question.id || question.q;
+                    const userAnswer = userAnswers[questionKey] || userAnswers[question.id];
+                    const correctAnswer = question.a || question.correct;
+                    const isCorrect = userAnswer === correctAnswer;
+                    
+                    return (
+                      <div key={idx} style={{ 
+                        marginBottom: '25px', 
+                        padding: '20px', 
+                        border: `2px solid ${isCorrect ? '#28a745' : '#dc3545'}`,
+                        borderRadius: '8px',
+                        backgroundColor: isCorrect ? '#f8fff8' : '#fff5f5'
+                      }}>
+                        <div style={{ display: 'flex', alignItems: 'center', marginBottom: '15px' }}>
+                          <span style={{ 
+                            fontSize: '20px', 
+                            marginRight: '10px',
+                            color: isCorrect ? '#28a745' : '#dc3545'
+                          }}>
+                            {isCorrect ? '✅' : '❌'}
+                          </span>
+                          <h4 style={{ margin: 0, flex: 1 }}>Question {idx + 1}</h4>
+                          <span style={{ 
+                            padding: '4px 8px',
+                            backgroundColor: '#e7f3ff',
+                            borderRadius: '4px',
+                            fontSize: '12px',
+                            color: '#0056b3'
+                          }}>
+                            {question.category}
+                          </span>
+                        </div>
+                        
+                        <p style={{ marginBottom: '15px', fontWeight: 'bold' }}>
+                          {question.q || question.question}
+                        </p>
+                        
+                        <div style={{ marginBottom: '15px' }}>
+                          <p><strong>Your Answer:</strong> <span style={{ color: isCorrect ? '#28a745' : '#dc3545' }}>{userAnswer}</span></p>
+                          <p><strong>Correct Answer:</strong> <span style={{ color: '#28a745' }}>{correctAnswer}</span></p>
+                        </div>
+                        
+                        {/* AI Explanation */}
+                        {!isCorrect && (
+                          <div style={{ marginTop: '15px' }}>
+                            {!quizExplanations[questionKey] ? (
+                              <button
+                                onClick={() => getQuizExplanation(question, userAnswer, correctAnswer)}
+                                disabled={loadingExplanation === questionKey}
+                                style={{
+                                  padding: '8px 16px',
+                                  backgroundColor: loadingExplanation === questionKey ? '#ccc' : '#667eea',
+                                  color: 'white',
+                                  border: 'none',
+                                  borderRadius: '4px',
+                                  cursor: loadingExplanation === questionKey ? 'not-allowed' : 'pointer',
+                                  fontSize: '14px'
+                                }}
+                              >
+                                {loadingExplanation === questionKey ? '🤔 Getting explanation...' : '🤖 Why is this correct?'}
+                              </button>
+                            ) : (
+                              <div style={{
+                                backgroundColor: '#e7f3ff',
+                                padding: '15px',
+                                borderRadius: '6px',
+                                marginTop: '10px',
+                                border: '1px solid #b3d4fc'
+                              }}>
+                                <h5 style={{ margin: '0 0 10px 0', color: '#0056b3' }}>🤖 AI Explanation:</h5>
+                                <div style={{ lineHeight: '1.6', whiteSpace: 'pre-wrap' }}>
+                                  {quizExplanations[questionKey]}
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        )}
+                        
+                        {/* Show basic explanation if available */}
+                        {question.explanation && (
+                          <div style={{
+                            backgroundColor: '#f8f9fa',
+                            padding: '12px',
+                            borderRadius: '4px',
+                            marginTop: '10px',
+                            fontSize: '14px',
+                            color: '#666'
+                          }}>
+                            <strong>Explanation:</strong> {question.explanation}
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
             )}
           </div>
@@ -505,6 +726,9 @@ const App = () => {
             protocols={emergencyProtocols}
             selectedProtocol={selectedProtocol}
             setSelectedProtocol={setSelectedProtocol}
+            getProtocolGuidance={getProtocolGuidance}
+            protocolGuidance={protocolGuidance}
+            loadingProtocolGuidance={loadingProtocolGuidance}
           />
         )}
 
@@ -1338,7 +1562,7 @@ const FlashcardsTab = ({ srs, currentFlashcard, setCurrentFlashcard, showAnswer,
 };
 
 // Emergency Protocols Component
-const EmergencyProtocolsTab = ({ protocols, selectedProtocol, setSelectedProtocol }) => {
+const EmergencyProtocolsTab = ({ protocols, selectedProtocol, setSelectedProtocol, getProtocolGuidance, protocolGuidance, loadingProtocolGuidance }) => {
   const criticalProtocols = Object.entries(protocols).filter(([_, protocol]) => protocol.urgency === 'CRITICAL');
   const highProtocols = Object.entries(protocols).filter(([_, protocol]) => protocol.urgency === 'HIGH');
 
@@ -1362,11 +1586,27 @@ const EmergencyProtocolsTab = ({ protocols, selectedProtocol, setSelectedProtoco
                 </span>
                 <span style={{ color: '#666' }}>{protocol.timeFrame}</span>
               </div>
-              <button
-                onClick={() => setSelectedProtocol(protocol)}
-                style={{ width: '100%', padding: '10px', backgroundColor: '#dc3545', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold' }}>
-                View Protocol
-              </button>
+              <div style={{ display: 'flex', gap: '8px' }}>
+                <button
+                  onClick={() => setSelectedProtocol(protocol)}
+                  style={{ flex: 1, padding: '10px', backgroundColor: '#dc3545', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold' }}>
+                  View Protocol
+                </button>
+                <button
+                  onClick={() => getProtocolGuidance(protocol, 'What are the key assessment priorities for this emergency protocol?')}
+                  disabled={loadingProtocolGuidance === `${protocol.title}_What are the key assessment priorities for this emergency protocol?`}
+                  style={{
+                    padding: '8px 12px', 
+                    backgroundColor: loadingProtocolGuidance === `${protocol.title}_What are the key assessment priorities for this emergency protocol?` ? '#ccc' : '#667eea', 
+                    color: 'white', 
+                    border: 'none', 
+                    borderRadius: '4px', 
+                    cursor: loadingProtocolGuidance === `${protocol.title}_What are the key assessment priorities for this emergency protocol?` ? 'not-allowed' : 'pointer',
+                    fontSize: '12px'
+                  }}>
+                  🤖 AI
+                </button>
+              </div>
             </div>
           ))}
         </div>
@@ -1385,11 +1625,27 @@ const EmergencyProtocolsTab = ({ protocols, selectedProtocol, setSelectedProtoco
                 </span>
                 <span style={{ color: '#666' }}>{protocol.timeFrame}</span>
               </div>
-              <button
-                onClick={() => setSelectedProtocol(protocol)}
-                style={{ width: '100%', padding: '10px', backgroundColor: '#fd7e14', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold' }}>
-                View Protocol
-              </button>
+              <div style={{ display: 'flex', gap: '8px' }}>
+                <button
+                  onClick={() => setSelectedProtocol(protocol)}
+                  style={{ flex: 1, padding: '10px', backgroundColor: '#fd7e14', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold' }}>
+                  View Protocol
+                </button>
+                <button
+                  onClick={() => getProtocolGuidance(protocol, 'What are the key assessment priorities for this emergency protocol?')}
+                  disabled={loadingProtocolGuidance === `${protocol.title}_What are the key assessment priorities for this emergency protocol?`}
+                  style={{
+                    padding: '8px 12px', 
+                    backgroundColor: loadingProtocolGuidance === `${protocol.title}_What are the key assessment priorities for this emergency protocol?` ? '#ccc' : '#667eea', 
+                    color: 'white', 
+                    border: 'none', 
+                    borderRadius: '4px', 
+                    cursor: loadingProtocolGuidance === `${protocol.title}_What are the key assessment priorities for this emergency protocol?` ? 'not-allowed' : 'pointer',
+                    fontSize: '12px'
+                  }}>
+                  🤖 AI
+                </button>
+              </div>
             </div>
           ))}
         </div>
@@ -1413,6 +1669,67 @@ const EmergencyProtocolsTab = ({ protocols, selectedProtocol, setSelectedProtoco
 
           <div style={{ marginBottom: '20px' }}>
             <p style={{ fontSize: '16px', fontStyle: 'italic', color: '#666' }}>{selectedProtocol.description}</p>
+            
+            {/* AI Guidance Section */}
+            <div style={{ marginTop: '20px', padding: '15px', backgroundColor: '#f8f9fa', borderRadius: '8px', border: '1px solid #e9ecef' }}>
+              <h4 style={{ margin: '0 0 15px 0', color: '#667eea', display: 'flex', alignItems: 'center' }}>
+                🤖 AI Clinical Guidance
+              </h4>
+              
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '10px' }}>
+                {[
+                  'What are the key assessment priorities?',
+                  'What are the red flags to watch for?',
+                  'Special considerations for elderly patients?',
+                  'Next steps in management?'
+                ].map((question, idx) => {
+                  const guidanceKey = `${selectedProtocol.title}_${question}`;
+                  const isLoading = loadingProtocolGuidance === guidanceKey;
+                  const hasResponse = protocolGuidance[guidanceKey];
+                  
+                  return (
+                    <button
+                      key={idx}
+                      onClick={() => getProtocolGuidance(selectedProtocol, question)}
+                      disabled={isLoading}
+                      style={{
+                        padding: '8px 12px',
+                        backgroundColor: isLoading ? '#ccc' : (hasResponse ? '#28a745' : '#667eea'),
+                        color: 'white',
+                        border: 'none',
+                        borderRadius: '6px',
+                        cursor: isLoading ? 'not-allowed' : 'pointer',
+                        fontSize: '12px',
+                        textAlign: 'left'
+                      }}
+                    >
+                      {isLoading ? '🤔 Loading...' : (hasResponse ? '✅' : '🤖')} {question}
+                    </button>
+                  );
+                })}
+              </div>
+              
+              {/* Display AI Guidance Responses */}
+              {Object.entries(protocolGuidance).filter(([key]) => key.startsWith(selectedProtocol.title)).map(([key, response]) => {
+                const question = key.replace(`${selectedProtocol.title}_`, '');
+                return (
+                  <div key={key} style={{
+                    marginTop: '15px',
+                    padding: '15px',
+                    backgroundColor: '#e7f3ff',
+                    border: '1px solid #b3d4fc',
+                    borderRadius: '6px'
+                  }}>
+                    <h5 style={{ margin: '0 0 10px 0', color: '#0056b3' }}>
+                      🤖 {question}
+                    </h5>
+                    <div style={{ lineHeight: '1.6', whiteSpace: 'pre-wrap', fontSize: '14px' }}>
+                      {response}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
           </div>
 
           {selectedProtocol.assessment && (
@@ -1622,6 +1939,225 @@ const ArticlesTab = ({ articleManager, selectedArticle, setSelectedArticle, sear
                 {tag}
               </span>
             ))}
+          </div>
+        </div>
+      )}
+
+      {/* Floating AI Assistant Button */}
+      <button
+        onClick={() => setShowAIChat(true)}
+        style={{
+          position: 'fixed',
+          bottom: '20px',
+          right: '20px',
+          width: '60px',
+          height: '60px',
+          borderRadius: '50%',
+          backgroundColor: '#667eea',
+          color: 'white',
+          border: 'none',
+          fontSize: '24px',
+          cursor: 'pointer',
+          boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+          transition: 'all 0.3s ease',
+          zIndex: 1000
+        }}
+        onMouseEnter={(e) => {
+          e.target.style.transform = 'scale(1.1)';
+          e.target.style.boxShadow = '0 6px 20px rgba(0,0,0,0.25)';
+        }}
+        onMouseLeave={(e) => {
+          e.target.style.transform = 'scale(1)';
+          e.target.style.boxShadow = '0 4px 12px rgba(0,0,0,0.15)';
+        }}
+        title="AI Clinical Assistant"
+      >
+        🤖
+      </button>
+
+      {/* AI Chat Modal */}
+      {showAIChat && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundColor: 'rgba(0,0,0,0.5)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 1001
+        }}>
+          <div style={{
+            backgroundColor: 'white',
+            borderRadius: '12px',
+            width: '90%',
+            maxWidth: '600px',
+            maxHeight: '80vh',
+            overflow: 'auto',
+            boxShadow: '0 10px 40px rgba(0,0,0,0.3)'
+          }}>
+            {/* Header */}
+            <div style={{
+              padding: '20px',
+              background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+              color: 'white',
+              borderRadius: '12px 12px 0 0',
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center'
+            }}>
+              <div>
+                <h3 style={{ margin: 0, fontSize: '20px' }}>🤖 AI Clinical Assistant</h3>
+                <p style={{ margin: '5px 0 0 0', fontSize: '14px', opacity: 0.9 }}>
+                  Ask me anything about geriatrics and clinical medicine
+                </p>
+              </div>
+              <button
+                onClick={closeAIChat}
+                style={{
+                  backgroundColor: 'rgba(255,255,255,0.2)',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '50%',
+                  width: '32px',
+                  height: '32px',
+                  cursor: 'pointer',
+                  fontSize: '16px'
+                }}
+              >
+                ✕
+              </button>
+            </div>
+
+            {/* Content */}
+            <div style={{ padding: '20px' }}>
+              {/* Current Context */}
+              <div style={{
+                backgroundColor: '#f8f9fa',
+                padding: '10px 15px',
+                borderRadius: '8px',
+                marginBottom: '15px',
+                fontSize: '14px',
+                color: '#666'
+              }}>
+                <strong>Context:</strong> Currently on {activeTab} tab - Geriatrics Study Platform
+              </div>
+
+              {/* Question Input */}
+              <div style={{ marginBottom: '15px' }}>
+                <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
+                  Your Question:
+                </label>
+                <textarea
+                  value={aiQuestion}
+                  onChange={(e) => setAiQuestion(e.target.value)}
+                  placeholder="Ask about clinical guidelines, drug interactions, assessment tools, or any geriatrics topic..."
+                  style={{
+                    width: '100%',
+                    minHeight: '80px',
+                    padding: '10px',
+                    border: '1px solid #ddd',
+                    borderRadius: '8px',
+                    resize: 'vertical',
+                    fontSize: '14px'
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                      e.preventDefault();
+                      handleAIQuestion();
+                    }
+                  }}
+                />
+              </div>
+
+              {/* Send Button */}
+              <button
+                onClick={handleAIQuestion}
+                disabled={!aiQuestion.trim() || aiLoading}
+                style={{
+                  backgroundColor: aiLoading ? '#ccc' : '#667eea',
+                  color: 'white',
+                  border: 'none',
+                  padding: '10px 20px',
+                  borderRadius: '8px',
+                  cursor: aiLoading ? 'not-allowed' : 'pointer',
+                  fontSize: '14px',
+                  fontWeight: 'bold',
+                  marginBottom: '20px'
+                }}
+              >
+                {aiLoading ? '🤔 Thinking...' : '🚀 Ask AI'}
+              </button>
+
+              {/* AI Response */}
+              {aiResponse && (
+                <div style={{
+                  border: '1px solid #e0e0e0',
+                  borderRadius: '8px',
+                  padding: '15px',
+                  backgroundColor: aiResponse.success ? '#f8fff8' : '#fff5f5'
+                }}>
+                  <div style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    marginBottom: '10px',
+                    color: aiResponse.success ? '#28a745' : '#dc3545'
+                  }}>
+                    <strong>
+                      {aiResponse.success ? '✅ AI Response' : '❌ Error'}
+                      {aiResponse.model && ` (${aiResponse.model})`}
+                    </strong>
+                    <span style={{ marginLeft: '10px', fontSize: '12px', color: '#666' }}>
+                      {new Date(aiResponse.timestamp).toLocaleTimeString()}
+                    </span>
+                  </div>
+                  
+                  <div style={{
+                    lineHeight: '1.6',
+                    whiteSpace: 'pre-wrap',
+                    color: '#333'
+                  }}>
+                    {aiResponse.success ? aiResponse.answer : aiResponse.error}
+                  </div>
+                </div>
+              )}
+
+              {/* Quick Suggestions */}
+              {!aiResponse && !aiLoading && (
+                <div style={{ marginTop: '15px' }}>
+                  <p style={{ fontSize: '14px', fontWeight: 'bold', marginBottom: '10px' }}>
+                    💡 Quick Questions:
+                  </p>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
+                    {[
+                      "What are the contraindications for tPA in elderly stroke patients?",
+                      "How do I calculate CHA₂DS₂-VASc score for anticoagulation decisions?",
+                      "What are the key components of delirium assessment using CAM?",
+                      "Which medications should be avoided in elderly per Beers criteria?"
+                    ].map((suggestion, idx) => (
+                      <button
+                        key={idx}
+                        onClick={() => setAiQuestion(suggestion)}
+                        style={{
+                          textAlign: 'left',
+                          padding: '8px 12px',
+                          backgroundColor: '#f0f2f5',
+                          border: '1px solid #e0e0e0',
+                          borderRadius: '6px',
+                          cursor: 'pointer',
+                          fontSize: '13px',
+                          color: '#667eea'
+                        }}
+                      >
+                        "{suggestion}"
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       )}
