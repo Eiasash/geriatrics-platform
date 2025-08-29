@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Geriatrics Platform - Data Backup Tool</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .container {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        h1 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            color: #718096;
+            margin-bottom: 30px;
+        }
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 5px;
+            transition: all 0.3s;
+        }
+        button:hover {
+            background: #5a67d8;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+        .backup-section {
+            margin: 20px 0;
+            padding: 20px;
+            background: #f7fafc;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+        }
+        .status {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            display: none;
+        }
+        .status.success {
+            background: #c6f6d5;
+            color: #22543d;
+            border-left: 4px solid #48bb78;
+            display: block;
+        }
+        .status.error {
+            background: #fed7d7;
+            color: #742a2a;
+            border-left: 4px solid #fc8181;
+            display: block;
+        }
+        .data-preview {
+            background: #1a202c;
+            color: #68d391;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            max-height: 300px;
+            overflow-y: auto;
+            margin-top: 15px;
+        }
+        .restore-section {
+            margin-top: 30px;
+            padding-top: 30px;
+            border-top: 2px solid #e2e8f0;
+        }
+        input[type="file"] {
+            display: none;
+        }
+        .file-label {
+            display: inline-block;
+            padding: 12px 24px;
+            background: #48bb78;
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .file-label:hover {
+            background: #38a169;
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔐 Data Backup & Restore Tool</h1>
+        <p class="subtitle">Backup your fellowship study progress and settings</p>
+
+        <div class="backup-section">
+            <h2>📥 Export Data</h2>
+            <p>Create a backup of all your platform data:</p>
+            <button onclick="backupAll()">💾 Backup Everything</button>
+            <button onclick="backupQuizScores()">📊 Quiz Scores Only</button>
+            <button onclick="backupNotes()">📝 Clinical Notes Only</button>
+            <button onclick="backupSettings()">⚙️ Settings Only</button>
+            <div id="backup-status" class="status"></div>
+            <div id="data-preview" class="data-preview" style="display:none;"></div>
+        </div>
+
+        <div class="restore-section">
+            <h2>📤 Restore Data</h2>
+            <p>Restore your data from a backup file:</p>
+            <input type="file" id="restore-file" accept=".json" onchange="restoreData(event)">
+            <label for="restore-file" class="file-label">📂 Choose Backup File</label>
+            <button onclick="clearAllData()" style="background: #fc8181;">🗑️ Clear All Data</button>
+            <div id="restore-status" class="status"></div>
+        </div>
+    </div>
+
+    <script>
+        // Backup all data
+        function backupAll() {
+            const backup = {
+                version: '1.0',
+                timestamp: new Date().toISOString(),
+                platform: 'Shaare Zedek Geriatrics Fellowship',
+                data: {}
+            };
+
+            // Collect all localStorage data
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                try {
+                    backup.data[key] = JSON.parse(localStorage.getItem(key));
+                } catch {
+                    backup.data[key] = localStorage.getItem(key);
+                }
+            }
+
+            // Add session statistics
+            backup.statistics = {
+                totalItems: Object.keys(backup.data).length,
+                quizScores: backup.data.quizScores || [],
+                studyTime: backup.data.studyTime || 0,
+                lastBackup: new Date().toLocaleDateString()
+            };
+
+            downloadBackup(backup, 'geriatrics_platform_backup');
+            showStatus('backup-status', 'success', `✅ Backup complete! ${Object.keys(backup.data).length} items saved.`);
+            showPreview(backup);
+        }
+
+        // Backup quiz scores only
+        function backupQuizScores() {
+            const backup = {
+                version: '1.0',
+                timestamp: new Date().toISOString(),
+                type: 'quiz_scores',
+                data: {
+                    quizScores: JSON.parse(localStorage.getItem('quizScores') || '[]'),
+                    quizHistory: JSON.parse(localStorage.getItem('quizHistory') || '[]'),
+                    analytics_performance: JSON.parse(localStorage.getItem('analytics_performance') || '[]'),
+                    analytics_events: JSON.parse(localStorage.getItem('analytics_events') || '[]'),
+                    battleLeaderboard: JSON.parse(localStorage.getItem('battleLeaderboard') || '{}'),
+                    casePerformance: JSON.parse(localStorage.getItem('casePerformance') || '{}')
+                }
+            };
+
+            downloadBackup(backup, 'quiz_scores_backup');
+            showStatus('backup-status', 'success', '✅ Quiz scores backed up successfully!');
+            showPreview(backup);
+        }
+
+        // Backup clinical notes
+        function backupNotes() {
+            const backup = {
+                version: '1.0',
+                timestamp: new Date().toISOString(),
+                type: 'clinical_notes',
+                data: {
+                    soapNotes: JSON.parse(localStorage.getItem('soapNotes') || '[]'),
+                    clinicalNotes: JSON.parse(localStorage.getItem('clinicalNotes') || '[]'),
+                    voiceNotes: JSON.parse(localStorage.getItem('voiceNotes') || '[]'),
+                    patientData: JSON.parse(localStorage.getItem('patientData') || '{}')
+                }
+            };
+
+            downloadBackup(backup, 'clinical_notes_backup');
+            showStatus('backup-status', 'success', '✅ Clinical notes backed up successfully!');
+            showPreview(backup);
+        }
+
+        // Backup settings
+        function backupSettings() {
+            const backup = {
+                version: '1.0',
+                timestamp: new Date().toISOString(),
+                type: 'settings',
+                data: {
+                    language: localStorage.getItem('language') || 'en',
+                    theme: localStorage.getItem('theme') || 'light',
+                    nightShiftSettings: JSON.parse(localStorage.getItem('nightShiftSettings') || '{}'),
+                    voiceSettings: JSON.parse(localStorage.getItem('voiceSettings') || '{}'),
+                    userPreferences: JSON.parse(localStorage.getItem('userPreferences') || '{}')
+                }
+            };
+
+            downloadBackup(backup, 'settings_backup');
+            showStatus('backup-status', 'success', '✅ Settings backed up successfully!');
+            showPreview(backup);
+        }
+
+        // Download backup file
+        function downloadBackup(data, filename) {
+            const json = JSON.stringify(data, null, 2);
+            const blob = new Blob([json], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${filename}_${new Date().toISOString().split('T')[0]}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        // Restore data from file
+        function restoreData(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const backup = JSON.parse(e.target.result);
+                    
+                    // Verify backup structure
+                    if (!backup.version || !backup.data) {
+                        throw new Error('Invalid backup file format');
+                    }
+
+                    // Confirm before restoring
+                    if (!confirm(`This will restore data from ${new Date(backup.timestamp).toLocaleDateString()}. Continue?`)) {
+                        return;
+                    }
+
+                    // Restore data
+                    let restored = 0;
+                    Object.entries(backup.data).forEach(([key, value]) => {
+                        localStorage.setItem(key, typeof value === 'string' ? value : JSON.stringify(value));
+                        restored++;
+                    });
+
+                    showStatus('restore-status', 'success', `✅ Restored ${restored} items successfully!`);
+                    
+                    // Refresh page after 2 seconds
+                    setTimeout(() => {
+                        if (confirm('Data restored! Reload the platform to apply changes?')) {
+                            window.location.href = 'https://geriatrics-study.netlify.app';
+                        }
+                    }, 2000);
+
+                } catch (error) {
+                    showStatus('restore-status', 'error', `❌ Error: ${error.message}`);
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        // Clear all data
+        function clearAllData() {
+            if (!confirm('⚠️ This will DELETE all your data! Are you sure?')) return;
+            if (!confirm('⚠️ FINAL WARNING: This cannot be undone! Continue?')) return;
+
+            const count = localStorage.length;
+            localStorage.clear();
+            showStatus('restore-status', 'success', `✅ Cleared ${count} items from storage.`);
+        }
+
+        // Show status message
+        function showStatus(elementId, type, message) {
+            const status = document.getElementById(elementId);
+            status.className = `status ${type}`;
+            status.textContent = message;
+            status.style.display = 'block';
+        }
+
+        // Show data preview
+        function showPreview(data) {
+            const preview = document.getElementById('data-preview');
+            preview.style.display = 'block';
+            preview.textContent = JSON.stringify(data, null, 2);
+        }
+
+        // Auto-backup reminder
+        window.onload = function() {
+            const lastBackup = localStorage.getItem('lastBackupDate');
+            const today = new Date().toDateString();
+            
+            if (lastBackup !== today) {
+                setTimeout(() => {
+                    if (confirm('💡 Reminder: Would you like to backup your data now?')) {
+                        backupAll();
+                        localStorage.setItem('lastBackupDate', today);
+                    }
+                }, 3000);
+            }
+        };
+    </script>
+</body>
+</html>
