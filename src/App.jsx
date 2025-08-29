@@ -13,12 +13,12 @@ import { SpacedRepetitionSystem, initializeGeriatricsCards } from './utils/space
 import { ArticleManager, sampleGeriatricsArticles } from './utils/articleManager.js';
 import emergencyProtocols from './data/emergencyProtocols.js';
 // Import Patient Management System
-import { PatientManagementTab } from './patientManagement/PatientManagementUI.js';
+import { PatientManagementTab } from './patientManagement/PatientManagementUI.jsx';
 // Import On-Call Survival Kit
-import { OnCallSurvivalKit } from './onCallSurvival/OnCallSurvivalKit.js';
+import { OnCallSurvivalKit } from './onCallSurvival/OnCallSurvivalKit.jsx';
 // Import Language Support
 import { LanguageProvider, useLanguage } from './localization/LanguageProvider.js';
-import { LanguageSelector } from './components/LanguageSelector.js';
+import { LanguageSelector } from './components/LanguageSelector.jsx';
 
 const AppContent = () => {
   // Initialize enhanced systems
