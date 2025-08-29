@@ -12,10 +12,18 @@ import ClinicalCalculators from './utils/clinicalCalculators.js';
 import { SpacedRepetitionSystem, initializeGeriatricsCards } from './utils/spacedRepetition.js';
 import { ArticleManager, sampleGeriatricsArticles } from './utils/articleManager.js';
 import emergencyProtocols from './data/emergencyProtocols.js';
+// Import Patient Management System
+import { PatientManagementTab } from './patientManagement/PatientManagementUI.js';
+// Import On-Call Survival Kit
+import { OnCallSurvivalKit } from './onCallSurvival/OnCallSurvivalKit.js';
+// Import Language Support
+import { LanguageProvider, useLanguage } from './localization/LanguageProvider.js';
+import { LanguageSelector } from './components/LanguageSelector.js';
 
-const App = () => {
+const AppContent = () => {
   // Initialize enhanced systems
   const [clinicalAI] = useState(() => new ClinicalAI());
+  const { t, isRTL, getRTLStyles } = useLanguage();
   const [quizSystem] = useState(() => new EnhancedQuizSystem());
   const [srs] = useState(() => {
     const spacedRepetition = new SpacedRepetitionSystem();
@@ -189,13 +197,14 @@ Keep the response practical and actionable for emergency/urgent care settings.
   };
 
   return (
-    <div style={{ fontFamily: 'Arial, sans-serif', backgroundColor: '#f0f2f5', minHeight: '100vh' }}>
+    <div style={{ fontFamily: 'Arial, sans-serif', backgroundColor: '#f0f2f5', minHeight: '100vh', ...getRTLStyles() }}>
       {/* Header */}
       <header style={{ 
         background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', 
         color: 'white', 
         padding: '20px',
-        boxShadow: '0 4px 6px rgba(0,0,0,0.1)'
+        boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
+        ...getRTLStyles()
       }}>
         <div style={{ maxWidth: '1400px', margin: '0 auto' }}>
           <h1 style={{ margin: 0, fontSize: '28px' }}>
@@ -209,7 +218,7 @@ Keep the response practical and actionable for emergency/urgent care settings.
           </p>
           
           <nav style={{ marginTop: '20px', display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-            {['dashboard', 'quiz', 'flashcards', 'ai-assistant', 'medications', 'protocols', 'calculators', 'emergency', 'articles', 'resources'].map(tab => (
+            {['dashboard', 'quiz', 'flashcards', 'ai-assistant', 'medications', 'protocols', 'calculators', 'emergency', 'articles', 'resources', 'patients', 'on-call', 'settings'].map(tab => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
@@ -222,9 +231,12 @@ Keep the response practical and actionable for emergency/urgent care settings.
                   cursor: 'pointer',
                   fontWeight: activeTab === tab ? 'bold' : 'normal'
                 }}>
-                {tab === 'ai-assistant' ? 'AI Assistant' : 
-                 tab === 'calculators' ? 'Calculators' :
-                 tab.charAt(0).toUpperCase() + tab.slice(1)}
+                {tab === 'ai-assistant' ? t('navigation.aiAssistant', 'AI Assistant') : 
+                 tab === 'calculators' ? t('navigation.calculators', 'Calculators') :
+                 tab === 'patients' ? t('navigation.patients', 'Patients') :
+                 tab === 'on-call' ? t('navigation.onCall', 'On-Call Kit') :
+                 tab === 'settings' ? t('navigation.settings', 'Settings') :
+                 t(`navigation.${tab}`, tab.charAt(0).toUpperCase() + tab.slice(1))}
               </button>
             ))}
           </nav>
@@ -757,8 +769,34 @@ Keep the response practical and actionable for emergency/urgent care settings.
             <p>📖 Hazzard's Geriatric Medicine</p>
           </div>
         )}
+
+        {activeTab === 'patients' && <PatientManagementTab />}
+
+        {activeTab === 'on-call' && <OnCallSurvivalKit />}
+
+        {activeTab === 'settings' && (
+          <div>
+            <div style={{ marginBottom: '20px', padding: '20px', backgroundColor: 'white', borderRadius: '8px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
+              <h2 style={{ margin: '0 0 10px 0', color: '#667eea' }}>
+                ⚙️ {t('settings.title', 'Settings')}
+              </h2>
+              <p style={{ margin: 0, color: '#666' }}>
+                {t('settings.description', 'Customize your medical platform experience')}
+              </p>
+            </div>
+            <LanguageSelector />
+          </div>
+        )}
       </main>
     </div>
+  );
+};
+
+const App = () => {
+  return (
+    <LanguageProvider>
+      <AppContent />
+    </LanguageProvider>
   );
 };
 
