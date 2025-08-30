@@ -123,18 +123,119 @@ export const ClinicalToolsSidebar = ({ onClose }) => {
   };
 
   const checkDrugInteractions = (drugString) => {
+    if (!drugString) return [];
+    
     const drugs = drugString.split(',').map(d => d.trim().toLowerCase());
     const interactions = [];
 
-    // Simplified interaction checking
-    if (drugs.includes('warfarin') && drugs.includes('aspirin')) {
-      interactions.push({ severity: 'Major', description: 'Increased bleeding risk with warfarin + aspirin' });
-    }
-    if (drugs.includes('lisinopril') && drugs.includes('losartan')) {
-      interactions.push({ severity: 'Major', description: 'Dual RAAS blockade - increased hyperkalemia risk' });
-    }
-    if (drugs.includes('metformin') && drugs.includes('furosemide')) {
-      interactions.push({ severity: 'Moderate', description: 'Monitor renal function - increased lactic acidosis risk' });
+    // Comprehensive interaction database
+    const interactionDatabase = {
+      'aspirin+plavix': {
+        severity: 'Major',
+        description: 'Increased bleeding risk with dual antiplatelet therapy',
+        recommendation: 'Monitor for bleeding, consider PPI for GI protection'
+      },
+      'aspirin+clopidogrel': {
+        severity: 'Major',
+        description: 'Increased bleeding risk with dual antiplatelet therapy',
+        recommendation: 'Monitor for bleeding, consider PPI for GI protection'
+      },
+      'aspirin+warfarin': {
+        severity: 'Major',
+        description: 'Major bleeding risk, INR elevation',
+        recommendation: 'Avoid combination if possible, monitor INR closely'
+      },
+      'lisinopril+losartan': {
+        severity: 'Major',
+        description: 'Dual RAAS blockade - increased hyperkalemia and renal failure risk',
+        recommendation: 'Avoid combination, choose single agent'
+      },
+      'metformin+furosemide': {
+        severity: 'Moderate',
+        description: 'Increased risk of lactic acidosis with renal impairment',
+        recommendation: 'Monitor renal function and adjust metformin dose'
+      },
+      'digoxin+furosemide': {
+        severity: 'Major',
+        description: 'Hypokalemia increases digoxin toxicity risk',
+        recommendation: 'Monitor potassium and digoxin levels'
+      },
+      'ssri+nsaid': {
+        severity: 'Moderate',
+        description: 'Increased GI bleeding risk',
+        recommendation: 'Consider PPI, monitor for bleeding'
+      },
+      'warfarin+amiodarone': {
+        severity: 'Major',
+        description: 'Increased INR and bleeding risk',
+        recommendation: 'Reduce warfarin dose by 30-50%, monitor INR'
+      },
+      'statin+gemfibrozil': {
+        severity: 'Major',
+        description: 'Increased risk of rhabdomyolysis',
+        recommendation: 'Use fenofibrate instead of gemfibrozil'
+      },
+      'metformin+contrast': {
+        severity: 'Major',
+        description: 'Risk of lactic acidosis with contrast media',
+        recommendation: 'Hold metformin 48h before and after contrast'
+      }
+    };
+
+    // Check all drug pairs
+    for (let i = 0; i < drugs.length; i++) {
+      for (let j = i + 1; j < drugs.length; j++) {
+        const drug1 = drugs[i];
+        const drug2 = drugs[j];
+        
+        // Create sorted key for lookup
+        const key = [drug1, drug2].sort().join('+');
+        
+        // Check direct match
+        if (interactionDatabase[key]) {
+          interactions.push(interactionDatabase[key]);
+        }
+        
+        // Check common drug classes
+        const checkClassInteraction = (d1, d2) => {
+          // ACE/ARB combination
+          if ((d1.includes('pril') && d2.includes('sartan')) || 
+              (d1.includes('sartan') && d2.includes('pril'))) {
+            return {
+              severity: 'Major',
+              description: 'Dual RAAS blockade - risk of hyperkalemia and renal failure',
+              recommendation: 'Avoid combination, use single agent'
+            };
+          }
+          
+          // Anticoagulant + Antiplatelet
+          if ((d1.includes('warfarin') || d1.includes('apixaban') || d1.includes('rivaroxaban')) &&
+              (d2.includes('aspirin') || d2.includes('plavix') || d2.includes('clopidogrel'))) {
+            return {
+              severity: 'Major',
+              description: 'Increased bleeding risk with anticoagulant + antiplatelet',
+              recommendation: 'Use only if clear indication, monitor closely'
+            };
+          }
+          
+          // Multiple NSAIDs
+          if ((d1.includes('ibuprofen') || d1.includes('naproxen') || d1.includes('diclofenac')) &&
+              (d2.includes('ibuprofen') || d2.includes('naproxen') || d2.includes('diclofenac'))) {
+            return {
+              severity: 'Major',
+              description: 'Avoid multiple NSAIDs - increased GI and renal toxicity',
+              recommendation: 'Use single NSAID at lowest effective dose'
+            };
+          }
+          
+          return null;
+        };
+        
+        const classInteraction = checkClassInteraction(drug1, drug2);
+        if (classInteraction && !interactions.some(i => i.description === classInteraction.description)) {
+          interactions.push(classInteraction);
+        }
+      }
     }
 
     return interactions;
@@ -684,13 +785,39 @@ export const ClinicalToolsSidebar = ({ onClose }) => {
                       fontSize: '12px'
                     }}>
                       <div style={{ fontWeight: 'bold', color: interaction.severity === 'Major' ? '#721c24' : '#856404' }}>
-                        {interaction.severity} Interaction
+                        ⚠️ {interaction.severity} Interaction
                       </div>
-                      <div style={{ fontSize: '11px', color: interaction.severity === 'Major' ? '#721c24' : '#856404' }}>
+                      <div style={{ fontSize: '11px', color: interaction.severity === 'Major' ? '#721c24' : '#856404', marginTop: '4px' }}>
                         {interaction.description}
                       </div>
+                      {interaction.recommendation && (
+                        <div style={{ 
+                          fontSize: '11px', 
+                          color: '#155724', 
+                          marginTop: '4px',
+                          padding: '4px',
+                          backgroundColor: 'rgba(212, 237, 218, 0.3)',
+                          borderRadius: '2px'
+                        }}>
+                          <strong>Recommendation:</strong> {interaction.recommendation}
+                        </div>
+                      )}
                     </div>
                   ))}
+                </div>
+              )}
+              
+              {interactionCheck.drugs && interactionCheck.results.length === 0 && (
+                <div style={{ 
+                  marginTop: '8px',
+                  padding: '10px',
+                  backgroundColor: '#d4edda',
+                  borderRadius: '4px',
+                  border: '1px solid #c3e6cb',
+                  fontSize: '12px',
+                  color: '#155724'
+                }}>
+                  ✓ No significant interactions found
                 </div>
               )}
             </div>

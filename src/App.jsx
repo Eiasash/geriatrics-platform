@@ -28,6 +28,8 @@ import { ResearchLibrary } from './components/ResearchLibrary.jsx';
 import { ClinicalToolsSidebar } from './components/ClinicalToolsSidebar.jsx';
 import { AIPoweredTools } from './components/AIPoweredTools.jsx';
 import { ErrorBoundary } from './components/ErrorBoundary.jsx';
+import Articles from './components/Articles.jsx';
+import MedOptimizer from './components/AITools/MedOptimizer.jsx';
 
 const AppContent = () => {
   // Initialize enhanced systems
@@ -861,13 +863,7 @@ Keep the response practical and actionable for emergency/urgent care settings.
 
         {activeTab === 'articles' && (
           <ErrorBoundary fallback={<div>Articles temporarily unavailable. Please try again.</div>}>
-            <ArticlesTab 
-              articleManager={articleManager}
-              selectedArticle={selectedArticle}
-              setSelectedArticle={setSelectedArticle}
-              searchQuery={articleSearchQuery}
-              setSearchQuery={setArticleSearchQuery}
-            />
+            <Articles />
           </ErrorBoundary>
         )}
 

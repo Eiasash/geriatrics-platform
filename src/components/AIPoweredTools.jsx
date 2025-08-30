@@ -3,6 +3,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { MedicalTerminologyParser } from '../utils/medicalTerminologyParser.js';
+import MedOptimizer from './AITools/MedOptimizer.jsx';
 
 export const AIPoweredTools = () => {
   const [activeTab, setActiveTab] = useState('patient-analyzer');
@@ -967,14 +968,7 @@ export const AIPoweredTools = () => {
           borderRadius: '12px',
           boxShadow: '0 4px 6px rgba(0,0,0,0.1)'
         }}>
-          <h2 style={{ margin: '0 0 25px 0', color: '#2c3e50' }}>
-            💊 Medication Optimizer
-          </h2>
-          <div style={{ textAlign: 'center', color: '#6c757d', padding: '40px' }}>
-            <div style={{ fontSize: '3rem', marginBottom: '20px' }}>🚧</div>
-            <p>Advanced medication optimization features coming soon!</p>
-            <p>This will include Beers Criteria analysis, drug interaction checking, and dose optimization for renal function.</p>
-          </div>
+          <MedOptimizer />
         </div>
       )}
 
