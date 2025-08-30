@@ -1280,6 +1280,300 @@ export class TextbookManager {
     };
 
     return commonTopics[topic.toLowerCase()] || null;
+  },
+
+  // New Hazzard's 8th Edition comprehensive content
+  getHazzardsComprehensive: function() {
+    return {
+      id: "hazzards-geriatric-medicine-8e-complete",
+      title: "Hazzard's Geriatric Medicine and Gerontology",
+      authors: ["Jeffrey B. Halter", "Joseph G. Ouslander", "Stephanie Studenski", "Kevin P. High", "Sanjay Asthana"],
+      edition: "8th Edition",
+      publisher: "McGraw-Hill",
+      isbn: "978-1259835803",
+      year: 2022,
+      category: "geriatrics",
+      tags: ["comprehensive", "reference", "gold-standard", "clinical", "research"],
+      description: "The definitive reference in geriatric medicine - comprehensive coverage of aging science, pathophysiology, and clinical management.",
+      
+      sections: {
+        dementia: {
+          alzheimer: {
+            title: "Alzheimer Disease Management",
+            content: `
+              Comprehensive AD management includes both pharmacologic and non-pharmacologic approaches.
+              
+              PHARMACOLOGIC THERAPY:
+              • Cholinesterase Inhibitors (mild-moderate AD):
+                - Donepezil: Start 5mg daily x 4-6 weeks, then 10mg daily
+                - Rivastigmine: Start 1.5mg BID, increase by 1.5mg BID every 2 weeks to 6mg BID
+                - Galantamine: Start 4mg BID, increase by 4mg BID every 4 weeks to 12mg BID
+              
+              • NMDA Antagonist (moderate-severe AD):
+                - Memantine: Start 5mg daily, increase by 5mg weekly to 10mg BID
+              
+              • Anti-amyloid Antibodies (controversial):
+                - Aducanumab: Monthly IV infusions, requires ARIA monitoring
+                - Lecanemab: Biweekly IV, 27% slowing of decline in early AD
+              
+              NON-PHARMACOLOGIC INTERVENTIONS:
+              • Cognitive stimulation therapy
+              • Physical exercise (150 min/week moderate intensity)
+              • Mediterranean diet adherence
+              • Social engagement programs
+              • Caregiver education and support
+              
+              BEHAVIORAL MANAGEMENT:
+              • DICE approach for neuropsychiatric symptoms
+              • Environmental modifications
+              • Structured daily routines
+              • Validation therapy techniques
+            `,
+            keyPoints: [
+              "Start cholinesterase inhibitors at diagnosis",
+              "Combine with memantine in moderate-severe stages",
+              "Monitor for GI side effects and bradycardia",
+              "Non-pharmacologic interventions essential",
+              "Regular reassessment of medication benefit"
+            ]
+          },
+          
+          behavioralSymptoms: {
+            title: "Managing Behavioral Symptoms in Dementia",
+            content: `
+              Neuropsychiatric symptoms affect 98% of dementia patients and require systematic approach.
+              
+              ASSESSMENT:
+              • Use Neuropsychiatric Inventory (NPI) for quantification
+              • Identify triggers and patterns
+              • Rule out pain, infection, constipation
+              • Review medications for contributors
+              
+              NON-PHARMACOLOGIC FIRST-LINE:
+              • Music therapy for agitation
+              • Reminiscence therapy for depression
+              • Structured activities matched to abilities
+              • Environmental modifications:
+                - Reduce noise and clutter
+                - Adequate lighting
+                - Familiar objects
+                - Clear wayfinding cues
+              
+              PHARMACOLOGIC MANAGEMENT (when necessary):
+              • Agitation: Citalopram 10-20mg (watch QTc)
+              • Psychosis: Risperidone 0.25-0.5mg (black box warning)
+              • Depression: Sertraline 25-100mg
+              • Sleep: Melatonin 3-6mg, avoid benzodiazepines
+              
+              MONITORING:
+              • Reassess antipsychotic need every 3-6 months
+              • Document informed consent
+              • Monitor for metabolic effects, EPS, falls
+            `,
+            keyPoints: [
+              "Non-pharmacologic interventions first-line",
+              "Antipsychotics carry mortality risk",
+              "Start low, go slow with all medications",
+              "Regular reassessment essential",
+              "Family education crucial"
+            ]
+          }
+        },
+        
+        parkinsonDisease: {
+          diagnosis: {
+            title: "Parkinson Disease Diagnosis and Early Management",
+            content: `
+              PD diagnosis remains clinical but supported by imaging and response to therapy.
+              
+              MDS DIAGNOSTIC CRITERIA:
+              • Essential: Bradykinesia
+              • Plus ≥1 of: Rest tremor, rigidity
+              • Supportive features:
+                - Clear beneficial response to dopamine
+                - Levodopa-induced dyskinesias
+                - Rest tremor documented
+                - Olfactory loss or cardiac denervation
+              
+              RED FLAGS FOR ATYPICAL PARKINSONISM:
+              • Symmetric onset
+              • Poor levodopa response
+              • Early falls (within 3 years)
+              • Early cognitive impairment
+              • Early autonomic failure
+              
+              DIAGNOSTIC TESTING:
+              • DaTscan: Differentiates PD from essential tremor
+              • Olfactory testing: Impaired in PD
+              • REM sleep study: RBD precedes PD by years
+              
+              WHEN TO START TREATMENT:
+              • Functional impairment present
+              • Patient desires symptom control
+              • Employment at risk
+              • Safety concerns (driving, falls)
+            `,
+            keyPoints: [
+              "Asymmetric onset typical of PD",
+              "Good levodopa response supports diagnosis",
+              "DaTscan cannot differentiate PD from atypical parkinsonism",
+              "Start treatment when function affected",
+              "Consider age in medication selection"
+            ]
+          },
+          
+          treatment: {
+            title: "Parkinson Disease Medical Management",
+            content: `
+              Treatment individualized based on age, symptoms, and functional goals.
+              
+              INITIAL THERAPY OPTIONS:
+              
+              Younger Patients (<65):
+              • Dopamine agonists first-line:
+                - Pramipexole: Start 0.125mg TID, titrate to 1.5mg TID
+                - Ropinirole: Start 0.25mg TID, titrate to 8mg TID
+                - Monitor for impulse control disorders
+              
+              • MAO-B inhibitors for mild symptoms:
+                - Rasagiline 1mg daily
+                - Selegiline 5mg BID
+              
+              Older Patients (>65):
+              • Levodopa/carbidopa first-line:
+                - Start 25/100mg TID
+                - Titrate by 25/100mg weekly
+                - Target lowest effective dose
+              
+              MANAGING MOTOR COMPLICATIONS:
+              • Wearing-off: Add COMT inhibitor or MAO-B inhibitor
+              • Dyskinesias: Reduce levodopa, add amantadine
+              • Freezing: Physical therapy, cueing strategies
+              
+              ADVANCED THERAPIES:
+              • Deep Brain Stimulation (DBS):
+                - Good levodopa response required
+                - No significant cognitive impairment
+                - Realistic expectations
+              
+              • Continuous dopaminergic therapies:
+                - Levodopa-carbidopa intestinal gel
+                - Apomorphine pump
+            `,
+            keyPoints: [
+              "Levodopa most effective but causes complications",
+              "Start dopamine agonists in younger patients",
+              "Monitor for impulse control disorders",
+              "DBS for motor fluctuations/tremor",
+              "Exercise improves motor and non-motor symptoms"
+            ]
+          }
+        },
+        
+        delirium: {
+          prevention: {
+            title: "Delirium Prevention Strategies",
+            content: `
+              Multicomponent interventions can prevent 30-40% of delirium cases.
+              
+              HOSPITAL ELDER LIFE PROGRAM (HELP):
+              • Orientation protocols:
+                - Clocks and calendars visible
+                - Regular orientation by staff
+                - Family photos at bedside
+              
+              • Therapeutic activities:
+                - Cognitively stimulating activities
+                - Tailored to baseline function
+                - Three times daily
+              
+              • Early mobilization:
+                - Ambulation or exercises TID
+                - Minimize restraints and tethers
+                - Progressive mobility protocol
+              
+              • Sleep enhancement:
+                - Warm milk or herbal tea
+                - Relaxation music
+                - Massage
+                - Reduce nighttime disruptions
+              
+              • Feeding assistance:
+                - Encourage oral intake
+                - Assist with meals
+                - Provide dentures/glasses
+              
+              • Sensory protocols:
+                - Glasses and hearing aids
+                - Earwax removal
+                - Adequate lighting
+              
+              PHARMACOLOGIC PREVENTION:
+              • No medications proven to prevent delirium
+              • Avoid benzodiazepines
+              • Minimize anticholinergics
+              • Optimize pain control with multimodal approach
+            `,
+            keyPoints: [
+              "Multicomponent interventions most effective",
+              "Target high-risk patients",
+              "Family involvement beneficial",
+              "No pharmacologic prevention proven",
+              "Staff education essential"
+            ]
+          },
+          
+          management: {
+            title: "Delirium Management Protocols",
+            content: `
+              Systematic approach to delirium improves outcomes.
+              
+              IMMEDIATE ASSESSMENT:
+              • Confirm with CAM or CAM-ICU
+              • Assess severity and subtype
+              • Evaluate for life-threatening causes
+              
+              IDENTIFY AND TREAT CAUSES:
+              • Infections (UTI, pneumonia most common)
+              • Medications (review all, especially new)
+              • Metabolic (electrolytes, glucose, thyroid)
+              • Hypoxia/hypercapnia
+              • Pain (use appropriate scales)
+              • Constipation/urinary retention
+              • Alcohol/benzodiazepine withdrawal
+              
+              NON-PHARMACOLOGIC MANAGEMENT:
+              • Frequent reorientation
+              • Promote normal sleep-wake cycle
+              • Early mobilization
+              • Ensure sensory aids in place
+              • Family presence encouraged
+              • Minimize room changes
+              • Avoid physical restraints
+              
+              PHARMACOLOGIC (severe agitation only):
+              • Haloperidol 0.25-0.5mg PO/IV q6h PRN
+              • Quetiapine 12.5-25mg PO q6h PRN
+              • Avoid in Parkinson's/DLB
+              • Avoid benzodiazepines except alcohol withdrawal
+              
+              MONITORING:
+              • CAM assessments BID
+              • Safety assessments
+              • Medication review daily
+              • Family education
+            `,
+            keyPoints: [
+              "Treat underlying causes essential",
+              "Non-pharmacologic measures first",
+              "Antipsychotics only for safety",
+              "Avoid benzodiazepines",
+              "Recovery may take weeks-months"
+            ]
+          }
+        }
+      }
+    };
   }
 }
 
