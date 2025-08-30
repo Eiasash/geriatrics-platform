@@ -331,7 +331,7 @@ export const medicalTextbooks = {
       year: 2017,
       category: "geriatrics",
       tags: ["comprehensive", "evidence-based", "clinical", "gerontology"],
-      description: "The definitive textbook of geriatric medicine, covering all aspects of aging and age-related diseases with evidence-based approaches. This comprehensive resource provides in-depth coverage of the biological, clinical, and social aspects of aging."
+      description: "The definitive textbook of geriatric medicine, covering all aspects of aging and age-related diseases with evidence-based approaches. This comprehensive resource provides in-depth coverage of the biological, clinical, and social aspects of aging.",
       
       chapters: [
         {
