@@ -115,41 +115,327 @@ export const medicalTextbooks = {
       ]
     },
 
+    "geriatrics-syllabus-review": {
+      id: "geriatrics-syllabus-review", 
+      title: "Geriatrics Syllabus Review: A Core Curriculum in Geriatric Medicine",
+      authors: ["American Geriatrics Society"],
+      edition: "9th Edition",
+      publisher: "American Geriatrics Society",
+      isbn: "978-1-886775-27-3",
+      year: 2020,
+      category: "geriatrics",
+      tags: ["curriculum", "board-review", "core-knowledge", "geriatrics"],
+      description: "The essential board review and core curriculum guide for geriatric medicine, covering all competency areas required for geriatrics fellowship training and board certification.",
+
+      chapters: [
+        {
+          number: 1,
+          title: "Approach to the Geriatric Patient",
+          sections: [
+            {
+              title: "Comprehensive Geriatric Assessment (CGA)",
+              content: "CGA is a multidimensional, interdisciplinary diagnostic process focused on determining a frail older person's medical, psychological and functional capability in order to develop a coordinated and integrated plan for treatment and long-term follow up. CGA typically examines four main domains: physical health, functional capacity, psychological health, and socio-environmental circumstances. Studies consistently demonstrate that CGA improves diagnostic accuracy, reduces functional decline, decreases unnecessary institutionalization, and can reduce mortality.",
+              keyPoints: [
+                "CGA improves outcomes in hospitalized elderly patients",
+                "Functional assessment is central to geriatric evaluation", 
+                "Interdisciplinary team approach is essential",
+                "Early identification of geriatric syndromes prevents complications",
+                "Social determinants significantly impact health outcomes"
+              ]
+            },
+            {
+              title: "Geriatric Syndromes",
+              content: "Geriatric syndromes are clinical conditions in older persons that do not fit into discrete disease categories. They include cognitive impairment, incontinence, falls, functional decline, and pressure ulcers. These syndromes are often precipitated by multiple underlying factors and may have significant overlap. Recognition and management require a systematic approach addressing contributing factors rather than focusing on single-disease models.",
+              keyPoints: [
+                "Multiple contributing factors are typically present",
+                "Prevention is more effective than treatment",  
+                "Functional impact often more important than diagnosis",
+                "Requires multifactorial intervention approach",
+                "Early recognition prevents cascade of complications"
+              ]
+            },
+            {
+              title: "Medication Management in Elderly",
+              content: "Polypharmacy, defined as use of multiple medications (typically 5 or more), affects over 40% of community-dwelling elderly. Age-related pharmacokinetic and pharmacodynamic changes increase risk of adverse drug reactions. The Beers Criteria identify potentially inappropriate medications, while STOPP/START criteria provide European perspective on prescribing optimization. Medication reconciliation should occur at every clinical encounter.",
+              keyPoints: [
+                "Age-related changes affect all aspects of pharmacology",
+                "Start low, go slow principle for new medications",
+                "Regular medication review prevents polypharmacy",
+                "Beers Criteria guide inappropriate medication identification", 
+                "Deprescribing is as important as prescribing"
+              ]
+            }
+          ]
+        },
+        {
+          number: 2, 
+          title: "Cognitive and Behavioral Disorders",
+          sections: [
+            {
+              title: "Dementia and Mild Cognitive Impairment",
+              content: "Dementia affects 10% of people over 65 and 30% over 85. Alzheimer's disease accounts for 60-70% of dementia cases. Early detection allows for advance planning, safety interventions, and symptomatic treatment. The 2018 NIA-AA Research Framework emphasizes biomarker-based diagnosis, though clinical criteria remain standard for practice. Mild cognitive impairment (MCI) represents the symptomatic pre-dementia stage, with 10-15% annual conversion rate to dementia.",
+              keyPoints: [
+                "Early detection enables planning and intervention",
+                "Alzheimer's disease most common but not only cause",
+                "Biomarkers increasingly important for research",
+                "MCI has high conversion rate to dementia",
+                "Non-pharmacologic interventions are first-line"
+              ]
+            },
+            {
+              title: "Delirium",
+              content: "Delirium occurs in 20-40% of hospitalized elderly patients and up to 80% in ICU settings. It is characterized by acute onset, fluctuating course, inattention, and altered consciousness. The Confusion Assessment Method (CAM) is the most validated diagnostic tool. Prevention strategies include avoiding high-risk medications, maintaining sleep-wake cycles, early mobilization, adequate nutrition, and cognitive stimulation. Hospital Elder Life Program (HELP) reduces delirium incidence by 30-40%.",
+              keyPoints: [
+                "Prevention more effective than treatment",
+                "CAM is gold standard for diagnosis",
+                "Hypoactive delirium often missed",
+                "Multiple precipitating factors usually present",
+                "HELP program proven effective for prevention"
+              ]
+            },
+            {
+              title: "Depression and Anxiety in Late Life",
+              content: "Late-life depression affects 1-3% of community-dwelling elderly but up to 15% have clinically significant depressive symptoms. Presentation may be atypical with more somatic complaints and less mood symptoms. The Geriatric Depression Scale (GDS) is validated screening tool. Treatment response rates are similar to younger adults, but side effect profiles favor SSRIs over tricyclics. Psychotherapy, particularly CBT and IPT, are effective either alone or combined with medication.",
+              keyPoints: [
+                "Atypical presentations common in elderly",
+                "GDS is preferred screening instrument",
+                "SSRIs first-line pharmacologic treatment",
+                "Psychotherapy effective in elderly patients",
+                "Suicide risk highest in elderly white males"
+              ]
+            }
+          ]
+        },
+        {
+          number: 3,
+          title: "Cardiovascular Disease",
+          sections: [
+            {
+              title: "Hypertension in Older Adults",
+              content: "Isolated systolic hypertension is most common form in elderly, resulting from arterial stiffening. SPRINT trial demonstrated benefits of intensive BP control (<120 mmHg systolic) in patients >75, but with increased risk of hypotension and acute kidney injury. Current guidelines recommend individualized targets based on frailty, comorbidities, and life expectancy. Orthostatic hypotension affects 20% of elderly and increases fall risk.",
+              keyPoints: [
+                "Isolated systolic hypertension predominates",
+                "SPRINT showed benefits but also risks of intensive control",
+                "Individualize targets based on patient factors",
+                "Orthostatic hypotension increases fall risk",
+                "Start low, go slow with antihypertensive therapy"
+              ]
+            },
+            {
+              title: "Heart Failure in the Elderly",
+              content: "Heart failure prevalence reaches 10% in octogenarians. Heart failure with preserved ejection fraction (HFpEF) accounts for 50% of cases in elderly, particularly women with hypertension. Management differs from HFrEF with focus on volume control, BP management, and treating comorbidities. ACE inhibitors and beta-blockers proven beneficial regardless of age, but require careful monitoring for hyperkalemia and bradycardia.",
+              keyPoints: [
+                "HFpEF common in elderly, especially women",
+                "Different pathophysiology and treatment approach",
+                "Evidence-based therapies beneficial regardless of age",
+                "Careful monitoring for age-related side effects",
+                "Diuretic management requires balance"
+              ]
+            }
+          ]
+        },
+        {
+          number: 4,
+          title: "Mobility and Falls",
+          sections: [
+            {
+              title: "Gait Disorders and Mobility Assessment",
+              content: "Gait speed is a vital sign in geriatrics, with speeds <0.8 m/s indicating increased mortality risk. Common gait patterns include cautious gait (fear-related), sensory ataxic gait (peripheral neuropathy), and parkinsonian gait. The Timed Up and Go test (normal <10 seconds) assesses functional mobility. Performance-Oriented Mobility Assessment (POMA) evaluates balance and gait comprehensively.",
+              keyPoints: [
+                "Gait speed predicts multiple outcomes",
+                "Specific gait patterns suggest underlying pathology", 
+                "Multiple assessment tools available",
+                "Mobility assessment predicts functional decline",
+                "Early intervention can prevent disability"
+              ]
+            },
+            {
+              title: "Falls Prevention",
+              content: "One-third of community-dwelling adults over 65 fall annually. Risk factors are multifactorial including muscle weakness, balance problems, medications, environmental hazards, and medical conditions. Evidence-based interventions include exercise programs (particularly balance training), medication review, vitamin D supplementation if deficient, and home safety modifications. Multifactorial interventions reduce fall rates by 20-30%.",
+              keyPoints: [
+                "Multifactorial etiology requires comprehensive assessment",
+                "Exercise programs most effective single intervention",
+                "Medication review critical component",
+                "Environmental modifications prevent 30% of falls", 
+                "Multifactorial interventions most effective overall"
+              ]
+            }
+          ]
+        },
+        {
+          number: 5,
+          title: "Geriatric Pharmacology",
+          sections: [
+            {
+              title: "Age-Related Pharmacologic Changes",
+              content: "Aging affects all phases of drug disposition. Absorption may be delayed due to decreased gastric acid production and gastrointestinal motility. Distribution changes due to increased body fat, decreased total body water, and reduced serum albumin affect drug concentrations. Hepatic metabolism decreases due to reduced liver mass and blood flow. Renal clearance declines with age-related decrease in glomerular filtration rate.",
+              keyPoints: [
+                "All pharmacologic processes affected by aging",
+                "Changes in body composition alter drug distribution",
+                "Hepatic and renal clearance both decline",
+                "Increased sensitivity to many medications",
+                "Start with lowest effective dose"
+              ]
+            },
+            {
+              title: "Potentially Inappropriate Medications",
+              content: "The 2019 American Geriatrics Society Beers Criteria identify medications that pose greater risk than benefit in older adults. High-risk categories include anticholinergics (increased cognitive impairment and fall risk), benzodiazepines (sedation, cognitive impairment, falls), proton pump inhibitors (C. difficile, fractures), and NSAIDs (GI bleeding, cardiovascular and renal toxicity). STOPP/START criteria provide European perspective.",
+              keyPoints: [
+                "Beers Criteria regularly updated with new evidence",
+                "Anticholinergics have cumulative cognitive effects",
+                "Benzodiazepines increase multiple risks",
+                "PPIs associated with multiple long-term risks",
+                "Regular medication review prevents inappropriate prescribing"
+              ]
+            }
+          ]
+        },
+        {
+          number: 6,
+          title: "Geriatric Emergency Medicine", 
+          sections: [
+            {
+              title: "Atypical Disease Presentations",
+              content: "Elderly patients frequently present with atypical symptoms that can delay diagnosis and treatment. Myocardial infarction may present without chest pain in 40% of patients over 85. Pneumonia may present with altered mental status rather than fever or cough. Appendicitis may lack classic symptoms with lower fever and less pain. High index of suspicion and comprehensive evaluation are essential.",
+              keyPoints: [
+                "Atypical presentations delay diagnosis",
+                "Altered mental status may be only symptom",
+                "Classic symptoms often absent",
+                "High index of suspicion required",
+                "Comprehensive evaluation essential"
+              ]
+            },
+            {
+              title: "Functional Decline in Hospital",
+              content: "Hospital-associated functional decline affects 30-60% of elderly patients. Bed rest leads to rapid muscle loss (1-1.5% daily), bone loss, cardiovascular deconditioning. Early mobilization within 24-48 hours prevents many complications. The Hospital Elder Life Program (HELP) reduces functional decline through early mobilization, cognitive stimulation, sleep enhancement, and nutrition optimization.",
+              keyPoints: [
+                "Functional decline common and preventable",
+                "Bed rest causes rapid deconditioning",  
+                "Early mobilization prevents complications",
+                "HELP program reduces multiple adverse outcomes",
+                "Prevention more effective than rehabilitation"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+
     "hazzards-geriatric-medicine": {
       id: "hazzards-geriatric-med",
       title: "Hazzard's Geriatric Medicine and Gerontology",
       authors: ["Jeffrey B. Halter", "Joseph G. Ouslander", "Stephanie Studenski", "Kevin P. High"],
-      edition: "7th Edition",
+      edition: "7th Edition", 
       publisher: "McGraw-Hill",
       isbn: "978-0-07-183144-9",
       year: 2017,
       category: "geriatrics",
       tags: ["comprehensive", "evidence-based", "clinical", "gerontology"],
-      description: "The definitive textbook of geriatric medicine, covering all aspects of aging and age-related diseases with evidence-based approaches.",
+      description: "The definitive textbook of geriatric medicine, covering all aspects of aging and age-related diseases with evidence-based approaches. This comprehensive resource provides in-depth coverage of the biological, clinical, and social aspects of aging."
       
       chapters: [
         {
           number: 1,
-          title: "Demography and Epidemiology of Aging",
+          title: "Demography and Epidemiology of Aging", 
           sections: [
             {
               title: "Population Aging Trends",
-              content: "The world's population is aging at an unprecedented rate. By 2050, the number of people aged 60+ will increase from 841 million to more than 2 billion globally. The fastest growing segment is those 85+, the 'oldest old.' This demographic transition has profound implications for healthcare systems, particularly in developed countries where 20-25% of the population will be over 65.",
+              content: "The world's population is aging at an unprecedented rate. By 2050, the number of people aged 60+ will increase from 841 million to more than 2 billion globally. The fastest growing segment is those 85+, the 'oldest old.' This demographic transition has profound implications for healthcare systems, particularly in developed countries where 20-25% of the population will be over 65. The demographic transition occurs in stages: first mortality decline, then fertility decline, leading to population aging. This process took centuries in developed nations but is happening in decades in developing countries.",
               keyPoints: [
                 "Population aging is accelerating globally",
                 "The 85+ age group is fastest growing",
                 "Healthcare demand will increase exponentially", 
-                "Chronic disease prevalence rises with age"
+                "Chronic disease prevalence rises with age",
+                "Developing countries aging faster than developed nations historically"
               ]
             },
             {
               title: "Compression of Morbidity Hypothesis",
-              content: "James Fries proposed that the onset of chronic illness could be delayed more than life expectancy is extended, compressing the period of morbidity into a shorter time before death. Evidence suggests that healthy life expectancy has indeed increased, with disability rates declining in many countries. However, the absolute number of disabled elderly continues to rise due to population growth.",
+              content: "James Fries proposed that the onset of chronic illness could be delayed more than life expectancy is extended, compressing the period of morbidity into a shorter time before death. Evidence suggests that healthy life expectancy has indeed increased, with disability rates declining in many countries. However, the absolute number of disabled elderly continues to rise due to population growth. Recent data shows mixed evidence - some populations achieving compression while others experience expansion of morbidity due to increased survival with chronic disease.",
               keyPoints: [
                 "Healthy life expectancy can be extended",
-                "Disability rates have declined per capita",
+                "Disability rates have declined per capita", 
                 "Prevention strategies are cost-effective",
-                "Quality of life improvements are achievable"
+                "Quality of life improvements are achievable",
+                "Evidence mixed on compression vs expansion of morbidity"
+              ]
+            },
+            {
+              title: "Successful Aging Models",
+              content: "Rowe and Kahn defined successful aging as avoiding disease, maintaining high cognitive and physical function, and active engagement with life. However, this model has been criticized for being too narrow and not accounting for adaptation and resilience. Alternative models emphasize subjective well-being, meaning, and adaptation rather than objective health measures. The concept of 'resilience' - the ability to adapt to adversity - is increasingly recognized as central to aging well.",
+              keyPoints: [
+                "Multiple models of successful aging exist",
+                "Rowe-Kahn model emphasizes avoidance of disease",
+                "Alternative models focus on adaptation and meaning",
+                "Resilience central to aging well",
+                "Cultural differences in aging concepts important"
+              ]
+            }
+          ]
+        },
+        {
+          number: 5,
+          title: "Biology of Aging",
+          sections: [
+            {
+              title: "Cellular and Molecular Mechanisms",
+              content: "Aging results from accumulation of molecular damage over time. Key mechanisms include telomere shortening, mitochondrial dysfunction, protein aggregation, and genomic instability. The hallmarks of aging include genomic instability, telomere attrition, epigenetic alterations, loss of proteostasis, deregulated nutrient sensing, mitochondrial dysfunction, cellular senescence, stem cell exhaustion, and altered intercellular communication. These processes are interconnected and contribute to the gradual decline in physiological function.",
+              keyPoints: [
+                "Multiple interconnected mechanisms drive aging",
+                "Cellular damage accumulates over time",
+                "Hallmarks of aging provide framework for understanding",
+                "Mitochondrial dysfunction central to aging process",
+                "Epigenetic changes regulate age-related gene expression"
+              ]
+            },
+            {
+              title: "Theories of Aging",
+              content: "Aging theories fall into two categories: programmed theories (genetic clock, endocrine theory, immunological theory) and damage theories (wear and tear, rate of living, cross-linking, free radical, somatic DNA damage). The free radical theory, proposed by Harman, suggests that aging results from cumulative oxidative damage. However, antioxidant supplementation trials have been disappointing, suggesting the relationship is more complex. Current thinking emphasizes multiple interacting processes rather than a single cause.",
+              keyPoints: [
+                "Programmed vs damage theories of aging",
+                "Free radical theory historically important but incomplete",
+                "Multiple processes interact to cause aging",
+                "Single-cause theories inadequate",
+                "Systems biology approach needed"
+              ]
+            }
+          ]
+        },
+        {
+          number: 10,
+          title: "Age-Related Changes in Organ Systems",
+          sections: [
+            {
+              title: "Cardiovascular System",
+              content: "Age-related cardiovascular changes include arterial stiffening, increased systolic blood pressure, reduced cardiac reserve, and altered heart rate variability. Structural changes include left ventricular wall thickening, valve calcification, and conduction system fibrosis. Functionally, maximum heart rate declines (220-age formula), stroke volume may decrease, and exercise capacity diminishes. These changes predispose to hypertension, heart failure, and arrhythmias, but are distinct from pathological processes.",
+              keyPoints: [
+                "Arterial stiffening increases systolic blood pressure", 
+                "Cardiac reserve diminishes with age",
+                "Maximum heart rate predictably declines",
+                "Valve calcification common but not always pathological",
+                "Age changes distinct from cardiovascular disease"
+              ]
+            },
+            {
+              title: "Pulmonary System",
+              content: "Respiratory system aging involves decreased chest wall compliance, reduced respiratory muscle strength, and altered lung parenchyma. Vital capacity decreases while residual volume increases, leading to reduced total lung capacity. Gas exchange efficiency declines due to ventilation-perfusion mismatch and reduced alveolar surface area. Cough reflex and mucociliary clearance diminish, increasing infection risk. These changes result in reduced exercise tolerance and increased susceptibility to respiratory illness.",
+              keyPoints: [
+                "Chest wall becomes stiffer with age",
+                "Vital capacity decreases while residual volume increases",
+                "Gas exchange efficiency declines",
+                "Protective mechanisms (cough, clearance) diminish",
+                "Increased susceptibility to respiratory infections"
+              ]
+            },
+            {
+              title: "Renal System",
+              content: "Kidney aging involves progressive nephron loss, reduced glomerular filtration rate, and decreased concentrating ability. GFR declines approximately 1 mL/min/1.73m²/year after age 30, though with significant individual variation. Structural changes include glomerulosclerosis, tubular atrophy, and vascular sclerosis. Functionally, the kidney's ability to conserve sodium, concentrate urine, and maintain acid-base balance diminishes. These changes have important implications for drug dosing and fluid management.",
+              keyPoints: [
+                "GFR declines predictably but varies individually",
+                "Multiple structural changes occur with aging",
+                "Concentrating ability progressively diminishes",
+                "Drug dosing must account for reduced clearance",
+                "Fluid and electrolyte regulation less efficient"
               ]
             }
           ]
@@ -253,27 +539,235 @@ export const medicalTextbooks = {
           ]
         },
         {
+          number: 35,
+          title: "Comprehensive Geriatric Assessment",
+          sections: [
+            {
+              title: "Principles and Components of CGA",
+              content: "Comprehensive Geriatric Assessment (CGA) is a multidisciplinary diagnostic and treatment process that identifies medical, functional, psychosocial, and environmental problems in older adults. Core domains include medical assessment, functional status (ADLs and IADLs), cognitive assessment, mood/psychological status, social support, nutritional status, and environmental safety. CGA should be systematic, interdisciplinary, and lead to actionable recommendations. Evidence shows CGA reduces mortality, improves functional outcomes, and decreases nursing home placement when properly implemented.",
+              keyPoints: [
+                "CGA is multidisciplinary and systematic",
+                "Seven core domains must be assessed",
+                "Must lead to actionable interventions",
+                "Evidence shows improved outcomes when done properly",
+                "Most effective in acute care and transitional settings"
+              ]
+            },
+            {
+              title: "Functional Assessment Tools",
+              content: "Activities of Daily Living (ADLs) include bathing, dressing, toileting, transferring, continence, and feeding. Instrumental Activities of Daily Living (IADLs) include managing finances, medications, transportation, shopping, housework, food preparation, and telephone use. The Katz Index and Barthel Index assess ADLs, while the Lawton Scale measures IADLs. Performance-based measures like the Physical Performance Test provide objective functional assessment. Gait speed (<0.8 m/s indicates increased mortality risk) is a powerful predictor of outcomes.",
+              keyPoints: [
+                "ADLs represent basic self-care tasks",
+                "IADLs represent complex independent living skills",
+                "Standardized tools improve reliability",
+                "Performance-based measures complement self-report",
+                "Gait speed is powerful predictor of outcomes"
+              ]
+            },
+            {
+              title: "Cognitive and Mood Assessment",
+              content: "Brief cognitive screening tools include Mini-Mental State Exam (MMSE), Montreal Cognitive Assessment (MoCA), and Mini-Cog. MMSE scores: 24-30 normal, 18-23 mild impairment, 0-17 severe impairment (adjust +1 for ≤12 years education). MoCA is more sensitive for mild cognitive impairment (normal ≥26). Depression screening uses Geriatric Depression Scale (GDS-15 or GDS-5) or PHQ-9. The combination of depression and cognitive impairment significantly worsens prognosis.",
+              keyPoints: [
+                "Multiple brief screening tools available",
+                "MoCA more sensitive than MMSE for mild impairment",
+                "Education level affects interpretation",
+                "Depression common and treatable in elderly",
+                "Combined cognitive-mood impairment particularly concerning"
+              ]
+            }
+          ]
+        },
+        {
+          number: 40,
+          title: "Delirium: Prevention, Diagnosis, and Management",
+          sections: [
+            {
+              title: "Pathophysiology and Risk Factors",
+              content: "Delirium results from complex interactions between predisposing factors (age, cognitive impairment, functional impairment) and precipitating factors (medications, infection, dehydration, surgery). Neurotransmitter imbalances, particularly cholinergic deficiency and dopaminergic excess, contribute to symptoms. Neuroinflammation and blood-brain barrier dysfunction play key roles. The more predisposing factors present, the fewer precipitating factors needed to cause delirium.",
+              keyPoints: [
+                "Multifactorial syndrome with complex pathophysiology",
+                "Predisposing + precipitating factors interact",
+                "Cholinergic deficiency central to pathogenesis",
+                "Neuroinflammation contributes to cognitive dysfunction",
+                "Prevention more effective than treatment"
+              ]
+            },
+            {
+              title: "Diagnosis and Assessment Tools",
+              content: "Delirium is characterized by acute onset (hours to days), fluctuating course, inattention, and either disorganized thinking or altered consciousness level. The Confusion Assessment Method (CAM) requires features 1+2 plus either 3 or 4. CAM-ICU and 4AT are validated tools for ICU and general settings. Richmond Agitation-Sedation Scale (RASS) assesses level of consciousness. Three motor subtypes: hyperactive (agitated), hypoactive (quiet), and mixed. Hypoactive delirium is most common but often missed.",
+              keyPoints: [
+                "CAM is gold standard diagnostic tool",
+                "Four key features with specific algorithm",
+                "Hypoactive subtype most common and missed",
+                "Fluctuation is characteristic feature", 
+                "Multiple validated assessment tools available"
+              ]
+            },
+            {
+              title: "Prevention and Management Strategies",
+              content: "The Hospital Elder Life Program (HELP) prevents 40% of delirium cases through non-pharmacologic interventions: orientation protocols, early mobilization, sleep enhancement, hearing/vision aids, hydration, and cognitive stimulation. Management focuses on identifying and treating underlying causes, ensuring safety, and providing supportive care. Antipsychotics should be avoided except for severe agitation threatening safety. Benzodiazepines worsen delirium except in alcohol/sedative withdrawal.",
+              keyPoints: [
+                "HELP program prevents 40% of delirium cases",
+                "Non-pharmacologic interventions most effective",
+                "Identify and treat underlying causes",
+                "Avoid antipsychotics unless severe agitation",
+                "Benzodiazepines generally contraindicated"
+              ]
+            }
+          ]
+        },
+        {
+          number: 42,
+          title: "Geriatric Pharmacology and Medication Management",
+          sections: [
+            {
+              title: "Age-Related Pharmacokinetic and Pharmacodynamic Changes",
+              content: "Aging affects all aspects of drug handling. Absorption may be delayed but usually complete. Distribution changes include decreased lean body mass and total body water (affecting hydrophilic drugs), increased body fat (affecting lipophilic drugs), and decreased albumin (affecting highly protein-bound drugs). First-pass metabolism decreases due to reduced liver mass and blood flow. Renal clearance declines predictably (~1 mL/min/1.73m²/year after age 30). Pharmacodynamic changes include increased sensitivity to CNS-active drugs and altered receptor sensitivity.",
+              keyPoints: [
+                "All pharmacokinetic phases affected by aging",
+                "Decreased first-pass metabolism increases bioavailability",
+                "Renal clearance declines predictably with age",
+                "Increased CNS sensitivity to medications",
+                "Start low, go slow principle applies"
+              ]
+            },
+            {
+              title: "Potentially Inappropriate Medications and Beers Criteria",
+              content: "The 2019 American Geriatrics Society Beers Criteria identify medications that are potentially inappropriate for older adults. High-risk categories include: anticholinergics (increase fall and cognitive impairment risk), benzodiazepines (increase sedation and fall risk), Z-drugs (zolpidem), first-generation antihistamines, tricyclic antidepressants, and NSAIDs. The criteria also address drug-disease interactions and drug-drug interactions. STOPP/START criteria provide European perspective on inappropriate prescribing and prescribing omissions.",
+              keyPoints: [
+                "Beers Criteria updated regularly with evidence",
+                "Anticholinergics have cumulative cognitive effects",
+                "Benzodiazepines increase fall and fracture risk",
+                "Consider alternatives to high-risk medications",
+                "STOPP/START criteria address prescribing omissions"
+              ]
+            },
+            {
+              title: "Polypharmacy and Medication Reconciliation",
+              content: "Polypharmacy (≥5 medications) affects 40% of community-dwelling elderly and increases risks of adverse drug events, drug interactions, non-adherence, and functional decline. Medication reconciliation should occur at every healthcare encounter. The ARMOR tool (Assess, Review, Minimize, Optimize, Reassess) provides systematic approach to medication management. Deprescribing involves systematic withdrawal of inappropriate medications with patient/family involvement.",
+              keyPoints: [
+                "Polypharmacy affects 40% of elderly patients",
+                "Medication reconciliation critical at transitions",
+                "ARMOR tool provides systematic approach",
+                "Deprescribing as important as prescribing",
+                "Patient/family education essential for safety"
+              ]
+            }
+          ]
+        },
+        {
+          number: 43,
+          title: "Frailty Syndrome and Sarcopenia",
+          sections: [
+            {
+              title: "Defining and Measuring Frailty",
+              content: "Frailty is a clinical syndrome characterized by decreased reserve and resistance to stressors, resulting in increased vulnerability to adverse outcomes. Fried's phenotype model includes 5 components: unintentional weight loss, self-reported exhaustion, weakness (grip strength), slow walking speed, and low physical activity. ≥3 criteria = frail, 1-2 = pre-frail, 0 = robust. Alternative models include deficit accumulation (Rockwood) and clinical assessment tools (Clinical Frailty Scale). Prevalence increases with age (7% at 65-74, 20% at 85+).",
+              keyPoints: [
+                "Frailty is distinct from aging and disease",
+                "Multiple validated measurement tools exist",
+                "Prevalence increases exponentially with age",
+                "Pre-frailty is potentially reversible",
+                "Frailty predicts multiple adverse outcomes"
+              ]
+            },
+            {
+              title: "Sarcopenia and Age-Related Muscle Loss",
+              content: "Sarcopenia is the loss of skeletal muscle mass and function with aging. Muscle mass decreases 3-8% per decade after age 30, accelerating after 60. Diagnostic criteria include low muscle mass (DXA, BIA, or CT), plus either low muscle strength (grip strength <27kg men, <16kg women) or low physical performance (gait speed <0.8 m/s). Primary sarcopenia is age-related; secondary sarcopenia has specific causes (disease, inactivity, malnutrition). Resistance exercise and protein supplementation can improve outcomes.",
+              keyPoints: [
+                "Muscle loss accelerates after age 60",
+                "Requires both low mass and function for diagnosis",
+                "Distinguished from frailty but often overlaps",
+                "Resistance exercise most effective intervention",
+                "Adequate protein intake (1.2-1.6 g/kg) important"
+              ]
+            },
+            {
+              title: "Clinical Implications and Management",
+              content: "Frail elderly have increased risk of falls, hospitalization, institutionalization, and mortality. Frailty assessment should guide treatment decisions, with more conservative approaches for frail patients and aggressive preventive care for pre-frail patients. Comprehensive geriatric assessment combined with individualized interventions can improve outcomes. Exercise programs (particularly resistance training), nutritional interventions, medication optimization, and social support are key components.",
+              keyPoints: [
+                "Frailty guides clinical decision-making",
+                "Pre-frailty is potentially reversible",
+                "Multicomponent interventions most effective",
+                "Exercise programs central to management",
+                "Social support important for outcomes"
+              ]
+            }
+          ]
+        },
+        {
           number: 45,
           title: "Geriatric Emergency Medicine",
           sections: [
             {
               title: "Atypical Presentations in Elderly",
-              content: "Elderly patients often present with atypical symptoms for common conditions. Myocardial infarction may present without chest pain (silent MI) in 25% of elderly patients. Infections may present without fever, with altered mental status being the primary symptom. Appendicitis may lack classic signs, leading to delayed diagnosis and higher perforation rates.",
+              content: "Elderly patients often present with atypical symptoms for common conditions. Myocardial infarction may present without chest pain (silent MI) in 25% of elderly patients. Infections may present without fever, with altered mental status being the primary symptom. Appendicitis may lack classic signs, leading to delayed diagnosis and higher perforation rates. Pneumonia may present only with confusion or functional decline. The classic triad of fever, flank pain, and dysuria occurs in <10% of elderly UTI patients.",
               keyPoints: [
                 "Atypical presentations are common in elderly",
                 "High index of suspicion needed",
                 "Altered mental status may be only sign of illness",
-                "Delays in diagnosis increase morbidity"
+                "Delays in diagnosis increase morbidity",
+                "Multiple conditions may present simultaneously"
               ]
             },
             {
               title: "Functional Assessment in ED",
-              content: "Baseline functional status is crucial for disposition decisions. Patients with functional decline are at higher risk for adverse outcomes. Brief assessment tools include Activities of Daily Living (ADL), Instrumental ADL, and mobility assessment. Cognitive assessment using brief tools like Six-Item Screener helps identify those at risk for delirium.",
+              content: "Baseline functional status is crucial for disposition decisions. Patients with functional decline are at higher risk for adverse outcomes. Brief assessment tools include Activities of Daily Living (ADL), Instrumental ADL, and mobility assessment. Cognitive assessment using brief tools like Six-Item Screener helps identify those at risk for delirium. The Identification of Seniors at Risk (ISAR) tool predicts adverse outcomes. Functional decline in the ED often indicates serious underlying illness.",
               keyPoints: [
                 "Functional status predicts outcomes",
                 "Brief assessment tools available for ED use",
                 "Cognitive impairment increases complications",
-                "Baseline function guides disposition decisions"
+                "Baseline function guides disposition decisions",
+                "New functional decline suggests serious illness"
+              ]
+            },
+            {
+              title: "Geriatric ED Management Principles",
+              content: "Geriatric ED management requires special considerations: longer evaluation times, increased risk of delirium from environment, higher medication error risk, and complex discharge planning needs. The Geriatric Emergency Department Guidelines recommend specialized protocols, staff training, and environmental modifications. Key elements include medication reconciliation, delirium prevention, functional assessment, and interdisciplinary team approach.",
+              keyPoints: [
+                "Specialized protocols improve geriatric care",
+                "Environmental modifications reduce delirium risk",
+                "Medication reconciliation prevents errors",
+                "Interdisciplinary approach essential",
+                "Disposition planning more complex for elderly"
+              ]
+            }
+          ]
+        },
+        {
+          number: 50,
+          title: "End-of-Life Care and Palliative Medicine",
+          sections: [
+            {
+              title: "Principles of Palliative Care",
+              content: "Palliative care focuses on improving quality of life for patients with serious illness and their families through prevention and relief of suffering. It can be provided alongside curative treatments and is not limited to end-of-life care. Core principles include symptom management, psychosocial support, spiritual care, and care coordination. Early palliative care improves quality of life, reduces hospitalizations, and may extend survival in some conditions.",
+              keyPoints: [
+                "Palliative care complements curative treatments",
+                "Early intervention improves multiple outcomes",
+                "Addresses physical, psychological, and spiritual needs",
+                "Family-centered approach essential",
+                "Specialized training required for complex cases"
+              ]
+            },
+            {
+              title: "Advance Care Planning and Goals of Care",
+              content: "Advance care planning involves discussions about future medical care in the context of patient values and preferences. This includes advance directives (living wills, healthcare proxies), but more importantly involves ongoing conversations about goals of care. The Serious Illness Conversation Guide provides a structured approach. POLST (Physician Orders for Life-Sustaining Treatment) translates patient preferences into medical orders. These discussions should occur before crises and be revisited regularly.",
+              keyPoints: [
+                "More than just advance directive completion",
+                "Ongoing conversations about values and goals",
+                "POLST translates preferences to medical orders",
+                "Should occur before acute illness",
+                "Regular reassessment important as conditions change"
+              ]
+            },
+            {
+              title: "Symptom Management in Advanced Illness",
+              content: "Common symptoms requiring management include pain, dyspnea, nausea/vomiting, constipation, delirium, and anxiety. Pain assessment in elderly may be complicated by cognitive impairment and communication difficulties. The WHO analgesic ladder provides systematic approach to pain management. Non-opioid interventions include adjuvant medications, interventional procedures, and complementary therapies. Dyspnea management includes opioids, bronchodilators, oxygen (if hypoxemic), and environmental modifications.",
+              keyPoints: [
+                "Comprehensive symptom assessment essential",
+                "Pain assessment challenging in cognitive impairment",
+                "Multimodal approach to symptom management",
+                "Non-pharmacologic interventions important",
+                "Regular reassessment and adjustment needed"
               ]
             }
           ]
