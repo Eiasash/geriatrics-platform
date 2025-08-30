@@ -205,7 +205,12 @@ export const ResearchLibrary = ({ onClose }) => {
         ].map(tab => (
           <button
             key={tab.id}
-            onClick={() => setActiveSection(tab.id)}
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              console.log('Tab clicked:', tab.id);
+              setActiveSection(tab.id);
+            }}
             style={{
               flex: 1,
               padding: '10px 4px',
@@ -242,7 +247,12 @@ export const ResearchLibrary = ({ onClose }) => {
                 border: '1px solid #bee5eb',
                 cursor: 'pointer'
               }}
-              onClick={() => setActiveSection('search')}>
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                console.log('Evidence Search card clicked');
+                setActiveSection('search');
+              }}>
                 <div style={{ fontWeight: 'bold', color: '#0c5460', fontSize: '14px' }}>
                   🔬 Evidence Search
                 </div>
@@ -327,7 +337,12 @@ export const ResearchLibrary = ({ onClose }) => {
                     border: '1px solid #e9ecef',
                     cursor: 'pointer'
                   }}
-                  onClick={() => showArticleDetails(paper)}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    console.log('Paper clicked:', paper.title);
+                    showArticleDetails(paper);
+                  }}
                 >
                   <div style={{ fontWeight: 'bold', fontSize: '13px', color: '#2c3e50', lineHeight: '1.3' }}>
                     {truncateTitle(paper.title)}
@@ -386,7 +401,10 @@ export const ResearchLibrary = ({ onClose }) => {
                   Free full-text articles available
                 </div>
                 <button
-                  onClick={() => {
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    console.log('Browse Open Access clicked');
                     setSearchQuery('geriatrics open access');
                     setActiveSection('search');
                     handleQuickSearch();
@@ -468,7 +486,12 @@ export const ResearchLibrary = ({ onClose }) => {
 
                   {guideline.url && (
                     <button
-                      onClick={() => window.open(guideline.url, '_blank')}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        console.log('View Guideline clicked:', guideline.title);
+                        window.open(guideline.url, '_blank');
+                      }}
                       style={{
                         marginTop: '8px',
                         padding: '4px 8px',
@@ -513,7 +536,12 @@ export const ResearchLibrary = ({ onClose }) => {
                   onKeyPress={(e) => e.key === 'Enter' && handleQuickSearch()}
                 />
                 <button
-                  onClick={handleQuickSearch}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    console.log('Search button clicked');
+                    handleQuickSearch();
+                  }}
                   disabled={loading}
                   style={{
                     padding: '8px 12px',
@@ -534,7 +562,10 @@ export const ResearchLibrary = ({ onClose }) => {
                 {['delirium', 'falls prevention', 'polypharmacy', 'dementia', 'frailty'].map(term => (
                   <button
                     key={term}
-                    onClick={() => {
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      console.log('Quick search term clicked:', term);
                       setSearchQuery(term);
                       handleQuickSearch();
                     }}
@@ -566,7 +597,12 @@ export const ResearchLibrary = ({ onClose }) => {
                     border: '1px solid #e9ecef',
                     cursor: 'pointer'
                   }}
-                  onClick={() => showArticleDetails(result)}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    console.log('Search result clicked:', result.title);
+                    showArticleDetails(result);
+                  }}
                 >
                   <div style={{ fontWeight: 'bold', fontSize: '12px', color: '#2c3e50', lineHeight: '1.2' }}>
                     {truncateTitle(result.title, 50)}
@@ -621,7 +657,12 @@ export const ResearchLibrary = ({ onClose }) => {
           <div>
             <div style={{ display: 'flex', alignItems: 'center', marginBottom: '16px' }}>
               <button
-                onClick={() => setActiveSection('search')}
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  console.log('Back to Search clicked');
+                  setActiveSection('search');
+                }}
                 style={{
                   padding: '4px 8px',
                   backgroundColor: '#f8f9fa',
@@ -702,7 +743,12 @@ export const ResearchLibrary = ({ onClose }) => {
                       ⭐ Recommended:
                     </div>
                     <button
-                      onClick={() => window.open(recommended.url, '_blank')}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        console.log('Recommended access clicked:', recommended.label);
+                        window.open(recommended.url, '_blank');
+                      }}
                       style={{
                         ...getAccessButtonStyle(recommended),
                         fontWeight: 'bold',
@@ -729,7 +775,12 @@ export const ResearchLibrary = ({ onClose }) => {
                   {scihubAPI.getAccessOptions(selectedArticle).map((option, idx) => (
                     <div key={idx} style={{ marginBottom: '8px' }}>
                       <button
-                        onClick={() => window.open(option.url, '_blank')}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          console.log('Access option clicked:', option.label);
+                          window.open(option.url, '_blank');
+                        }}
                         style={getAccessButtonStyle(option)}
                       >
                         {option.label}

@@ -224,7 +224,12 @@ export const ClinicalToolsSidebar = ({ onClose }) => {
         ].map(tab => (
           <button
             key={tab.id}
-            onClick={() => setActiveSection(tab.id)}
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              console.log('Clinical tab clicked:', tab.id);
+              setActiveSection(tab.id);
+            }}
             style={{
               flex: 1,
               padding: '10px 4px',
@@ -260,7 +265,12 @@ export const ClinicalToolsSidebar = ({ onClose }) => {
                 border: '1px solid #c3e6cb',
                 cursor: 'pointer'
               }}
-              onClick={() => setActiveSection('pimp')}>
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                console.log('Pimp Question Generator card clicked');
+                setActiveSection('pimp');
+              }}>
                 <div style={{ fontWeight: 'bold', color: '#155724', fontSize: '14px' }}>
                   🎯 Pimp Question Generator
                 </div>
@@ -276,7 +286,12 @@ export const ClinicalToolsSidebar = ({ onClose }) => {
                 border: '1px solid #f5c6cb',
                 cursor: 'pointer'
               }}
-              onClick={() => setActiveSection('cases')}>
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                console.log('Case Simulator card clicked');
+                setActiveSection('cases');
+              }}>
                 <div style={{ fontWeight: 'bold', color: '#721c24', fontSize: '14px' }}>
                   📋 Case Simulator
                 </div>
@@ -292,7 +307,12 @@ export const ClinicalToolsSidebar = ({ onClose }) => {
                 border: '1px solid #c8c9e4',
                 cursor: 'pointer'
               }}
-              onClick={() => setActiveSection('drugs')}>
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                console.log('Drug Lookup card clicked');
+                setActiveSection('drugs');
+              }}>
                 <div style={{ fontWeight: 'bold', color: '#383d47', fontSize: '14px' }}>
                   💊 Drug Lookup
                 </div>
@@ -420,7 +440,12 @@ export const ClinicalToolsSidebar = ({ onClose }) => {
             )}
 
             <button
-              onClick={generatePimpQuestion}
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                console.log('Generate New Question clicked');
+                generatePimpQuestion();
+              }}
               style={{
                 marginTop: '16px',
                 width: '100%',
@@ -544,7 +569,12 @@ export const ClinicalToolsSidebar = ({ onClose }) => {
             )}
 
             <button
-              onClick={loadCaseSimulator}
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                console.log('Load New Case clicked');
+                loadCaseSimulator();
+              }}
               style={{
                 marginTop: '16px',
                 width: '100%',

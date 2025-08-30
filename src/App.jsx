@@ -226,12 +226,22 @@ Keep the response practical and actionable for emergency/urgent care settings.
     <div style={{ fontFamily: 'Arial, sans-serif', backgroundColor: '#f0f2f5', minHeight: '100vh', position: 'relative', ...getRTLStyles() }}>
       {/* Research Library Sidebar (Left) */}
       {showResearchLibrary && (
-        <ResearchLibrary onClose={() => setShowResearchLibrary(false)} />
+        <div style={{ position: 'fixed', top: 0, left: 0, width: '320px', height: '100vh', zIndex: 9999 }}>
+          <ResearchLibrary onClose={() => {
+            console.log('Closing Research Library');
+            setShowResearchLibrary(false);
+          }} />
+        </div>
       )}
       
       {/* Clinical Tools Sidebar (Right) */}
       {showClinicalTools && (
-        <ClinicalToolsSidebar onClose={() => setShowClinicalTools(false)} />
+        <div style={{ position: 'fixed', top: 0, right: 0, width: '320px', height: '100vh', zIndex: 9999 }}>
+          <ClinicalToolsSidebar onClose={() => {
+            console.log('Closing Clinical Tools');
+            setShowClinicalTools(false);
+          }} />
+        </div>
       )}
       
       {/* Header */}
@@ -246,7 +256,13 @@ Keep the response practical and actionable for emergency/urgent care settings.
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             {/* Left - Research Library Toggle */}
             <button
-              onClick={() => setShowResearchLibrary(!showResearchLibrary)}
+              type="button"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                console.log('Research Library toggle clicked, current state:', showResearchLibrary);
+                setShowResearchLibrary(prev => !prev);
+              }}
               style={{
                 padding: '10px 15px',
                 backgroundColor: showResearchLibrary ? 'white' : 'rgba(255,255,255,0.2)',
@@ -277,7 +293,13 @@ Keep the response practical and actionable for emergency/urgent care settings.
             
             {/* Right - Clinical Tools Toggle */}
             <button
-              onClick={() => setShowClinicalTools(!showClinicalTools)}
+              type="button"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                console.log('Clinical Tools toggle clicked, current state:', showClinicalTools);
+                setShowClinicalTools(prev => !prev);
+              }}
               style={{
                 padding: '10px 15px',
                 backgroundColor: showClinicalTools ? 'white' : 'rgba(255,255,255,0.2)',
