@@ -27,10 +27,12 @@ import { PubMedResearch } from './components/PubMedResearch.jsx';
 import { ResearchLibrary } from './components/ResearchLibrary.jsx';
 import { ClinicalToolsSidebar } from './components/ClinicalToolsSidebar.jsx';
 import { AIPoweredTools } from './components/AIPoweredTools.jsx';
+import { ErrorBoundary } from './components/ErrorBoundary.jsx';
 
 const AppContent = () => {
   // Initialize enhanced systems
   const [clinicalAI] = useState(() => new ClinicalAI());
+  
   const { t, isRTL, getRTLStyles } = useLanguage();
   const [quizSystem] = useState(() => new EnhancedQuizSystem());
   const [srs] = useState(() => {
@@ -60,6 +62,18 @@ const AppContent = () => {
 
   const [activeTab, setActiveTab] = useState('dashboard');
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  
+  // Fix for showAIChat global function
+  useEffect(() => {
+    window.showAIChat = () => {
+      setActiveTab('ai-assistant');
+    };
+    
+    // Cleanup on unmount
+    return () => {
+      delete window.showAIChat;
+    };
+  }, []);
   const [userAnswers, setUserAnswers] = useState({});
   const [showResults, setShowResults] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
@@ -824,13 +838,15 @@ Keep the response practical and actionable for emergency/urgent care settings.
         {activeTab === 'research' && <PubMedResearch />}
 
         {activeTab === 'articles' && (
-          <ArticlesTab 
-            articleManager={articleManager}
-            selectedArticle={selectedArticle}
-            setSelectedArticle={setSelectedArticle}
-            searchQuery={articleSearchQuery}
-            setSearchQuery={setArticleSearchQuery}
-          />
+          <ErrorBoundary fallback={<div>Articles temporarily unavailable. Please try again.</div>}>
+            <ArticlesTab 
+              articleManager={articleManager}
+              selectedArticle={selectedArticle}
+              setSelectedArticle={setSelectedArticle}
+              searchQuery={articleSearchQuery}
+              setSearchQuery={setArticleSearchQuery}
+            />
+          </ErrorBoundary>
         )}
 
         {/* AI Assistant Tab - Using Enhanced AI-Powered Tools */}
@@ -1910,17 +1926,42 @@ const EmergencyProtocolsTab = ({ protocols, selectedProtocol, setSelectedProtoco
 
 // Articles Component
 const ArticlesTab = ({ articleManager, selectedArticle, setSelectedArticle, searchQuery, setSearchQuery }) => {
-  const [articles, setArticles] = useState(Array.from(articleManager.articles.values()));
+  // Safe initialization with null checks
+  const [articles, setArticles] = useState(() => {
+    try {
+      return articleManager?.articles ? Array.from(articleManager.articles.values()) : [];
+    } catch (e) {
+      console.warn('ArticlesTab initialization error:', e);
+      return [];
+    }
+  });
   const [filters, setFilters] = useState({ sortBy: 'relevance' });
-  const [stats, setStats] = useState(articleManager.getStatistics());
+  const [stats, setStats] = useState(() => {
+    try {
+      return articleManager?.getStatistics ? articleManager.getStatistics() : 
+        { totalArticles: 0, byStatus: { unread: 0, read: 0 }, favorites: 0 };
+    } catch (e) {
+      console.warn('Stats initialization error:', e);
+      return { totalArticles: 0, byStatus: { unread: 0, read: 0 }, favorites: 0 };
+    }
+  });
 
   const searchArticles = () => {
-    const results = articleManager.searchArticles(searchQuery, filters);
-    setArticles(results);
+    try {
+      if (articleManager?.searchArticles) {
+        const results = articleManager.searchArticles(searchQuery, filters);
+        setArticles(results || []);
+      }
+    } catch (error) {
+      console.warn('Article search error:', error);
+      setArticles([]);
+    }
   };
 
   useEffect(() => {
-    searchArticles();
+    if (articleManager) {
+      searchArticles();
+    }
   }, [searchQuery, filters]);
 
   return (
@@ -1989,19 +2030,19 @@ const ArticlesTab = ({ articleManager, selectedArticle, setSelectedArticle, sear
             </h4>
             
             <p style={{ fontSize: '14px', color: '#666', marginBottom: '10px' }}>
-              {article.authors.join(', ')}
+              {Array.isArray(article.authors) ? article.authors.join(', ') : article.authors || 'Unknown authors'}
             </p>
             
             <p style={{ fontSize: '14px', fontStyle: 'italic', color: '#666', marginBottom: '15px' }}>
-              {article.journal}
+              {article.journal || 'Unknown journal'}
             </p>
             
             <p style={{ fontSize: '14px', color: '#555', marginBottom: '15px', lineHeight: '1.4' }}>
-              {article.abstract.substring(0, 200)}...
+              {article.abstract ? article.abstract.substring(0, 200) + '...' : 'No abstract available'}
             </p>
             
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '5px', marginBottom: '15px' }}>
-              {Array.from(article.tags).slice(0, 3).map(tag => (
+              {(Array.isArray(article.tags) ? article.tags : Array.from(article.tags || [])).slice(0, 3).map(tag => (
                 <span key={tag} style={{ padding: '2px 6px', backgroundColor: '#f8f9fa', fontSize: '12px', borderRadius: '3px' }}>
                   {tag}
                 </span>
