@@ -309,10 +309,10 @@ const MedOptimizer = () => {
               borderRadius: '4px'
             }}
           >
-            <option value="normal">Normal (eGFR >60)</option>
+            <option value="normal">Normal (eGFR &gt;60)</option>
             <option value="mild">Mild CKD (eGFR 30-60)</option>
             <option value="moderate">Moderate CKD (eGFR 15-30)</option>
-            <option value="severe">Severe CKD (eGFR <15)</option>
+            <option value="severe">Severe CKD (eGFR &lt;15)</option>
           </select>
         </div>
       </div>
