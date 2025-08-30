@@ -30,6 +30,7 @@ import { AIPoweredTools } from './components/AIPoweredTools.jsx';
 import { ErrorBoundary } from './components/ErrorBoundary.jsx';
 import Articles from './components/Articles.jsx';
 import MedOptimizer from './components/AITools/MedOptimizer.jsx';
+import ClinicalNoteAnalyzer from './components/ClinicalNoteAnalyzer.jsx';
 
 const AppContent = () => {
   // Initialize enhanced systems
@@ -325,7 +326,7 @@ Keep the response practical and actionable for emergency/urgent care settings.
             flexWrap: 'wrap',
             justifyContent: 'center'
           }}>
-            {['dashboard', 'quiz', 'flashcards', 'ai-assistant', 'medications', 'protocols', 'calculators', 'emergency', 'articles', 'textbooks', 'research', 'resources', 'patients', 'on-call', 'settings'].map(tab => (
+            {['dashboard', 'quiz', 'flashcards', 'ai-assistant', 'medications', 'protocols', 'calculators', 'emergency', 'articles', 'note-analyzer', 'textbooks', 'research', 'resources', 'patients', 'on-call', 'settings'].map(tab => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
@@ -347,6 +348,7 @@ Keep the response practical and actionable for emergency/urgent care settings.
                  tab === 'on-call' ? t('navigation.onCall', 'On-Call Kit') :
                  tab === 'textbooks' ? t('navigation.textbooks', 'Textbooks') :
                  tab === 'research' ? t('navigation.research', 'Research') :
+                 tab === 'note-analyzer' ? t('navigation.noteAnalyzer', 'Note Analyzer') :
                  tab === 'settings' ? t('navigation.settings', 'Settings') :
                  t(`navigation.${tab}`, tab.charAt(0).toUpperCase() + tab.slice(1))}
               </button>
@@ -864,6 +866,13 @@ Keep the response practical and actionable for emergency/urgent care settings.
         {activeTab === 'articles' && (
           <ErrorBoundary fallback={<div>Articles temporarily unavailable. Please try again.</div>}>
             <Articles />
+          </ErrorBoundary>
+        )}
+
+        {/* Clinical Note Analyzer Tab */}
+        {activeTab === 'note-analyzer' && (
+          <ErrorBoundary fallback={<div>Note Analyzer temporarily unavailable. Please try again.</div>}>
+            <ClinicalNoteAnalyzer />
           </ErrorBoundary>
         )}
 
