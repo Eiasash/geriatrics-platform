@@ -23,6 +23,10 @@ import { LanguageSelector } from './components/LanguageSelector.jsx';
 import { TextbookLibrary } from './components/TextbookLibrary.jsx';
 // Import PubMed Research
 import { PubMedResearch } from './components/PubMedResearch.jsx';
+// Import Sidebars and AI Tools
+import { ResearchLibrary } from './components/ResearchLibrary.jsx';
+import { ClinicalToolsSidebar } from './components/ClinicalToolsSidebar.jsx';
+import { AIPoweredTools } from './components/AIPoweredTools.jsx';
 
 const AppContent = () => {
   // Initialize enhanced systems
@@ -69,6 +73,10 @@ const AppContent = () => {
   const [studyMode, setStudyMode] = useState('review'); // review, new, weak
   const [selectedArticle, setSelectedArticle] = useState(null);
   const [articleSearchQuery, setArticleSearchQuery] = useState('');
+  
+  // Sidebar states
+  const [showResearchLibrary, setShowResearchLibrary] = useState(false);
+  const [showClinicalTools, setShowClinicalTools] = useState(false);
 
   // AI Assistant state
   const [showAIChat, setShowAIChat] = useState(false);
@@ -201,7 +209,17 @@ Keep the response practical and actionable for emergency/urgent care settings.
   };
 
   return (
-    <div style={{ fontFamily: 'Arial, sans-serif', backgroundColor: '#f0f2f5', minHeight: '100vh', ...getRTLStyles() }}>
+    <div style={{ fontFamily: 'Arial, sans-serif', backgroundColor: '#f0f2f5', minHeight: '100vh', position: 'relative', ...getRTLStyles() }}>
+      {/* Research Library Sidebar (Left) */}
+      {showResearchLibrary && (
+        <ResearchLibrary onClose={() => setShowResearchLibrary(false)} />
+      )}
+      
+      {/* Clinical Tools Sidebar (Right) */}
+      {showClinicalTools && (
+        <ClinicalToolsSidebar onClose={() => setShowClinicalTools(false)} />
+      )}
+      
       {/* Header */}
       <header style={{ 
         background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', 
@@ -211,15 +229,56 @@ Keep the response practical and actionable for emergency/urgent care settings.
         ...getRTLStyles()
       }}>
         <div style={{ maxWidth: '1400px', margin: '0 auto' }}>
-          <h1 style={{ margin: 0, fontSize: '28px' }}>
-            Geriatrics Excellence Platform
-            <span style={{ fontSize: '14px', marginLeft: '10px', opacity: 0.9 }}>
-              Shaare Zedek Medical Center
-            </span>
-          </h1>
-          <p style={{ margin: '10px 0 0 0', opacity: 0.9 }}>
-            {allQuestions.length} Board Questions | {allMedications.length} Medications | {Object.keys(protocols).length} Protocols
-          </p>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            {/* Left - Research Library Toggle */}
+            <button
+              onClick={() => setShowResearchLibrary(!showResearchLibrary)}
+              style={{
+                padding: '10px 15px',
+                backgroundColor: showResearchLibrary ? 'white' : 'rgba(255,255,255,0.2)',
+                color: showResearchLibrary ? '#667eea' : 'white',
+                border: 'none',
+                borderRadius: '8px',
+                cursor: 'pointer',
+                fontSize: '14px',
+                fontWeight: 'bold',
+                transition: 'all 0.3s'
+              }}
+            >
+              📚 Research Library
+            </button>
+            
+            {/* Center - Title */}
+            <div style={{ textAlign: 'center' }}>
+              <h1 style={{ margin: 0, fontSize: '28px' }}>
+                Geriatrics Excellence Platform
+                <span style={{ fontSize: '14px', marginLeft: '10px', opacity: 0.9 }}>
+                  Shaare Zedek Medical Center
+                </span>
+              </h1>
+              <p style={{ margin: '10px 0 0 0', opacity: 0.9 }}>
+                {allQuestions.length} Board Questions | {allMedications.length} Medications | {Object.keys(protocols).length} Protocols
+              </p>
+            </div>
+            
+            {/* Right - Clinical Tools Toggle */}
+            <button
+              onClick={() => setShowClinicalTools(!showClinicalTools)}
+              style={{
+                padding: '10px 15px',
+                backgroundColor: showClinicalTools ? 'white' : 'rgba(255,255,255,0.2)',
+                color: showClinicalTools ? '#667eea' : 'white',
+                border: 'none',
+                borderRadius: '8px',
+                cursor: 'pointer',
+                fontSize: '14px',
+                fontWeight: 'bold',
+                transition: 'all 0.3s'
+              }}
+            >
+              🛠️ Clinical Tools
+            </button>
+          </div>
           
           <nav style={{ 
             marginTop: '20px', 
@@ -774,8 +833,8 @@ Keep the response practical and actionable for emergency/urgent care settings.
           />
         )}
 
-        {/* AI Assistant Tab */}
-        {activeTab === 'ai-assistant' && <AIAssistantTab clinicalAI={clinicalAI} />}
+        {/* AI Assistant Tab - Using Enhanced AI-Powered Tools */}
+        {activeTab === 'ai-assistant' && <AIPoweredTools />}
 
         {/* Resources Tab */}
         {activeTab === 'resources' && (
