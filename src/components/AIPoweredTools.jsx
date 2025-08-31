@@ -4,6 +4,7 @@
 import React, { useState, useEffect } from 'react';
 import { MedicalTerminologyParser } from '../utils/medicalTerminologyParser.js';
 import MedOptimizer from './AITools/MedOptimizer.jsx';
+import { calculateGeriatricRisk } from './ClinicalTools/RiskCalculators';
 
 export const AIPoweredTools = () => {
   const [activeTab, setActiveTab] = useState('patient-analyzer');
@@ -52,11 +53,14 @@ export const AIPoweredTools = () => {
       // Simulate comprehensive AI analysis
       await new Promise(resolve => setTimeout(resolve, 2000));
 
+      // Use the comprehensive geriatric risk calculator
+      const geriatricRisks = calculateGeriatricRisk(patientData);
+
       const mockAnalysis = {
         demographics: {
           ageCategory: categorizeAge(parseInt(patientData.age)),
           genderSpecificRisks: getGenderSpecificRisks(patientData.gender),
-          overallRiskLevel: calculateOverallRisk(parsedConditions, parsedMedications)
+          overallRiskLevel: geriatricRisks.overallRisk
         },
         conditions: {
           parsed: parsedConditions,
@@ -70,10 +74,11 @@ export const AIPoweredTools = () => {
           recommendations: medParser.getMedicationRecommendations(parsedConditions)
         },
         riskAssessment: {
-          fall: calculateFallRisk(patientData, parsedConditions, parsedMedications),
-          frailty: calculateFrailtyRisk(patientData, parsedConditions),
-          delirium: calculateDeliriumRisk(patientData, parsedConditions, parsedMedications),
-          readmission: calculateReadmissionRisk(patientData, parsedConditions, parsedMedications)
+          fall: { level: geriatricRisks.fallRisk },
+          frailty: { level: geriatricRisks.frailtyRisk },
+          delirium: { level: geriatricRisks.deliriumRisk },
+          bleeding: { level: geriatricRisks.bleedingRisk },
+          readmission: { level: geriatricRisks.readmissionRisk }
         },
         recommendations: {
           immediate: generateImmediateRecommendations(parsedConditions, parsedMedications),
@@ -95,6 +100,18 @@ export const AIPoweredTools = () => {
         readmissionRisk: mockAnalysis.riskAssessment.readmission,
         deliriumRisk: mockAnalysis.riskAssessment.delirium
       });
+      
+      // Store in sessionStorage for other tabs/tools
+      sessionStorage.setItem('currentPatient', JSON.stringify({
+        ...patientData,
+        risks: geriatricRisks,
+        timestamp: Date.now()
+      }));
+
+      // Auto-populate deprescribing if on same page
+      if (window.populateDeprescribing) {
+        window.populateDeprescribing(patientData);
+      }
       
     } catch (error) {
       console.error('Analysis error:', error);
@@ -206,28 +223,43 @@ export const AIPoweredTools = () => {
   };
 
   const calculateFallRisk = (patient, conditions, medications) => {
+    // Input validation
+    if (!patient || !conditions || !medications) {
+      return {
+        score: 0,
+        level: 'Unknown',
+        recommendations: ['Unable to calculate risk - missing patient data']
+      };
+    }
+    
     let score = 0;
     
-    // Age factor
-    const age = parseInt(patient.age);
+    // Age factor with validation
+    const age = parseInt(patient.age) || 0;
     if (age >= 85) score += 3;
     else if (age >= 75) score += 2;
     else if (age >= 65) score += 1;
     
-    // Condition factors
-    conditions.forEach(condition => {
-      const lower = condition.toLowerCase();
-      if (lower.includes('dementia') || lower.includes('cognitive')) score += 2;
-      if (lower.includes('parkinson') || lower.includes('movement')) score += 2;
-      if (lower.includes('vision') || lower.includes('hearing')) score += 1;
+    // Condition factors - ensure conditions is an array
+    const conditionsArray = Array.isArray(conditions) ? conditions : [];
+    conditionsArray.forEach(condition => {
+      if (typeof condition === 'string') {
+        const lower = condition.toLowerCase();
+        if (lower.includes('dementia') || lower.includes('cognitive')) score += 2;
+        if (lower.includes('parkinson') || lower.includes('movement')) score += 2;
+        if (lower.includes('vision') || lower.includes('hearing')) score += 1;
+      }
     });
     
-    // Medication factors
-    medications.forEach(med => {
-      const lower = med.toLowerCase();
-      if (lower.includes('benzodiazepine') || lower.includes('sedative')) score += 2;
-      if (lower.includes('antipsychotic')) score += 2;
-      if (lower.includes('antidepressant')) score += 1;
+    // Medication factors - ensure medications is an array
+    const medicationsArray = Array.isArray(medications) ? medications : [];
+    medicationsArray.forEach(med => {
+      if (typeof med === 'string') {
+        const lower = med.toLowerCase();
+        if (lower.includes('benzodiazepine') || lower.includes('sedative')) score += 2;
+        if (lower.includes('antipsychotic')) score += 2;
+        if (lower.includes('antidepressant')) score += 1;
+      }
     });
     
     return {
@@ -238,24 +270,37 @@ export const AIPoweredTools = () => {
   };
 
   const calculateFrailtyRisk = (patient, conditions) => {
-    let indicators = 0;
-    
-    // Age
-    if (parseInt(patient.age) >= 80) indicators++;
-    
-    // Functional status
-    if (patient.functionalStatus.toLowerCase().includes('dependent') || 
-        patient.functionalStatus.toLowerCase().includes('assistance')) {
-      indicators += 2;
+    // Input validation
+    if (!patient || !conditions) {
+      return {
+        indicators: 0,
+        level: 'Unknown',
+        recommendations: ['Unable to calculate risk - missing patient data']
+      };
     }
     
-    // Weight loss / malnutrition
-    if (conditions.some(c => c.toLowerCase().includes('malnutrition') || c.toLowerCase().includes('weight loss'))) {
+    let indicators = 0;
+    
+    // Age with validation
+    const age = parseInt(patient.age) || 0;
+    if (age >= 80) indicators++;
+    
+    // Functional status with validation
+    if (patient.functionalStatus && typeof patient.functionalStatus === 'string') {
+      const functionalLower = patient.functionalStatus.toLowerCase();
+      if (functionalLower.includes('dependent') || functionalLower.includes('assistance')) {
+        indicators += 2;
+      }
+    }
+    
+    // Weight loss / malnutrition - ensure conditions is an array
+    const conditionsArray = Array.isArray(conditions) ? conditions : [];
+    if (conditionsArray.some(c => typeof c === 'string' && (c.toLowerCase().includes('malnutrition') || c.toLowerCase().includes('weight loss')))) {
       indicators++;
     }
     
     // Multiple conditions
-    if (conditions.length >= 3) indicators++;
+    if (conditionsArray.length >= 3) indicators++;
     
     return {
       indicators,
@@ -265,23 +310,39 @@ export const AIPoweredTools = () => {
   };
 
   const calculateDeliriumRisk = (patient, conditions, medications) => {
+    // Input validation
+    if (!patient || !conditions || !medications) {
+      return {
+        riskFactors: 0,
+        level: 'Unknown',
+        recommendations: ['Unable to calculate risk - missing patient data']
+      };
+    }
+    
     let riskFactors = 0;
     
-    // Age
-    if (parseInt(patient.age) >= 70) riskFactors++;
+    // Age with validation
+    const age = parseInt(patient.age) || 0;
+    if (age >= 70) riskFactors++;
     
-    // Cognitive impairment
-    if (patient.cognitiveStatus.toLowerCase().includes('impair') || 
-        conditions.some(c => c.toLowerCase().includes('dementia'))) {
+    // Cognitive impairment with validation
+    const conditionsArray = Array.isArray(conditions) ? conditions : [];
+    const hasCognitiveImpairment = (patient.cognitiveStatus && typeof patient.cognitiveStatus === 'string' && 
+                                   patient.cognitiveStatus.toLowerCase().includes('impair')) || 
+                                   conditionsArray.some(c => typeof c === 'string' && c.toLowerCase().includes('dementia'));
+    if (hasCognitiveImpairment) {
       riskFactors += 2;
     }
     
-    // High-risk medications
-    medications.forEach(med => {
-      const lower = med.toLowerCase();
-      if (lower.includes('benzodiazepine') || lower.includes('anticholinergic') || 
-          lower.includes('opioid') || lower.includes('steroid')) {
-        riskFactors++;
+    // High-risk medications - ensure medications is an array
+    const medicationsArray = Array.isArray(medications) ? medications : [];
+    medicationsArray.forEach(med => {
+      if (typeof med === 'string') {
+        const lower = med.toLowerCase();
+        if (lower.includes('benzodiazepine') || lower.includes('anticholinergic') || 
+            lower.includes('opioid') || lower.includes('steroid')) {
+          riskFactors++;
+        }
       }
     });
     
@@ -293,28 +354,42 @@ export const AIPoweredTools = () => {
   };
 
   const calculateReadmissionRisk = (patient, conditions, medications) => {
+    // Input validation
+    if (!patient || !conditions || !medications) {
+      return {
+        score: 0,
+        level: 'Unknown',
+        recommendations: ['Unable to calculate risk - missing patient data']
+      };
+    }
+    
     let score = 0;
     
-    // Age
-    if (parseInt(patient.age) >= 85) score += 2;
-    else if (parseInt(patient.age) >= 75) score += 1;
+    // Age with validation
+    const age = parseInt(patient.age) || 0;
+    if (age >= 85) score += 2;
+    else if (age >= 75) score += 1;
     
-    // High-risk conditions
+    // High-risk conditions - ensure conditions is an array
     const highRiskConditions = ['heart failure', 'copd', 'diabetes', 'kidney disease'];
-    conditions.forEach(condition => {
-      if (highRiskConditions.some(risk => condition.toLowerCase().includes(risk))) {
+    const conditionsArray = Array.isArray(conditions) ? conditions : [];
+    conditionsArray.forEach(condition => {
+      if (typeof condition === 'string' && highRiskConditions.some(risk => condition.toLowerCase().includes(risk))) {
         score += 2;
       }
     });
     
-    // Social factors
-    if (patient.socialSupport.toLowerCase().includes('limited') || 
-        patient.socialSupport.toLowerCase().includes('alone')) {
-      score += 1;
+    // Social factors with validation
+    if (patient.socialSupport && typeof patient.socialSupport === 'string') {
+      const socialLower = patient.socialSupport.toLowerCase();
+      if (socialLower.includes('limited') || socialLower.includes('alone')) {
+        score += 1;
+      }
     }
     
-    // Polypharmacy
-    if (medications.length >= 5) score += 1;
+    // Polypharmacy - ensure medications is an array
+    const medicationsArray = Array.isArray(medications) ? medications : [];
+    if (medicationsArray.length >= 5) score += 1;
     
     return {
       score,

@@ -79,6 +79,30 @@ body {
   100% { opacity: 1; }
 }
 
+/* RISK LEVEL INDICATORS */
+.risk-critical {
+  background: #ff1744 !important;
+  color: white !important;
+  font-weight: bold;
+  animation: pulse 2s infinite;
+}
+
+.risk-high {
+  background: #ff9800 !important;
+  color: white !important;
+  font-weight: bold;
+}
+
+.risk-moderate {
+  background: #ffd54f !important;
+  color: #333 !important;
+}
+
+.risk-low {
+  background: #4caf50 !important;
+  color: white !important;
+}
+
 /* NAVIGATION */
 .nav-tabs {
   background: white;

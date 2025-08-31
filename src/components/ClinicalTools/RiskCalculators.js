@@ -318,6 +318,113 @@ export function calculateHASBLED(data) {
   };
 }
 
+// Comprehensive Geriatric Risk Calculator
+export function calculateGeriatricRisk(patient) {
+  // Initialize all risks as CRITICAL for elderly with multiple conditions
+  let risks = {
+    fall: 'LOW',
+    frailty: 'LOW',
+    delirium: 'LOW',
+    bleeding: 'LOW',
+    readmission: 'LOW'
+  };
+
+  // Age alone changes everything
+  if (patient.age >= 85) {
+    risks.fall = 'HIGH';
+    risks.frailty = 'HIGH';
+    risks.readmission = 'MODERATE';
+  } else if (patient.age >= 75) {
+    risks.fall = 'MODERATE';
+    risks.frailty = 'MODERATE';
+  }
+
+  // Hip fracture = automatic critical
+  if (patient.conditions?.toLowerCase().includes('hip') || 
+      patient.conditions?.toLowerCase().includes('fracture')) {
+    risks.fall = 'CRITICAL';
+    risks.frailty = 'CRITICAL';
+    risks.readmission = 'CRITICAL';
+  }
+
+  // CKD with age
+  if (patient.conditions?.toLowerCase().includes('ckd') || 
+      patient.conditions?.toLowerCase().includes('kidney')) {
+    if (patient.age >= 80) {
+      risks.frailty = 'CRITICAL';
+      risks.readmission = 'HIGH';
+    }
+  }
+
+  // Cognitive impairment changes EVERYTHING
+  if (patient.cognitiveStatus === 'moderate' || patient.cognitiveStatus === 'severe') {
+    risks.fall = risks.fall === 'CRITICAL' ? 'CRITICAL' : 'HIGH';
+    risks.delirium = 'HIGH';
+    risks.readmission = 'CRITICAL';
+    
+    if (patient.cognitiveStatus === 'severe') {
+      risks.fall = 'CRITICAL';
+      risks.delirium = 'CRITICAL';
+    }
+  }
+
+  // Social isolation multiplies risk
+  if (patient.socialSupport === 'isolated') {
+    risks.readmission = 'CRITICAL';
+    if (patient.cognitiveStatus !== 'intact') {
+      risks.fall = 'CRITICAL';
+      risks.frailty = 'CRITICAL';
+    }
+  }
+
+  // Medication analysis
+  const meds = patient.medications?.toLowerCase() || '';
+  const hasAnticoag = /eliquis|warfarin|xarelto|apixaban|rivaroxaban/.test(meds);
+  const hasAntiplatelet = /plavix|aspirin|clopidogrel/.test(meds);
+  const hasInsulin = /insulin/.test(meds);
+  const medCount = (meds.match(/\n/g) || []).length + 1;
+
+  // Polypharmacy
+  if (medCount > 10) {
+    risks.fall = 'HIGH';
+    risks.delirium = 'HIGH';
+  } else if (medCount > 5) {
+    risks.fall = risks.fall === 'LOW' ? 'MODERATE' : risks.fall;
+    risks.delirium = risks.delirium === 'LOW' ? 'MODERATE' : risks.delirium;
+  }
+
+  // Anticoagulation + antiplatelet = disaster
+  if (hasAnticoag && hasAntiplatelet) {
+    risks.bleeding = 'CRITICAL';
+    risks.fall = 'CRITICAL'; // Because falls on anticoag = death
+  } else if (hasAnticoag || hasAntiplatelet) {
+    risks.bleeding = 'HIGH';
+    if (patient.age >= 80) {
+      risks.bleeding = 'CRITICAL';
+    }
+  }
+
+  // Insulin + cognitive impairment = hypoglycemia waiting
+  if (hasInsulin && patient.cognitiveStatus !== 'intact') {
+    risks.fall = 'CRITICAL';
+    risks.readmission = 'CRITICAL';
+  }
+
+  // Calculate overall risk - take the WORST score
+  const riskLevels = { 'LOW': 1, 'MODERATE': 2, 'HIGH': 3, 'CRITICAL': 4 };
+  const maxRisk = Math.max(...Object.values(risks).map(r => riskLevels[r]));
+  const overallRisk = Object.keys(riskLevels).find(key => riskLevels[key] === maxRisk);
+
+  return {
+    fallRisk: risks.fall,
+    frailtyRisk: risks.frailty,
+    deliriumRisk: risks.delirium,
+    bleedingRisk: risks.bleeding,
+    readmissionRisk: risks.readmission,
+    overallRisk: overallRisk
+  };
+}
+
 // Export all calculators
 export default {
   calculateHospitalScore,
@@ -327,5 +434,6 @@ export default {
   clinicalFrailtyScale,
   calculateMorseFallScale,
   calculateCHADS2VASc,
-  calculateHASBLED
+  calculateHASBLED,
+  calculateGeriatricRisk
 };

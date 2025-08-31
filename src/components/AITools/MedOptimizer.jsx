@@ -1,5 +1,5 @@
 // Medication Optimizer Component - AI-powered deprescribing assistant
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 const MedOptimizer = () => {
   const [meds, setMeds] = useState('');
@@ -10,6 +10,37 @@ const MedOptimizer = () => {
   });
   const [results, setResults] = useState(null);
   const [analyzing, setAnalyzing] = useState(false);
+
+  // Auto-populate from sessionStorage on mount
+  useEffect(() => {
+    const stored = sessionStorage.getItem('currentPatient');
+    if (stored) {
+      const patient = JSON.parse(stored);
+      // Auto-fill form
+      setPatientInfo(prev => ({
+        ...prev,
+        age: patient.age || '',
+        conditions: patient.conditions || ''
+      }));
+      setMeds(patient.medications || '');
+    }
+  }, []);
+
+  // Make function available globally for other components
+  useEffect(() => {
+    window.populateDeprescribing = (patientData) => {
+      setPatientInfo(prev => ({
+        ...prev,
+        age: patientData.age || '',
+        conditions: patientData.conditions || ''
+      }));
+      setMeds(patientData.medications || '');
+    };
+    
+    return () => {
+      delete window.populateDeprescribing;
+    };
+  }, []);
 
   // Beers Criteria and STOPP/START database
   const beersCriteria = {
