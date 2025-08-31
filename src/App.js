@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
+import './styles/modern-design.css';
+import ModernDashboard from './components/Dashboard/ModernDashboard';
 
 // REAL MEDICAL DATA - NO BULLSHIT
 const MEDICAL_DATABASE = {
@@ -335,13 +337,18 @@ Check: Cr, hepatic function, bleeding risk`;
       </header>
 
       <nav className="nav-tabs">
-        {['dashboard', 'calculators', 'ai', 'drugs', 'labs', 'procedures', 'israeli'].map(tab => (
+        {['dashboard', 'calculators', 'ai', 'drugs', 'labs', 'procedures', 'israeli', 'modern'].map(tab => (
           <button
             key={tab}
             className={`nav-btn ${activeTab === tab ? 'active' : ''}`}
             onClick={() => setActiveTab(tab)}
+            style={tab === 'modern' ? {
+              background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+              color: 'white',
+              fontWeight: 'bold'
+            } : {}}
           >
-            {tab.toUpperCase()}
+            {tab === 'modern' ? '✨ NEW PLATFORM' : tab.toUpperCase()}
           </button>
         ))}
       </nav>
@@ -622,6 +629,9 @@ Check: Cr, hepatic function, bleeding risk`;
           </div>
         )}
       </main>
+      
+      {/* Modern Dashboard Integration */}
+      {activeTab === 'modern' && <ModernDashboard />}
     </div>
   );
 }
