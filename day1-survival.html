@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DAY 1 SURVIVAL - Geriatrics / מדריך הישרדות יום 1 - גריאטריה</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+            background: #f5f5f5;
+            padding: 10px;
+        }
+        
+        /* PANIC BUTTON */
+        .panic-button {
+            background: #ff4444;
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+            padding: 20px;
+            border: none;
+            border-radius: 10px;
+            width: 100%;
+            margin-bottom: 20px;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(255,0,0,0.3);
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+            100% { transform: scale(1); }
+        }
+        .panic-button:active { transform: scale(0.98); }
+        
+        /* DELIRIUM POPUP */
+        .delirium-popup {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.9);
+            z-index: 9999;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        .delirium-content {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        .close-btn {
+            float: right;
+            font-size: 30px;
+            cursor: pointer;
+            color: #999;
+        }
+        
+        /* QUICK DRUGS */
+        .pinned-drugs {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .drug-card {
+            background: #e3f2fd;
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border-left: 4px solid #2196f3;
+        }
+        .drug-name {
+            font-weight: bold;
+            font-size: 18px;
+            color: #1976d2;
+        }
+        .drug-dose {
+            color: #333;
+            margin-top: 5px;
+        }
+        
+        /* TABS */
+        .tabs {
+            display: flex;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .tab {
+            flex: 1;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            background: white;
+            border: none;
+            font-weight: bold;
+        }
+        .tab.active {
+            background: #4caf50;
+            color: white;
+        }
+        
+        /* CONTENT */
+        .content {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .hidden { display: none !important; }
+        
+        /* CRITICAL INFO */
+        .critical {
+            background: #ffebee;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #f44336;
+            margin: 10px 0;
+        }
+        .mnemonic {
+            background: #fff9c4;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+        }
+        
+        h2 {
+            color: #d32f2f;
+            margin-bottom: 15px;
+            font-size: 22px;
+        }
+        h3 {
+            color: #1976d2;
+            margin: 15px 0 10px 0;
+            font-size: 18px;
+        }
+        ul {
+            margin-left: 20px;
+            line-height: 1.8;
+        }
+        .highlight {
+            background: #ffeb3b;
+            padding: 2px 4px;
+            font-weight: bold;
+        }
+        
+        /* SEARCH */
+        .search-box {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+        
+        /* LANGUAGE TOGGLE */
+        .lang-toggle {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background: #2196f3;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            z-index: 1000;
+            font-weight: bold;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        .lang-toggle:hover {
+            background: #1976d2;
+        }
+        .rtl {
+            direction: rtl;
+            text-align: right;
+        }
+        .rtl ul {
+            margin-right: 20px;
+            margin-left: 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- LANGUAGE TOGGLE -->
+    <div class="lang-toggle" onclick="toggleLanguage()">
+        <span class="lang-text">עב/EN</span>
+    </div>
+    
+    <!-- PANIC BUTTON -->
+    <button class="panic-button" onclick="showDelirium()">
+        <span class="en-text">🚨 PANIC! DELIRIUM PROTOCOL 🚨</span>
+        <span class="he-text" style="display:none;">🚨 חירום! פרוטוקול דליריום 🚨</span>
+    </button>
+    
+    <!-- DELIRIUM POPUP -->
+    <div id="deliriumPopup" class="delirium-popup">
+        <div class="delirium-content">
+            <span class="close-btn" onclick="hideDelirium()">&times;</span>
+            <h2>
+                <span class="en-text">🚨 DELIRIUM EMERGENCY PROTOCOL</span>
+                <span class="he-text" style="display:none;">🚨 פרוטוקול חירום דליריום</span>
+            </h2>
+            
+            <div class="critical">
+                <strong>
+                    <span class="en-text">CAM CRITERIA (need 1+2 AND 3 or 4):</span>
+                    <span class="he-text" style="display:none;">קריטריוני CAM (צריך 1+2 וגם 3 או 4):</span>
+                </strong>
+                <ol>
+                    <li>✅ <span class="en-text">ACUTE onset + fluctuating</span><span class="he-text" style="display:none;">התחלה חדה + תנודות</span></li>
+                    <li>✅ <span class="en-text">INATTENTION (can't count backward from 20)</span><span class="he-text" style="display:none;">חוסר קשב (לא יכול לספור אחורה מ-20)</span></li>
+                    <li>✅ <span class="en-text">DISORGANIZED thinking OR</span><span class="he-text" style="display:none;">חשיבה לא מאורגנת או</span></li>
+                    <li>✅ <span class="en-text">ALTERED consciousness</span><span class="he-text" style="display:none;">שינוי ברמת ההכרה</span></li>
+                </ol>
+            </div>
+            
+            <div class="critical">
+                <strong>
+                    <span class="en-text">IMMEDIATE ORDERS:</span>
+                    <span class="he-text" style="display:none;">הוראות מיידיות:</span>
+                </strong>
+                <ul>
+                    <li>📋 <span class="en-text">UA (UTI is #1 cause!)</span><span class="he-text" style="display:none;">בדיקת שתן (UTI הסיבה מס' 1!)</span></li>
+                    <li>📋 <span class="en-text">CBC with diff</span><span class="he-text" style="display:none;">ספירת דם עם נוסחה</span></li>
+                    <li>📋 <span class="en-text">BMP (check Na, glucose)</span><span class="he-text" style="display:none;">כימיה (בדוק Na, גלוקוז)</span></li>
+                    <li>📋 <span class="en-text">Med review - STOP benzos/anticholinergics</span><span class="he-text" style="display:none;">סקירת תרופות - הפסק בנזו/אנטיכולינרגיות</span></li>
+                    <li>📋 <span class="en-text">Consider head CT if fall/anticoag</span><span class="he-text" style="display:none;">שקול CT ראש אם נפילה/נוגדי קרישה</span></li>
+                </ul>
+            </div>
+            
+            <div class="mnemonic">
+                <strong>DELIRIUM Mnemonic:</strong><br>
+                <strong>D</strong> - Drugs (benzos, anticholinergics)<br>
+                <strong>E</strong> - Electrolytes (Na, Ca)<br>
+                <strong>L</strong> - Low O2 (check pulse ox)<br>
+                <strong>I</strong> - Infection (UTI, pneumonia)<br>
+                <strong>R</strong> - Retention (bladder/stool)<br>
+                <strong>I</strong> - Intracranial (stroke, subdural)<br>
+                <strong>U</strong> - Uremia<br>
+                <strong>M</strong> - Myocardial (MI, CHF)
+            </div>
+        </div>
+    </div>
+    
+    <!-- PINNED DRUGS -->
+    <div class="pinned-drugs">
+        <h3>
+            <span class="en-text">⭐ MOST-USED DRUGS (PINNED)</span>
+            <span class="he-text" style="display:none;">⭐ תרופות נפוצות (מוצמדות)</span>
+        </h3>
+        
+        <div class="drug-card">
+            <div class="drug-name">
+                <span class="en-text">HALOPERIDOL (Haldol)</span>
+                <span class="he-text" style="display:none;">הלופרידול (הלדול)</span>
+            </div>
+            <div class="drug-dose">
+                <strong><span class="en-text">Elderly:</span><span class="he-text" style="display:none;">קשישים:</span></strong> 0.25-0.5mg PO/IM<br>
+                <strong><span class="en-text">Regular:</span><span class="he-text" style="display:none;">רגיל:</span></strong> 2-5mg<br>
+                ⚠️ <span class="en-text">BLACK BOX: Increases mortality in dementia</span>
+                <span class="he-text" style="display:none;">אזהרת קופסה שחורה: מעלה תמותה בדמנציה</span>
+            </div>
+        </div>
+        
+        <div class="drug-card">
+            <div class="drug-name">RAMIPRIL</div>
+            <div class="drug-dose">
+                <strong>Elderly Start:</strong> 1.25mg daily<br>
+                <strong>Target:</strong> 5-10mg daily<br>
+                ✅ Monitor K+ and Cr
+            </div>
+        </div>
+        
+        <div class="drug-card">
+            <div class="drug-name">FUROSEMIDE (Lasix)</div>
+            <div class="drug-dose">
+                <strong>Elderly Start:</strong> 20mg daily<br>
+                <strong>Max:</strong> Usually 80mg BID<br>
+                ⚠️ Watch K+, Mg++, increases digoxin toxicity
+            </div>
+        </div>
+        
+        <div class="drug-card">
+            <div class="drug-name">BISOPROLOL</div>
+            <div class="drug-dose">
+                <strong>Elderly Start:</strong> 1.25mg daily<br>
+                <strong>Target HR:</strong> 60-70 in HF<br>
+                ✅ Better than atenolol in elderly
+            </div>
+        </div>
+        
+        <div class="drug-card">
+            <div class="drug-name">AMLODIPINE</div>
+            <div class="drug-dose">
+                <strong>Elderly Start:</strong> 2.5mg daily<br>
+                <strong>Max:</strong> 10mg daily<br>
+                ⚠️ Edema common, not heart failure!
+            </div>
+        </div>
+    </div>
+    
+    <!-- TABS -->
+    <div class="tabs">
+        <button class="tab active" onclick="showTab('mustknow')">
+            <span class="en-text">MUST KNOW</span>
+            <span class="he-text" style="display:none;">חובה לדעת</span>
+        </button>
+        <button class="tab" onclick="showTab('assess')">
+            <span class="en-text">ASSESSMENTS</span>
+            <span class="he-text" style="display:none;">הערכות</span>
+        </button>
+        <button class="tab" onclick="showTab('redflag')">
+            <span class="en-text">RED FLAGS</span>
+            <span class="he-text" style="display:none;">דגלים אדומים</span>
+        </button>
+    </div>
+    
+    <!-- CONTENT SECTIONS -->
+    <div id="mustknow" class="content">
+        <h2>
+            <span class="en-text">DAY 1: MUST KNOW COLD</span>
+            <span class="he-text" style="display:none;">יום 1: חובה לדעת בעל פה</span>
+        </h2>
+        
+        <h3>
+            <span class="en-text">FRIED FRAILTY (≥3 = frail)</span>
+            <span class="he-text" style="display:none;">שבריריות FRIED (≥3 = שברירי)</span>
+        </h3>
+        <ol>
+            <li><span class="en-text">Weight loss >4.5 kg/year</span><span class="he-text" style="display:none;">ירידה במשקל >4.5 ק"ג/שנה</span></li>
+            <li><span class="en-text">Exhaustion (self-reported)</span><span class="he-text" style="display:none;">תשישות (דיווח עצמי)</span></li>
+            <li><span class="en-text">Weakness (grip strength)</span><span class="he-text" style="display:none;">חולשה (כוח אחיזה)</span></li>
+            <li><span class="en-text">Slow walking (>6-7 sec for 4.5 meters)</span><span class="he-text" style="display:none;">הליכה איטית (>6-7 שניות ל-4.5 מטר)</span></li>
+            <li><span class="en-text">Low activity</span><span class="he-text" style="display:none;">פעילות נמוכה</span></li>
+        </ol>
+        
+        <h3>
+            <span class="en-text">DELIRIUM vs DEMENTIA</span>
+            <span class="he-text" style="display:none;">דליריום מול דמנציה</span>
+        </h3>
+        <table style="width:100%; margin:10px 0;">
+            <tr>
+                <td><strong><span class="en-text">DELIRIUM</span><span class="he-text" style="display:none;">דליריום</span></strong></td>
+                <td><strong><span class="en-text">DEMENTIA</span><span class="he-text" style="display:none;">דמנציה</span></strong></td>
+            </tr>
+            <tr>
+                <td>✅ <span class="en-text">HOURS to days</span><span class="he-text" style="display:none;">שעות עד ימים</span></td>
+                <td>❌ <span class="en-text">MONTHS to years</span><span class="he-text" style="display:none;">חודשים עד שנים</span></td>
+            </tr>
+            <tr>
+                <td>✅ <span class="en-text">FLUCTUATES</span><span class="he-text" style="display:none;">משתנה</span></td>
+                <td>❌ <span class="en-text">STABLE decline</span><span class="he-text" style="display:none;">ירידה יציבה</span></td>
+            </tr>
+            <tr>
+                <td>✅ <span class="en-text">INATTENTION</span><span class="he-text" style="display:none;">חוסר קשב</span></td>
+                <td>❌ <span class="en-text">MEMORY loss first</span><span class="he-text" style="display:none;">אובדן זיכרון קודם</span></td>
+            </tr>
+        </table>
+        
+        <h3>
+            <span class="en-text">FALLS: Timed Up & Go</span>
+            <span class="he-text" style="display:none;">נפילות: Timed Up & Go</span>
+        </h3>
+        <div class="critical">
+            <strong><span class="en-text">>12 seconds = HIGH RISK</span><span class="he-text" style="display:none;">>12 שניות = סיכון גבוה</span></strong><br>
+            <span class="en-text">Check: Orthostatics | Vision | Feet | Meds (>4)</span>
+            <span class="he-text" style="display:none;">בדוק: אורתוסטטיות | ראייה | כפות רגליים | תרופות (>4)</span>
+        </div>
+        
+        <h3>
+            <span class="en-text">POLYPHARMACY KILLERS</span>
+            <span class="he-text" style="display:none;">רב-תרופתיות קטלנית</span>
+        </h3>
+        <ul>
+            <li><span class="highlight">Benzos</span> → Falls (2.7x risk)</li>
+            <li><span class="highlight">Anticholinergics</span> → Confusion</li>
+            <li><span class="highlight">NSAIDs</span> → Renal failure</li>
+            <li><span class="highlight">PPIs >8 weeks</span> → C.diff, fractures</li>
+        </ul>
+    </div>
+    
+    <div id="assess" class="content hidden">
+        <h2>QUICK ASSESSMENTS</h2>
+        
+        <h3>MINI-COG (3 min)</h3>
+        <ol>
+            <li>Remember 3 words</li>
+            <li>Draw clock (11:10)</li>
+            <li>Recall 3 words</li>
+        </ol>
+        <p><strong>Score:</strong> 0-2 recall + abnormal clock = POSITIVE</p>
+        
+        <h3>CAM (Confusion Assessment)</h3>
+        <div class="critical">
+            Need: (1) Acute + (2) Inattention<br>
+            AND: (3) Disorganized OR (4) Altered LOC
+        </div>
+        
+        <h3>ADLs (Can't do = needs help)</h3>
+        <ul>
+            <li><strong>B</strong>athing</li>
+            <li><strong>D</strong>ressing</li>
+            <li><strong>T</strong>oileting</li>
+            <li><strong>T</strong>ransferring</li>
+            <li><strong>C</strong>ontinence</li>
+            <li><strong>F</strong>eeding</li>
+        </ul>
+        
+        <h3>MORSE Fall Scale</h3>
+        <ul>
+            <li>History of falls: 25 points</li>
+            <li>Secondary diagnosis: 15 points</li>
+            <li>Ambulatory aid: 15-30 points</li>
+            <li>IV/Heparin lock: 20 points</li>
+            <li>Gait impaired: 10-20 points</li>
+            <li>Mental status: 15 points</li>
+        </ul>
+        <p><strong>>45 = HIGH RISK</strong></p>
+    </div>
+    
+    <div id="redflag" class="content hidden">
+        <h2>🚩 NEVER MISS THESE</h2>
+        
+        <div class="critical">
+            <strong>NEW CONFUSION</strong><br>
+            = DELIRIUM until proven otherwise<br>
+            → Full workup NOW
+        </div>
+        
+        <div class="critical">
+            <strong>NEW INCONTINENCE</strong><br>
+            = Cord compression until proven otherwise<br>
+            → Check rectal tone, urgent MRI
+        </div>
+        
+        <div class="critical">
+            <strong>FAILURE TO THRIVE</strong><br>
+            = Depression vs Cancer<br>
+            → PHQ-9, CBC, CMP, consider CT
+        </div>
+        
+        <div class="critical">
+            <strong>REPEATED FALLS</strong><br>
+            = Parkinson's, NPH, subdural<br>
+            → Neuro exam, head CT, gait assessment
+        </div>
+        
+        <div class="critical">
+            <strong>WEIGHT LOSS >5%</strong><br>
+            = Cancer, depression, dementia<br>
+            → Full review, depression screen, CT
+        </div>
+        
+        <h3>ATTENDING WILL ASK:</h3>
+        <ul>
+            <li>"Did you check orthostatics?" (>20/10 drop)</li>
+            <li>"What's the med count?" (>4 = problem)</li>
+            <li>"Did you do a CAM?" (know it cold!)</li>
+            <li>"What's the eGFR?" (Cr 1.0 in 80yo = ~50)</li>
+            <li>"Is this delirium or dementia?" (know difference!)</li>
+        </ul>
+    </div>
+    
+    <script>
+        // Language toggle
+        let currentLang = 'en';
+        
+        function toggleLanguage() {
+            currentLang = currentLang === 'en' ? 'he' : 'en';
+            
+            // Toggle text visibility
+            document.querySelectorAll('.en-text').forEach(el => {
+                el.style.display = currentLang === 'en' ? 'inline' : 'none';
+            });
+            document.querySelectorAll('.he-text').forEach(el => {
+                el.style.display = currentLang === 'he' ? 'inline' : 'none';
+            });
+            
+            // Toggle RTL
+            if (currentLang === 'he') {
+                document.body.classList.add('rtl');
+            } else {
+                document.body.classList.remove('rtl');
+            }
+            
+            // Update language button
+            document.querySelector('.lang-text').textContent = currentLang === 'en' ? 'עב/EN' : 'HE/עב';
+        }
+        
+        // Make it work offline
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js');
+        }
+        
+        function showDelirium() {
+            document.getElementById('deliriumPopup').style.display = 'block';
+        }
+        
+        function hideDelirium() {
+            document.getElementById('deliriumPopup').style.display = 'none';
+        }
+        
+        function showTab(tabName) {
+            // Hide all content
+            document.querySelectorAll('.content').forEach(el => {
+                el.classList.add('hidden');
+            });
+            
+            // Remove active from all tabs
+            document.querySelectorAll('.tab').forEach(el => {
+                el.classList.remove('active');
+            });
+            
+            // Show selected content
+            document.getElementById(tabName).classList.remove('hidden');
+            
+            // Mark tab as active
+            event.target.classList.add('active');
+        }
+        
+        // Close popup on escape
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                hideDelirium();
+            }
+        });
+    </script>
+</body>
+</html>

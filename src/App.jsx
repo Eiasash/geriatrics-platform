@@ -28,6 +28,7 @@ import { ResearchLibrary } from './components/ResearchLibrary.jsx';
 import { ClinicalToolsSidebar } from './components/ClinicalToolsSidebar.jsx';
 import { AIPoweredTools } from './components/AIPoweredTools.jsx';
 import { ErrorBoundary } from './components/ErrorBoundary.jsx';
+import Day1Survival from './components/Day1Survival.jsx';
 import Articles from './components/Articles.jsx';
 import MedOptimizer from './components/AITools/MedOptimizer.jsx';
 import ClinicalNoteAnalyzer from './components/ClinicalNoteAnalyzer.jsx';
@@ -326,7 +327,7 @@ Keep the response practical and actionable for emergency/urgent care settings.
             flexWrap: 'wrap',
             justifyContent: 'center'
           }}>
-            {['dashboard', 'quiz', 'flashcards', 'ai-assistant', 'medications', 'protocols', 'calculators', 'emergency', 'articles', 'note-analyzer', 'textbooks', 'research', 'resources', 'patients', 'on-call', 'settings'].map(tab => (
+            {['day1', 'dashboard', 'quiz', 'flashcards', 'ai-assistant', 'medications', 'protocols', 'calculators', 'emergency', 'articles', 'note-analyzer', 'textbooks', 'research', 'resources', 'patients', 'on-call', 'settings'].map(tab => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
@@ -342,7 +343,8 @@ Keep the response practical and actionable for emergency/urgent care settings.
                   fontSize: '14px',
                   whiteSpace: 'nowrap'
                 }}>
-                {tab === 'ai-assistant' ? t('navigation.aiAssistant', 'AI Assistant') : 
+                {tab === 'day1' ? '🚨 DAY 1' :
+                 tab === 'ai-assistant' ? t('navigation.aiAssistant', 'AI Assistant') : 
                  tab === 'calculators' ? t('navigation.calculators', 'Calculators') :
                  tab === 'patients' ? t('navigation.patients', 'Patients') :
                  tab === 'on-call' ? t('navigation.onCall', 'On-Call Kit') :
@@ -358,6 +360,11 @@ Keep the response practical and actionable for emergency/urgent care settings.
       </header>
 
       <main style={{ maxWidth: '1400px', margin: '0 auto', padding: '20px' }}>
+        
+        {/* Day 1 Survival */}
+        {activeTab === 'day1' && (
+          <Day1Survival />
+        )}
         
         {/* Dashboard */}
         {activeTab === 'dashboard' && (
