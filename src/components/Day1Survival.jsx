@@ -231,7 +231,7 @@ const Day1Survival = () => {
               <li><span className="highlight">Benzos</span> → <Text en="Falls (2.7x risk)" he="נפילות (סיכון פי 2.7)"/></li>
               <li><span className="highlight">Anticholinergics</span> → <Text en="Confusion" he="בלבול"/></li>
               <li><span className="highlight">NSAIDs</span> → <Text en="Renal failure" he="אי ספיקת כליות"/></li>
-              <li><span className="highlight">PPIs >8 weeks</span> → <Text en="C.diff, fractures" he="C.diff, שברים"/></li>
+              <li><span className="highlight">PPIs &gt;8 weeks</span> → <Text en="C.diff, fractures" he="C.diff, שברים"/></li>
             </ul>
           </div>
         )}
@@ -314,9 +314,9 @@ const Day1Survival = () => {
             <h3><Text en="ATTENDING WILL ASK:" he="המנהל ישאל:"/></h3>
             <ul>
               <li><Text en='"Did you check orthostatics?" (>20/10 drop)' he='"בדקת אורתוסטטיות?" (ירידה >20/10)'/></li>
-              <li><Text en='"What\'s the med count?" (>4 = problem)' he='"כמה תרופות?" (>4 = בעיה)'/></li>
+              <li><Text en={`"What's the med count?" (>4 = problem)`} he={`"כמה תרופות?" (>4 = בעיה)`}/></li>
               <li><Text en='"Did you do a CAM?" (know it cold!)' he='"עשית CAM?" (דע בעל פה!)'/></li>
-              <li><Text en='"What\'s the eGFR?" (Cr 1.0 in 80yo = ~50)' he='"מה ה-eGFR?" (Cr 1.0 בגיל 80 = ~50)'/></li>
+              <li><Text en={`"What's the eGFR?" (Cr 1.0 in 80yo = ~50)`} he={`"מה ה-eGFR?" (Cr 1.0 בגיל 80 = ~50)`}/></li>
               <li><Text en='"Is this delirium or dementia?" (know difference!)' he='"זה דליריום או דמנציה?" (דע את ההבדל!)'/></li>
             </ul>
           </div>
