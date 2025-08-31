@@ -3,6 +3,10 @@
 
 import React, { useState, useEffect } from 'react';
 import { MedicalTerminologyParser } from '../utils/medicalTerminologyParser.js';
+import EnhancedMedicationSearch from './EnhancedMedicationSearch';
+import { MedicationMatcher } from '../utils/medicationMatcher';
+import { medicationDatabase } from '../data/medications';
+import HazzardsRapidReview from './HazzardsRapidReview';
 
 export const ClinicalToolsSidebar = ({ onClose }) => {
   const [activeSection, setActiveSection] = useState('quick-tools');
@@ -125,7 +129,33 @@ export const ClinicalToolsSidebar = ({ onClose }) => {
   const checkDrugInteractions = (drugString) => {
     if (!drugString) return [];
     
-    const drugs = drugString.split(',').map(d => d.trim().toLowerCase());
+    // Split by commas or newlines for free text input
+    const drugInputs = drugString.split(/[,\n]+/).map(d => d.trim()).filter(d => d);
+    
+    // Use MedicationMatcher to resolve each drug input to actual medications
+    const resolvedMeds = [];
+    const unresolved = [];
+    
+    drugInputs.forEach(input => {
+      const matched = MedicationMatcher.findMedication(input, medicationDatabase);
+      if (matched) {
+        resolvedMeds.push({
+          original: input,
+          resolved: matched,
+          name: matched.name.toLowerCase()
+        });
+      } else {
+        // Try direct lowercase match for common names
+        resolvedMeds.push({
+          original: input,
+          resolved: null,
+          name: input.toLowerCase()
+        });
+        unresolved.push(input);
+      }
+    });
+    
+    const drugs = resolvedMeds.map(m => m.name);
     const interactions = [];
 
     // Comprehensive interaction database
@@ -179,6 +209,36 @@ export const ClinicalToolsSidebar = ({ onClose }) => {
         severity: 'Major',
         description: 'Risk of lactic acidosis with contrast media',
         recommendation: 'Hold metformin 48h before and after contrast'
+      },
+      'carbamazepine+warfarin': {
+        severity: 'Major',
+        description: 'Carbamazepine induces warfarin metabolism, reducing INR',
+        recommendation: 'Monitor INR closely, may need warfarin dose increase'
+      },
+      'tegretol+warfarin': {
+        severity: 'Major',
+        description: 'Tegretol (carbamazepine) induces warfarin metabolism, reducing INR',
+        recommendation: 'Monitor INR closely, may need warfarin dose increase'
+      },
+      'carbamazepine+apixaban': {
+        severity: 'Major',
+        description: 'Carbamazepine reduces apixaban levels via CYP3A4 induction',
+        recommendation: 'Avoid combination if possible, consider alternative anticoagulant'
+      },
+      'carbamazepine+rivaroxaban': {
+        severity: 'Major',
+        description: 'Carbamazepine reduces rivaroxaban levels via CYP3A4 induction',
+        recommendation: 'Avoid combination, use alternative anticoagulant'
+      },
+      'carbamazepine+diltiazem': {
+        severity: 'Major',
+        description: 'Diltiazem increases carbamazepine levels, risk of toxicity',
+        recommendation: 'Monitor carbamazepine levels, consider dose reduction'
+      },
+      'carbamazepine+verapamil': {
+        severity: 'Major',
+        description: 'Verapamil increases carbamazepine levels, risk of toxicity',
+        recommendation: 'Monitor carbamazepine levels, consider dose reduction'
       }
     };
 
@@ -319,6 +379,7 @@ export const ClinicalToolsSidebar = ({ onClose }) => {
       }}>
         {[
           { id: 'quick-tools', label: '⚡ Quick', title: 'Quick Tools' },
+          { id: 'hazzards', label: '📚 Hazzard\'s', title: 'Hazzard\'s Rapid Review' },
           { id: 'pimp', label: '🎯 Pimp', title: 'Pimp Questions' },
           { id: 'cases', label: '📋 Cases', title: 'Case Simulator' },
           { id: 'drugs', label: '💊 Drugs', title: 'Drug Tools' }
@@ -454,6 +515,13 @@ export const ClinicalToolsSidebar = ({ onClose }) => {
                 </div>
               </div>
             </div>
+          </div>
+        )}
+
+        {/* Hazzard's Rapid Review */}
+        {activeSection === 'hazzards' && (
+          <div style={{ margin: '-16px' }}>
+            <HazzardsRapidReview />
           </div>
         )}
 
@@ -701,27 +769,26 @@ export const ClinicalToolsSidebar = ({ onClose }) => {
               Drug Information Tools
             </h3>
             
-            {/* Drug Search */}
+            {/* Enhanced Drug Search with Typo Tolerance */}
             <div style={{ marginBottom: '20px' }}>
               <h4 style={{ margin: '0 0 8px 0', fontSize: '14px', color: '#495057' }}>
-                💊 Drug Lookup
+                💊 Drug Lookup (Free Text with Typo Support)
               </h4>
-              <input
-                type="text"
-                value={drugSearchQuery}
-                onChange={(e) => {
-                  setDrugSearchQuery(e.target.value);
-                  setDrugSearchResults(searchDrugs(e.target.value));
+              <EnhancedMedicationSearch
+                onMedicationSelect={(medication) => {
+                  setDrugSearchQuery(medication.name);
+                  // Display the selected medication details
+                  const result = {
+                    name: medication.name,
+                    class: medication.category || 'N/A',
+                    elderlyDose: medication.dose?.geriatric || medication.dose?.standard || 'See prescribing information',
+                    renalAdjust: medication.dose?.renal || 'No adjustment specified'
+                  };
+                  setDrugSearchResults([result]);
                 }}
-                placeholder="Search medications..."
-                style={{
-                  width: '100%',
-                  padding: '8px 12px',
-                  border: '1px solid #ddd',
-                  borderRadius: '4px',
-                  fontSize: '12px',
-                  boxSizing: 'border-box'
-                }}
+                placeholder="Type any medication (handles typos, Hebrew, brands)..."
+                showConfidence={true}
+                allowCustomEntry={true}
               />
               
               {drugSearchResults.length > 0 && (
@@ -747,13 +814,12 @@ export const ClinicalToolsSidebar = ({ onClose }) => {
               )}
             </div>
 
-            {/* Drug Interactions */}
+            {/* Drug Interactions with Free Text Input */}
             <div style={{ marginBottom: '20px' }}>
               <h4 style={{ margin: '0 0 8px 0', fontSize: '14px', color: '#495057' }}>
-                ⚠️ Interaction Checker
+                ⚠️ Interaction Checker (Free Text Input)
               </h4>
-              <input
-                type="text"
+              <textarea
                 value={interactionCheck.drugs}
                 onChange={(e) => {
                   const value = e.target.value;
@@ -762,14 +828,22 @@ export const ClinicalToolsSidebar = ({ onClose }) => {
                     results: checkDrugInteractions(value)
                   });
                 }}
-                placeholder="Enter drugs separated by commas..."
+                placeholder="Enter medications (one per line or separated by commas)...
+Examples:
+- tegretol, warfarin, aspirin
+- Tegritol (typo will be handled)
+- קרבמזפין (Hebrew supported)
+- eliquis, plavix"
                 style={{
                   width: '100%',
                   padding: '8px 12px',
                   border: '1px solid #ddd',
                   borderRadius: '4px',
                   fontSize: '12px',
-                  boxSizing: 'border-box'
+                  boxSizing: 'border-box',
+                  minHeight: '80px',
+                  resize: 'vertical',
+                  fontFamily: 'inherit'
                 }}
               />
               

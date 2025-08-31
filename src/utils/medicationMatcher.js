@@ -46,7 +46,9 @@ export const MedicationMatcher = {
     'diuver': ['diubar', 'torsemide', 'דיובר'],
     'normalol': ['normallol', 'atenolol', 'נורמלול'],
     'efient': ['efyent', 'prasugrel', 'אפיינט'],
-    'persantine': ['persantin', 'dipyridamole', 'פרסנטין']
+    'persantine': ['persantin', 'dipyridamole', 'פרסנטין'],
+    'tegretol': ['tegritol', 'tegretel', 'carbamazepine', 'carbatrol', 'epitol', 'טגרטול', 'קרבמזפין'],
+    'carbamazepine': ['carbamzepine', 'carbamazepin', 'tegretol', 'carbatrol', 'epitol', 'טגרטול', 'קרבמזפין']
   },
   
   // Hebrew to English mapping for reverse lookup
@@ -86,7 +88,9 @@ export const MedicationMatcher = {
     'דיובר': 'diuver',
     'נורמלול': 'normalol',
     'אפיינט': 'efient',
-    'פרסנטין': 'persantine'
+    'פרסנטין': 'persantine',
+    'טגרטול': 'tegretol',
+    'קרבמזפין': 'carbamazepine'
   },
   
   // Levenshtein distance algorithm for fuzzy string matching

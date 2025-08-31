@@ -1,0 +1,597 @@
+.hazzards-rapid-review {
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+  background: #f8f9fa;
+}
+
+.hazzards-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 20px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.hazzards-title {
+  font-size: 24px;
+  font-weight: bold;
+  margin: 0 0 15px 0;
+}
+
+.search-bar {
+  position: relative;
+}
+
+.hazzards-search {
+  width: 100%;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 25px;
+  font-size: 14px;
+  background: rgba(255, 255, 255, 0.95);
+  color: #333;
+}
+
+.hazzards-search:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.3);
+}
+
+.hazzards-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 15px;
+  background: white;
+  border-bottom: 2px solid #e9ecef;
+  position: sticky;
+  top: 120px;
+  z-index: 99;
+}
+
+.nav-button {
+  padding: 8px 16px;
+  border: 1px solid #dee2e6;
+  border-radius: 20px;
+  background: white;
+  color: #495057;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.nav-button:hover {
+  background: #f8f9fa;
+  transform: translateY(-1px);
+}
+
+.nav-button.active {
+  background: #667eea;
+  color: white;
+  border-color: #667eea;
+}
+
+.hazzards-content {
+  padding: 20px;
+}
+
+.hazzards-section {
+  margin-bottom: 30px;
+}
+
+.section-title {
+  font-size: 20px;
+  color: #2c3e50;
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #667eea;
+}
+
+/* Emergency Protocol Cards */
+.protocol-card {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.protocol-card.emergency {
+  border-left: 4px solid #dc3545;
+}
+
+.protocol-title {
+  font-size: 18px;
+  color: #2c3e50;
+  margin: 0 0 15px 0;
+}
+
+.cam-criteria {
+  margin-bottom: 15px;
+}
+
+.criteria-box {
+  background: #fff3cd;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #ffc107;
+  margin-top: 8px;
+  font-weight: 500;
+}
+
+.orders-section, .mnemonic-section {
+  margin-top: 15px;
+}
+
+.orders-list {
+  list-style: none;
+  padding: 0;
+  margin-top: 8px;
+}
+
+.order-item {
+  padding: 8px 12px;
+  background: #e8f5e9;
+  margin-bottom: 6px;
+  border-radius: 6px;
+  border-left: 3px solid #4caf50;
+}
+
+.mnemonic-list {
+  margin-top: 10px;
+}
+
+.mnemonic-item {
+  padding: 6px 10px;
+  background: #f5f5f5;
+  margin-bottom: 4px;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+/* Falls & Assessment */
+.assessment-box {
+  background: #e3f2fd;
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 15px;
+}
+
+.timed-up-go {
+  font-size: 16px;
+  color: #1976d2;
+  margin-bottom: 12px;
+  font-weight: bold;
+}
+
+.checklist {
+  list-style: none;
+  padding: 0;
+  margin-top: 10px;
+}
+
+.checklist li {
+  padding: 6px 0;
+  padding-left: 25px;
+  position: relative;
+}
+
+.checklist li:before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  color: #4caf50;
+  font-weight: bold;
+}
+
+.risk-meds {
+  margin-top: 15px;
+}
+
+.med-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.risk-med {
+  padding: 6px 12px;
+  background: #ffebee;
+  color: #c62828;
+  border-radius: 16px;
+  font-size: 13px;
+  border: 1px solid #ef5350;
+}
+
+.red-flag-box {
+  background: #fff3cd;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #ffc107;
+  margin-top: 15px;
+  font-weight: 500;
+  color: #856404;
+}
+
+/* Polypharmacy */
+.dangerous-combos {
+  margin-bottom: 20px;
+}
+
+.combo-item {
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  gap: 10px;
+  padding: 12px;
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+.combo-drug {
+  font-weight: bold;
+  color: #d32f2f;
+}
+
+.combo-effect {
+  color: #666;
+}
+
+.combo-alternative {
+  grid-column: span 2;
+  font-size: 13px;
+  color: #4caf50;
+  margin-top: 4px;
+}
+
+.beers-list {
+  background: #fce4ec;
+  padding: 15px;
+  border-radius: 8px;
+}
+
+.beers-items {
+  margin: 10px 0 0 20px;
+  padding: 0;
+}
+
+/* Core Topics */
+.topic-card {
+  background: white;
+  border-radius: 10px;
+  margin-bottom: 15px;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.topic-title {
+  padding: 15px;
+  margin: 0;
+  background: #f8f9fa;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 16px;
+}
+
+.topic-title:hover {
+  background: #e9ecef;
+}
+
+.expand-icon {
+  font-size: 12px;
+  color: #666;
+}
+
+.topic-content {
+  padding: 20px;
+}
+
+.topic-subsection {
+  margin-bottom: 15px;
+}
+
+.subsection-title {
+  display: block;
+  color: #495057;
+  margin-bottom: 8px;
+  font-size: 14px;
+  text-transform: capitalize;
+}
+
+.value-list {
+  margin: 5px 0 0 20px;
+  padding: 0;
+}
+
+.value-object {
+  margin-top: 8px;
+  padding-left: 15px;
+}
+
+.object-item {
+  padding: 4px 0;
+  font-size: 14px;
+}
+
+.object-key {
+  font-weight: 500;
+  color: #495057;
+  margin-right: 8px;
+}
+
+/* Dosing Section */
+.dosing-principles {
+  background: #e8f5e9;
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.principles-list {
+  margin: 10px 0 0 20px;
+  padding: 0;
+}
+
+.principle-item {
+  padding: 4px 0;
+  font-size: 14px;
+}
+
+.dosing-table {
+  margin-top: 20px;
+}
+
+.drug-dosing-card {
+  background: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 15px;
+  margin-bottom: 12px;
+}
+
+.drug-name {
+  font-size: 16px;
+  font-weight: bold;
+  color: #2c3e50;
+  margin-bottom: 10px;
+}
+
+.dosing-info {
+  display: grid;
+  gap: 6px;
+}
+
+.dosing-row {
+  display: grid;
+  grid-template-columns: 100px 1fr;
+  font-size: 14px;
+}
+
+.dosing-label {
+  font-weight: 500;
+  color: #666;
+}
+
+.dosing-value {
+  color: #333;
+}
+
+/* Assessment Tools */
+.assessment-category {
+  margin-bottom: 25px;
+}
+
+.category-title {
+  font-size: 16px;
+  color: #495057;
+  margin-bottom: 15px;
+  font-weight: 600;
+}
+
+.tools-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 15px;
+}
+
+.tool-card {
+  background: white;
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  padding: 15px;
+}
+
+.tool-name {
+  font-weight: bold;
+  color: #2c3e50;
+  margin-bottom: 10px;
+  font-size: 14px;
+}
+
+/* Red Flags */
+.red-flags-grid {
+  display: grid;
+  gap: 15px;
+}
+
+.red-flag-card {
+  background: #fff;
+  border-left: 4px solid #dc3545;
+  padding: 15px;
+  border-radius: 0 8px 8px 0;
+  box-shadow: 0 2px 4px rgba(220,53,69,0.1);
+}
+
+.flag-presentation {
+  font-size: 16px;
+  font-weight: bold;
+  color: #dc3545;
+  margin-bottom: 10px;
+}
+
+.flag-consider, .flag-action {
+  font-size: 14px;
+  margin-top: 8px;
+  padding-left: 10px;
+}
+
+.flag-consider strong, .flag-action strong {
+  color: #495057;
+}
+
+/* Pearls */
+.pearls-list {
+  background: white;
+  border-radius: 10px;
+  padding: 20px;
+}
+
+.pearl-item {
+  display: flex;
+  align-items: flex-start;
+  padding: 10px;
+  margin-bottom: 8px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  transition: background 0.3s;
+}
+
+.pearl-item:hover {
+  background: #e9ecef;
+}
+
+.pearl-number {
+  font-weight: bold;
+  color: #667eea;
+  margin-right: 12px;
+  font-size: 16px;
+}
+
+.pearl-text {
+  font-size: 14px;
+  line-height: 1.5;
+  color: #333;
+}
+
+/* Quick Protocols */
+.quick-protocol {
+  background: white;
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.protocol-header {
+  font-size: 16px;
+  color: #2c3e50;
+  margin: 0 0 15px 0;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.protocol-items {
+  display: grid;
+  gap: 8px;
+}
+
+.protocol-item {
+  display: flex;
+  align-items: center;
+  padding: 8px;
+  background: #f8f9fa;
+  border-radius: 6px;
+  transition: background 0.2s;
+}
+
+.protocol-item:hover {
+  background: #e9ecef;
+}
+
+.protocol-item input[type="checkbox"] {
+  margin-right: 10px;
+  cursor: pointer;
+}
+
+.protocol-item label {
+  cursor: pointer;
+  font-size: 14px;
+  color: #333;
+}
+
+/* Search Results */
+.search-results {
+  padding: 20px;
+  background: white;
+}
+
+.search-result {
+  padding: 12px;
+  margin-bottom: 10px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border-left: 3px solid #667eea;
+}
+
+.result-path {
+  font-size: 12px;
+  color: #666;
+  margin-bottom: 4px;
+}
+
+.result-value {
+  font-size: 14px;
+  color: #333;
+}
+
+/* Bookmarks */
+.bookmarks-section {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: white;
+  border-radius: 10px;
+  padding: 15px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  max-width: 250px;
+}
+
+.bookmarks-list {
+  margin-top: 10px;
+}
+
+.bookmark-item {
+  padding: 6px;
+  font-size: 13px;
+  color: #495057;
+  cursor: pointer;
+}
+
+.bookmark-item:hover {
+  color: #667eea;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .hazzards-nav {
+    flex-direction: column;
+  }
+  
+  .tools-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .combo-item {
+    grid-template-columns: 1fr;
+  }
+  
+  .combo-alternative {
+    grid-column: 1;
+  }
+}

@@ -1213,6 +1213,30 @@ export const medicationDatabase = [
     beersRating: 'Avoid',
     stoppStartCriteria: 'Not recommended'
   },
+  {
+    id: 51,
+    name: 'Carbamazepine',
+    heName: 'קרבמזפין',
+    brand: 'Tegretol / טגרטול',
+    israeliBrand: 'טגרטול',
+    category: 'Antiepileptic',
+    subCategory: 'Sodium channel blocker',
+    dose: {
+      standard: '200mg BID, titrate up to 400-600mg BID',
+      renal: 'No adjustment needed',
+      geriatric: 'Start lower (100mg BID), slower titration'
+    },
+    indications: ['Epilepsy', 'Trigeminal neuralgia', 'Bipolar disorder'],
+    contraindications: ['AV block', 'Bone marrow suppression', 'MAOIs within 14 days', 'Porphyria'],
+    interactions: ['Strong CYP3A4 inducer', 'Warfarin', 'DOACs', 'OCPs', 'Multiple drug interactions'],
+    sideEffects: ['Dizziness', 'Ataxia', 'Diplopia', 'Hyponatremia', 'Aplastic anemia (rare)', 'Stevens-Johnson syndrome (rare)'],
+    monitoring: ['CBC with differential', 'LFTs', 'Sodium levels', 'Drug levels (4-12 mcg/mL)'],
+    salCoverage: 'כן - בהתוויה מתאימה',
+    israeliGuidelines: 'נדרש מעקב רמות תרופה ובדיקות דם',
+    geriatricConsiderations: 'Higher risk of hyponatremia, falls, cognitive effects; consider alternatives',
+    beersRating: 'Avoid unless for seizure or trigeminal neuralgia',
+    stoppStartCriteria: 'STOPP: Avoid for neuropathic pain if safer alternatives available'
+  },
 
   // Continue with more medications...
   // Adding Statins, Antiplatelets, Antidiabetics, etc.
