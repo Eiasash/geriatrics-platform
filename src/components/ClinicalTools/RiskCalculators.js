@@ -379,16 +379,26 @@ export function calculateGeriatricRisk(patient) {
     // Safe cognitive status check
     const cognitiveStatus = patient.cognitiveStatus || '';
     
-    // Cognitive impairment changes EVERYTHING
-    if (cognitiveStatus === 'moderate' || cognitiveStatus === 'severe') {
+    // Cognitive impairment changes EVERYTHING - FIXED DELIRIUM SCORING
+    if (cognitiveStatus === 'moderate' || cognitiveStatus === 'mild') {
       risks.fall = risks.fall === 'CRITICAL' ? 'CRITICAL' : 'HIGH';
-      risks.delirium = 'HIGH';
+      risks.delirium = 'HIGH'; // Cognitive impairment = HIGH delirium risk
       risks.readmission = 'CRITICAL';
       
-      if (cognitiveStatus === 'severe') {
-        risks.fall = 'CRITICAL';
+      // Count medications safely
+      const medLines = meds.split(/[\n,;]/);
+      const medCount = medLines.filter(line => line.trim().length > 0).length;
+      
+      // Polypharmacy + cognitive = disaster
+      if (medCount > 5) {
         risks.delirium = 'CRITICAL';
       }
+    }
+    
+    if (cognitiveStatus === 'severe') {
+      risks.fall = 'CRITICAL';
+      risks.delirium = 'CRITICAL'; // Always critical with severe impairment
+      risks.readmission = 'CRITICAL';
     }
 
     // Safe social support check
@@ -441,6 +451,12 @@ export function calculateGeriatricRisk(patient) {
       if (hasInsulin && cognitiveStatus !== 'intact' && cognitiveStatus !== '') {
         risks.fall = 'CRITICAL';
         risks.readmission = 'CRITICAL';
+      }
+      
+      // Specific med classes that increase delirium - CRITICAL FIX
+      const hasDeliriogenicMeds = /benzo|benzodiazepin|lorazepam|alprazolam|diazepam|clonazepam|anticholinergic|diphenhydramine|hydroxyzine|oxybutynin|quetiapine|haloperidol/.test(meds);
+      if (hasDeliriogenicMeds) {
+        risks.delirium = risks.delirium === 'CRITICAL' ? 'CRITICAL' : 'HIGH';
       }
     }
 
