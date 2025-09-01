@@ -1,9 +1,12 @@
 {
-  "name": "shaare-zedek-geriatrics-platform",
-  "version": "1.0.0",
-  "description": "Geriatric assessment platform for Shaare Zedek Medical Center",
+  "name": "geriatrics-platform",
+  "version": "3.0.0",
+  "description": "Comprehensive Geriatrics Platform for Shaare Zedek Medical Center",
   "private": true,
+  "type": "module",
+  "main": "index.html",
   "dependencies": {
+    "chart.js": "^4.4.1",
     "firebase": "^10.4.0",
     "lucide-react": "^0.263.1",
     "node-fetch": "^3.3.2",
@@ -11,33 +14,135 @@
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
+    "@babel/core": "^7.23.7",
+    "@babel/preset-env": "^7.23.7",
+    "@babel/preset-react": "^7.23.3",
+    "@testing-library/jest-dom": "^6.1.5",
+    "@testing-library/react": "^14.1.2",
+    "@testing-library/user-event": "^14.5.1",
     "@types/node": "^20.4.2",
     "@types/react": "^18.2.14",
     "@types/react-dom": "^18.2.6",
     "@vitejs/plugin-react": "^4.0.3",
     "autoprefixer": "^10.4.14",
     "eslint": "^9.33.0",
+    "eslint-config-airbnb": "^19.0.4",
+    "eslint-plugin-import": "^2.29.1",
+    "eslint-plugin-jsx-a11y": "^6.8.0",
+    "eslint-plugin-react": "^7.33.2",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "htmlhint": "^1.1.4",
+    "husky": "^8.0.3",
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0",
+    "lighthouse": "^11.4.0",
+    "lint-staged": "^15.2.0",
+    "live-server": "^1.2.2",
     "postcss": "^8.4.27",
+    "prettier": "^3.1.1",
     "tailwindcss": "^3.3.3",
     "typescript": "^5.9.2",
-    "vite": "^4.5.14"
+    "vite": "^4.5.14",
+    "webpack-bundle-analyzer": "^4.10.1"
   },
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "serve": "vite preview"
+    "serve": "vite preview",
+    "test": "jest --coverage",
+    "test:watch": "jest --watch",
+    "test:ci": "jest --ci --coverage --maxWorkers=2",
+    "lint": "eslint . --ext .js,.jsx,.html --fix",
+    "lint:html": "htmlhint '**/*.html'",
+    "format": "prettier --write '**/*.{js,jsx,html,css,json,md}'",
+    "audit": "npm audit --audit-level=moderate",
+    "audit:fix": "npm audit fix",
+    "lighthouse": "lighthouse https://geriatrics-study.netlify.app --output json --output-path ./lighthouse-report.json",
+    "analyze": "webpack-bundle-analyzer dist/stats.json",
+    "clean": "rm -rf dist coverage .lighthouseci",
+    "prepare": "husky install"
   },
-  "main": "Chart.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Eiasash/geriatrics-platform.git"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": [
+    "geriatrics",
+    "medical",
+    "healthcare",
+    "clinical",
+    "shaare-zedek"
+  ],
+  "author": "Dr. Iyasas",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/Eiasash/geriatrics-platform/issues"
   },
-  "homepage": "https://github.com/Eiasash/geriatrics-platform#readme"
+  "homepage": "https://geriatrics-study.netlify.app",
+  "jest": {
+    "testEnvironment": "jsdom",
+    "setupFilesAfterEnv": [
+      "<rootDir>/src/setupTests.js"
+    ],
+    "collectCoverageFrom": [
+      "src/**/*.{js,jsx}",
+      "!src/index.jsx",
+      "!src/setupTests.js"
+    ],
+    "coverageThreshold": {
+      "global": {
+        "branches": 70,
+        "functions": 70,
+        "lines": 70,
+        "statements": 70
+      }
+    },
+    "transform": {
+      "^.+\\.(js|jsx)$": "babel-jest"
+    },
+    "moduleNameMapper": {
+      "\\.(css|less|scss|sass)$": "identity-obj-proxy"
+    }
+  },
+  "prettier": {
+    "semi": true,
+    "trailingComma": "es5",
+    "singleQuote": true,
+    "printWidth": 100,
+    "tabWidth": 2,
+    "useTabs": false,
+    "bracketSpacing": true,
+    "arrowParens": "avoid"
+  },
+  "lint-staged": {
+    "*.{js,jsx}": [
+      "eslint --fix",
+      "prettier --write",
+      "jest --bail --findRelatedTests"
+    ],
+    "*.html": [
+      "htmlhint",
+      "prettier --write"
+    ],
+    "*.{json,md,css}": [
+      "prettier --write"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  }
 }
