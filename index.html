@@ -1,12 +1,395 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Geriatrics Platform</title>
-  </head>
-  <body>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Geriatrics Study Platform - Enhanced</title>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: system-ui, -apple-system, sans-serif; background: #f9fafb; }
+        .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; text-align: center; }
+        .tabs { display: flex; justify-content: center; gap: 10px; padding: 20px; background: #f3f4f6; }
+        .tab { padding: 10px 20px; background: white; border: 2px solid #667eea; border-radius: 8px; cursor: pointer; font-weight: bold; }
+        .tab.active { background: #667eea; color: white; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        textarea { width: 100%; padding: 12px; border: 2px solid #e5e7eb; border-radius: 8px; font-family: monospace; }
+        button { background: #667eea; color: white; padding: 12px 30px; border: none; border-radius: 8px; cursor: pointer; font-size: 16px; }
+        button:hover { background: #5a67d8; }
+        .alert { padding: 10px; margin: 8px 0; border-radius: 8px; }
+        .alert.critical { background: #fee2e2; border-left: 4px solid #dc2626; }
+        .alert.warning { background: #fef3c7; border-left: 4px solid #f59e0b; }
+        .med-tag { display: inline-block; background: #e0e7ff; color: #3730a3; padding: 4px 12px; border-radius: 20px; margin: 4px; }
+        .quiz-card { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .option { display: block; width: 100%; text-align: left; padding: 15px; margin: 10px 0; border: 2px solid #e5e7eb; border-radius: 8px; background: white; cursor: pointer; }
+        .option:hover { background: #f3f4f6; border-color: #667eea; }
+        .option.correct { background: #dcfce7; border-color: #10b981; }
+        .option.incorrect { background: #fee2e2; border-color: #ef4444; }
+    </style>
+</head>
+<body>
     <div id="root"></div>
-    <script type="module" src="/src/index.jsx"></script>
-  </body>
+
+    <script type="text/babel">
+        const { useState } = React;
+
+        // Enhanced Clinical Analyzer Component
+        function ClinicalAnalyzer() {
+            const [note, setNote] = useState('');
+            const [analysis, setAnalysis] = useState(null);
+
+            const medicationList = {
+                english: ['warfarin', 'metformin', 'haloperidol', 'furosemide', 'ramipril', 'bisoprolol', 'amlodipine', 'apixaban', 'donepezil', 'memantine', 'quetiapine', 'lorazepam', 'gabapentin', 'omeprazole', 'levothyroxine', 'atorvastatin', 'lisinopril', 'spironolactone', 'digoxin', 'clopidogrel', 'aspirin', 'insulin', 'sertraline', 'escitalopram', 'mirtazapine', 'risperidone', 'olanzapine', 'prednisone', 'albuterol', 'ciprofloxacin', 'azithromycin', 'amoxicillin', 'acetaminophen', 'ibuprofen'],
+                hebrew: {
+                    'הלדול': 'haloperidol',
+                    'פוסיד': 'furosemide',
+                    'קומדין': 'warfarin',
+                    'טריטייס': 'ramipril',
+                    'קונקור': 'bisoprolol',
+                    'נורבסק': 'amlodipine',
+                    'אליקוויס': 'apixaban',
+                    'אריספט': 'donepezil',
+                    'נמנדה': 'memantine',
+                    'סרוקוול': 'quetiapine',
+                    'אטיוון': 'lorazepam',
+                    'ניורונטין': 'gabapentin',
+                    'לוסק': 'omeprazole',
+                    'אלטרוקסין': 'levothyroxine',
+                    'סורטיס': 'atorvastatin',
+                    'רמיפריל': 'ramipril',
+                    'אלדקטון': 'spironolactone',
+                    'לנוקסין': 'digoxin',
+                    'פלביקס': 'clopidogrel',
+                    'אספירין': 'aspirin',
+                    'לנטוס': 'insulin',
+                    'זולופט': 'sertraline',
+                    'ציפרלקס': 'escitalopram',
+                    'רמרון': 'mirtazapine',
+                    'ריספרדל': 'risperidone',
+                    'זיפרקסה': 'olanzapine',
+                    'פרדניזון': 'prednisone',
+                    'ונטולין': 'albuterol',
+                    'ציפרו': 'ciprofloxacin',
+                    'אוגמנטין': 'amoxicillin',
+                    'אקמול': 'acetaminophen',
+                    'אדוויל': 'ibuprofen'
+                }
+            };
+
+            const analyze = () => {
+                const lowerNote = note.toLowerCase();
+                const foundMeds = [];
+                const interactions = [];
+                
+                // Find English medications
+                medicationList.english.forEach(med => {
+                    const regex = new RegExp(`\\b${med}\\b`, 'gi');
+                    if (regex.test(note)) {
+                        foundMeds.push(med);
+                    }
+                });
+                
+                // Find Hebrew medications
+                Object.keys(medicationList.hebrew).forEach(hebMed => {
+                    if (note.includes(hebMed)) {
+                        foundMeds.push(`${hebMed} (${medicationList.hebrew[hebMed]})`);
+                    }
+                });
+                
+                // Check critical interactions
+                const medsLower = foundMeds.map(m => m.toLowerCase());
+                
+                if (medsLower.some(m => m.includes('warfarin') || m.includes('קומדין'))) {
+                    interactions.push({ severity: 'warning', text: '⚠️ Warfarin detected - Monitor INR weekly' });
+                    
+                    if (medsLower.some(m => m.includes('aspirin') || m.includes('אספירין'))) {
+                        interactions.push({ severity: 'critical', text: '🔴 CRITICAL: Warfarin + Aspirin = Major bleeding risk' });
+                    }
+                    if (medsLower.some(m => m.includes('amiodarone'))) {
+                        interactions.push({ severity: 'critical', text: '🔴 CRITICAL: Warfarin + Amiodarone = INR increase 2-3x' });
+                    }
+                    if (medsLower.some(m => m.includes('ciprofloxacin') || m.includes('ציפרו'))) {
+                        interactions.push({ severity: 'critical', text: '🔴 CRITICAL: Warfarin + Ciprofloxacin = INR increase' });
+                    }
+                }
+                
+                if (medsLower.some(m => m.includes('furosemide') || m.includes('פוסיד'))) {
+                    interactions.push({ severity: 'warning', text: '⚠️ Monitor K+ and Creatinine in 1 week' });
+                }
+                
+                if (medsLower.some(m => m.includes('haloperidol') || m.includes('הלדול'))) {
+                    interactions.push({ severity: 'warning', text: '⚠️ Haloperidol - Monitor QTc and EPS' });
+                }
+                
+                // ACE-I + K+ sparing diuretic
+                if (medsLower.some(m => m.includes('ramipril') || m.includes('lisinopril')) && 
+                    medsLower.some(m => m.includes('spironolactone'))) {
+                    interactions.push({ severity: 'critical', text: '🔴 CRITICAL: ACE-I + Spironolactone = Hyperkalemia risk' });
+                }
+                
+                // Benzodiazepine + opioid
+                if (medsLower.some(m => m.includes('lorazepam') || m.includes('אטיוון')) && 
+                    medsLower.some(m => m.includes('morphine') || m.includes('oxycodone'))) {
+                    interactions.push({ severity: 'critical', text: '🔴 CRITICAL: Benzodiazepine + Opioid = Respiratory depression' });
+                }
+                
+                if (foundMeds.length > 10) {
+                    interactions.push({ severity: 'warning', text: '⚠️ Polypharmacy detected - Consider medication review' });
+                }
+                
+                // Extract vitals
+                const bp = note.match(/\b\d{2,3}\/\d{2,3}\b/g);
+                const hr = note.match(/(?:HR|Pulse|דופק)[:\s]*(\d{2,3})/i)?.[1];
+                const creatinine = note.match(/(?:Cr|Creatinine|קריאטינין)[:\s]*([\d.]+)/i)?.[1];
+                const inr = note.match(/(?:INR)[:\s]*([\d.]+)/i)?.[1];
+                
+                setAnalysis({
+                    medications: foundMeds,
+                    interactions: interactions,
+                    vitals: {
+                        bp: bp ? bp[0] : null,
+                        hr: hr || null,
+                        creatinine: creatinine || null,
+                        inr: inr || null
+                    }
+                });
+            };
+
+            return (
+                <div className="container">
+                    <h2 style={{color: '#667eea', marginBottom: '20px'}}>Clinical Note Analyzer - Hebrew & English</h2>
+                    <textarea 
+                        value={note}
+                        onChange={(e) => setNote(e.target.value)}
+                        rows="10"
+                        placeholder={`Paste clinical note here (Hebrew/English supported)
+
+Example:
+85 y/o male with HTN, DM, AF
+Medications: Warfarin 5mg daily, Furosemide 40mg BID, Ramipril 10mg daily, Aspirin 100mg
+Labs: Cr 1.5, INR 2.3, BP: 130/80, HR: 72
+
+דוגמה בעברית:
+בן 85 עם יתר לחץ דם, סוכרת, פרפור עליות
+תרופות: קומדין 5 מ"ג, פוסיד 40 מ"ג פעמיים ביום, טריטייס 10 מ"ג, אספירין 100 מ"ג
+מעבדה: קריאטינין 1.5, INR 2.3`}
+                    />
+                    <button onClick={analyze} style={{marginTop: '10px'}}>Analyze Note</button>
+                    
+                    {analysis && (
+                        <div style={{marginTop: '20px', background: 'white', padding: '20px', borderRadius: '12px'}}>
+                            <h3>Analysis Report</h3>
+                            
+                            <div style={{marginTop: '15px'}}>
+                                <strong>Medications Found ({analysis.medications.length}):</strong>
+                                <div style={{marginTop: '10px'}}>
+                                    {analysis.medications.map((med, idx) => (
+                                        <span key={idx} className="med-tag">{med}</span>
+                                    ))}
+                                </div>
+                            </div>
+                            
+                            {analysis.interactions.length > 0 && (
+                                <div style={{marginTop: '20px'}}>
+                                    <strong>Drug Interactions & Alerts:</strong>
+                                    {analysis.interactions.map((alert, idx) => (
+                                        <div key={idx} className={`alert ${alert.severity}`}>
+                                            {alert.text}
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                            
+                            {(analysis.vitals.bp || analysis.vitals.hr || analysis.vitals.creatinine || analysis.vitals.inr) && (
+                                <div style={{marginTop: '20px'}}>
+                                    <strong>Extracted Values:</strong>
+                                    <div style={{marginTop: '10px'}}>
+                                        {analysis.vitals.bp && <div>BP: {analysis.vitals.bp}</div>}
+                                        {analysis.vitals.hr && <div>HR: {analysis.vitals.hr} bpm</div>}
+                                        {analysis.vitals.creatinine && <div>Creatinine: {analysis.vitals.creatinine} mg/dL</div>}
+                                        {analysis.vitals.inr && <div>INR: {analysis.vitals.inr}</div>}
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                    )}
+                </div>
+            );
+        }
+
+        // MCQ Quiz Component
+        function MCQQuiz() {
+            const questions = [
+                {
+                    question: "85-year-old with acute delirium. First-line medication?",
+                    options: [
+                        { text: "Haloperidol 0.25-0.5mg PO/IM", correct: true },
+                        { text: "Lorazepam 1mg PO", correct: false },
+                        { text: "Quetiapine 100mg PO", correct: false },
+                        { text: "Diphenhydramine 25mg PO", correct: false }
+                    ],
+                    explanation: "Low-dose haloperidol is first-line. Benzodiazepines worsen delirium except in alcohol withdrawal."
+                },
+                {
+                    question: "Which is NOT a feature of delirium (CAM criteria)?",
+                    options: [
+                        { text: "Acute onset", correct: false },
+                        { text: "Fluctuating course", correct: false },
+                        { text: "Clear consciousness", correct: true },
+                        { text: "Inattention", correct: false }
+                    ],
+                    explanation: "CAM requires: acute onset AND fluctuation, inattention, and either disorganized thinking OR altered consciousness."
+                },
+                {
+                    question: "88-year-old on warfarin with pneumonia. Safest antibiotic?",
+                    options: [
+                        { text: "Azithromycin", correct: true },
+                        { text: "Levofloxacin", correct: false },
+                        { text: "TMP-SMX", correct: false },
+                        { text: "Metronidazole", correct: false }
+                    ],
+                    explanation: "Azithromycin has minimal warfarin interaction. Others significantly increase INR."
+                },
+                {
+                    question: "Frail elderly patient with diabetes. HbA1c target?",
+                    options: [
+                        { text: "< 6.5%", correct: false },
+                        { text: "< 7.0%", correct: false },
+                        { text: "< 7.5%", correct: false },
+                        { text: "< 8.5%", correct: true }
+                    ],
+                    explanation: "Frail elderly: HbA1c <8.5%. Tight control increases hypoglycemia without benefit."
+                },
+                {
+                    question: "Best intervention to reduce falls by 30%?",
+                    options: [
+                        { text: "Vitamin D supplementation", correct: true },
+                        { text: "Hip protectors", correct: false },
+                        { text: "Bed alarms", correct: false },
+                        { text: "Restraints", correct: false }
+                    ],
+                    explanation: "Vitamin D 800-1000 IU reduces falls by 30% if deficient. Restraints increase falls."
+                }
+            ];
+
+            const [currentQ, setCurrentQ] = useState(0);
+            const [score, setScore] = useState(0);
+            const [showExplanation, setShowExplanation] = useState(false);
+            const [selectedAnswer, setSelectedAnswer] = useState(null);
+            const [quizComplete, setQuizComplete] = useState(false);
+
+            const handleAnswer = (index) => {
+                if (showExplanation) return;
+                setSelectedAnswer(index);
+                if (questions[currentQ].options[index].correct) {
+                    setScore(score + 1);
+                }
+                setShowExplanation(true);
+            };
+
+            const nextQuestion = () => {
+                if (currentQ < questions.length - 1) {
+                    setCurrentQ(currentQ + 1);
+                    setShowExplanation(false);
+                    setSelectedAnswer(null);
+                } else {
+                    setQuizComplete(true);
+                }
+            };
+
+            const restart = () => {
+                setCurrentQ(0);
+                setScore(0);
+                setShowExplanation(false);
+                setSelectedAnswer(null);
+                setQuizComplete(false);
+            };
+
+            if (quizComplete) {
+                return (
+                    <div className="container">
+                        <div className="quiz-card">
+                            <h2>Quiz Complete!</h2>
+                            <p style={{fontSize: '24px', margin: '20px 0'}}>
+                                Score: {score}/{questions.length} ({Math.round(score/questions.length * 100)}%)
+                            </p>
+                            <button onClick={restart}>Restart Quiz</button>
+                        </div>
+                    </div>
+                );
+            }
+
+            return (
+                <div className="container">
+                    <div className="quiz-card">
+                        <div style={{marginBottom: '20px'}}>
+                            <span style={{color: '#667eea'}}>Question {currentQ + 1}/{questions.length}</span>
+                            <span style={{float: 'right'}}>Score: {score}/{currentQ}</span>
+                        </div>
+                        
+                        <h3 style={{marginBottom: '20px'}}>{questions[currentQ].question}</h3>
+                        
+                        {questions[currentQ].options.map((option, idx) => (
+                            <button
+                                key={idx}
+                                className={`option ${showExplanation ? (option.correct ? 'correct' : (idx === selectedAnswer ? 'incorrect' : '')) : ''}`}
+                                onClick={() => handleAnswer(idx)}
+                                disabled={showExplanation}
+                            >
+                                {option.text}
+                                {showExplanation && option.correct && ' ✓'}
+                                {showExplanation && idx === selectedAnswer && !option.correct && ' ✗'}
+                            </button>
+                        ))}
+                        
+                        {showExplanation && (
+                            <div style={{marginTop: '20px', padding: '15px', background: '#f0f9ff', borderRadius: '8px'}}>
+                                <strong>Explanation:</strong> {questions[currentQ].explanation}
+                                <button onClick={nextQuestion} style={{marginTop: '10px', display: 'block'}}>
+                                    {currentQ < questions.length - 1 ? 'Next Question' : 'Finish Quiz'}
+                                </button>
+                            </div>
+                        )}
+                    </div>
+                </div>
+            );
+        }
+
+        // Main App Component
+        function App() {
+            const [activeTab, setActiveTab] = useState('analyzer');
+
+            return (
+                <div>
+                    <div className="header">
+                        <h1>Geriatrics Study Platform</h1>
+                        <p>Enhanced Clinical Tools with Hebrew Support</p>
+                    </div>
+                    
+                    <div className="tabs">
+                        <div 
+                            className={`tab ${activeTab === 'analyzer' ? 'active' : ''}`}
+                            onClick={() => setActiveTab('analyzer')}
+                        >
+                            Clinical Analyzer
+                        </div>
+                        <div 
+                            className={`tab ${activeTab === 'quiz' ? 'active' : ''}`}
+                            onClick={() => setActiveTab('quiz')}
+                        >
+                            MCQ Quiz
+                        </div>
+                    </div>
+                    
+                    {activeTab === 'analyzer' && <ClinicalAnalyzer />}
+                    {activeTab === 'quiz' && <MCQQuiz />}
+                </div>
+            );
+        }
+
+        ReactDOM.render(<App />, document.getElementById('root'));
+    </script>
+</body>
 </html>
