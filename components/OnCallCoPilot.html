@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>On-Call Co-Pilot - Geriatrics Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .protocol-card {
+            transition: all 0.3s ease;
+        }
+        .protocol-card:hover {
+            transform: translateY(-2px);
+        }
+        .urgent { border-left: 4px solid #dc2626; }
+        .warning { border-left: 4px solid #f59e0b; }
+        .info { border-left: 4px solid #2563eb; }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <div class="container mx-auto p-6">
+        <!-- Header -->
+        <div class="flex justify-between items-center mb-6">
+            <div>
+                <h1 class="text-3xl font-bold text-gray-900">🚨 On-Call Co-Pilot</h1>
+                <p class="text-gray-600">3AM guidance for geriatric scenarios</p>
+                <p class="text-sm text-blue-600">Current time: <span id="currentTime"></span></p>
+            </div>
+            <div class="flex gap-3">
+                <button onclick="quickSearch()" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700">
+                    🚨 Emergency Search
+                </button>
+                <button onclick="window.location.href='../fellowship-index.html'" class="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700">
+                    ← Back to Hub
+                </button>
+            </div>
+        </div>
+
+        <!-- Quick Access Emergency Buttons -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+            <button onclick="showProtocol('code-blue')" class="bg-red-600 text-white p-4 rounded-lg hover:bg-red-700 text-center">
+                <div class="text-2xl mb-2">💔</div>
+                <div class="font-bold">Code Blue</div>
+            </button>
+            <button onclick="showProtocol('stroke')" class="bg-orange-600 text-white p-4 rounded-lg hover:bg-orange-700 text-center">
+                <div class="text-2xl mb-2">🧠</div>
+                <div class="font-bold">Stroke Alert</div>
+            </button>
+            <button onclick="showProtocol('sepsis')" class="bg-yellow-600 text-white p-4 rounded-lg hover:bg-yellow-700 text-center">
+                <div class="text-2xl mb-2">🦠</div>
+                <div class="font-bold">Sepsis</div>
+            </button>
+            <button onclick="showProtocol('gi-bleed')" class="bg-purple-600 text-white p-4 rounded-lg hover:bg-purple-700 text-center">
+                <div class="text-2xl mb-2">🩸</div>
+                <div class="font-bold">GI Bleed</div>
+            </button>
+        </div>
+
+        <!-- Search Bar -->
+        <div class="bg-white p-4 rounded-lg shadow mb-6">
+            <div class="flex gap-4">
+                <input type="text" id="searchInput" placeholder="Search symptoms, conditions, medications..." 
+                       class="flex-1 border border-gray-300 rounded px-3 py-2">
+                <select id="categoryFilter" class="border border-gray-300 rounded px-3 py-2">
+                    <option value="">All Categories</option>
+                    <option value="emergency">Emergency</option>
+                    <option value="cardiac">Cardiac</option>
+                    <option value="neuro">Neurological</option>
+                    <option value="gi">GI/Nutrition</option>
+                    <option value="respiratory">Respiratory</option>
+                    <option value="medications">Medications</option>
+                </select>
+                <button onclick="searchProtocols()" class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700">
+                    Search
+                </button>
+            </div>
+        </div>
+
+        <!-- Protocols Grid -->
+        <div id="protocolsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Dynamic content will be inserted here -->
+        </div>
+
+        <!-- Quick Reference Sidebar -->
+        <div class="fixed right-4 top-1/2 transform -translate-y-1/2 bg-white p-4 rounded-lg shadow-lg max-w-xs hidden" id="quickReference">
+            <h3 class="font-bold mb-3">Quick Reference</h3>
+            <div class="space-y-2 text-sm">
+                <div><strong>Normal Vitals (>65yo):</strong></div>
+                <div>• BP: <130/80 mmHg</div>
+                <div>• HR: 60-100 bpm</div>
+                <div>• O2 Sat: >95%</div>
+                <div>• Temp: 36-37.5°C</div>
+                <div class="mt-3"><strong>Emergency Contacts:</strong></div>
+                <div>• Cardiology: 2567</div>
+                <div>• Neurology: 2568</div>
+                <div>• ICU: 2500</div>
+            </div>
+            <button onclick="toggleQuickReference()" class="text-xs text-gray-500 mt-2">Close</button>
+        </div>
+    </div>
+
+    <!-- Protocol Detail Modal -->
+    <div id="protocolModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-lg max-w-4xl w-full max-h-screen overflow-y-auto">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 id="protocolTitle" class="text-2xl font-bold"></h2>
+                    <button onclick="closeProtocolModal()" class="text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
+                </div>
+                <div id="protocolContent" class="prose max-w-none">
+                    <!-- Dynamic content -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Update current time
+        function updateTime() {
+            document.getElementById('currentTime').textContent = new Date().toLocaleTimeString();
+        }
+        setInterval(updateTime, 1000);
+        updateTime();
+
+        // Protocol database
+        const protocols = {
+            'code-blue': {
+                title: 'Code Blue - Cardiac Arrest',
+                category: 'emergency',
+                priority: 'urgent',
+                content: `
+                    <div class="bg-red-100 p-4 rounded mb-4">
+                        <h3 class="text-red-800 font-bold">IMMEDIATE ACTIONS (0-2 minutes)</h3>
+                        <ol class="list-decimal list-inside text-red-800">
+                            <li>Call Code Blue team immediately</li>
+                            <li>Check responsiveness and pulse (10 seconds max)</li>
+                            <li>Start CPR if no pulse - 30:2 ratio</li>
+                            <li>Apply defibrillator/AED when available</li>
+                        </ol>
+                    </div>
+                    
+                    <h3 class="font-bold text-lg mb-3">Geriatric Considerations</h3>
+                    <ul class="list-disc list-inside mb-4">
+                        <li>Higher risk of rib fractures during CPR</li>
+                        <li>Consider goals of care and code status</li>
+                        <li>More likely to have underlying conditions</li>
+                        <li>Lower survival rates - discuss with family early</li>
+                    </ul>
+                    
+                    <h3 class="font-bold text-lg mb-3">Medications</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="bg-gray-100 p-3 rounded">
+                            <strong>Epinephrine 1mg IV/IO</strong><br>
+                            Give every 3-5 minutes<br>
+                            <span class="text-sm text-gray-600">Reduce dose in frail patients</span>
+                        </div>
+                        <div class="bg-gray-100 p-3 rounded">
+                            <strong>Amiodarone 300mg IV</strong><br>
+                            For VF/VT, then 150mg<br>
+                            <span class="text-sm text-gray-600">Monitor for hypotension</span>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-yellow-100 p-4 rounded mt-4">
+                        <strong>⚠️ Remember:</strong> In elderly patients, discuss prognosis with family early. Consider comfort care if prolonged resuscitation.
+                    </div>
+                `
+            },
+            'stroke': {
+                title: 'Acute Stroke Protocol',
+                category: 'neuro',
+                priority: 'urgent',
+                content: `
+                    <div class="bg-orange-100 p-4 rounded mb-4">
+                        <h3 class="text-orange-800 font-bold">TIME IS BRAIN - Act Fast!</h3>
+                        <p class="text-orange-800">Goal: Door to CT <25 minutes, Door to needle <60 minutes</p>
+                    </div>
+                    
+                    <h3 class="font-bold text-lg mb-3">FAST Assessment</h3>
+                    <div class="grid grid-cols-2 gap-4 mb-4">
+                        <div class="bg-gray-100 p-3 rounded">
+                            <strong>Face:</strong> Facial droop<br>
+                            Ask to smile, check symmetry
+                        </div>
+                        <div class="bg-gray-100 p-3 rounded">
+                            <strong>Arms:</strong> Arm weakness<br>
+                            Ask to raise both arms x10 seconds
+                        </div>
+                        <div class="bg-gray-100 p-3 rounded">
+                            <strong>Speech:</strong> Speech difficulty<br>
+                            Ask to repeat simple phrase
+                        </div>
+                        <div class="bg-gray-100 p-3 rounded">
+                            <strong>Time:</strong> Time to call stroke team<br>
+                            Note time of symptom onset
+                        </div>
+                    </div>
+                    
+                    <h3 class="font-bold text-lg mb-3">Immediate Actions</h3>
+                    <ol class="list-decimal list-inside mb-4">
+                        <li>Check vitals and glucose</li>
+                        <li>Get IV access (avoid affected side)</li>
+                        <li>Emergency CT head (rule out hemorrhage)</li>
+                        <li>Consider thrombolytics if <4.5 hours</li>
+                        <li>Neuro checks q15min</li>
+                    </ol>
+                    
+                    <div class="bg-red-100 p-4 rounded">
+                        <strong>Contraindications to tPA in elderly:</strong><br>
+                        • Age >80 with NIHSS >25<br>
+                        • Recent surgery <14 days<br>
+                        • Anticoagulation with INR >1.7<br>
+                        • Platelets <100,000
+                    </div>
+                `
+            },
+            'sepsis': {
+                title: 'Sepsis Recognition & Management',
+                category: 'emergency',
+                priority: 'urgent',
+                content: `
+                    <div class="bg-yellow-100 p-4 rounded mb-4">
+                        <h3 class="text-yellow-800 font-bold">qSOFA Score (≥2 = High Risk)</h3>
+                        <ul class="text-yellow-800">
+                            <li>• Respiratory rate ≥22/min</li>
+                            <li>• Altered mental status (GCS <15)</li>
+                            <li>• Systolic BP ≤100 mmHg</li>
+                        </ul>
+                    </div>
+                    
+                    <h3 class="font-bold text-lg mb-3">Sepsis-3 Criteria</h3>
+                    <p class="mb-4">Life-threatening organ dysfunction due to infection</p>
+                    
+                    <h3 class="font-bold text-lg mb-3">Hour-1 Bundle</h3>
+                    <ol class="list-decimal list-inside mb-4">
+                        <li>Measure lactate level</li>
+                        <li>Obtain blood cultures before antibiotics</li>
+                        <li>Administer broad-spectrum antibiotics</li>
+                        <li>Begin rapid IV fluid resuscitation (30ml/kg)</li>
+                        <li>Apply vasopressors if hypotensive during/after fluid resuscitation</li>
+                    </ol>
+                    
+                    <h3 class="font-bold text-lg mb-3">Geriatric Considerations</h3>
+                    <div class="bg-blue-100 p-4 rounded mb-4">
+                        <ul class="list-disc list-inside">
+                            <li>Often present without fever (hypothermia common)</li>
+                            <li>Mental status changes may be only sign</li>
+                            <li>Be cautious with fluid resuscitation (CHF risk)</li>
+                            <li>Consider urinary tract as source</li>
+                            <li>Higher mortality - early ICU consideration</li>
+                        </ul>
+                    </div>
+                    
+                    <h3 class="font-bold text-lg mb-3">Antibiotic Choices</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="bg-gray-100 p-3 rounded">
+                            <strong>Suspected UTI:</strong><br>
+                            Ceftriaxone 2g IV daily<br>
+                            <span class="text-sm text-gray-600">Adjust for renal function</span>
+                        </div>
+                        <div class="bg-gray-100 p-3 rounded">
+                            <strong>Pneumonia:</strong><br>
+                            Ceftriaxone + Azithromycin<br>
+                            <span class="text-sm text-gray-600">Cover atypicals</span>
+                        </div>
+                    </div>
+                `
+            },
+            'gi-bleed': {
+                title: 'GI Bleeding Management',
+                category: 'gi',
+                priority: 'urgent',
+                content: `
+                    <div class="bg-purple-100 p-4 rounded mb-4">
+                        <h3 class="text-purple-800 font-bold">Glasgow-Blatchford Score</h3>
+                        <p class="text-purple-800">Risk stratification for upper GI bleeding</p>
+                    </div>
+                    
+                    <h3 class="font-bold text-lg mb-3">Initial Assessment</h3>
+                    <ol class="list-decimal list-inside mb-4">
+                        <li>ABC assessment - airway protection if altered</li>
+                        <li>Two large-bore IVs (16-18 gauge)</li>
+                        <li>Blood type & crossmatch 4-6 units</li>
+                        <li>CBC, BMP, PT/INR, LFTs</li>
+                        <li>Consider NG tube if upper GI bleed suspected</li>
+                    </ol>
+                    
+                    <h3 class="font-bold text-lg mb-3">Resuscitation</h3>
+                    <div class="bg-red-100 p-4 rounded mb-4">
+                        <strong>Transfusion Thresholds in Elderly:</strong><br>
+                        • Hgb <7 g/dL (restrictive strategy)<br>
+                        • Hgb <8 g/dL if CAD/CHF<br>
+                        • Goal Hgb 7-9 g/dL
+                    </div>
+                    
+                    <h3 class="font-bold text-lg mb-3">Medications</h3>
+                    <div class="space-y-3">
+                        <div class="bg-gray-100 p-3 rounded">
+                            <strong>PPI - Pantoprazole 80mg IV bolus</strong><br>
+                            Then 8mg/hour continuous infusion<br>
+                            <span class="text-sm text-gray-600">Continue until endoscopy</span>
+                        </div>
+                        <div class="bg-gray-100 p-3 rounded">
+                            <strong>Octreotide (if variceal bleeding suspected)</strong><br>
+                            50mcg IV bolus, then 50mcg/hour<br>
+                            <span class="text-sm text-gray-600">Less common in geriatric patients</span>
+                        </div>
+                    </div>
+                    
+                    <h3 class="font-bold text-lg mb-3">Anticoagulation Reversal</h3>
+                    <div class="bg-yellow-100 p-4 rounded">
+                        <strong>Warfarin:</strong> Vitamin K 10mg IV + FFP or 4F-PCC<br>
+                        <strong>DOACs:</strong> Consider reversal agents (idarucizumab, andexanet alfa)<br>
+                        <strong>Heparin:</strong> Protamine sulfate
+                    </div>
+                `
+            },
+            'delirium': {
+                title: 'Delirium Assessment & Management',
+                category: 'neuro',
+                priority: 'warning',
+                content: `
+                    <h3 class="font-bold text-lg mb-3">CAM-ICU Assessment</h3>
+                    <div class="grid grid-cols-2 gap-4 mb-4">
+                        <div class="bg-gray-100 p-3 rounded">
+                            <strong>1. Acute onset/fluctuating course</strong><br>
+                            Present or abnormal
+                        </div>
+                        <div class="bg-gray-100 p-3 rounded">
+                            <strong>2. Inattention</strong><br>
+                            Difficulty focusing
+                        </div>
+                        <div class="bg-gray-100 p-3 rounded">
+                            <strong>3. Altered level of consciousness</strong><br>
+                            Alert, vigilant, lethargic, stupor
+                        </div>
+                        <div class="bg-gray-100 p-3 rounded">
+                            <strong>4. Disorganized thinking</strong><br>
+                            Incoherent, unclear reasoning
+                        </div>
+                    </div>
+                    
+                    <div class="bg-blue-100 p-4 rounded mb-4">
+                        <strong>Delirium = Features 1 AND 2 AND (3 OR 4)</strong>
+                    </div>
+                    
+                    <h3 class="font-bold text-lg mb-3">Common Causes (DELIRIUM)</h3>
+                    <ul class="list-disc list-inside mb-4">
+                        <li><strong>D</strong>rugs & medications</li>
+                        <li><strong>E</strong>lectrolyte imbalances</li>
+                        <li><strong>L</strong>ack of drugs (withdrawal)</li>
+                        <li><strong>I</strong>nfection</li>
+                        <li><strong>R</strong>educed sensory input</li>
+                        <li><strong>I</strong>ntracranial pathology</li>
+                        <li><strong>U</strong>rinary retention/fecal impaction</li>
+                        <li><strong>M</strong>yocardial infarction/respiratory failure</li>
+                    </ul>
+                    
+                    <h3 class="font-bold text-lg mb-3">Management</h3>
+                    <ol class="list-decimal list-inside mb-4">
+                        <li>Identify and treat underlying cause</li>
+                        <li>Non-pharmacological interventions first</li>
+                        <li>Ensure adequate sleep-wake cycle</li>
+                        <li>Minimize restraints</li>
+                        <li>Family presence when possible</li>
+                    </ol>
+                    
+                    <div class="bg-yellow-100 p-4 rounded">
+                        <strong>Antipsychotics only for severe agitation:</strong><br>
+                        Haloperidol 0.5-1mg IV q6h PRN (start low in elderly)<br>
+                        <strong>Avoid:</strong> Benzodiazepines (worsen delirium)
+                    </div>
+                `
+            },
+            'falls': {
+                title: 'Fall Assessment & Prevention',
+                category: 'geriatric',
+                priority: 'warning',
+                content: `
+                    <h3 class="font-bold text-lg mb-3">Post-Fall Assessment</h3>
+                    <ol class="list-decimal list-inside mb-4">
+                        <li>Check for injuries (especially hip fracture)</li>
+                        <li>Vital signs including orthostatic</li>
+                        <li>Neurological examination</li>
+                        <li>Cardiac rhythm and examination</li>
+                        <li>Review circumstances of fall</li>
+                    </ol>
+                    
+                    <h3 class="font-bold text-lg mb-3">Fall Risk Factors</h3>
+                    <div class="grid grid-cols-2 gap-4 mb-4">
+                        <div class="bg-red-100 p-3 rounded">
+                            <strong>Intrinsic Factors</strong>
+                            <ul class="list-disc list-inside text-sm">
+                                <li>Age >80</li>
+                                <li>Previous falls</li>
+                                <li>Gait/balance problems</li>
+                                <li>Cognitive impairment</li>
+                                <li>Visual impairment</li>
+                                <li>Polypharmacy</li>
+                            </ul>
+                        </div>
+                        <div class="bg-blue-100 p-3 rounded">
+                            <strong>Extrinsic Factors</strong>
+                            <ul class="list-disc list-inside text-sm">
+                                <li>Poor lighting</li>
+                                <li>Loose rugs</li>
+                                <li>Wet floors</li>
+                                <li>Missing handrails</li>
+                                <li>Inappropriate footwear</li>
+                                <li>Clutter</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <h3 class="font-bold text-lg mb-3">High-Risk Medications</h3>
+                    <div class="bg-yellow-100 p-4 rounded mb-4">
+                        <ul class="list-disc list-inside">
+                            <li>Benzodiazepines</li>
+                            <li>Antipsychotics</li>
+                            <li>Antidepressants (especially TCAs)</li>
+                            <li>Antihistamines</li>
+                            <li>Opioids</li>
+                            <li>Antihypertensives</li>
+                        </ul>
+                    </div>
+                    
+                    <h3 class="font-bold text-lg mb-3">Interventions</h3>
+                    <ol class="list-decimal list-inside">
+                        <li>Medication review and deprescribing</li>
+                        <li>Physical therapy referral</li>
+                        <li>Vision assessment</li>
+                        <li>Environmental safety assessment</li>
+                        <li>Vitamin D supplementation</li>
+                        <li>Consider hip protectors</li>
+                    </ol>
+                `
+            }
+        };
+
+        function renderProtocols(filteredProtocols = protocols) {
+            const grid = document.getElementById('protocolsGrid');
+            
+            grid.innerHTML = Object.entries(filteredProtocols).map(([key, protocol]) => `
+                <div class="protocol-card bg-white rounded-lg shadow-md p-6 ${protocol.priority}" onclick="showProtocol('${key}')">
+                    <div class="flex justify-between items-start mb-4">
+                        <h3 class="text-xl font-bold text-gray-900">${protocol.title}</h3>
+                        <span class="text-xs px-2 py-1 rounded ${
+                            protocol.priority === 'urgent' ? 'bg-red-100 text-red-800' :
+                            protocol.priority === 'warning' ? 'bg-yellow-100 text-yellow-800' :
+                            'bg-blue-100 text-blue-800'
+                        }">
+                            ${protocol.priority.toUpperCase()}
+                        </span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span class="text-sm bg-gray-100 text-gray-700 px-2 py-1 rounded capitalize">
+                            ${protocol.category}
+                        </span>
+                        <button class="text-blue-600 hover:text-blue-800 text-sm font-medium">
+                            View Protocol →
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function showProtocol(protocolKey) {
+            const protocol = protocols[protocolKey];
+            if (!protocol) return;
+            
+            document.getElementById('protocolTitle').textContent = protocol.title;
+            document.getElementById('protocolContent').innerHTML = protocol.content;
+            document.getElementById('protocolModal').classList.remove('hidden');
+            
+            // Log usage
+            const usage = JSON.parse(localStorage.getItem('protocolUsage') || '{}');
+            usage[protocolKey] = (usage[protocolKey] || 0) + 1;
+            localStorage.setItem('protocolUsage', JSON.stringify(usage));
+        }
+
+        function closeProtocolModal() {
+            document.getElementById('protocolModal').classList.add('hidden');
+        }
+
+        function searchProtocols() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const category = document.getElementById('categoryFilter').value;
+            
+            if (!searchTerm && !category) {
+                renderProtocols();
+                return;
+            }
+            
+            const filtered = Object.fromEntries(
+                Object.entries(protocols).filter(([key, protocol]) => {
+                    const matchesSearch = !searchTerm || 
+                        protocol.title.toLowerCase().includes(searchTerm) ||
+                        protocol.content.toLowerCase().includes(searchTerm);
+                    
+                    const matchesCategory = !category || protocol.category === category;
+                    
+                    return matchesSearch && matchesCategory;
+                })
+            );
+            
+            renderProtocols(filtered);
+        }
+
+        function quickSearch() {
+            const searchTerm = prompt('Enter symptoms or condition:');
+            if (searchTerm) {
+                document.getElementById('searchInput').value = searchTerm;
+                searchProtocols();
+            }
+        }
+
+        function toggleQuickReference() {
+            const ref = document.getElementById('quickReference');
+            ref.classList.toggle('hidden');
+        }
+
+        // Event listeners
+        document.getElementById('searchInput').addEventListener('input', searchProtocols);
+        document.getElementById('categoryFilter').addEventListener('change', searchProtocols);
+
+        // Close modal on Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeProtocolModal();
+            }
+        });
+
+        // Initialize
+        renderProtocols();
+        
+        // Show quick reference by default during night hours
+        const currentHour = new Date().getHours();
+        if (currentHour >= 22 || currentHour <= 6) {
+            toggleQuickReference();
+        }
+    </script>
+</body>
+</html>

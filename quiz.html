@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Board Review Quiz - Geriatrics Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .question-card {
+            transition: all 0.3s ease;
+        }
+        .correct-answer {
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+        }
+        .incorrect-answer {
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+        }
+        .selected-answer {
+            border-width: 2px;
+            border-color: #007bff;
+        }
+        .hebrew-text {
+            direction: rtl;
+            text-align: right;
+            font-family: 'Noto Sans Hebrew', Arial, sans-serif;
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Hebrew:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body class="bg-gray-50">
+    <div class="container mx-auto p-6">
+        <!-- Header -->
+        <div class="flex justify-between items-center mb-6">
+            <div>
+                <h1 class="text-3xl font-bold text-gray-900">📝 Board Review Quiz</h1>
+                <p class="text-gray-600">Shlav Alef + Advanced Geriatrics Questions</p>
+            </div>
+            <div class="flex gap-3">
+                <button onclick="toggleLanguage()" id="languageToggle" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+                    עברית/English
+                </button>
+                <button onclick="showStatistics()" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
+                    📊 Statistics
+                </button>
+                <button onclick="window.location.href='fellowship-index.html'" class="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700">
+                    ← Back to Hub
+                </button>
+            </div>
+        </div>
+
+        <!-- Quiz Settings -->
+        <div class="bg-white rounded-lg shadow p-6 mb-6" id="quizSettings">
+            <h3 class="font-bold text-gray-900 mb-4">Quiz Settings</h3>
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Question Type</label>
+                    <select id="questionType" class="w-full border border-gray-300 rounded px-3 py-2">
+                        <option value="all">All Questions</option>
+                        <option value="hebrew">Hebrew Only</option>
+                        <option value="english">English Only</option>
+                        <option value="shlav-alef">Shlav Alef Focused</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Category</label>
+                    <select id="category" class="w-full border border-gray-300 rounded px-3 py-2">
+                        <option value="all">All Categories</option>
+                        <option value="cardiology">Cardiology</option>
+                        <option value="neurology">Neurology</option>
+                        <option value="pharmacology">Pharmacology</option>
+                        <option value="geriatric-syndromes">Geriatric Syndromes</option>
+                        <option value="ethics">Ethics & Communication</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Difficulty</label>
+                    <select id="difficulty" class="w-full border border-gray-300 rounded px-3 py-2">
+                        <option value="all">All Levels</option>
+                        <option value="basic">Basic</option>
+                        <option value="intermediate">Intermediate</option>
+                        <option value="advanced">Advanced</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Questions</label>
+                    <select id="questionCount" class="w-full border border-gray-300 rounded px-3 py-2">
+                        <option value="10">10 Questions</option>
+                        <option value="20">20 Questions</option>
+                        <option value="30">30 Questions</option>
+                        <option value="all">All Available</option>
+                    </select>
+                </div>
+            </div>
+            <button onclick="startQuiz()" class="w-full bg-blue-600 text-white py-3 rounded-lg font-bold hover:bg-blue-700">
+                🚀 Start Quiz
+            </button>
+        </div>
+
+        <!-- Quiz Interface -->
+        <div id="quizInterface" class="hidden">
+            <!-- Progress Bar -->
+            <div class="bg-white rounded-lg shadow p-4 mb-6">
+                <div class="flex justify-between items-center mb-2">
+                    <span class="text-sm font-medium text-gray-700">Progress</span>
+                    <span class="text-sm font-medium text-gray-700" id="progressText">1 of 10</span>
+                </div>
+                <div class="w-full bg-gray-200 rounded-full h-2">
+                    <div id="progressBar" class="bg-blue-600 h-2 rounded-full transition-all duration-300" style="width: 10%"></div>
+                </div>
+            </div>
+
+            <!-- Question Card -->
+            <div class="question-card bg-white rounded-lg shadow p-6 mb-6" id="questionCard">
+                <!-- Dynamic content will be inserted here -->
+            </div>
+
+            <!-- Navigation -->
+            <div class="flex justify-between items-center">
+                <button onclick="previousQuestion()" id="prevBtn" class="bg-gray-600 text-white px-6 py-2 rounded hover:bg-gray-700" disabled>
+                    ← Previous
+                </button>
+                <div class="flex space-x-3">
+                    <button onclick="showExplanation()" id="explanationBtn" class="bg-yellow-600 text-white px-6 py-2 rounded hover:bg-yellow-700">
+                        💡 Explanation
+                    </button>
+                    <button onclick="nextQuestion()" id="nextBtn" class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700">
+                        Next →
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Results -->
+        <div id="quizResults" class="hidden bg-white rounded-lg shadow p-6">
+            <h2 class="text-2xl font-bold text-gray-900 mb-6">🎯 Quiz Results</h2>
+            <div id="resultsContent">
+                <!-- Results will be populated here -->
+            </div>
+        </div>
+
+        <!-- Statistics Modal -->
+        <div id="statisticsModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center p-4 z-50">
+            <div class="bg-white rounded-lg max-w-md w-full p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-xl font-bold">📊 Your Statistics</h3>
+                    <button onclick="closeStatistics()" class="text-gray-500 hover:text-gray-700">&times;</button>
+                </div>
+                <div id="statisticsContent">
+                    <!-- Statistics will be populated here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="utils/shared-utilities.js"></script>
+    <script>
+        class GeriatricsQuizSystem {
+            constructor() {
+                this.questions = this.initializeQuestionBank();
+                this.currentQuiz = null;
+                this.currentQuestionIndex = 0;
+                this.userAnswers = [];
+                this.showingExplanation = false;
+                this.currentLanguage = 'english';
+                
+                this.loadStatistics();
+            }
+
+            initializeQuestionBank() {
+                return [
+                    // Hebrew Shlav Alef Questions
+                    {
+                        id: 1,
+                        language: 'hebrew',
+                        category: 'pharmacology',
+                        difficulty: 'intermediate',
+                        question: 'מטופלת בת 82 מקבלת וארפרין עקב פרפור עליות. ה-INR שלה 4.2. מה הטיפול המומלץ?',
+                        options: [
+                            'להפסיק וארפרין ליום אחד ולבדוק INR שוב',
+                            'לתת ויטמין K 10mg תוך ורידי מיידית',
+                            'להמשיך באותה מנה ולבדוק INR בעוד שבוע',
+                            'לקבע בבית החולים למעקב'
+                        ],
+                        correct: 0,
+                        explanation: 'כאשר INR בין 4.0-5.0 ללא דימום פעיל, יש להפסיק וארפרין ליום אחד ולבדוק INR. ויטמין K ניתן רק אם יש דימום או INR גבוה מאוד.',
+                        hebrewExplanation: true,
+                        reference: 'הנחיות משרד הבריאות לנוגדי קרישה 2024',
+                        tags: ['anticoagulation', 'warfarin', 'INR']
+                    },
+                    {
+                        id: 2,
+                        language: 'hebrew',
+                        category: 'geriatric-syndromes',
+                        difficulty: 'advanced',
+                        question: 'איש בן 78 מפתח בלבול אקוטי במחלקה הפנימית. איזה מהבאים הוא הכלי המועדף לאבחון דלירה?',
+                        options: [
+                            'Mini Mental State Exam (MMSE)',
+                            'Montreal Cognitive Assessment (MoCA)',
+                            'Confusion Assessment Method (CAM)',
+                            'Clock Drawing Test'
+                        ],
+                        correct: 2,
+                        explanation: 'CAM הוא הכלי הסטנדרטי לאבחון דלירה. הוא כולל 4 מאפיינים: הופעה אקוטית, הפרעת קשב, חשיבה לא מאורגנת, ושינוי ברמת ההכרה.',
+                        reference: 'Inouye et al. Ann Intern Med 1990',
+                        tags: ['delirium', 'cognitive assessment', 'CAM']
+                    },
+                    {
+                        id: 3,
+                        language: 'hebrew',
+                        category: 'ethics',
+                        difficulty: 'advanced',
+                        question: 'מטופל בן 85 עם דמנציה מתקדמת מסרב לקחת תרופות. המשפחה מבקשת לתת את התרופות בכוח. מה הגישה הנכונה?',
+                        options: [
+                            'לתת תרופות בכוח כי המשפחה מבקשת',
+                            'לכבד את סירובו של המטופל במוחלט',
+                            'להעריך כושר שיפוט ולחפש דרכים אלטרנטיביות',
+                            'לפנות למשפט לקבלת צו'
+                        ],
+                        correct: 2,
+                        explanation: 'חשוב להעריך כושר שיפוט, לחפש סיבות לסירוב, ולנסות דרכים אלטרנטיביות לטיפול. אילוץ פיזי הוא האמצעי האחרון.',
+                        reference: 'הנחיות משרד הבריאות - זכויות החולה',
+                        tags: ['ethics', 'capacity', 'refusal']
+                    },
+
+                    // English Advanced Questions
+                    {
+                        id: 4,
+                        language: 'english',
+                        category: 'cardiology',
+                        difficulty: 'advanced',
+                        question: 'An 82-year-old woman with atrial fibrillation has a CHA₂DS₂-VASc score of 4 and HAS-BLED score of 3. What is the most appropriate anticoagulation strategy?',
+                        options: [
+                            'No anticoagulation due to high bleeding risk',
+                            'Aspirin 81mg daily as safer alternative',
+                            'Anticoagulation with careful monitoring and bleeding risk mitigation',
+                            'Warfarin only if INR can be maintained 2.0-2.5'
+                        ],
+                        correct: 2,
+                        explanation: 'High CHA₂DS₂-VASc score (4) indicates significant stroke risk that outweighs bleeding risk (HAS-BLED 3). Anticoagulation should be initiated with risk mitigation strategies.',
+                        reference: '2020 ESC Guidelines for Atrial Fibrillation',
+                        tags: ['anticoagulation', 'atrial fibrillation', 'risk assessment']
+                    },
+                    {
+                        id: 5,
+                        language: 'english',
+                        category: 'pharmacology',
+                        difficulty: 'intermediate',
+                        question: 'A 75-year-old man is prescribed tramadol for chronic pain. Which medication interaction requires the most careful monitoring?',
+                        options: [
+                            'Lisinopril',
+                            'Sertraline (SSRI)',
+                            'Metformin',
+                            'Atorvastatin'
+                        ],
+                        correct: 1,
+                        explanation: 'Tramadol with SSRIs significantly increases serotonin syndrome risk. This combination requires careful monitoring and dose adjustment.',
+                        reference: 'AGS Beers Criteria 2023',
+                        tags: ['drug interactions', 'tramadol', 'serotonin syndrome']
+                    },
+                    {
+                        id: 6,
+                        language: 'english',
+                        category: 'geriatric-syndromes',
+                        difficulty: 'basic',
+                        question: 'What is the most effective evidence-based intervention for preventing falls in community-dwelling older adults?',
+                        options: [
+                            'Hip protectors',
+                            'Vitamin D supplementation',
+                            'Exercise programs (balance and strength training)',
+                            'Home safety modifications'
+                        ],
+                        correct: 2,
+                        explanation: 'Exercise programs, particularly those targeting balance and strength, have the strongest evidence for fall prevention in community-dwelling older adults.',
+                        reference: 'Cochrane Review 2019 - Exercise for preventing falls',
+                        tags: ['falls prevention', 'exercise', 'evidence-based']
+                    },
+                    {
+                        id: 7,
+                        language: 'english',
+                        category: 'neurology',
+                        difficulty: 'advanced',
+                        question: 'An 80-year-old with mild cognitive impairment asks about acetylcholinesterase inhibitors. What is the most accurate counseling?',
+                        options: [
+                            'These medications are only effective in moderate-to-severe Alzheimer disease',
+                            'They provide significant long-term cognitive benefits',
+                            'They may provide modest symptomatic benefit but do not alter disease progression',
+                            'They should be started immediately to prevent progression to dementia'
+                        ],
+                        correct: 2,
+                        explanation: 'Acetylcholinesterase inhibitors provide modest symptomatic benefits in Alzheimer disease but do not significantly alter disease progression or prevent conversion from MCI to dementia.',
+                        reference: '2022 Alzheimer Association Guidelines',
+                        tags: ['dementia', 'acetylcholinesterase inhibitors', 'MCI']
+                    },
+                    {
+                        id: 8,
+                        language: 'english',
+                        category: 'pharmacology',
+                        difficulty: 'intermediate',
+                        question: 'According to 2023 Beers Criteria, which medication should be avoided in elderly patients with dementia?',
+                        options: [
+                            'Memantine',
+                            'Quetiapine for behavioral symptoms',
+                            'Donepezil',
+                            'Escitalopram for depression'
+                        ],
+                        correct: 1,
+                        explanation: 'Antipsychotics like quetiapine carry a black box warning for increased mortality in dementia patients and should be avoided unless severe symptoms warrant risk.',
+                        reference: 'AGS Beers Criteria 2023 Update',
+                        tags: ['beers criteria', 'antipsychotics', 'dementia']
+                    },
+
+                    // Additional Mixed Questions
+                    {
+                        id: 9,
+                        language: 'hebrew',
+                        category: 'cardiology',
+                        difficulty: 'basic',
+                        question: 'איזה יעד לחץ דם מומלץ למטופל בן 85 בריא יחסית?',
+                        options: [
+                            'פחות מ-120/80',
+                            '120-130 סיסטולי',
+                            '130-140 סיסטולי', 
+                            'פחות מ-150/90'
+                        ],
+                        correct: 2,
+                        explanation: 'במטופלים מעל גיל 80, היעד המומלץ הוא 130-140 mmHg סיסטולי, תוך הימנעות מהיפוטנזיה אורתוסטטית.',
+                        reference: 'הנחיות משרד הבריאות לטיפול בלחץ דם גבוה',
+                        tags: ['hypertension', 'blood pressure targets', 'elderly']
+                    },
+                    {
+                        id: 10,
+                        language: 'english',
+                        category: 'geriatric-syndromes',
+                        difficulty: 'intermediate',
+                        question: 'What is the most appropriate initial approach to sundown syndrome in a patient with dementia?',
+                        options: [
+                            'Start quetiapine 12.5mg at bedtime',
+                            'Increase daytime light exposure and maintain consistent routine',
+                            'Prescribe lorazepam PRN for agitation',
+                            'Admit to hospital for comprehensive evaluation'
+                        ],
+                        correct: 1,
+                        explanation: 'Non-pharmacological interventions should be tried first for sundown syndrome, including bright light therapy, consistent routines, and environmental modifications.',
+                        reference: 'Alzheimer Association Practice Guidelines',
+                        tags: ['sundown syndrome', 'dementia', 'behavioral interventions']
+                    }
+                ];
+            }
+
+            startQuiz() {
+                const questionType = document.getElementById('questionType').value;
+                const category = document.getElementById('category').value;
+                const difficulty = document.getElementById('difficulty').value;
+                const questionCount = document.getElementById('questionCount').value;
+
+                // Filter questions based on settings
+                let filteredQuestions = this.questions.filter(q => {
+                    if (questionType !== 'all' && questionType !== q.language && questionType !== 'shlav-alef') return false;
+                    if (category !== 'all' && category !== q.category) return false;
+                    if (difficulty !== 'all' && difficulty !== q.difficulty) return false;
+                    return true;
+                });
+
+                // Shuffle and limit questions
+                filteredQuestions = this.shuffleArray(filteredQuestions);
+                if (questionCount !== 'all') {
+                    filteredQuestions = filteredQuestions.slice(0, parseInt(questionCount));
+                }
+
+                if (filteredQuestions.length === 0) {
+                    alert('No questions match your criteria. Please adjust your settings.');
+                    return;
+                }
+
+                this.currentQuiz = filteredQuestions;
+                this.currentQuestionIndex = 0;
+                this.userAnswers = [];
+                this.showingExplanation = false;
+
+                // Hide settings, show quiz
+                document.getElementById('quizSettings').classList.add('hidden');
+                document.getElementById('quizInterface').classList.remove('hidden');
+
+                this.displayCurrentQuestion();
+                this.updateProgress();
+            }
+
+            displayCurrentQuestion() {
+                const question = this.currentQuiz[this.currentQuestionIndex];
+                const card = document.getElementById('questionCard');
+                
+                const isHebrew = question.language === 'hebrew';
+                const cardClass = isHebrew ? 'hebrew-text' : '';
+                
+                card.className = `question-card bg-white rounded-lg shadow p-6 mb-6 ${cardClass}`;
+                
+                card.innerHTML = `
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="flex space-x-2">
+                            <span class="px-2 py-1 text-xs bg-blue-100 text-blue-800 rounded">${question.category}</span>
+                            <span class="px-2 py-1 text-xs bg-yellow-100 text-yellow-800 rounded">${question.difficulty}</span>
+                            <span class="px-2 py-1 text-xs bg-green-100 text-green-800 rounded">${question.language}</span>
+                        </div>
+                        <div class="text-sm text-gray-500">Question ${this.currentQuestionIndex + 1} of ${this.currentQuiz.length}</div>
+                    </div>
+                    
+                    <h3 class="text-lg font-semibold text-gray-900 mb-6 ${isHebrew ? 'text-right' : 'text-left'}">
+                        ${question.question}
+                    </h3>
+                    
+                    <div class="space-y-3">
+                        ${question.options.map((option, index) => `
+                            <button onclick="selectAnswer(${index})" 
+                                    class="answer-option w-full p-4 text-left border rounded-lg hover:bg-gray-50 ${isHebrew ? 'text-right' : ''}" 
+                                    data-index="${index}">
+                                <span class="font-semibold">${String.fromCharCode(65 + index)}.</span> ${option}
+                            </button>
+                        `).join('')}
+                    </div>
+                    
+                    <div id="explanationArea" class="mt-6 hidden">
+                        <div class="bg-green-50 border-l-4 border-green-400 p-4">
+                            <h4 class="font-bold text-green-800 mb-2">Explanation:</h4>
+                            <p class="text-green-700 mb-2 ${isHebrew ? 'text-right' : ''}">${question.explanation}</p>
+                            <p class="text-sm text-green-600 ${isHebrew ? 'text-right' : ''}"><strong>Reference:</strong> ${question.reference}</p>
+                        </div>
+                    </div>
+                `;
+                
+                // Restore previous answer if exists
+                if (this.userAnswers[this.currentQuestionIndex] !== undefined) {
+                    this.highlightAnswer(this.userAnswers[this.currentQuestionIndex]);
+                }
+            }
+
+            selectAnswer(answerIndex) {
+                if (this.showingExplanation) return; // Prevent changes after explanation shown
+                
+                this.userAnswers[this.currentQuestionIndex] = answerIndex;
+                this.highlightAnswer(answerIndex);
+                
+                // Enable next button
+                document.getElementById('nextBtn').disabled = false;
+            }
+
+            highlightAnswer(answerIndex) {
+                // Clear previous selections
+                document.querySelectorAll('.answer-option').forEach(btn => {
+                    btn.classList.remove('selected-answer', 'correct-answer', 'incorrect-answer');
+                });
+                
+                // Highlight selected answer
+                const selectedBtn = document.querySelector(`[data-index="${answerIndex}"]`);
+                if (selectedBtn) {
+                    selectedBtn.classList.add('selected-answer');
+                }
+            }
+
+            showExplanation() {
+                const question = this.currentQuiz[this.currentQuestionIndex];
+                const userAnswer = this.userAnswers[this.currentQuestionIndex];
+                
+                if (userAnswer === undefined) {
+                    alert('Please select an answer first!');
+                    return;
+                }
+                
+                this.showingExplanation = true;
+                
+                // Show correct/incorrect styling
+                document.querySelectorAll('.answer-option').forEach((btn, index) => {
+                    if (index === question.correct) {
+                        btn.classList.add('correct-answer');
+                    } else if (index === userAnswer && index !== question.correct) {
+                        btn.classList.add('incorrect-answer');
+                    }
+                });
+                
+                // Show explanation
+                document.getElementById('explanationArea').classList.remove('hidden');
+                document.getElementById('explanationBtn').disabled = true;
+            }
+
+            nextQuestion() {
+                if (this.currentQuestionIndex < this.currentQuiz.length - 1) {
+                    this.currentQuestionIndex++;
+                    this.showingExplanation = false;
+                    this.displayCurrentQuestion();
+                    this.updateProgress();
+                    
+                    document.getElementById('explanationBtn').disabled = false;
+                    document.getElementById('nextBtn').disabled = this.userAnswers[this.currentQuestionIndex] === undefined;
+                } else {
+                    this.finishQuiz();
+                }
+            }
+
+            previousQuestion() {
+                if (this.currentQuestionIndex > 0) {
+                    this.currentQuestionIndex--;
+                    this.showingExplanation = false;
+                    this.displayCurrentQuestion();
+                    this.updateProgress();
+                    
+                    document.getElementById('explanationBtn').disabled = false;
+                    document.getElementById('nextBtn').disabled = false;
+                }
+            }
+
+            updateProgress() {
+                const progress = ((this.currentQuestionIndex + 1) / this.currentQuiz.length) * 100;
+                document.getElementById('progressBar').style.width = `${progress}%`;
+                document.getElementById('progressText').textContent = `${this.currentQuestionIndex + 1} of ${this.currentQuiz.length}`;
+                
+                // Update navigation buttons
+                document.getElementById('prevBtn').disabled = this.currentQuestionIndex === 0;
+                document.getElementById('nextBtn').textContent = this.currentQuestionIndex === this.currentQuiz.length - 1 ? 'Finish Quiz' : 'Next →';
+            }
+
+            finishQuiz() {
+                // Calculate results
+                let correctAnswers = 0;
+                const results = this.currentQuiz.map((question, index) => {
+                    const userAnswer = this.userAnswers[index];
+                    const isCorrect = userAnswer === question.correct;
+                    if (isCorrect) correctAnswers++;
+                    
+                    return {
+                        question: question.question,
+                        userAnswer: userAnswer !== undefined ? question.options[userAnswer] : 'No answer',
+                        correctAnswer: question.options[question.correct],
+                        isCorrect: isCorrect,
+                        explanation: question.explanation,
+                        category: question.category,
+                        difficulty: question.difficulty
+                    };
+                });
+                
+                const percentage = Math.round((correctAnswers / this.currentQuiz.length) * 100);
+                
+                // Update statistics
+                this.updateStatistics(correctAnswers, this.currentQuiz.length, percentage);
+                
+                // Show results
+                this.displayResults(results, correctAnswers, percentage);
+            }
+
+            displayResults(results, correctAnswers, percentage) {
+                document.getElementById('quizInterface').classList.add('hidden');
+                document.getElementById('quizResults').classList.remove('hidden');
+                
+                const resultsContent = document.getElementById('resultsContent');
+                
+                // Performance summary
+                let performanceColor = 'text-red-600';
+                let performanceText = 'Needs Improvement';
+                if (percentage >= 80) {
+                    performanceColor = 'text-green-600';
+                    performanceText = 'Excellent';
+                } else if (percentage >= 70) {
+                    performanceColor = 'text-yellow-600';
+                    performanceText = 'Good';
+                }
+                
+                resultsContent.innerHTML = `
+                    <div class="text-center mb-8">
+                        <div class="text-6xl mb-4">${percentage >= 80 ? '🏆' : percentage >= 70 ? '⭐' : '📚'}</div>
+                        <h3 class="text-2xl font-bold ${performanceColor} mb-2">${performanceText}</h3>
+                        <p class="text-xl text-gray-700">${correctAnswers} / ${this.currentQuiz.length} correct (${percentage}%)</p>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+                        <div class="bg-green-100 p-4 rounded-lg text-center">
+                            <div class="text-2xl font-bold text-green-600">${correctAnswers}</div>
+                            <div class="text-sm text-green-700">Correct</div>
+                        </div>
+                        <div class="bg-red-100 p-4 rounded-lg text-center">
+                            <div class="text-2xl font-bold text-red-600">${this.currentQuiz.length - correctAnswers}</div>
+                            <div class="text-sm text-red-700">Incorrect</div>
+                        </div>
+                        <div class="bg-blue-100 p-4 rounded-lg text-center">
+                            <div class="text-2xl font-bold text-blue-600">${percentage}%</div>
+                            <div class="text-sm text-blue-700">Score</div>
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-4">
+                        <h4 class="text-lg font-bold text-gray-900">Question Review</h4>
+                        ${results.map((result, index) => `
+                            <div class="border rounded-lg p-4 ${result.isCorrect ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200'}">
+                                <div class="flex items-center justify-between mb-2">
+                                    <span class="text-sm text-gray-600">Question ${index + 1}</span>
+                                    <span class="text-lg">${result.isCorrect ? '✅' : '❌'}</span>
+                                </div>
+                                <p class="font-medium text-gray-900 mb-2">${result.question.substring(0, 100)}...</p>
+                                <div class="text-sm">
+                                    <div class="mb-1">
+                                        <strong class="${result.isCorrect ? 'text-green-700' : 'text-red-700'}">Your answer:</strong> 
+                                        ${result.userAnswer}
+                                    </div>
+                                    ${!result.isCorrect ? `
+                                        <div class="mb-2">
+                                            <strong class="text-green-700">Correct answer:</strong> ${result.correctAnswer}
+                                        </div>
+                                    ` : ''}
+                                    <div class="text-gray-600 text-xs mt-2">
+                                        ${result.explanation.substring(0, 150)}...
+                                    </div>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                    
+                    <div class="flex justify-center space-x-4 mt-8">
+                        <button onclick="restartQuiz()" class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700">
+                            🔄 Take Another Quiz
+                        </button>
+                        <button onclick="exportResults()" class="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700">
+                            📊 Export Results
+                        </button>
+                    </div>
+                `;
+            }
+
+            updateStatistics(correct, total, percentage) {
+                const stats = JSON.parse(localStorage.getItem('quizStatistics') || '{"completed": 0, "totalQuestions": 0, "totalCorrect": 0, "bestScore": 0, "recentScores": []}');
+                
+                stats.completed += 1;
+                stats.totalQuestions += total;
+                stats.totalCorrect += correct;
+                stats.bestScore = Math.max(stats.bestScore, percentage);
+                stats.recentScores.unshift(percentage);
+                if (stats.recentScores.length > 10) stats.recentScores.pop();
+                stats.lastQuiz = new Date().toISOString();
+                
+                localStorage.setItem('quizStatistics', JSON.stringify(stats));
+                
+                // Update shared utilities
+                if (window.sharedUtils) {
+                    window.sharedUtils.updateQuizStats(correct, total);
+                }
+            }
+
+            loadStatistics() {
+                return JSON.parse(localStorage.getItem('quizStatistics') || '{"completed": 0, "totalQuestions": 0, "totalCorrect": 0, "bestScore": 0, "recentScores": []}');
+            }
+
+            shuffleArray(array) {
+                const shuffled = [...array];
+                for (let i = shuffled.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+                }
+                return shuffled;
+            }
+        }
+
+        // Initialize quiz system
+        const quizSystem = new GeriatricsQuizSystem();
+
+        // Global functions for UI
+        function startQuiz() {
+            quizSystem.startQuiz();
+        }
+
+        function selectAnswer(index) {
+            quizSystem.selectAnswer(index);
+        }
+
+        function showExplanation() {
+            quizSystem.showExplanation();
+        }
+
+        function nextQuestion() {
+            quizSystem.nextQuestion();
+        }
+
+        function previousQuestion() {
+            quizSystem.previousQuestion();
+        }
+
+        function restartQuiz() {
+            document.getElementById('quizResults').classList.add('hidden');
+            document.getElementById('quizSettings').classList.remove('hidden');
+        }
+
+        function showStatistics() {
+            const stats = quizSystem.loadStatistics();
+            const averageScore = stats.totalQuestions > 0 ? Math.round((stats.totalCorrect / stats.totalQuestions) * 100) : 0;
+            
+            document.getElementById('statisticsContent').innerHTML = `
+                <div class="space-y-4">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="text-center">
+                            <div class="text-2xl font-bold text-blue-600">${stats.completed}</div>
+                            <div class="text-sm text-gray-600">Quizzes Completed</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-2xl font-bold text-green-600">${stats.bestScore}%</div>
+                            <div class="text-sm text-gray-600">Best Score</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-2xl font-bold text-purple-600">${averageScore}%</div>
+                            <div class="text-sm text-gray-600">Average Score</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-2xl font-bold text-orange-600">${stats.totalQuestions}</div>
+                            <div class="text-sm text-gray-600">Questions Answered</div>
+                        </div>
+                    </div>
+                    
+                    ${stats.recentScores.length > 0 ? `
+                        <div>
+                            <h4 class="font-bold text-gray-700 mb-2">Recent Scores</h4>
+                            <div class="flex flex-wrap gap-2">
+                                ${stats.recentScores.map(score => `
+                                    <span class="px-2 py-1 text-xs rounded ${score >= 80 ? 'bg-green-100 text-green-800' : score >= 70 ? 'bg-yellow-100 text-yellow-800' : 'bg-red-100 text-red-800'}">
+                                        ${score}%
+                                    </span>
+                                `).join('')}
+                            </div>
+                        </div>
+                    ` : ''}
+                </div>
+            `;
+            document.getElementById('statisticsModal').classList.remove('hidden');
+        }
+
+        function closeStatistics() {
+            document.getElementById('statisticsModal').classList.add('hidden');
+        }
+
+        function toggleLanguage() {
+            // This would toggle the interface language in a full implementation
+            alert('Language toggle feature - would switch between Hebrew and English interface');
+        }
+
+        function exportResults() {
+            alert('Export functionality - would generate PDF report with detailed results');
+        }
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if returning user
+            const stats = quizSystem.loadStatistics();
+            if (stats.completed > 0) {
+                document.getElementById('quizSettings').innerHTML += `
+                    <div class="mt-4 p-4 bg-blue-50 rounded-lg">
+                        <p class="text-sm text-blue-700">
+                            <strong>Welcome back!</strong> You've completed ${stats.completed} quizzes with a ${Math.round((stats.totalCorrect / stats.totalQuestions) * 100)}% average score.
+                        </p>
+                    </div>
+                `;
+            }
+        });
+    </script>
+</body>
+</html>

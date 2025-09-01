@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient Dashboard - Geriatrics Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .patient-card {
+            transition: all 0.3s ease;
+        }
+        .patient-card:hover {
+            transform: translateY(-2px);
+        }
+        .risk-high { border-left: 4px solid #dc2626; }
+        .risk-medium { border-left: 4px solid #f59e0b; }
+        .risk-low { border-left: 4px solid #059669; }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <div class="container mx-auto p-6">
+        <!-- Header -->
+        <div class="flex justify-between items-center mb-6">
+            <div>
+                <h1 class="text-3xl font-bold text-gray-900">Patient Dashboard</h1>
+                <p class="text-gray-600">Real-time risk synthesis for geriatric patients</p>
+            </div>
+            <div class="flex gap-3">
+                <button onclick="addNewPatient()" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+                    + Add Patient
+                </button>
+                <button onclick="window.location.href='../fellowship-index.html'" class="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700">
+                    ← Back to Hub
+                </button>
+            </div>
+        </div>
+
+        <!-- Summary Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+            <div class="bg-white p-4 rounded-lg shadow">
+                <div class="text-2xl font-bold text-blue-600" id="totalPatients">0</div>
+                <div class="text-sm text-gray-600">Total Patients</div>
+            </div>
+            <div class="bg-white p-4 rounded-lg shadow">
+                <div class="text-2xl font-bold text-red-600" id="highRiskPatients">0</div>
+                <div class="text-sm text-gray-600">High Risk</div>
+            </div>
+            <div class="bg-white p-4 rounded-lg shadow">
+                <div class="text-2xl font-bold text-yellow-600" id="mediumRiskPatients">0</div>
+                <div class="text-sm text-gray-600">Medium Risk</div>
+            </div>
+            <div class="bg-white p-4 rounded-lg shadow">
+                <div class="text-2xl font-bold text-green-600" id="lowRiskPatients">0</div>
+                <div class="text-sm text-gray-600">Low Risk</div>
+            </div>
+        </div>
+
+        <!-- Filter and Search -->
+        <div class="bg-white p-4 rounded-lg shadow mb-6">
+            <div class="flex flex-wrap gap-4 items-center">
+                <input type="text" id="searchInput" placeholder="Search patients..." 
+                       class="border border-gray-300 rounded px-3 py-2 flex-1 min-w-64">
+                <select id="riskFilter" class="border border-gray-300 rounded px-3 py-2">
+                    <option value="">All Risk Levels</option>
+                    <option value="high">High Risk</option>
+                    <option value="medium">Medium Risk</option>
+                    <option value="low">Low Risk</option>
+                </select>
+                <button onclick="exportPatientList()" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
+                    📊 Export List
+                </button>
+            </div>
+        </div>
+
+        <!-- Patients Grid -->
+        <div id="patientsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Dynamic content will be inserted here -->
+        </div>
+
+        <!-- Empty State -->
+        <div id="emptyState" class="text-center py-12 hidden">
+            <div class="text-6xl mb-4">👥</div>
+            <h3 class="text-xl font-semibold text-gray-700 mb-2">No Patients Added</h3>
+            <p class="text-gray-500 mb-4">Add your first patient to start tracking their care</p>
+            <button onclick="addNewPatient()" class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700">
+                + Add First Patient
+            </button>
+        </div>
+    </div>
+
+    <!-- Add Patient Modal -->
+    <div id="patientModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-lg max-w-md w-full max-h-screen overflow-y-auto">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-xl font-bold">Add New Patient</h2>
+                    <button onclick="closeModal()" class="text-gray-500 hover:text-gray-700">&times;</button>
+                </div>
+                
+                <form id="patientForm">
+                    <div class="space-y-4">
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">Initials</label>
+                                <input type="text" id="initials" required class="w-full border border-gray-300 rounded px-3 py-2">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">Room</label>
+                                <input type="text" id="room" class="w-full border border-gray-300 rounded px-3 py-2">
+                            </div>
+                        </div>
+                        
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">Age</label>
+                                <input type="number" id="age" required min="0" max="120" class="w-full border border-gray-300 rounded px-3 py-2">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">Gender</label>
+                                <select id="gender" class="w-full border border-gray-300 rounded px-3 py-2">
+                                    <option value="M">Male</option>
+                                    <option value="F">Female</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Problems (one per line)</label>
+                            <textarea id="problems" placeholder="DM2&#10;HTN&#10;CHF..." class="w-full border border-gray-300 rounded px-3 py-2 h-20"></textarea>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Medications (one per line)</label>
+                            <textarea id="medications" placeholder="Metformin 1000mg BID&#10;Lisinopril 10mg daily..." class="w-full border border-gray-300 rounded px-3 py-2 h-20"></textarea>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Clinical Notes</label>
+                            <textarea id="notes" placeholder="Additional notes..." class="w-full border border-gray-300 rounded px-3 py-2 h-16"></textarea>
+                        </div>
+
+                        <div class="flex justify-end space-x-3 pt-4">
+                            <button type="button" onclick="closeModal()" class="px-4 py-2 text-gray-600 border border-gray-300 rounded hover:bg-gray-50">
+                                Cancel
+                            </button>
+                            <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+                                Add Patient
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let patients = JSON.parse(localStorage.getItem('geriatricPatients') || '[]');
+
+        // Risk calculation algorithm
+        function calculateRiskScore(patient) {
+            let score = 0;
+            
+            // Age factor
+            if (patient.age > 85) score += 3;
+            else if (patient.age > 75) score += 2;
+            else if (patient.age > 65) score += 1;
+            
+            // Problem count
+            const problemCount = patient.problems ? patient.problems.length : 0;
+            if (problemCount > 5) score += 3;
+            else if (problemCount > 3) score += 2;
+            else if (problemCount > 1) score += 1;
+            
+            // Medication count (polypharmacy)
+            const medCount = patient.medications ? patient.medications.length : 0;
+            if (medCount > 10) score += 3;
+            else if (medCount > 5) score += 2;
+            else if (medCount > 3) score += 1;
+            
+            // High-risk conditions
+            const problemsText = (patient.problems || []).join(' ').toLowerCase();
+            const highRiskConditions = ['dementia', 'delirium', 'falls', 'fracture', 'chf', 'heart failure', 'ckd', 'renal failure'];
+            highRiskConditions.forEach(condition => {
+                if (problemsText.includes(condition)) score += 2;
+            });
+            
+            // High-risk medications
+            const medsText = (patient.medications || []).join(' ').toLowerCase();
+            const highRiskMeds = ['warfarin', 'digoxin', 'insulin', 'opioid', 'benzodiazepine', 'antipsychotic'];
+            highRiskMeds.forEach(med => {
+                if (medsText.includes(med)) score += 1;
+            });
+            
+            return Math.min(score, 10); // Cap at 10
+        }
+
+        function getRiskLevel(score) {
+            if (score >= 7) return { level: 'high', color: 'red' };
+            if (score >= 4) return { level: 'medium', color: 'yellow' };
+            return { level: 'low', color: 'green' };
+        }
+
+        function addNewPatient() {
+            document.getElementById('patientModal').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('patientModal').classList.add('hidden');
+            document.getElementById('patientForm').reset();
+        }
+
+        function savePatient(patientData) {
+            const patient = {
+                id: Date.now(),
+                initials: patientData.initials,
+                room: patientData.room,
+                age: parseInt(patientData.age),
+                gender: patientData.gender,
+                problems: patientData.problems.split('\n').filter(p => p.trim()),
+                medications: patientData.medications.split('\n').filter(m => m.trim()),
+                notes: patientData.notes,
+                addedDate: new Date().toISOString()
+            };
+            
+            patient.riskScore = calculateRiskScore(patient);
+            patients.push(patient);
+            localStorage.setItem('geriatricPatients', JSON.stringify(patients));
+            renderPatients();
+            updateSummary();
+            closeModal();
+        }
+
+        function deletePatient(id) {
+            if (confirm('Are you sure you want to delete this patient?')) {
+                patients = patients.filter(p => p.id !== id);
+                localStorage.setItem('geriatricPatients', JSON.stringify(patients));
+                renderPatients();
+                updateSummary();
+            }
+        }
+
+        function renderPatients() {
+            const grid = document.getElementById('patientsGrid');
+            const emptyState = document.getElementById('emptyState');
+            
+            if (patients.length === 0) {
+                grid.innerHTML = '';
+                emptyState.classList.remove('hidden');
+                return;
+            }
+            
+            emptyState.classList.add('hidden');
+            
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const riskFilter = document.getElementById('riskFilter').value;
+            
+            const filteredPatients = patients.filter(patient => {
+                const matchesSearch = !searchTerm || 
+                    patient.initials.toLowerCase().includes(searchTerm) ||
+                    patient.room.toLowerCase().includes(searchTerm) ||
+                    patient.problems.some(p => p.toLowerCase().includes(searchTerm));
+                
+                const risk = getRiskLevel(patient.riskScore);
+                const matchesRisk = !riskFilter || risk.level === riskFilter;
+                
+                return matchesSearch && matchesRisk;
+            });
+            
+            grid.innerHTML = filteredPatients.map(patient => {
+                const risk = getRiskLevel(patient.riskScore);
+                const daysSinceAdded = Math.floor((new Date() - new Date(patient.addedDate)) / (1000 * 60 * 60 * 24));
+                
+                return `
+                    <div class="patient-card bg-white rounded-lg shadow-md p-6 risk-${risk.level}">
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <h3 class="text-xl font-bold text-gray-900">${patient.initials}</h3>
+                                <p class="text-gray-600">Room ${patient.room || 'TBD'} • ${patient.age}yo ${patient.gender}</p>
+                                <p class="text-sm text-gray-500">${daysSinceAdded} days in system</p>
+                            </div>
+                            <div class="text-right">
+                                <div class="text-lg font-bold text-${risk.color}-600">${patient.riskScore}/10</div>
+                                <div class="text-sm text-${risk.color}-600 uppercase">${risk.level} Risk</div>
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-3">
+                            <div>
+                                <h4 class="font-semibold text-gray-700 mb-1">Problems (${patient.problems.length})</h4>
+                                <div class="flex flex-wrap gap-1">
+                                    ${patient.problems.slice(0, 3).map(problem => 
+                                        `<span class="text-xs bg-red-100 text-red-800 px-2 py-1 rounded">${problem}</span>`
+                                    ).join('')}
+                                    ${patient.problems.length > 3 ? `<span class="text-xs text-gray-500">+${patient.problems.length - 3} more</span>` : ''}
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <h4 class="font-semibold text-gray-700 mb-1">Medications (${patient.medications.length})</h4>
+                                <div class="flex flex-wrap gap-1">
+                                    ${patient.medications.slice(0, 3).map(med => 
+                                        `<span class="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">${med.split(' ')[0]}</span>`
+                                    ).join('')}
+                                    ${patient.medications.length > 3 ? `<span class="text-xs text-gray-500">+${patient.medications.length - 3} more</span>` : ''}
+                                </div>
+                            </div>
+                            
+                            ${patient.notes ? `
+                                <div>
+                                    <h4 class="font-semibold text-gray-700 mb-1">Notes</h4>
+                                    <p class="text-sm text-gray-600">${patient.notes}</p>
+                                </div>
+                            ` : ''}
+                        </div>
+                        
+                        <div class="flex justify-end mt-4 space-x-2">
+                            <button onclick="viewPatientDetails(${patient.id})" class="text-blue-600 hover:text-blue-800 text-sm">
+                                View Details
+                            </button>
+                            <button onclick="deletePatient(${patient.id})" class="text-red-600 hover:text-red-800 text-sm">
+                                Delete
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function updateSummary() {
+            const total = patients.length;
+            const highRisk = patients.filter(p => getRiskLevel(p.riskScore).level === 'high').length;
+            const mediumRisk = patients.filter(p => getRiskLevel(p.riskScore).level === 'medium').length;
+            const lowRisk = patients.filter(p => getRiskLevel(p.riskScore).level === 'low').length;
+            
+            document.getElementById('totalPatients').textContent = total;
+            document.getElementById('highRiskPatients').textContent = highRisk;
+            document.getElementById('mediumRiskPatients').textContent = mediumRisk;
+            document.getElementById('lowRiskPatients').textContent = lowRisk;
+        }
+
+        function exportPatientList() {
+            const csvContent = [
+                'Initials,Room,Age,Gender,Risk Score,Risk Level,Problems,Medications,Days in System',
+                ...patients.map(p => {
+                    const risk = getRiskLevel(p.riskScore);
+                    const daysSince = Math.floor((new Date() - new Date(p.addedDate)) / (1000 * 60 * 60 * 24));
+                    return `"${p.initials}","${p.room}",${p.age},"${p.gender}",${p.riskScore},"${risk.level}","${p.problems.join('; ')}","${p.medications.join('; ')}",${daysSince}`;
+                })
+            ].join('\n');
+            
+            const blob = new Blob([csvContent], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `geriatric-patients-${new Date().toISOString().split('T')[0]}.csv`;
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+            document.body.removeChild(a);
+        }
+
+        function viewPatientDetails(id) {
+            const patient = patients.find(p => p.id === id);
+            if (!patient) return;
+            
+            alert(`
+Patient: ${patient.initials}
+Room: ${patient.room}
+Age: ${patient.age} years old
+Gender: ${patient.gender}
+Risk Score: ${patient.riskScore}/10
+
+Problems:
+${patient.problems.map(p => '• ' + p).join('\n')}
+
+Medications:
+${patient.medications.map(m => '• ' + m).join('\n')}
+
+${patient.notes ? 'Notes:\n' + patient.notes : 'No additional notes'}
+
+Added: ${new Date(patient.addedDate).toLocaleDateString()}
+            `);
+        }
+
+        // Event handlers
+        document.getElementById('patientForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            const patientData = {
+                initials: document.getElementById('initials').value,
+                room: document.getElementById('room').value,
+                age: document.getElementById('age').value,
+                gender: document.getElementById('gender').value,
+                problems: document.getElementById('problems').value,
+                medications: document.getElementById('medications').value,
+                notes: document.getElementById('notes').value
+            };
+            savePatient(patientData);
+        });
+
+        document.getElementById('searchInput').addEventListener('input', renderPatients);
+        document.getElementById('riskFilter').addEventListener('change', renderPatients);
+
+        // Initialize
+        renderPatients();
+        updateSummary();
+
+        // Add some sample data if empty
+        if (patients.length === 0) {
+            const samplePatients = [
+                {
+                    id: 1,
+                    initials: "A.B.",
+                    room: "101",
+                    age: 82,
+                    gender: "F",
+                    problems: ["DM2", "HTN", "CHF", "CKD stage 3"],
+                    medications: ["Metformin 1000mg BID", "Lisinopril 10mg daily", "Furosemide 40mg daily"],
+                    notes: "Recent admission for CHF exacerbation",
+                    addedDate: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString()
+                },
+                {
+                    id: 2,
+                    initials: "C.D.",
+                    room: "102",
+                    age: 75,
+                    gender: "M",
+                    problems: ["CAD", "Afib"],
+                    medications: ["Metoprolol 50mg BID", "Warfarin 5mg daily"],
+                    notes: "Stable, awaiting discharge",
+                    addedDate: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString()
+                }
+            ];
+            
+            samplePatients.forEach(p => {
+                p.riskScore = calculateRiskScore(p);
+            });
+            
+            patients = samplePatients;
+            localStorage.setItem('geriatricPatients', JSON.stringify(patients));
+            renderPatients();
+            updateSummary();
+        }
+    </script>
+</body>
+</html>

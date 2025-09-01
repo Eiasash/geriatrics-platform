@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Geriatrics Excellence Platform - Shaare Zedek</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .module-card {
+            transition: all 0.3s ease;
+            cursor: pointer;
+            min-height: 180px;
+        }
+        .module-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        .priority-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <div class="container mx-auto p-6">
+        <header class="text-center mb-8">
+            <h1 class="text-4xl font-bold text-gray-900">Geriatrics Fellowship Platform</h1>
+            <p class="text-gray-600 mt-2">Shaare Zedek Medical Center - Dr. Eias Ashhab</p>
+            <p class="text-sm text-gray-500 mt-1">Starting: September 1, 2025</p>
+        </header>
+
+        <!-- Priority Tools Section -->
+        <section class="mb-8">
+            <h2 class="text-xl font-bold mb-4 text-indigo-600">🔥 Daily Use Tools</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                
+                <div class="module-card bg-white rounded-lg shadow-lg p-6 relative border-2 border-indigo-500" 
+                     onclick="window.location.href='patient-dashboard.html'">
+                    <span class="priority-badge bg-red-500 text-white text-xs px-2 py-1 rounded">PRIORITY</span>
+                    <div class="text-3xl mb-3">🏥</div>
+                    <h3 class="text-lg font-bold mb-2">Patient Dashboard</h3>
+                    <p class="text-gray-600 text-sm">Morning rounds prep with risk synthesis</p>
+                    <div class="mt-3">
+                        <span class="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">Ready</span>
+                    </div>
+                </div>
+
+                <div class="module-card bg-white rounded-lg shadow-lg p-6 relative" 
+                     onclick="window.location.href='oncall-copilot.html'">
+                    <div class="text-3xl mb-3">🚨</div>
+                    <h3 class="text-lg font-bold mb-2">On-Call Co-Pilot</h3>
+                    <p class="text-gray-600 text-sm">3AM protocols for geriatric scenarios</p>
+                    <div class="mt-3">
+                        <span class="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">Ready</span>
+                    </div>
+                </div>
+
+                <div class="module-card bg-white rounded-lg shadow-lg p-6" 
+                     onclick="window.location.href='clinical-note-analyzer.html'">
+                    <div class="text-3xl mb-3">📝</div>
+                    <h3 class="text-lg font-bold mb-2">Note Analyzer</h3>
+                    <p class="text-gray-600 text-sm">NLP for Hebrew/English abbreviations</p>
+                    <div class="mt-3">
+                        <span class="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">Ready</span>
+                    </div>
+                </div>
+
+                <div class="module-card bg-white rounded-lg shadow-lg p-6" 
+                     onclick="window.location.href='anticoag-synthesizer.html'">
+                    <div class="text-3xl mb-3">💊</div>
+                    <h3 class="text-lg font-bold mb-2">Anticoag Tool</h3>
+                    <p class="text-gray-600 text-sm">CHA₂DS₂-VASc with renal dosing</p>
+                    <div class="mt-3">
+                        <span class="text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded">Phase 2</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Academic Tools Section -->
+        <section class="mb-8">
+            <h2 class="text-xl font-bold mb-4 text-purple-600">📚 Academic & Study Tools</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                
+                <div class="module-card bg-white rounded-lg shadow-lg p-6" 
+                     onclick="window.location.href='exam-simulator.html'">
+                    <div class="text-3xl mb-3">📖</div>
+                    <h3 class="text-lg font-bold mb-2">Shlav Alef Prep</h3>
+                    <p class="text-gray-600 text-sm">50 Hebrew + English questions</p>
+                    <div class="mt-3">
+                        <span class="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">Ready</span>
+                    </div>
+                </div>
+
+                <div class="module-card bg-white rounded-lg shadow-lg p-6" 
+                     onclick="window.location.href='research-assistant.html'">
+                    <div class="text-3xl mb-3">🔬</div>
+                    <h3 class="text-lg font-bold mb-2">Research/M&M</h3>
+                    <p class="text-gray-600 text-sm">PICO search + conference builder</p>
+                    <div class="mt-3">
+                        <span class="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">Ready</span>
+                    </div>
+                </div>
+
+                <div class="module-card bg-white rounded-lg shadow-lg p-6" 
+                     onclick="window.location.href='evidence-library.html'">
+                    <div class="text-3xl mb-3">📊</div>
+                    <h3 class="text-lg font-bold mb-2">Evidence Library</h3>
+                    <p class="text-gray-600 text-sm">20 landmark trials + MOH guidelines</p>
+                    <div class="mt-3">
+                        <span class="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">Database</span>
+                    </div>
+                </div>
+
+                <div class="module-card bg-white rounded-lg shadow-lg p-6" 
+                     onclick="window.location.href='platform-main.html'">
+                    <div class="text-3xl mb-3">⚕️</div>
+                    <h3 class="text-lg font-bold mb-2">Original Platform</h3>
+                    <p class="text-gray-600 text-sm">Calculators, articles, guidelines</p>
+                    <div class="mt-3">
+                        <span class="text-xs bg-gray-100 text-gray-800 px-2 py-1 rounded">Enhanced</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Additional Tools Section -->
+        <section class="mb-8">
+            <h2 class="text-xl font-bold mb-4 text-orange-600">🛠️ Clinical Tools & Calculators</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                
+                <div class="module-card bg-white rounded-lg shadow-lg p-6" 
+                     onclick="window.location.href='comprehensive-tools.html'">
+                    <div class="text-3xl mb-3">🧮</div>
+                    <h3 class="text-lg font-bold mb-2">All Calculators</h3>
+                    <p class="text-gray-600 text-sm">Frailty, MMSE, GDS, Barthel & more</p>
+                    <div class="mt-3">
+                        <span class="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">Ready</span>
+                    </div>
+                </div>
+
+                <div class="module-card bg-white rounded-lg shadow-lg p-6" 
+                     onclick="window.location.href='drug-interaction-checker.html'">
+                    <div class="text-3xl mb-3">💊</div>
+                    <h3 class="text-lg font-bold mb-2">Drug Interactions</h3>
+                    <p class="text-gray-600 text-sm">Check medication interactions</p>
+                    <div class="mt-3">
+                        <span class="text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded">Coming Soon</span>
+                    </div>
+                </div>
+
+                <div class="module-card bg-white rounded-lg shadow-lg p-6" 
+                     onclick="window.location.href='polypharmacy-optimizer.html'">
+                    <div class="text-3xl mb-3">🔄</div>
+                    <h3 class="text-lg font-bold mb-2">Deprescribing Tool</h3>
+                    <p class="text-gray-600 text-sm">Optimize medication regimens</p>
+                    <div class="mt-3">
+                        <span class="text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded">Coming Soon</span>
+                    </div>
+                </div>
+
+                <div class="module-card bg-white rounded-lg shadow-lg p-6" 
+                     onclick="window.location.href='capacity-assessment.html'">
+                    <div class="text-3xl mb-3">⚖️</div>
+                    <h3 class="text-lg font-bold mb-2">Capacity Tool</h3>
+                    <p class="text-gray-600 text-sm">Decision-making capacity assessment</p>
+                    <div class="mt-3">
+                        <span class="text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded">Phase 3</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Quick Actions Bar -->
+        <section class="bg-white rounded-lg shadow p-6">
+            <h3 class="font-bold text-gray-700 mb-3">Quick Actions</h3>
+            <div class="flex flex-wrap gap-3">
+                <button class="px-4 py-2 bg-indigo-100 text-indigo-700 rounded hover:bg-indigo-200" 
+                        onclick="exportAllPatients()">
+                    📤 Export Morning Report
+                </button>
+                <button class="px-4 py-2 bg-red-100 text-red-700 rounded hover:bg-red-200"
+                        onclick="window.location.href='oncall-copilot.html'">
+                    🚨 Emergency Protocol
+                </button>
+                <button class="px-4 py-2 bg-green-100 text-green-700 rounded hover:bg-green-200"
+                        onclick="clearAllData()">
+                    🗑️ Clear All Data
+                </button>
+                <button class="px-4 py-2 bg-purple-100 text-purple-700 rounded hover:bg-purple-200"
+                        onclick="showPhaseProgress()">
+                    📈 Development Progress
+                </button>
+            </div>
+        </section>
+
+        <!-- Development Roadmap -->
+        <footer class="mt-8 text-center text-sm text-gray-500">
+            <p>Phase 1: Foundation (Complete) | Phase 2: Core Tools (Sept-Nov) | Phase 3: Advanced Integration (Dec-Feb)</p>
+        </footer>
+    </div>
+
+    <script>
+        // Shared utilities
+        function exportAllPatients() {
+            try {
+                const patients = JSON.parse(localStorage.getItem('geriatricPatients') || '[]');
+                if (patients.length === 0) {
+                    alert('No patients in dashboard. Add patients first.');
+                    return;
+                }
+                
+                const date = new Date().toLocaleDateString('en-US');
+                let report = `MORNING REPORT - Shaare Zedek Geriatrics\n${date}\n\n`;
+                
+                patients.forEach(p => {
+                    report += `Room ${p.room}: ${p.initials} (${p.age}yo)\n`;
+                    report += `Dx: ${p.problems && p.problems.length > 0 ? p.problems.join(', ') : 'None listed'}\n`;
+                    report += `Meds: ${p.meds && p.meds.length > 0 ? p.meds.slice(0,3).join(', ') : 'None listed'}\n`;
+                    if (p.labs && p.labs.k > 5.0) report += `⚠️ K+: ${p.labs.k}\n`;
+                    if (p.labs && p.labs.cr > 2.0) report += `⚠️ Cr: ${p.labs.cr}\n`;
+                    report += '---\n';
+                });
+                
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    navigator.clipboard.writeText(report).then(() => {
+                        alert('Morning report copied to clipboard! Paste in WhatsApp/Email.');
+                    }).catch(() => {
+                        fallbackCopy(report);
+                    });
+                } else {
+                    fallbackCopy(report);
+                }
+            } catch (error) {
+                console.error('Error exporting patients:', error);
+                alert('Error exporting report. Please try again.');
+            }
+        }
+        
+        function fallbackCopy(text) {
+            const textArea = document.createElement('textarea');
+            textArea.value = text;
+            document.body.appendChild(textArea);
+            textArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textArea);
+            alert('Morning report copied to clipboard! Paste in WhatsApp/Email.');
+        }
+
+        function clearAllData() {
+            try {
+                if (confirm('Clear all saved data? This cannot be undone.')) {
+                    localStorage.clear();
+                    alert('All data cleared. Fresh start!');
+                }
+            } catch (error) {
+                console.error('Error clearing data:', error);
+                alert('Error clearing data. Please try again.');
+            }
+        }
+
+        function showPhaseProgress() {
+            try {
+                alert(`Development Status:
+                
+Phase 1 ✅ Complete:
+- Patient Dashboard
+- On-Call Protocols  
+- Note Analyzer
+- Research Tools
+
+Phase 2 🚧 In Progress:
+- Anticoag Synthesizer
+- Hebrew Exam Questions
+- Evidence Library UI
+
+Phase 3 📅 Planned:
+- Performance Analytics
+- Capacity Assessment
+- Pain Management Tool`);
+            } catch (error) {
+                console.error('Error showing progress:', error);
+                alert('Error displaying progress information.');
+            }
+        }
+
+        // Check if first visit
+        if (!localStorage.getItem('returningUser')) {
+            localStorage.setItem('returningUser', 'true');
+            alert('Welcome to your Geriatrics Fellowship Platform! Start with the Patient Dashboard for daily rounds.');
+        }
+    </script>
+</body>
+</html>
