@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import './App.css';
 import './styles/modern-design.css';
 import ModernDashboard from './components/Dashboard/ModernDashboard';
+import Dashboard from './components/Dashboard/Dashboard';
+import ModernUI from './components/ModernUI/ModernDashboard';
 
 // REAL MEDICAL DATA - NO BULLSHIT
 const MEDICAL_DATABASE = {
