@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Geriatrics Study Platform - Enhanced</title>
+    <title>Geriatrics Fellowship Platform</title>
     <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
@@ -11,77 +11,96 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: system-ui, -apple-system, sans-serif; background: #f9fafb; }
         .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; text-align: center; }
-        .tabs { display: flex; justify-content: center; gap: 10px; padding: 20px; background: #f3f4f6; }
-        .tab { padding: 10px 20px; background: white; border: 2px solid #667eea; border-radius: 8px; cursor: pointer; font-weight: bold; }
+        .tabs { display: flex; justify-content: center; gap: 10px; padding: 20px; background: #f3f4f6; flex-wrap: wrap; }
+        .tab { padding: 10px 20px; background: white; border: 2px solid #667eea; border-radius: 8px; cursor: pointer; font-weight: bold; transition: all 0.3s; }
+        .tab:hover { transform: scale(1.05); }
         .tab.active { background: #667eea; color: white; }
         .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
-        textarea { width: 100%; padding: 12px; border: 2px solid #e5e7eb; border-radius: 8px; font-family: monospace; }
-        button { background: #667eea; color: white; padding: 12px 30px; border: none; border-radius: 8px; cursor: pointer; font-size: 16px; }
-        button:hover { background: #5a67d8; }
+        textarea { width: 100%; padding: 12px; border: 2px solid #e5e7eb; border-radius: 8px; font-family: monospace; resize: vertical; }
+        button { background: #667eea; color: white; padding: 12px 30px; border: none; border-radius: 8px; cursor: pointer; font-size: 16px; transition: all 0.3s; }
+        button:hover { background: #5a67d8; transform: scale(1.02); }
         .alert { padding: 10px; margin: 8px 0; border-radius: 8px; }
         .alert.critical { background: #fee2e2; border-left: 4px solid #dc2626; }
         .alert.warning { background: #fef3c7; border-left: 4px solid #f59e0b; }
-        .med-tag { display: inline-block; background: #e0e7ff; color: #3730a3; padding: 4px 12px; border-radius: 20px; margin: 4px; }
+        .alert.info { background: #dbeafe; border-left: 4px solid #3b82f6; }
+        .med-tag { display: inline-block; background: #e0e7ff; color: #3730a3; padding: 4px 12px; border-radius: 20px; margin: 4px; font-size: 14px; }
         .quiz-card { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        .option { display: block; width: 100%; text-align: left; padding: 15px; margin: 10px 0; border: 2px solid #e5e7eb; border-radius: 8px; background: white; cursor: pointer; }
+        .option { display: block; width: 100%; text-align: left; padding: 15px; margin: 10px 0; border: 2px solid #e5e7eb; border-radius: 8px; background: white; cursor: pointer; transition: all 0.3s; }
         .option:hover { background: #f3f4f6; border-color: #667eea; }
         .option.correct { background: #dcfce7; border-color: #10b981; }
         .option.incorrect { background: #fee2e2; border-color: #ef4444; }
+        .protocol-card { background: white; border-radius: 12px; padding: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); border: 1px solid #e5e7eb; }
+        .protocol-card h3 { color: #764ba2; margin-bottom: 15px; border-bottom: 2px solid #e5e7eb; padding-bottom: 10px; }
+        table { width: 100%; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        th { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 15px; text-align: left; }
+        td { padding: 12px; border-bottom: 1px solid #e5e7eb; }
+        tr:hover { background: #f9fafb; }
+        .calculator-section { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .calculator-result { margin-top: 20px; padding: 15px; background: #f0f9ff; border-radius: 8px; border-left: 4px solid #3b82f6; }
+        select { padding: 8px 12px; border: 2px solid #e5e7eb; border-radius: 6px; font-size: 14px; cursor: pointer; }
+        input[type="number"] { padding: 8px; border: 2px solid #e5e7eb; border-radius: 6px; width: 80px; }
+        input[type="checkbox"] { margin-right: 8px; cursor: pointer; }
+        label { display: block; margin-bottom: 10px; cursor: pointer; }
     </style>
 </head>
 <body>
     <div id="root"></div>
 
     <script type="text/babel">
-        const { useState } = React;
+        const { useState, useEffect } = React;
 
-        // Enhanced Clinical Analyzer Component
+        // Complete Enhanced Clinical Analyzer Component
         function ClinicalAnalyzer() {
             const [note, setNote] = useState('');
             const [analysis, setAnalysis] = useState(null);
 
             const medicationList = {
-                english: ['warfarin', 'metformin', 'haloperidol', 'furosemide', 'ramipril', 'bisoprolol', 'amlodipine', 'apixaban', 'donepezil', 'memantine', 'quetiapine', 'lorazepam', 'gabapentin', 'omeprazole', 'levothyroxine', 'atorvastatin', 'lisinopril', 'spironolactone', 'digoxin', 'clopidogrel', 'aspirin', 'insulin', 'sertraline', 'escitalopram', 'mirtazapine', 'risperidone', 'olanzapine', 'prednisone', 'albuterol', 'ciprofloxacin', 'azithromycin', 'amoxicillin', 'acetaminophen', 'ibuprofen'],
+                english: ['warfarin', 'metformin', 'haloperidol', 'furosemide', 'ramipril', 'bisoprolol', 'amlodipine', 'apixaban', 'rivaroxaban', 'dabigatran', 'edoxaban', 'donepezil', 'rivastigmine', 'galantamine', 'memantine', 'quetiapine', 'risperidone', 'olanzapine', 'aripiprazole', 'lorazepam', 'diazepam', 'alprazolam', 'clonazepam', 'gabapentin', 'pregabalin', 'omeprazole', 'pantoprazole', 'esomeprazole', 'levothyroxine', 'atorvastatin', 'simvastatin', 'rosuvastatin', 'lisinopril', 'enalapril', 'perindopril', 'spironolactone', 'eplerenone', 'digoxin', 'amiodarone', 'clopidogrel', 'ticagrelor', 'aspirin', 'insulin', 'glargine', 'lispro', 'aspart', 'detemir', 'sertraline', 'escitalopram', 'citalopram', 'fluoxetine', 'paroxetine', 'venlafaxine', 'duloxetine', 'mirtazapine', 'trazodone', 'bupropion', 'lithium', 'valproate', 'carbamazepine', 'lamotrigine', 'prednisone', 'methylprednisolone', 'dexamethasone', 'hydrocortisone', 'albuterol', 'ipratropium', 'tiotropium', 'formoterol', 'budesonide', 'fluticasone', 'montelukast', 'cetirizine', 'loratadine', 'diphenhydramine', 'hydroxyzine', 'ranitidine', 'famotidine', 'metoclopramide', 'ondansetron', 'promethazine', 'docusate', 'senna', 'lactulose', 'polyethylene glycol', 'morphine', 'oxycodone', 'hydrocodone', 'tramadol', 'fentanyl', 'codeine', 'acetaminophen', 'ibuprofen', 'naproxen', 'celecoxib', 'meloxicam', 'diclofenac', 'ketorolac', 'ciprofloxacin', 'levofloxacin', 'moxifloxacin', 'azithromycin', 'clarithromycin', 'amoxicillin', 'augmentin', 'cephalexin', 'ceftriaxone', 'cefuroxime', 'vancomycin', 'metronidazole', 'clindamycin', 'doxycycline', 'trimethoprim', 'nitrofurantoin', 'fluconazole', 'nystatin', 'acyclovir', 'valacyclovir', 'oseltamivir', 'zolpidem', 'eszopiclone', 'temazepam', 'melatonin', 'buspirone', 'propranolol', 'metoprolol', 'carvedilol', 'atenolol', 'diltiazem', 'verapamil', 'nifedipine', 'isosorbide', 'nitroglycerin', 'hydralazine', 'clonidine', 'doxazosin', 'tamsulosin', 'finasteride', 'dutasteride', 'oxybutynin', 'tolterodine', 'solifenacin', 'mirabegron', 'sildenafil', 'tadalafil', 'vardenafil', 'testosterone', 'estradiol', 'progesterone', 'levonorgestrel', 'raloxifene', 'alendronate', 'risedronate', 'ibandronate', 'zoledronic acid', 'denosumab', 'calcitonin', 'teriparatide', 'calcium', 'vitamin d', 'folic acid', 'vitamin b12', 'thiamine', 'ferrous sulfate', 'potassium', 'magnesium'],
                 hebrew: {
-                    'הלדול': 'haloperidol',
-                    'פוסיד': 'furosemide',
-                    'קומדין': 'warfarin',
-                    'טריטייס': 'ramipril',
-                    'קונקור': 'bisoprolol',
-                    'נורבסק': 'amlodipine',
-                    'אליקוויס': 'apixaban',
-                    'אריספט': 'donepezil',
-                    'נמנדה': 'memantine',
-                    'סרוקוול': 'quetiapine',
-                    'אטיוון': 'lorazepam',
-                    'ניורונטין': 'gabapentin',
-                    'לוסק': 'omeprazole',
-                    'אלטרוקסין': 'levothyroxine',
-                    'סורטיס': 'atorvastatin',
-                    'רמיפריל': 'ramipril',
-                    'אלדקטון': 'spironolactone',
-                    'לנוקסין': 'digoxin',
-                    'פלביקס': 'clopidogrel',
-                    'אספירין': 'aspirin',
-                    'לנטוס': 'insulin',
-                    'זולופט': 'sertraline',
-                    'ציפרלקס': 'escitalopram',
-                    'רמרון': 'mirtazapine',
-                    'ריספרדל': 'risperidone',
-                    'זיפרקסה': 'olanzapine',
-                    'פרדניזון': 'prednisone',
-                    'ונטולין': 'albuterol',
-                    'ציפרו': 'ciprofloxacin',
-                    'אוגמנטין': 'amoxicillin',
-                    'אקמול': 'acetaminophen',
-                    'אדוויל': 'ibuprofen'
+                    'הלדול': 'haloperidol', 'פוסיד': 'furosemide', 'קומדין': 'warfarin', 'טריטייס': 'ramipril',
+                    'קונקור': 'bisoprolol', 'נורבסק': 'amlodipine', 'אליקוויס': 'apixaban', 'קסרלטו': 'rivaroxaban',
+                    'אריספט': 'donepezil', 'נמנדה': 'memantine', 'סרוקוול': 'quetiapine', 'ריספרדל': 'risperidone',
+                    'אטיוון': 'lorazepam', 'וליום': 'diazepam', 'ניורונטין': 'gabapentin', 'ליריקה': 'pregabalin',
+                    'לוסק': 'omeprazole', 'קונטרולוק': 'pantoprazole', 'אלטרוקסין': 'levothyroxine', 'סורטיס': 'atorvastatin',
+                    'סימבסטטין': 'simvastatin', 'קרסטור': 'rosuvastatin', 'רמיפריל': 'ramipril', 'ליזינופריל': 'lisinopril',
+                    'אלדקטון': 'spironolactone', 'לנוקסין': 'digoxin', 'קורדרון': 'amiodarone', 'פלביקס': 'clopidogrel',
+                    'אספירין': 'aspirin', 'לנטוס': 'insulin glargine', 'הומלוג': 'insulin lispro', 'נובורפיד': 'insulin aspart',
+                    'זולופט': 'sertraline', 'ציפרלקס': 'escitalopram', 'ציפרמיל': 'citalopram', 'פרוזק': 'fluoxetine',
+                    'רמרון': 'mirtazapine', 'טריטיקו': 'trazodone', 'אפקסור': 'venlafaxine', 'סימבלטה': 'duloxetine',
+                    'וולבוטרין': 'bupropion', 'זיפרקסה': 'olanzapine', 'אביליפי': 'aripiprazole', 'קלוזריל': 'clozapine',
+                    'ליתיום': 'lithium', 'דפלפט': 'valproate', 'טגרטול': 'carbamazepine', 'למיקטל': 'lamotrigine',
+                    'פרדניזון': 'prednisone', 'מדרול': 'methylprednisolone', 'דקסמטזון': 'dexamethasone',
+                    'ונטולין': 'albuterol', 'אטרובנט': 'ipratropium', 'ספיריבה': 'tiotropium', 'סימביקורט': 'budesonide/formoterol',
+                    'פליקסוטייד': 'fluticasone', 'סינגולר': 'montelukast', 'זירטק': 'cetirizine', 'לוריטן': 'loratadine',
+                    'בנדריל': 'diphenhydramine', 'אטרקס': 'hydroxyzine', 'זנטק': 'ranitidine', 'פמידין': 'famotidine',
+                    'פרמין': 'metoclopramide', 'זופרן': 'ondansetron', 'פנרגן': 'promethazine', 'דולקולקס': 'bisacodyl',
+                    'מירלקס': 'polyethylene glycol', 'דופלק': 'lactulose', 'מורפין': 'morphine', 'אוקסיקודון': 'oxycodone',
+                    'פרקוסט': 'percocet', 'טרמדול': 'tramadol', 'פנטניל': 'fentanyl', 'קודאין': 'codeine',
+                    'אקמול': 'acetaminophen', 'אדוויל': 'ibuprofen', 'נורופן': 'ibuprofen', 'אטופן': 'naproxen',
+                    'ברקסין': 'celecoxib', 'ארקוקסיה': 'etoricoxib', 'וולטרן': 'diclofenac', 'טורדול': 'ketorolac',
+                    'ציפרו': 'ciprofloxacin', 'לבופלוקס': 'levofloxacin', 'אבלוקס': 'moxifloxacin', 'זיתרומקס': 'azithromycin',
+                    'מוקסיפן': 'amoxicillin', 'אוגמנטין': 'augmentin', 'קפלקס': 'cephalexin', 'רוספין': 'ceftriaxone',
+                    'ונקומיצין': 'vancomycin', 'פלג\'יל': 'metronidazole', 'דלצין': 'clindamycin', 'דוקסילין': 'doxycycline',
+                    'רספרים': 'trimethoprim', 'מקרודנטין': 'nitrofurantoin', 'דיפלוקן': 'fluconazole', 'ניסטטין': 'nystatin',
+                    'זובירקס': 'acyclovir', 'ולטרקס': 'valacyclovir', 'טמיפלו': 'oseltamivir', 'סטילנוקס': 'zolpidem',
+                    'לונסטה': 'eszopiclone', 'בונדורמין': 'temazepam', 'מלטונין': 'melatonin', 'בוספירון': 'buspirone',
+                    'דרלין': 'propranolol', 'לופרסור': 'metoprolol', 'דילטיאם': 'diltiazem', 'איסופטין': 'verapamil',
+                    'אדלט': 'nifedipine', 'איזוקט': 'isosorbide', 'ניטרוסטט': 'nitroglycerin', 'אפרזולין': 'hydralazine',
+                    'קלונידין': 'clonidine', 'קרדורה': 'doxazosin', 'אומניק': 'tamsulosin', 'פרוסקר': 'finasteride',
+                    'אבודרט': 'dutasteride', 'ויזיקר': 'oxybutynin', 'דטרוסיטול': 'tolterodine', 'וסיקר': 'solifenacin',
+                    'מירבטריק': 'mirabegron', 'ויאגרה': 'sildenafil', 'סיאליס': 'tadalafil', 'לביטרה': 'vardenafil',
+                    'אנדרוג\'ל': 'testosterone', 'אסטרופם': 'estradiol', 'פרוג\'סטרון': 'progesterone', 'מירנה': 'levonorgestrel',
+                    'אויסטה': 'raloxifene', 'פוסלן': 'alendronate', 'אקטונל': 'risedronate', 'בוניבה': 'ibandronate',
+                    'רקלסט': 'zoledronic acid', 'פרוליה': 'denosumab', 'מיאקלצין': 'calcitonin', 'פורטאו': 'teriparatide',
+                    'קלציום': 'calcium', 'ויטמין די': 'vitamin d', 'חומצה פולית': 'folic acid', 'ויטמין בי12': 'vitamin b12',
+                    'ויטמין בי1': 'thiamine', 'ברזל': 'iron', 'אשלגן': 'potassium', 'מגנזיום': 'magnesium'
                 }
             };
 
             const analyze = () => {
-                const lowerNote = note.toLowerCase();
                 const foundMeds = [];
                 const interactions = [];
+                const beersCriteria = [];
                 
                 // Find English medications
                 medicationList.english.forEach(med => {
@@ -101,58 +120,183 @@
                 // Check critical interactions
                 const medsLower = foundMeds.map(m => m.toLowerCase());
                 
+                // Warfarin interactions
                 if (medsLower.some(m => m.includes('warfarin') || m.includes('קומדין'))) {
-                    interactions.push({ severity: 'warning', text: '⚠️ Warfarin detected - Monitor INR weekly' });
+                    interactions.push({ severity: 'warning', text: '⚠️ Warfarin detected - Monitor INR weekly initially, then monthly' });
                     
                     if (medsLower.some(m => m.includes('aspirin') || m.includes('אספירין'))) {
-                        interactions.push({ severity: 'critical', text: '🔴 CRITICAL: Warfarin + Aspirin = Major bleeding risk' });
+                        interactions.push({ severity: 'critical', text: '🔴 CRITICAL: Warfarin + Aspirin = Major bleeding risk (use only if clear indication)' });
                     }
-                    if (medsLower.some(m => m.includes('amiodarone'))) {
-                        interactions.push({ severity: 'critical', text: '🔴 CRITICAL: Warfarin + Amiodarone = INR increase 2-3x' });
+                    if (medsLower.some(m => m.includes('amiodarone') || m.includes('קורדרון'))) {
+                        interactions.push({ severity: 'critical', text: '🔴 CRITICAL: Warfarin + Amiodarone = INR increase 2-3x (reduce warfarin by 30-50%)' });
                     }
-                    if (medsLower.some(m => m.includes('ciprofloxacin') || m.includes('ציפרו'))) {
-                        interactions.push({ severity: 'critical', text: '🔴 CRITICAL: Warfarin + Ciprofloxacin = INR increase' });
+                    if (medsLower.some(m => m.includes('ciprofloxacin') || m.includes('levofloxacin') || m.includes('ציפרו'))) {
+                        interactions.push({ severity: 'critical', text: '🔴 CRITICAL: Warfarin + Quinolone = Significant INR increase' });
+                    }
+                    if (medsLower.some(m => m.includes('metronidazole') || m.includes('פלג\'יל'))) {
+                        interactions.push({ severity: 'critical', text: '🔴 CRITICAL: Warfarin + Metronidazole = INR increase' });
+                    }
+                    if (medsLower.some(m => m.includes('trimethoprim') || m.includes('רספרים'))) {
+                        interactions.push({ severity: 'critical', text: '🔴 CRITICAL: Warfarin + TMP-SMX = Major INR increase' });
                     }
                 }
                 
-                if (medsLower.some(m => m.includes('furosemide') || m.includes('פוסיד'))) {
-                    interactions.push({ severity: 'warning', text: '⚠️ Monitor K+ and Creatinine in 1 week' });
-                }
-                
-                if (medsLower.some(m => m.includes('haloperidol') || m.includes('הלדול'))) {
-                    interactions.push({ severity: 'warning', text: '⚠️ Haloperidol - Monitor QTc and EPS' });
-                }
-                
-                // ACE-I + K+ sparing diuretic
-                if (medsLower.some(m => m.includes('ramipril') || m.includes('lisinopril')) && 
-                    medsLower.some(m => m.includes('spironolactone'))) {
-                    interactions.push({ severity: 'critical', text: '🔴 CRITICAL: ACE-I + Spironolactone = Hyperkalemia risk' });
+                // ACE-I/ARB + Potassium-sparing interactions
+                if (medsLower.some(m => m.includes('ramipril') || m.includes('lisinopril') || m.includes('enalapril') || m.includes('perindopril') || m.includes('טריטייס'))) {
+                    if (medsLower.some(m => m.includes('spironolactone') || m.includes('eplerenone') || m.includes('אלדקטון'))) {
+                        interactions.push({ severity: 'critical', text: '🔴 CRITICAL: ACE-I + K-sparing diuretic = Severe hyperkalemia risk' });
+                    }
+                    if (medsLower.some(m => m.includes('potassium') || m.includes('אשלגן'))) {
+                        interactions.push({ severity: 'warning', text: '⚠️ ACE-I + K supplement = Monitor potassium closely' });
+                    }
                 }
                 
                 // Benzodiazepine + opioid
-                if (medsLower.some(m => m.includes('lorazepam') || m.includes('אטיוון')) && 
-                    medsLower.some(m => m.includes('morphine') || m.includes('oxycodone'))) {
-                    interactions.push({ severity: 'critical', text: '🔴 CRITICAL: Benzodiazepine + Opioid = Respiratory depression' });
+                if (medsLower.some(m => m.includes('lorazepam') || m.includes('diazepam') || m.includes('alprazolam') || m.includes('clonazepam') || m.includes('אטיוון') || m.includes('וליום'))) {
+                    if (medsLower.some(m => m.includes('morphine') || m.includes('oxycodone') || m.includes('fentanyl') || m.includes('tramadol') || m.includes('מורפין'))) {
+                        interactions.push({ severity: 'critical', text: '🔴 CRITICAL: Benzodiazepine + Opioid = Respiratory depression (avoid if possible)' });
+                    }
                 }
                 
+                // SSRI interactions
+                if (medsLower.some(m => m.includes('sertraline') || m.includes('escitalopram') || m.includes('fluoxetine') || m.includes('paroxetine') || m.includes('זולופט') || m.includes('ציפרלקס'))) {
+                    if (medsLower.some(m => m.includes('tramadol') || m.includes('טרמדול'))) {
+                        interactions.push({ severity: 'warning', text: '⚠️ SSRI + Tramadol = Serotonin syndrome risk' });
+                    }
+                    if (medsLower.some(m => m.includes('ibuprofen') || m.includes('naproxen') || m.includes('diclofenac') || m.includes('אדוויל'))) {
+                        interactions.push({ severity: 'warning', text: '⚠️ SSRI + NSAID = Increased bleeding risk (consider PPI)' });
+                    }
+                }
+                
+                // Digoxin interactions
+                if (medsLower.some(m => m.includes('digoxin') || m.includes('לנוקסין'))) {
+                    interactions.push({ severity: 'info', text: 'ℹ️ Digoxin detected - Monitor levels, K+, Cr' });
+                    if (medsLower.some(m => m.includes('amiodarone') || m.includes('קורדרון'))) {
+                        interactions.push({ severity: 'critical', text: '🔴 CRITICAL: Digoxin + Amiodarone = Reduce digoxin dose by 50%' });
+                    }
+                    if (medsLower.some(m => m.includes('verapamil') || m.includes('diltiazem'))) {
+                        interactions.push({ severity: 'warning', text: '⚠️ Digoxin + CCB = Increased digoxin levels' });
+                    }
+                }
+                
+                // Lithium interactions
+                if (medsLower.some(m => m.includes('lithium') || m.includes('ליתיום'))) {
+                    if (medsLower.some(m => m.includes('ibuprofen') || m.includes('naproxen') || m.includes('diclofenac'))) {
+                        interactions.push({ severity: 'critical', text: '🔴 CRITICAL: Lithium + NSAID = Lithium toxicity (avoid NSAIDs)' });
+                    }
+                    if (medsLower.some(m => m.includes('hydrochlorothiazide') || m.includes('furosemide') || m.includes('פוסיד'))) {
+                        interactions.push({ severity: 'warning', text: '⚠️ Lithium + Diuretic = Monitor lithium levels closely' });
+                    }
+                }
+                
+                // Metformin interactions
+                if (medsLower.some(m => m.includes('metformin') || m.includes('גלוקופאז'))) {
+                    interactions.push({ severity: 'info', text: 'ℹ️ Metformin - Hold 48h before/after contrast, monitor B12 annually' });
+                }
+                
+                // Check Beers Criteria violations
+                if (medsLower.some(m => m.includes('diphenhydramine') || m.includes('בנדריל'))) {
+                    beersCriteria.push('⚠️ Diphenhydramine - AVOID: Highly anticholinergic, confusion, falls');
+                }
+                if (medsLower.some(m => m.includes('hydroxyzine') || m.includes('אטרקס'))) {
+                    beersCriteria.push('⚠️ Hydroxyzine - AVOID: Anticholinergic, confusion');
+                }
+                if (medsLower.some(m => m.includes('lorazepam') || m.includes('diazepam') || m.includes('alprazolam'))) {
+                    beersCriteria.push('⚠️ Benzodiazepines - AVOID: Falls, cognitive impairment, dependence');
+                }
+                if (medsLower.some(m => m.includes('zolpidem') || m.includes('eszopiclone') || m.includes('סטילנוקס'))) {
+                    beersCriteria.push('⚠️ Z-drugs - AVOID: Falls, fractures, cognitive effects');
+                }
+                if (medsLower.some(m => m.includes('amitriptyline'))) {
+                    beersCriteria.push('⚠️ Amitriptyline - AVOID: Highly anticholinergic, sedating');
+                }
+                
+                // Monitoring recommendations
+                if (medsLower.some(m => m.includes('furosemide') || m.includes('פוסיד'))) {
+                    interactions.push({ severity: 'info', text: 'ℹ️ Furosemide - Monitor K+, Cr, Mg weekly initially' });
+                }
+                if (medsLower.some(m => m.includes('haloperidol') || m.includes('הלדול'))) {
+                    interactions.push({ severity: 'info', text: 'ℹ️ Haloperidol - Monitor QTc, EPS, max 2mg/day in elderly' });
+                }
+                if (medsLower.some(m => m.includes('spironolactone') || m.includes('אלדקטון'))) {
+                    interactions.push({ severity: 'info', text: 'ℹ️ Spironolactone - Monitor K+ at 1 week, then monthly' });
+                }
+                
+                // Polypharmacy check
                 if (foundMeds.length > 10) {
-                    interactions.push({ severity: 'warning', text: '⚠️ Polypharmacy detected - Consider medication review' });
+                    interactions.push({ severity: 'warning', text: '⚠️ Polypharmacy detected (>10 medications) - Consider comprehensive medication review' });
+                }
+                if (foundMeds.length > 15) {
+                    interactions.push({ severity: 'critical', text: '🔴 Severe polypharmacy (>15 medications) - High risk of adverse events' });
                 }
                 
-                // Extract vitals
+                // Calculate anticholinergic burden
+                let acbScore = 0;
+                const acb3 = ['amitriptyline', 'clomipramine', 'hydroxyzine', 'diphenhydramine', 'promethazine', 'chlorpheniramine', 'oxybutynin', 'tolterodine'];
+                const acb2 = ['cyproheptadine', 'meperidine', 'loxapine', 'olanzapine'];
+                const acb1 = ['alprazolam', 'aripiprazole', 'atenolol', 'captopril', 'cimetidine', 'clorazepate', 'codeine', 'colchicine', 'digoxin', 'dipyridamole', 'fentanyl', 'furosemide', 'fluvoxamine', 'haloperidol', 'hydralazine', 'hydrocortisone', 'isosorbide', 'loperamide', 'metoprolol', 'morphine', 'nifedipine', 'prednisone', 'quinidine', 'ranitidine', 'risperidone', 'theophylline', 'trazodone', 'triamterene', 'warfarin'];
+                
+                medsLower.forEach(med => {
+                    if (acb3.some(acbMed => med.includes(acbMed))) acbScore += 3;
+                    else if (acb2.some(acbMed => med.includes(acbMed))) acbScore += 2;
+                    else if (acb1.some(acbMed => med.includes(acbMed))) acbScore += 1;
+                });
+                
+                if (acbScore >= 3) {
+                    interactions.push({ severity: 'warning', text: `⚠️ High anticholinergic burden (ACB score: ${acbScore}) - Increased risk of cognitive impairment and falls` });
+                }
+                
+                // Extract vitals and labs
                 const bp = note.match(/\b\d{2,3}\/\d{2,3}\b/g);
                 const hr = note.match(/(?:HR|Pulse|דופק)[:\s]*(\d{2,3})/i)?.[1];
+                const temp = note.match(/(?:Temp|Temperature|חום)[:\s]*([\d.]+)/i)?.[1];
+                const spo2 = note.match(/(?:SpO2|O2|Sat|סטורציה)[:\s]*(\d{2,3})/i)?.[1];
                 const creatinine = note.match(/(?:Cr|Creatinine|קריאטינין)[:\s]*([\d.]+)/i)?.[1];
+                const egfr = note.match(/(?:eGFR|GFR)[:\s]*(\d+)/i)?.[1];
+                const potassium = note.match(/(?:K\+?|Potassium|אשלגן)[:\s]*([\d.]+)/i)?.[1];
+                const sodium = note.match(/(?:Na\+?|Sodium|נתרן)[:\s]*([\d.]+)/i)?.[1];
+                const glucose = note.match(/(?:Glucose|BS|Blood Sugar|גלוקוז|סוכר)[:\s]*(\d+)/i)?.[1];
+                const hba1c = note.match(/(?:HbA1c|A1C|המוגלובין)[:\s]*([\d.]+)/i)?.[1];
                 const inr = note.match(/(?:INR)[:\s]*([\d.]+)/i)?.[1];
+                const hemoglobin = note.match(/(?:Hb|Hgb|Hemoglobin|המוגלובין)[:\s]*([\d.]+)/i)?.[1];
+                const wbc = note.match(/(?:WBC|White cells|לויקוציטים)[:\s]*([\d.]+)/i)?.[1];
+                const platelets = note.match(/(?:Plt|Platelets|טסיות)[:\s]*(\d+)/i)?.[1];
+                
+                // Renal dosing recommendations
+                if (egfr && parseInt(egfr) < 30) {
+                    if (medsLower.some(m => m.includes('metformin'))) {
+                        interactions.push({ severity: 'critical', text: '🔴 CRITICAL: Metformin contraindicated with eGFR <30' });
+                    }
+                    if (medsLower.some(m => m.includes('gabapentin') || m.includes('pregabalin'))) {
+                        interactions.push({ severity: 'warning', text: '⚠️ Gabapentin/Pregabalin - Reduce dose for renal impairment' });
+                    }
+                    if (medsLower.some(m => m.includes('apixaban') || m.includes('rivaroxaban'))) {
+                        interactions.push({ severity: 'warning', text: '⚠️ DOAC dosing adjustment may be needed for CKD' });
+                    }
+                }
                 
                 setAnalysis({
                     medications: foundMeds,
                     interactions: interactions,
+                    beersCriteria: beersCriteria,
+                    anticholinergicBurden: acbScore,
                     vitals: {
                         bp: bp ? bp[0] : null,
                         hr: hr || null,
+                        temp: temp || null,
+                        spo2: spo2 || null
+                    },
+                    labs: {
                         creatinine: creatinine || null,
-                        inr: inr || null
+                        egfr: egfr || null,
+                        potassium: potassium || null,
+                        sodium: sodium || null,
+                        glucose: glucose || null,
+                        hba1c: hba1c || null,
+                        inr: inr || null,
+                        hemoglobin: hemoglobin || null,
+                        wbc: wbc || null,
+                        platelets: platelets || null
                     }
                 });
             };
@@ -163,26 +307,28 @@
                     <textarea 
                         value={note}
                         onChange={(e) => setNote(e.target.value)}
-                        rows="10"
+                        rows="12"
                         placeholder={`Paste clinical note here (Hebrew/English supported)
 
 Example:
-85 y/o male with HTN, DM, AF
-Medications: Warfarin 5mg daily, Furosemide 40mg BID, Ramipril 10mg daily, Aspirin 100mg
-Labs: Cr 1.5, INR 2.3, BP: 130/80, HR: 72
+85 y/o male with HTN, DM2, AF on warfarin, CHF, CKD
+Medications: Warfarin 5mg daily, Furosemide 40mg BID, Ramipril 10mg daily, Bisoprolol 5mg daily, Metformin 1000mg BID, Aspirin 100mg daily
+Vitals: BP 130/80, HR 72, Temp 36.8, SpO2 96%
+Labs: Cr 1.5, eGFR 45, K+ 4.8, Na+ 138, Glucose 145, HbA1c 7.2, INR 2.3, Hb 11.5, WBC 8.2, Plt 180
 
 דוגמה בעברית:
-בן 85 עם יתר לחץ דם, סוכרת, פרפור עליות
-תרופות: קומדין 5 מ"ג, פוסיד 40 מ"ג פעמיים ביום, טריטייס 10 מ"ג, אספירין 100 מ"ג
-מעבדה: קריאטינין 1.5, INR 2.3`}
+בן 85 עם יתר לחץ דם, סוכרת סוג 2, פרפור עליות על קומדין, אי ספיקת לב, מחלת כליות כרונית
+תרופות: קומדין 5 מ"ג ביום, פוסיד 40 מ"ג פעמיים ביום, טריטייס 10 מ"ג, קונקור 5 מ"ג, גלוקופאז' 1000 מ"ג פעמיים ביום, אספירין 100 מ"ג
+סימנים חיוניים: לחץ דם 130/80, דופק 72, חום 36.8, סטורציה 96%
+מעבדה: קריאטינין 1.5, eGFR 45, אשלגן 4.8, נתרן 138, גלוקוז 145, המוגלובין A1C 7.2, INR 2.3`}
                     />
                     <button onClick={analyze} style={{marginTop: '10px'}}>Analyze Note</button>
                     
                     {analysis && (
-                        <div style={{marginTop: '20px', background: 'white', padding: '20px', borderRadius: '12px'}}>
-                            <h3>Analysis Report</h3>
+                        <div style={{marginTop: '20px', background: 'white', padding: '20px', borderRadius: '12px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)'}}>
+                            <h3 style={{color: '#764ba2'}}>Comprehensive Analysis Report</h3>
                             
-                            <div style={{marginTop: '15px'}}>
+                            <div style={{marginTop: '20px'}}>
                                 <strong>Medications Found ({analysis.medications.length}):</strong>
                                 <div style={{marginTop: '10px'}}>
                                     {analysis.medications.map((med, idx) => (
@@ -193,7 +339,7 @@ Labs: Cr 1.5, INR 2.3, BP: 130/80, HR: 72
                             
                             {analysis.interactions.length > 0 && (
                                 <div style={{marginTop: '20px'}}>
-                                    <strong>Drug Interactions & Alerts:</strong>
+                                    <strong>Drug Interactions & Clinical Alerts:</strong>
                                     {analysis.interactions.map((alert, idx) => (
                                         <div key={idx} className={`alert ${alert.severity}`}>
                                             {alert.text}
@@ -202,14 +348,54 @@ Labs: Cr 1.5, INR 2.3, BP: 130/80, HR: 72
                                 </div>
                             )}
                             
-                            {(analysis.vitals.bp || analysis.vitals.hr || analysis.vitals.creatinine || analysis.vitals.inr) && (
+                            {analysis.beersCriteria.length > 0 && (
                                 <div style={{marginTop: '20px'}}>
-                                    <strong>Extracted Values:</strong>
-                                    <div style={{marginTop: '10px'}}>
-                                        {analysis.vitals.bp && <div>BP: {analysis.vitals.bp}</div>}
-                                        {analysis.vitals.hr && <div>HR: {analysis.vitals.hr} bpm</div>}
-                                        {analysis.vitals.creatinine && <div>Creatinine: {analysis.vitals.creatinine} mg/dL</div>}
-                                        {analysis.vitals.inr && <div>INR: {analysis.vitals.inr}</div>}
+                                    <strong>Beers Criteria Violations:</strong>
+                                    {analysis.beersCriteria.map((criteria, idx) => (
+                                        <div key={idx} className="alert warning">
+                                            {criteria}
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                            
+                            {analysis.anticholinergicBurden > 0 && (
+                                <div style={{marginTop: '20px'}}>
+                                    <strong>Anticholinergic Burden Score: {analysis.anticholinergicBurden}</strong>
+                                    <div className={`alert ${analysis.anticholinergicBurden >= 3 ? 'warning' : 'info'}`}>
+                                        {analysis.anticholinergicBurden >= 3 ? 
+                                            '⚠️ High risk of cognitive impairment, falls, and anticholinergic side effects' :
+                                            'ℹ️ Monitor for anticholinergic side effects'}
+                                    </div>
+                                </div>
+                            )}
+                            
+                            {(analysis.vitals.bp || analysis.vitals.hr || analysis.vitals.temp || analysis.vitals.spo2) && (
+                                <div style={{marginTop: '20px'}}>
+                                    <strong>Vital Signs:</strong>
+                                    <div style={{marginTop: '10px', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '10px'}}>
+                                        {analysis.vitals.bp && <div style={{background: '#f0f9ff', padding: '10px', borderRadius: '8px'}}>BP: {analysis.vitals.bp}</div>}
+                                        {analysis.vitals.hr && <div style={{background: '#f0f9ff', padding: '10px', borderRadius: '8px'}}>HR: {analysis.vitals.hr} bpm</div>}
+                                        {analysis.vitals.temp && <div style={{background: '#f0f9ff', padding: '10px', borderRadius: '8px'}}>Temp: {analysis.vitals.temp}°C</div>}
+                                        {analysis.vitals.spo2 && <div style={{background: '#f0f9ff', padding: '10px', borderRadius: '8px'}}>SpO2: {analysis.vitals.spo2}%</div>}
+                                    </div>
+                                </div>
+                            )}
+                            
+                            {Object.values(analysis.labs).some(v => v) && (
+                                <div style={{marginTop: '20px'}}>
+                                    <strong>Laboratory Values:</strong>
+                                    <div style={{marginTop: '10px', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '10px'}}>
+                                        {analysis.labs.creatinine && <div style={{background: '#fef3c7', padding: '10px', borderRadius: '8px'}}>Cr: {analysis.labs.creatinine} mg/dL</div>}
+                                        {analysis.labs.egfr && <div style={{background: '#fef3c7', padding: '10px', borderRadius: '8px'}}>eGFR: {analysis.labs.egfr} mL/min</div>}
+                                        {analysis.labs.potassium && <div style={{background: '#fef3c7', padding: '10px', borderRadius: '8px'}}>K+: {analysis.labs.potassium} mEq/L</div>}
+                                        {analysis.labs.sodium && <div style={{background: '#fef3c7', padding: '10px', borderRadius: '8px'}}>Na+: {analysis.labs.sodium} mEq/L</div>}
+                                        {analysis.labs.glucose && <div style={{background: '#fef3c7', padding: '10px', borderRadius: '8px'}}>Glucose: {analysis.labs.glucose} mg/dL</div>}
+                                        {analysis.labs.hba1c && <div style={{background: '#fef3c7', padding: '10px', borderRadius: '8px'}}>HbA1c: {analysis.labs.hba1c}%</div>}
+                                        {analysis.labs.inr && <div style={{background: '#fef3c7', padding: '10px', borderRadius: '8px'}}>INR: {analysis.labs.inr}</div>}
+                                        {analysis.labs.hemoglobin && <div style={{background: '#fef3c7', padding: '10px', borderRadius: '8px'}}>Hb: {analysis.labs.hemoglobin} g/dL</div>}
+                                        {analysis.labs.wbc && <div style={{background: '#fef3c7', padding: '10px', borderRadius: '8px'}}>WBC: {analysis.labs.wbc} K/μL</div>}
+                                        {analysis.labs.platelets && <div style={{background: '#fef3c7', padding: '10px', borderRadius: '8px'}}>Plt: {analysis.labs.platelets} K/μL</div>}
                                     </div>
                                 </div>
                             )}
@@ -219,58 +405,128 @@ Labs: Cr 1.5, INR 2.3, BP: 130/80, HR: 72
             );
         }
 
-        // MCQ Quiz Component
+        // Complete MCQ Quiz Component
         function MCQQuiz() {
             const questions = [
                 {
                     question: "85-year-old with acute delirium. First-line medication?",
+                    questionHE: "בן 85 עם דליריום חריף. תרופה ראשונה?",
                     options: [
                         { text: "Haloperidol 0.25-0.5mg PO/IM", correct: true },
                         { text: "Lorazepam 1mg PO", correct: false },
                         { text: "Quetiapine 100mg PO", correct: false },
                         { text: "Diphenhydramine 25mg PO", correct: false }
                     ],
-                    explanation: "Low-dose haloperidol is first-line. Benzodiazepines worsen delirium except in alcohol withdrawal."
+                    explanation: "Low-dose haloperidol (0.25-0.5mg) is first-line for delirium. Benzodiazepines worsen delirium except in alcohol withdrawal. Anticholinergics contraindicated.",
+                    category: "Delirium"
                 },
                 {
                     question: "Which is NOT a feature of delirium (CAM criteria)?",
+                    questionHE: "מה לא מאפיין דליריום לפי CAM?",
                     options: [
                         { text: "Acute onset", correct: false },
                         { text: "Fluctuating course", correct: false },
                         { text: "Clear consciousness", correct: true },
                         { text: "Inattention", correct: false }
                     ],
-                    explanation: "CAM requires: acute onset AND fluctuation, inattention, and either disorganized thinking OR altered consciousness."
+                    explanation: "CAM requires: 1) Acute onset AND fluctuation, 2) Inattention, 3) Disorganized thinking OR 4) Altered consciousness. Clear consciousness excludes delirium.",
+                    category: "Delirium"
                 },
                 {
                     question: "88-year-old on warfarin with pneumonia. Safest antibiotic?",
+                    questionHE: "בן 88 על קומדין עם דלקת ריאות. אנטיביוטיקה בטוחה?",
                     options: [
                         { text: "Azithromycin", correct: true },
                         { text: "Levofloxacin", correct: false },
                         { text: "TMP-SMX", correct: false },
                         { text: "Metronidazole", correct: false }
                     ],
-                    explanation: "Azithromycin has minimal warfarin interaction. Others significantly increase INR."
+                    explanation: "Azithromycin has minimal warfarin interaction. Quinolones, TMP-SMX, and metronidazole significantly increase INR.",
+                    category: "Medications"
                 },
                 {
                     question: "Frail elderly patient with diabetes. HbA1c target?",
+                    questionHE: "קשיש שברירי עם סוכרת. מטרת HbA1c?",
                     options: [
                         { text: "< 6.5%", correct: false },
                         { text: "< 7.0%", correct: false },
                         { text: "< 7.5%", correct: false },
                         { text: "< 8.5%", correct: true }
                     ],
-                    explanation: "Frail elderly: HbA1c <8.5%. Tight control increases hypoglycemia without benefit."
+                    explanation: "Frail elderly: HbA1c <8.5%. Healthy elderly: <7.5%. Tight control increases hypoglycemia without benefit.",
+                    category: "Endocrine"
                 },
                 {
                     question: "Best intervention to reduce falls by 30%?",
+                    questionHE: "התערבות המפחיתה נפילות ב-30%?",
                     options: [
                         { text: "Vitamin D supplementation", correct: true },
                         { text: "Hip protectors", correct: false },
                         { text: "Bed alarms", correct: false },
                         { text: "Restraints", correct: false }
                     ],
-                    explanation: "Vitamin D 800-1000 IU reduces falls by 30% if deficient. Restraints increase falls."
+                    explanation: "Vitamin D 800-1000 IU daily reduces falls by 30% if deficient. Restraints increase falls and injuries.",
+                    category: "Falls"
+                },
+                {
+                    question: "Patient with CrCl 25 mL/min. Which diabetes medication is contraindicated?",
+                    questionHE: "חולה עם CrCl 25. איזו תרופת סוכרת אסורה?",
+                    options: [
+                        { text: "Metformin", correct: true },
+                        { text: "Pioglitazone", correct: false },
+                        { text: "Sitagliptin", correct: false },
+                        { text: "Glipizide", correct: false }
+                    ],
+                    explanation: "Metformin contraindicated if eGFR <30 due to lactic acidosis risk. Sitagliptin needs dose reduction but not contraindicated.",
+                    category: "Medications"
+                },
+                {
+                    question: "85-year-old with new AF, CHA2DS2-VASc score 5. Best anticoagulation?",
+                    questionHE: "בן 85 עם פרפור חדש, CHA2DS2-VASc 5. נוגד קרישה מומלץ?",
+                    options: [
+                        { text: "Apixaban 5mg BID", correct: true },
+                        { text: "Warfarin INR 2-3", correct: false },
+                        { text: "Aspirin 325mg daily", correct: false },
+                        { text: "No anticoagulation", correct: false }
+                    ],
+                    explanation: "DOACs preferred over warfarin in elderly. Apixaban has lowest bleeding risk. Score ≥2 requires anticoagulation.",
+                    category: "Cardiovascular"
+                },
+                {
+                    question: "Which medication should be AVOIDED according to Beers Criteria?",
+                    questionHE: "איזו תרופה להימנע לפי Beers?",
+                    options: [
+                        { text: "Diphenhydramine", correct: true },
+                        { text: "Acetaminophen", correct: false },
+                        { text: "Omeprazole", correct: false },
+                        { text: "Metformin", correct: false }
+                    ],
+                    explanation: "Diphenhydramine is highly anticholinergic - causes confusion, falls, urinary retention. Use cetirizine instead.",
+                    category: "Medications"
+                },
+                {
+                    question: "Nursing home resident with asymptomatic bacteriuria. Treatment?",
+                    questionHE: "דייר מוסד עם בקטריוריה אסימפטומטית. טיפול?",
+                    options: [
+                        { text: "No antibiotics", correct: true },
+                        { text: "Ciprofloxacin 500mg BID x7d", correct: false },
+                        { text: "Nitrofurantoin 100mg BID x5d", correct: false },
+                        { text: "TMP-SMX DS BID x3d", correct: false }
+                    ],
+                    explanation: "Don't treat asymptomatic bacteriuria in elderly. Treatment doesn't prevent UTIs and increases resistance.",
+                    category: "Infections"
+                },
+                {
+                    question: "Terminal patient with dyspnea. Most effective intervention?",
+                    questionHE: "חולה סופני עם קוצר נשימה. הטיפול היעיל?",
+                    options: [
+                        { text: "Morphine 2.5mg SC q4h", correct: true },
+                        { text: "Oxygen 10L/min", correct: false },
+                        { text: "Furosemide 40mg IV", correct: false },
+                        { text: "Albuterol nebulizer", correct: false }
+                    ],
+                    explanation: "Low-dose opioids are most effective for dyspnea in dying patients. Oxygen only helps if hypoxic.",
+                    category: "Palliative"
                 }
             ];
 
@@ -279,18 +535,26 @@ Labs: Cr 1.5, INR 2.3, BP: 130/80, HR: 72
             const [showExplanation, setShowExplanation] = useState(false);
             const [selectedAnswer, setSelectedAnswer] = useState(null);
             const [quizComplete, setQuizComplete] = useState(false);
+            const [language, setLanguage] = useState('EN');
+            const [selectedCategory, setSelectedCategory] = useState('All');
+            
+            const categories = ['All', 'Delirium', 'Medications', 'Falls', 'Cardiovascular', 'Endocrine', 'Infections', 'Palliative'];
+            
+            const filteredQuestions = selectedCategory === 'All' ? 
+                questions : 
+                questions.filter(q => q.category === selectedCategory);
 
             const handleAnswer = (index) => {
                 if (showExplanation) return;
                 setSelectedAnswer(index);
-                if (questions[currentQ].options[index].correct) {
+                if (filteredQuestions[currentQ].options[index].correct) {
                     setScore(score + 1);
                 }
                 setShowExplanation(true);
             };
 
             const nextQuestion = () => {
-                if (currentQ < questions.length - 1) {
+                if (currentQ < filteredQuestions.length - 1) {
                     setCurrentQ(currentQ + 1);
                     setShowExplanation(false);
                     setSelectedAnswer(null);
@@ -313,8 +577,13 @@ Labs: Cr 1.5, INR 2.3, BP: 130/80, HR: 72
                         <div className="quiz-card">
                             <h2>Quiz Complete!</h2>
                             <p style={{fontSize: '24px', margin: '20px 0'}}>
-                                Score: {score}/{questions.length} ({Math.round(score/questions.length * 100)}%)
+                                Score: {score}/{filteredQuestions.length} ({Math.round(score/filteredQuestions.length * 100)}%)
                             </p>
+                            <div style={{marginTop: '20px'}}>
+                                {score/filteredQuestions.length >= 0.8 && <p style={{color: '#10b981'}}>Excellent! Ready for boards!</p>}
+                                {score/filteredQuestions.length >= 0.6 && score/filteredQuestions.length < 0.8 && <p style={{color: '#f59e0b'}}>Good! Keep studying!</p>}
+                                {score/filteredQuestions.length < 0.6 && <p style={{color: '#ef4444'}}>Need more review!</p>}
+                            </div>
                             <button onClick={restart}>Restart Quiz</button>
                         </div>
                     </div>
@@ -325,13 +594,30 @@ Labs: Cr 1.5, INR 2.3, BP: 130/80, HR: 72
                 <div className="container">
                     <div className="quiz-card">
                         <div style={{marginBottom: '20px'}}>
-                            <span style={{color: '#667eea'}}>Question {currentQ + 1}/{questions.length}</span>
-                            <span style={{float: 'right'}}>Score: {score}/{currentQ}</span>
+                            <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px'}}>
+                                <select value={selectedCategory} onChange={(e) => {setSelectedCategory(e.target.value); restart();}}>
+                                    {categories.map(cat => (
+                                        <option key={cat} value={cat}>{cat}</option>
+                                    ))}
+                                </select>
+                                <button 
+                                    onClick={() => setLanguage(language === 'EN' ? 'HE' : 'EN')}
+                                    style={{padding: '8px 16px', fontSize: '14px'}}
+                                >
+                                    {language === 'EN' ? 'עברית' : 'English'}
+                                </button>
+                            </div>
+                            <div style={{display: 'flex', justifyContent: 'space-between'}}>
+                                <span style={{color: '#667eea'}}>Question {currentQ + 1}/{filteredQuestions.length}</span>
+                                <span>Score: {score}/{currentQ}</span>
+                            </div>
                         </div>
                         
-                        <h3 style={{marginBottom: '20px'}}>{questions[currentQ].question}</h3>
+                        <h3 style={{marginBottom: '20px', fontSize: '18px', lineHeight: '1.5'}}>
+                            {language === 'EN' ? filteredQuestions[currentQ].question : (filteredQuestions[currentQ].questionHE || filteredQuestions[currentQ].question)}
+                        </h3>
                         
-                        {questions[currentQ].options.map((option, idx) => (
+                        {filteredQuestions[currentQ].options.map((option, idx) => (
                             <button
                                 key={idx}
                                 className={`option ${showExplanation ? (option.correct ? 'correct' : (idx === selectedAnswer ? 'incorrect' : '')) : ''}`}
@@ -346,10 +632,291 @@ Labs: Cr 1.5, INR 2.3, BP: 130/80, HR: 72
                         
                         {showExplanation && (
                             <div style={{marginTop: '20px', padding: '15px', background: '#f0f9ff', borderRadius: '8px'}}>
-                                <strong>Explanation:</strong> {questions[currentQ].explanation}
+                                <strong>Explanation:</strong> {filteredQuestions[currentQ].explanation}
                                 <button onClick={nextQuestion} style={{marginTop: '10px', display: 'block'}}>
-                                    {currentQ < questions.length - 1 ? 'Next Question' : 'Finish Quiz'}
+                                    {currentQ < filteredQuestions.length - 1 ? 'Next Question' : 'Finish Quiz'}
                                 </button>
+                            </div>
+                        )}
+                    </div>
+                </div>
+            );
+        }
+
+        // Protocols Component
+        function Protocols() {
+            const protocols = {
+                'Delirium': {
+                    assessment: 'CAM criteria: Acute onset + Fluctuation + Inattention + (Disorganized thinking OR Altered consciousness)',
+                    treatment: 'Haloperidol 0.25-0.5mg PO/IM q4h PRN (max 2mg/day)',
+                    prevention: 'Early mobilization, orientation, sleep hygiene, avoid restraints',
+                    monitoring: 'Monitor QTc, EPS, NMS'
+                },
+                'Falls Prevention': {
+                    assessment: 'TUG test, orthostatic vitals, medication review, vision/hearing',
+                    intervention: 'PT/OT, Vitamin D 800-1000 IU, home safety, medication adjustment',
+                    prevention: 'Exercise program, hip protectors, address orthostatic hypotension',
+                    monitoring: 'Fall diary, gait reassessment q3 months'
+                },
+                'Heart Failure': {
+                    acute: 'Furosemide IV (2x PO dose), daily weights, strict I/O',
+                    chronic: 'ACE-I/ARB + BB + MRA + SGLT2i, sodium restriction <2g/day',
+                    monitoring: 'Daily weight, K+, Cr, BNP trend',
+                    targets: 'Euvolemia, SBP >90, HR 60-100'
+                },
+                'Atrial Fibrillation': {
+                    rate: 'Beta-blocker first line (target HR <110 if asymptomatic)',
+                    anticoagulation: 'CHA2DS2-VASc ≥2: Apixaban 5mg BID (or 2.5mg if criteria met)',
+                    rhythm: 'Consider if new onset, symptomatic, or HF',
+                    monitoring: 'HR, BP, symptoms, annual echo'
+                },
+                'Diabetes in Elderly': {
+                    targets: 'Healthy: A1c <7.5%, Frail: A1c <8.5%, End-of-life: Avoid symptoms',
+                    medications: 'Metformin if eGFR >30, avoid sulfonylureas, prefer DPP-4i',
+                    monitoring: 'A1c q3-6 months, annual eye/foot exam',
+                    hypoglycemia: 'Avoid tight control, reduce meds if frequent lows'
+                },
+                'Hypertension': {
+                    targets: 'Age <80: <140/90, Age ≥80: <150/90',
+                    firstLine: 'ACE-I/ARB, CCB, or thiazide',
+                    avoid: 'Alpha-blockers as monotherapy',
+                    monitoring: 'Orthostatic BP, K+, Cr'
+                },
+                'Dementia': {
+                    diagnosis: 'MOCA/MMSE, B12, TSH, RPR, Head CT/MRI',
+                    medications: 'Mild-moderate: Donepezil 5-10mg, Severe: Consider memantine',
+                    behavioral: 'Non-pharm first, avoid antipsychotics if possible',
+                    support: 'Caregiver education, respite care, advance directives'
+                },
+                'UTI': {
+                    diagnosis: 'Symptoms + UA + culture (not asymptomatic bacteriuria)',
+                    empiric: 'Nitrofurantoin 100mg BID x5d or TMP-SMX DS BID x3d',
+                    complicated: 'Fluoroquinolone or ceftriaxone x7-14d',
+                    prevention: 'Hydration, void after intercourse, avoid catheters'
+                },
+                'Pneumonia': {
+                    assessment: 'CURB-65 score, CXR, CBC, BMP',
+                    empiric: 'CAP: Azithromycin + Ceftriaxone, HAP: Anti-pseudomonal',
+                    duration: 'CAP: 5-7 days, HAP: 7-8 days',
+                    prevention: 'Pneumovax, flu vaccine, aspiration precautions'
+                },
+                'Pressure Ulcers': {
+                    prevention: 'Turn q2h, pressure redistribution, nutrition',
+                    staging: 'Stage 1-4, unstageable, DTI',
+                    treatment: 'Offload, debride if needed, moist wound healing',
+                    nutrition: 'Protein 1.2-1.5 g/kg/day, vitamin C, zinc'
+                }
+            };
+
+            return (
+                <div className="container">
+                    <h2 style={{color: '#667eea', marginBottom: '20px'}}>Clinical Protocols</h2>
+                    <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '20px'}}>
+                        {Object.entries(protocols).map(([name, protocol]) => (
+                            <div key={name} className="protocol-card">
+                                <h3>{name}</h3>
+                                {Object.entries(protocol).map(([key, value]) => (
+                                    <div key={key} style={{marginBottom: '12px'}}>
+                                        <strong style={{color: '#667eea', textTransform: 'capitalize'}}>
+                                            {key}:
+                                        </strong>
+                                        <p style={{margin: '5px 0', fontSize: '14px', lineHeight: '1.5'}}>
+                                            {value}
+                                        </p>
+                                    </div>
+                                ))}
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            );
+        }
+
+        // Medications Component
+        function Medications() {
+            const medications = [
+                {name: 'Haloperidol', israeli: 'הלדול', indication: 'Delirium', elderlyDose: '0.25-0.5mg q4-6h', maxDose: '2mg/day', caution: 'QT, EPS, NMS', beers: 'Avoid in dementia', monitoring: 'EKG, AIMS'},
+                {name: 'Furosemide', israeli: 'פוסיד', indication: 'CHF, edema', elderlyDose: 'Start 20mg daily', maxDose: '160mg/day', caution: 'K+, Cr, BP', beers: 'Use with caution', monitoring: 'Electrolytes weekly'},
+                {name: 'Ramipril', israeli: 'טריטייס', indication: 'HTN, CHF', elderlyDose: 'Start 1.25mg', maxDose: '10mg daily', caution: 'Hyperkalemia, AKI', beers: 'Preferred ACE-I', monitoring: 'K+, Cr at 1-2 weeks'},
+                {name: 'Warfarin', israeli: 'קומדין', indication: 'AF, DVT/PE', elderlyDose: 'Start 2.5-5mg', target: 'INR 2-3', caution: 'Falls, interactions', beers: 'DOACs preferred', monitoring: 'INR weekly→monthly'},
+                {name: 'Apixaban', israeli: 'אליקוויס', indication: 'AF, DVT/PE', elderlyDose: '5mg BID', reducedDose: '2.5mg if criteria', caution: 'Bleeding', beers: 'Preferred', monitoring: 'Annual Cr, Hgb'},
+                {name: 'Donepezil', israeli: 'אריספט', indication: 'Alzheimer', elderlyDose: '5mg→10mg', maxDose: '23mg severe', caution: 'GI, bradycardia', beers: 'Appropriate', monitoring: 'HR, GI tolerance'},
+                {name: 'Metformin', israeli: 'גלוקופאז', indication: 'T2DM', elderlyDose: 'Start 500mg', maxDose: '2000mg/day', caution: 'CI if eGFR<30', beers: 'First-line', monitoring: 'B12, Cr'},
+                {name: 'Amlodipine', israeli: 'נורבסק', indication: 'HTN', elderlyDose: 'Start 2.5mg', maxDose: '10mg daily', caution: 'Edema', beers: 'Safe', monitoring: 'BP, ankle edema'},
+                {name: 'Bisoprolol', israeli: 'קונקור', indication: 'HTN, CHF', elderlyDose: 'Start 1.25mg', maxDose: '10mg daily', caution: 'Bradycardia', beers: 'Preferred BB', monitoring: 'HR, BP'},
+                {name: 'Omeprazole', israeli: 'לוסק', indication: 'GERD', elderlyDose: '20mg daily', maxDose: '40mg daily', caution: 'C.diff, B12↓', beers: 'Limit to 8 weeks', monitoring: 'B12, Mg if long-term'}
+            ];
+
+            return (
+                <div className="container">
+                    <h2 style={{color: '#667eea', marginBottom: '20px'}}>Geriatric Medications Reference</h2>
+                    <div style={{overflowX: 'auto'}}>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Medication</th>
+                                    <th>Hebrew</th>
+                                    <th>Indication</th>
+                                    <th>Elderly Dose</th>
+                                    <th>Max/Target</th>
+                                    <th>Caution</th>
+                                    <th>Beers Criteria</th>
+                                    <th>Monitoring</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {medications.map((med, index) => (
+                                    <tr key={index}>
+                                        <td style={{fontWeight: 'bold'}}>{med.name}</td>
+                                        <td>{med.israeli}</td>
+                                        <td style={{fontSize: '14px'}}>{med.indication}</td>
+                                        <td style={{color: '#667eea', fontSize: '14px'}}>{med.elderlyDose}</td>
+                                        <td style={{fontSize: '14px'}}>{med.maxDose || med.reducedDose || med.target || '-'}</td>
+                                        <td style={{color: '#f59e0b', fontSize: '13px'}}>{med.caution}</td>
+                                        <td style={{color: med.beers.includes('Avoid') ? '#ef4444' : '#10b981', fontSize: '13px', fontWeight: '500'}}>
+                                            {med.beers}
+                                        </td>
+                                        <td style={{fontSize: '13px'}}>{med.monitoring}</td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            );
+        }
+
+        // Calculators Component
+        function Calculators() {
+            const [calcType, setCalcType] = useState('cha2ds2vasc');
+            const [inputs, setInputs] = useState({});
+            const [result, setResult] = useState(null);
+
+            const calculateCHA2DS2VASc = () => {
+                let score = 0;
+                if (inputs.chf) score += 1;
+                if (inputs.htn) score += 1;
+                if (inputs.age >= 75) score += 2;
+                else if (inputs.age >= 65) score += 1;
+                if (inputs.diabetes) score += 1;
+                if (inputs.stroke) score += 2;
+                if (inputs.vascular) score += 1;
+                if (inputs.female) score += 1;
+                
+                const strokeRisk = {
+                    0: '0.2%', 1: '0.6%', 2: '2.2%', 3: '3.2%', 4: '4.8%', 
+                    5: '7.2%', 6: '9.7%', 7: '11.2%', 8: '10.8%', 9: '12.2%'
+                };
+                
+                setResult({
+                    score,
+                    risk: strokeRisk[score] || '>12%',
+                    recommendation: score >= 2 ? 'Anticoagulate (prefer DOAC)' : 
+                                   score === 1 ? 'Consider anticoagulation' : 'No anticoagulation'
+                });
+            };
+
+            const calculateHASBLED = () => {
+                let score = 0;
+                if (inputs.htn) score += 1;
+                if (inputs.renal || inputs.liver) score += inputs.renal && inputs.liver ? 2 : 1;
+                if (inputs.stroke) score += 1;
+                if (inputs.bleeding) score += 1;
+                if (inputs.labile) score += 1;
+                if (inputs.elderly) score += 1;
+                if (inputs.drugs || inputs.alcohol) score += inputs.drugs && inputs.alcohol ? 2 : 1;
+                
+                const bleedingRisk = {
+                    0: '1.13%', 1: '1.88%', 2: '3.74%', 3: '8.70%',
+                    4: '12.50%', 5: '15.50%', 6: '19.60%', 7: '22.40%', 8: '24.70%', 9: '25.70%'
+                };
+                
+                setResult({
+                    score,
+                    risk: bleedingRisk[score] || '>25%',
+                    recommendation: score >= 3 ? 'High bleeding risk - use caution' : 'Low-moderate bleeding risk'
+                });
+            };
+
+            const calculateCURB65 = () => {
+                let score = 0;
+                if (inputs.confusion) score += 1;
+                if (inputs.urea > 7) score += 1;
+                if (inputs.rr >= 30) score += 1;
+                if (inputs.sbp < 90 || inputs.dbp <= 60) score += 1;
+                if (inputs.age >= 65) score += 1;
+                
+                const mortality = {
+                    0: '0.6%', 1: '2.7%', 2: '6.8%', 3: '14.0%', 4: '27.8%', 5: '57.0%'
+                };
+                
+                setResult({
+                    score,
+                    mortality: mortality[score],
+                    recommendation: score === 0 || score === 1 ? 'Consider outpatient' :
+                                   score === 2 ? 'Admit to ward' : 'Consider ICU'
+                });
+            };
+
+            return (
+                <div className="container">
+                    <div className="calculator-section">
+                        <h3>Clinical Calculators</h3>
+                        <select value={calcType} onChange={(e) => {setCalcType(e.target.value); setInputs({}); setResult(null);}}>
+                            <option value="cha2ds2vasc">CHA2DS2-VASc Score</option>
+                            <option value="hasbled">HAS-BLED Score</option>
+                            <option value="curb65">CURB-65</option>
+                        </select>
+                        
+                        {calcType === 'cha2ds2vasc' && (
+                            <div style={{marginTop: '20px'}}>
+                                <h4>CHA2DS2-VASc Calculator</h4>
+                                <label><input type="checkbox" onChange={(e) => setInputs({...inputs, chf: e.target.checked})} /> CHF/LV dysfunction</label>
+                                <label><input type="checkbox" onChange={(e) => setInputs({...inputs, htn: e.target.checked})} /> Hypertension</label>
+                                <label>Age: <input type="number" onChange={(e) => setInputs({...inputs, age: parseInt(e.target.value) || 0})} /></label>
+                                <label><input type="checkbox" onChange={(e) => setInputs({...inputs, diabetes: e.target.checked})} /> Diabetes</label>
+                                <label><input type="checkbox" onChange={(e) => setInputs({...inputs, stroke: e.target.checked})} /> Prior Stroke/TIA/Thromboembolism</label>
+                                <label><input type="checkbox" onChange={(e) => setInputs({...inputs, vascular: e.target.checked})} /> Vascular Disease</label>
+                                <label><input type="checkbox" onChange={(e) => setInputs({...inputs, female: e.target.checked})} /> Female</label>
+                                <button onClick={calculateCHA2DS2VASc} style={{marginTop: '15px'}}>Calculate</button>
+                            </div>
+                        )}
+                        
+                        {calcType === 'hasbled' && (
+                            <div style={{marginTop: '20px'}}>
+                                <h4>HAS-BLED Calculator</h4>
+                                <label><input type="checkbox" onChange={(e) => setInputs({...inputs, htn: e.target.checked})} /> Hypertension (uncontrolled)</label>
+                                <label><input type="checkbox" onChange={(e) => setInputs({...inputs, renal: e.target.checked})} /> Renal disease</label>
+                                <label><input type="checkbox" onChange={(e) => setInputs({...inputs, liver: e.target.checked})} /> Liver disease</label>
+                                <label><input type="checkbox" onChange={(e) => setInputs({...inputs, stroke: e.target.checked})} /> Prior stroke</label>
+                                <label><input type="checkbox" onChange={(e) => setInputs({...inputs, bleeding: e.target.checked})} /> Prior bleeding</label>
+                                <label><input type="checkbox" onChange={(e) => setInputs({...inputs, labile: e.target.checked})} /> Labile INR</label>
+                                <label><input type="checkbox" onChange={(e) => setInputs({...inputs, elderly: e.target.checked})} /> Age >65</label>
+                                <label><input type="checkbox" onChange={(e) => setInputs({...inputs, drugs: e.target.checked})} /> Drugs (antiplatelet/NSAID)</label>
+                                <label><input type="checkbox" onChange={(e) => setInputs({...inputs, alcohol: e.target.checked})} /> Alcohol excess</label>
+                                <button onClick={calculateHASBLED} style={{marginTop: '15px'}}>Calculate</button>
+                            </div>
+                        )}
+                        
+                        {calcType === 'curb65' && (
+                            <div style={{marginTop: '20px'}}>
+                                <h4>CURB-65 Calculator</h4>
+                                <label><input type="checkbox" onChange={(e) => setInputs({...inputs, confusion: e.target.checked})} /> Confusion</label>
+                                <label>Urea (mmol/L): <input type="number" onChange={(e) => setInputs({...inputs, urea: parseFloat(e.target.value) || 0})} /></label>
+                                <label>Respiratory rate: <input type="number" onChange={(e) => setInputs({...inputs, rr: parseInt(e.target.value) || 0})} /></label>
+                                <label>Systolic BP: <input type="number" onChange={(e) => setInputs({...inputs, sbp: parseInt(e.target.value) || 0})} /></label>
+                                <label>Diastolic BP: <input type="number" onChange={(e) => setInputs({...inputs, dbp: parseInt(e.target.value) || 0})} /></label>
+                                <label>Age: <input type="number" onChange={(e) => setInputs({...inputs, age: parseInt(e.target.value) || 0})} /></label>
+                                <button onClick={calculateCURB65} style={{marginTop: '15px'}}>Calculate</button>
+                            </div>
+                        )}
+                        
+                        {result && (
+                            <div className="calculator-result">
+                                <h4>Result:</h4>
+                                <p><strong>Score:</strong> {result.score}</p>
+                                <p><strong>{calcType === 'curb65' ? 'Mortality' : 'Risk'}:</strong> {result.risk || result.mortality}</p>
+                                <p><strong>Recommendation:</strong> {result.recommendation}</p>
                             </div>
                         )}
                     </div>
@@ -364,27 +931,33 @@ Labs: Cr 1.5, INR 2.3, BP: 130/80, HR: 72
             return (
                 <div>
                     <div className="header">
-                        <h1>Geriatrics Study Platform</h1>
-                        <p>Enhanced Clinical Tools with Hebrew Support</p>
+                        <h1>Geriatrics Fellowship Platform</h1>
+                        <p>Complete Clinical Toolkit with Hebrew Support</p>
                     </div>
                     
                     <div className="tabs">
-                        <div 
-                            className={`tab ${activeTab === 'analyzer' ? 'active' : ''}`}
-                            onClick={() => setActiveTab('analyzer')}
-                        >
+                        <div className={`tab ${activeTab === 'analyzer' ? 'active' : ''}`} onClick={() => setActiveTab('analyzer')}>
                             Clinical Analyzer
                         </div>
-                        <div 
-                            className={`tab ${activeTab === 'quiz' ? 'active' : ''}`}
-                            onClick={() => setActiveTab('quiz')}
-                        >
+                        <div className={`tab ${activeTab === 'quiz' ? 'active' : ''}`} onClick={() => setActiveTab('quiz')}>
                             MCQ Quiz
+                        </div>
+                        <div className={`tab ${activeTab === 'protocols' ? 'active' : ''}`} onClick={() => setActiveTab('protocols')}>
+                            Protocols
+                        </div>
+                        <div className={`tab ${activeTab === 'medications' ? 'active' : ''}`} onClick={() => setActiveTab('medications')}>
+                            Medications
+                        </div>
+                        <div className={`tab ${activeTab === 'calculators' ? 'active' : ''}`} onClick={() => setActiveTab('calculators')}>
+                            Calculators
                         </div>
                     </div>
                     
                     {activeTab === 'analyzer' && <ClinicalAnalyzer />}
                     {activeTab === 'quiz' && <MCQQuiz />}
+                    {activeTab === 'protocols' && <Protocols />}
+                    {activeTab === 'medications' && <Medications />}
+                    {activeTab === 'calculators' && <Calculators />}
                 </div>
             );
         }
