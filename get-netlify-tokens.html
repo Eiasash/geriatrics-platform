@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Get Netlify Tokens - Setup Helper</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 900px;
+            width: 100%;
+            padding: 40px;
+        }
+        
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 32px;
+        }
+        
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 18px;
+        }
+        
+        .step {
+            background: #f8f9fa;
+            border-left: 4px solid #667eea;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+        }
+        
+        .step h2 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 20px;
+        }
+        
+        .button {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 12px 30px;
+            border-radius: 8px;
+            text-decoration: none;
+            margin: 10px 10px 10px 0;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        
+        .button:hover {
+            background: #5a67d8;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .code-block {
+            background: #2d3748;
+            color: #fff;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            font-family: 'Courier New', monospace;
+            position: relative;
+            overflow-x: auto;
+        }
+        
+        .copy-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #4a5568;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        
+        .copy-btn:hover {
+            background: #2d3748;
+        }
+        
+        .input-group {
+            margin: 15px 0;
+        }
+        
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #4a5568;
+            font-weight: 600;
+        }
+        
+        .input-group input {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e2e8f0;
+            border-radius: 6px;
+            font-size: 14px;
+            font-family: monospace;
+        }
+        
+        .input-group input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .success {
+            background: #48bb78;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            display: none;
+        }
+        
+        .warning {
+            background: #ed8936;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        
+        .token-display {
+            background: #edf2f7;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border: 2px dashed #cbd5e0;
+        }
+        
+        .status-indicator {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        
+        .status-indicator.ready {
+            background: #48bb78;
+            animation: pulse 2s infinite;
+        }
+        
+        .status-indicator.pending {
+            background: #ed8936;
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+        
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .card {
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .card h3 {
+            color: #2d3748;
+            margin-bottom: 10px;
+        }
+        
+        .card p {
+            color: #718096;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔐 Netlify Tokens Setup Helper</h1>
+        <p class="subtitle">Get your authentication tokens and site ID for GitHub Actions CI/CD</p>
+        
+        <div class="step">
+            <h2>📋 Step 1: Check Netlify CLI</h2>
+            <p>First, make sure you have Netlify CLI installed and you're logged in:</p>
+            <div class="code-block">
+                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                <code>netlify login</code>
+            </div>
+            <p style="margin-top: 10px;">Or if not installed:</p>
+            <div class="code-block">
+                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                <code>npm install -g netlify-cli && netlify login</code>
+            </div>
+        </div>
+        
+        <div class="step">
+            <h2>🔑 Step 2: Get Your Auth Token</h2>
+            <p>Run this command to get your authentication token:</p>
+            <div class="code-block">
+                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                <code>netlify status --json</code>
+            </div>
+            <p style="margin-top: 15px;">Or get it from the Netlify dashboard:</p>
+            <a href="https://app.netlify.com/user/applications#personal-access-tokens" target="_blank" class="button">
+                Open Netlify Token Settings →
+            </a>
+            
+            <div class="input-group">
+                <label for="authToken">Paste your Auth Token here:</label>
+                <input type="password" id="authToken" placeholder="xxxxxxxxxxxxxxxxxxxxxxxxxxxx">
+            </div>
+        </div>
+        
+        <div class="step">
+            <h2>🆔 Step 3: Get Your Site ID</h2>
+            <p>Your Netlify sites and their IDs:</p>
+            
+            <div class="grid">
+                <div class="card">
+                    <h3>geriatrics-study</h3>
+                    <p>Primary deployment site</p>
+                    <a href="https://app.netlify.com/sites/geriatrics-study/settings/general" target="_blank" class="button">
+                        Get Site ID →
+                    </a>
+                </div>
+                <div class="card">
+                    <h3>geriatrics-platform</h3>
+                    <p>Alternative deployment</p>
+                    <a href="https://app.netlify.com/sites/geriatrics-platform/settings/general" target="_blank" class="button">
+                        Get Site ID →
+                    </a>
+                </div>
+            </div>
+            
+            <div class="input-group">
+                <label for="siteId">Paste your Site ID here:</label>
+                <input type="text" id="siteId" placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx">
+            </div>
+        </div>
+        
+        <div class="step">
+            <h2>🚀 Step 4: Add to GitHub Secrets</h2>
+            <p>Now add these secrets to your GitHub repository:</p>
+            
+            <a href="https://github.com/Eiasash/geriatrics-platform/settings/secrets/actions/new" target="_blank" class="button">
+                Add GitHub Secret →
+            </a>
+            
+            <div class="token-display" id="tokenDisplay" style="display: none;">
+                <h3>Your Configuration:</h3>
+                <div style="margin-top: 15px;">
+                    <strong>NETLIFY_AUTH_TOKEN:</strong>
+                    <div class="code-block" style="margin-top: 5px;">
+                        <button class="copy-btn" onclick="copyValue('authToken')">Copy</button>
+                        <code id="authTokenDisplay">Not set</code>
+                    </div>
+                </div>
+                <div style="margin-top: 15px;">
+                    <strong>NETLIFY_SITE_ID:</strong>
+                    <div class="code-block" style="margin-top: 5px;">
+                        <button class="copy-btn" onclick="copyValue('siteId')">Copy</button>
+                        <code id="siteIdDisplay">Not set</code>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="step">
+            <h2>✅ Step 5: Test Your Setup</h2>
+            <p>Generate a test deployment command:</p>
+            <button class="button" onclick="generateTestCommand()">Generate Test Command</button>
+            
+            <div class="code-block" id="testCommand" style="display: none; margin-top: 15px;">
+                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                <code id="testCommandCode">Generated command will appear here</code>
+            </div>
+        </div>
+        
+        <div class="step">
+            <h2>📚 Additional Setup (Optional)</h2>
+            <div class="grid">
+                <div class="card">
+                    <span class="status-indicator pending"></span>
+                    <h3>Snyk Token</h3>
+                    <p>Security vulnerability scanning</p>
+                    <a href="https://app.snyk.io/signup" target="_blank" class="button">Get Snyk Token →</a>
+                </div>
+                <div class="card">
+                    <span class="status-indicator pending"></span>
+                    <h3>Codecov Token</h3>
+                    <p>Code coverage reporting</p>
+                    <a href="https://about.codecov.io/sign-up/" target="_blank" class="button">Get Codecov Token →</a>
+                </div>
+                <div class="card">
+                    <span class="status-indicator ready"></span>
+                    <h3>Dependabot</h3>
+                    <p>Automated dependency updates</p>
+                    <a href="https://github.com/Eiasash/geriatrics-platform/settings/security_analysis" target="_blank" class="button">Enable Dependabot →</a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="success" id="successMessage">
+            ✅ Configuration ready! Add these secrets to GitHub and trigger a test deployment.
+        </div>
+        
+        <div class="warning">
+            ⚠️ <strong>Security Note:</strong> Never commit these tokens to your repository. Always use GitHub Secrets.
+        </div>
+    </div>
+    
+    <script>
+        // Monitor input changes
+        document.getElementById('authToken').addEventListener('input', updateDisplay);
+        document.getElementById('siteId').addEventListener('input', updateDisplay);
+        
+        function updateDisplay() {
+            const authToken = document.getElementById('authToken').value;
+            const siteId = document.getElementById('siteId').value;
+            
+            if (authToken || siteId) {
+                document.getElementById('tokenDisplay').style.display = 'block';
+                
+                if (authToken) {
+                    document.getElementById('authTokenDisplay').textContent = '•'.repeat(authToken.length);
+                }
+                
+                if (siteId) {
+                    document.getElementById('siteIdDisplay').textContent = siteId;
+                }
+                
+                if (authToken && siteId) {
+                    document.getElementById('successMessage').style.display = 'block';
+                }
+            }
+        }
+        
+        function copyCode(button) {
+            const codeBlock = button.parentElement;
+            const code = codeBlock.querySelector('code').textContent;
+            navigator.clipboard.writeText(code);
+            button.textContent = 'Copied!';
+            setTimeout(() => {
+                button.textContent = 'Copy';
+            }, 2000);
+        }
+        
+        function copyValue(inputId) {
+            const value = document.getElementById(inputId).value;
+            if (value) {
+                navigator.clipboard.writeText(value);
+                alert('Copied to clipboard!');
+            }
+        }
+        
+        function generateTestCommand() {
+            const authToken = document.getElementById('authToken').value;
+            const siteId = document.getElementById('siteId').value;
+            
+            if (authToken && siteId) {
+                const command = `NETLIFY_AUTH_TOKEN="${authToken}" NETLIFY_SITE_ID="${siteId}" netlify deploy --dir=. --prod`;
+                document.getElementById('testCommand').style.display = 'block';
+                document.getElementById('testCommandCode').textContent = command;
+            } else {
+                alert('Please enter both Auth Token and Site ID first');
+            }
+        }
+        
+        // Auto-save to localStorage
+        function saveToLocal() {
+            const data = {
+                authToken: document.getElementById('authToken').value,
+                siteId: document.getElementById('siteId').value
+            };
+            localStorage.setItem('netlifySetup', JSON.stringify(data));
+        }
+        
+        // Load from localStorage
+        window.onload = function() {
+            const saved = localStorage.getItem('netlifySetup');
+            if (saved) {
+                const data = JSON.parse(saved);
+                if (data.authToken) document.getElementById('authToken').value = data.authToken;
+                if (data.siteId) document.getElementById('siteId').value = data.siteId;
+                updateDisplay();
+            }
+        };
+        
+        // Save on change
+        document.getElementById('authToken').addEventListener('change', saveToLocal);
+        document.getElementById('siteId').addEventListener('change', saveToLocal);
+    </script>
+</body>
+</html>
