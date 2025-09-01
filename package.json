@@ -8,8 +8,7 @@
     "lucide-react": "^0.263.1",
     "node-fetch": "^3.3.2",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "typescript": "^5.1.6"
+    "react-dom": "^18.2.0"
   },
   "devDependencies": {
     "@types/node": "^20.4.2",
@@ -20,12 +19,14 @@
     "eslint": "^9.33.0",
     "postcss": "^8.4.27",
     "tailwindcss": "^3.3.3",
-    "vite": "^4.4.4"
+    "typescript": "^5.9.2",
+    "vite": "^4.5.14"
   },
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
-    "preview": "vite preview"
+    "build": "vite build",
+    "preview": "vite preview",
+    "serve": "vite preview"
   },
   "main": "Chart.js",
   "repository": {

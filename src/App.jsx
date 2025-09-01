@@ -1,4 +1,7 @@
 import React, { useState, useEffect } from 'react';
+// Import new enhanced components
+import EnhancedAnalyzer from './components/ClinicalTools/EnhancedAnalyzer';
+import MCQQuiz from './components/Quiz/MCQQuiz';
 // Import from the correct files
 import { boardQuestions } from './Questions.js';
 import { medicationDatabase } from './data/medications.js';
