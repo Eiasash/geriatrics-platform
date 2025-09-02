@@ -15,7 +15,10 @@ import Analytics from './components/Analytics';
 import AuditLogViewer from './components/AuditLogViewer';
 import DemoMode from './components/DemoMode';
 import Welcome from './components/Welcome';
-import { Home, Calculator, FileText, Package, LogOut, Menu, X, Pill, ClipboardList, BarChart3, Shield, Printer } from 'lucide-react';
+import PatientDatabase from './components/PatientDatabase';
+import Education from './components/Education';
+import Protocols from './components/Protocols';
+import { Home, Calculator, FileText, Package, LogOut, Menu, X, Pill, ClipboardList, BarChart3, Shield, Printer, Users, BookOpen, FileCheck } from 'lucide-react';
 import { auditLogger } from '../services/auditLog';
 import { PDFGenerator } from '../services/pdfGenerator';
 
@@ -82,9 +85,12 @@ function AppContent() {
 
   const navigation = [
     { name: language === 'en' ? 'Dashboard' : 'לוח בקרה', href: '/', icon: Home },
+    { name: language === 'en' ? 'Patients' : 'מטופלים', href: '/patients', icon: Users },
     { name: language === 'en' ? 'Calculators' : 'מחשבונים', href: '/calculators', icon: Calculator },
     { name: language === 'en' ? 'Medications' : 'תרופות', href: '/medications', icon: Pill },
     { name: language === 'en' ? 'Shift Handoff' : 'העברת משמרת', href: '/handoff', icon: ClipboardList },
+    { name: language === 'en' ? 'Protocols' : 'פרוטוקולים', href: '/protocols', icon: FileCheck },
+    { name: language === 'en' ? 'Education' : 'השכלה', href: '/education', icon: BookOpen },
     { name: language === 'en' ? 'Note Analyzer' : 'מנתח הערות', href: '/notes', icon: FileText },
     { name: language === 'en' ? 'Analytics' : 'ניתוחים', href: '/analytics', icon: BarChart3 },
     { name: language === 'en' ? 'Data Packs' : 'חבילות נתונים', href: '/packs', icon: Package },
@@ -176,6 +182,9 @@ function AppContent() {
               <Route path="/" element={
                 dataSource ? <Dashboard dataSource={dataSource} language={language} /> : <div>Loading...</div>
               } />
+              <Route path="/patients" element={
+                <PatientDatabase language={language} />
+              } />
               <Route path="/calculators" element={
                 <Calculators language={language} />
               } />
@@ -184,6 +193,12 @@ function AppContent() {
               } />
               <Route path="/handoff" element={
                 dataSource ? <ShiftHandoff dataSource={dataSource} language={language} /> : <div>Loading...</div>
+              } />
+              <Route path="/protocols" element={
+                <Protocols language={language} />
+              } />
+              <Route path="/education" element={
+                <Education language={language} />
               } />
               <Route path="/notes" element={
                 dataSource ? <NoteAnalyzer dataSource={dataSource} language={language} /> : <div>Loading...</div>
