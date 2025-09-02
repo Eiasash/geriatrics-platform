@@ -1,0 +1,52 @@
+{
+  "name": "Geriatrics Platform Pro - Shaare Zedek",
+  "short_name": "GeriatricsPro",
+  "description": "Advanced geriatric care management platform",
+  "theme_color": "#2563eb",
+  "background_color": "#ffffff",
+  "display": "standalone",
+  "orientation": "portrait",
+  "scope": "/",
+  "start_url": "/",
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["medical", "health"],
+  "screenshots": [
+    {
+      "src": "/screenshot1.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "label": "Dashboard View"
+    },
+    {
+      "src": "/screenshot2.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "label": "Clinical Calculators"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "New Task",
+      "url": "/tasks/new",
+      "description": "Create a new clinical task"
+    },
+    {
+      "name": "MMSE Calculator",
+      "url": "/calculators?tool=mmse",
+      "description": "Quick access to MMSE assessment"
+    }
+  ]
+}

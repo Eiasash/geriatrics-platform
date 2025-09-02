@@ -1,0 +1,45 @@
+{
+  "checklist": {
+    "title": "FRAIL Scale Assessment",
+    "description": "Frailty screening tool",
+    "items": [
+      {
+        "id": "f1",
+        "question": "Fatigue",
+        "description": "Are you fatigued most or all of the time?",
+        "points": 1
+      },
+      {
+        "id": "f2",
+        "question": "Resistance",
+        "description": "Can you walk up one flight of stairs without help?",
+        "points": 1,
+        "reverse": true
+      },
+      {
+        "id": "f3",
+        "question": "Ambulation",
+        "description": "Can you walk one block without help?",
+        "points": 1,
+        "reverse": true
+      },
+      {
+        "id": "f4",
+        "question": "Illnesses",
+        "description": "Do you have more than 5 illnesses?",
+        "points": 1
+      },
+      {
+        "id": "f5",
+        "question": "Loss of weight",
+        "description": "Have you lost more than 5% of your weight in the past 6 months?",
+        "points": 1
+      }
+    ],
+    "scoring": {
+      "0": "Robust",
+      "1-2": "Pre-frail",
+      "3-5": "Frail"
+    }
+  }
+}
