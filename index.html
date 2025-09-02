@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/geriatrics-platform/icon-192.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <!-- PWA Meta Tags -->
+    <meta name="theme-color" content="#2563eb" />
+    <meta name="description" content="Advanced geriatric care management platform" />
+    <link rel="manifest" href="/geriatrics-platform/manifest.json" />
+    
+    <!-- iOS PWA Support -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="GeriatricsPro" />
+    <link rel="apple-touch-icon" href="/geriatrics-platform/icon-192.svg" />
+    
+    <title>Geriatrics Platform Pro</title>
+    <script type="module" crossorigin src="/geriatrics-platform/assets/index-Cb9V4cML.js"></script>
+    <link rel="modulepreload" crossorigin href="/geriatrics-platform/assets/react-vendor-BP9ApZiI.js">
+    <link rel="modulepreload" crossorigin href="/geriatrics-platform/assets/supabase-D23GQrQo.js">
+    <link rel="modulepreload" crossorigin href="/geriatrics-platform/assets/ui-utils-9ZtHZXoF.js">
+    <link rel="modulepreload" crossorigin href="/geriatrics-platform/assets/charts-Cu53rPhx.js">
+    <link rel="stylesheet" crossorigin href="/geriatrics-platform/assets/index-Bm1pnhK4.css">
+  </head>
+  <body>
+    <div id="root"></div>
+    
+    <!-- Service Worker Registration -->
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/service-worker.js')
+            .then(registration => {
+              console.log('ServiceWorker registration successful');
+              
+              // Check for updates periodically
+              setInterval(() => {
+                registration.update();
+              }, 60000); // Check every minute
+            })
+            .catch(err => {
+              console.log('ServiceWorker registration failed: ', err);
+            });
+        });
+      }
+    </script>
+  </body>
+</html>

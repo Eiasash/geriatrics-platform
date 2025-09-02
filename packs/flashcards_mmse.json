@@ -1,0 +1,53 @@
+{
+  "flashcards": [
+    {
+      "id": "fc001",
+      "category": "MMSE",
+      "question": "What are the 5 orientation to time questions?",
+      "answer": "1. Year\n2. Season\n3. Month\n4. Date\n5. Day of week",
+      "points": "5 points total (1 each)"
+    },
+    {
+      "id": "fc002",
+      "category": "MMSE",
+      "question": "What are the 5 orientation to place questions?",
+      "answer": "1. Country\n2. State/Province\n3. City/Town\n4. Building/Hospital\n5. Floor/Ward",
+      "points": "5 points total (1 each)"
+    },
+    {
+      "id": "fc003",
+      "category": "MMSE",
+      "question": "How do you test registration?",
+      "answer": "Name 3 objects (e.g., apple, table, penny). Ask patient to repeat them. Give 1 point for each correct. Repeat until learned (max 6 trials).",
+      "points": "3 points"
+    },
+    {
+      "id": "fc004",
+      "category": "MMSE",
+      "question": "How do you test attention and calculation?",
+      "answer": "Serial 7s: Subtract 7 from 100, then from result, 5 times (93, 86, 79, 72, 65). Alternative: Spell WORLD backwards.",
+      "points": "5 points"
+    },
+    {
+      "id": "fc005",
+      "category": "MMSE",
+      "question": "How do you test recall?",
+      "answer": "Ask patient to recall the 3 objects from registration test (apple, table, penny).",
+      "points": "3 points"
+    },
+    {
+      "id": "fc006",
+      "category": "MMSE",
+      "question": "What is the 3-stage command test?",
+      "answer": "Give patient a paper and say: 'Take the paper in your right hand, fold it in half, and put it on the floor.'",
+      "points": "3 points (1 for each action)"
+    },
+    {
+      "id": "fc007",
+      "category": "MMSE",
+      "question": "What is the cutoff score for cognitive impairment?",
+      "answer": "< 24 points suggests cognitive impairment\n(Normal: 24-30, Mild: 19-23, Moderate: 10-18, Severe: <10)",
+      "points": "Total: 30 points"
+    }
+  ]
+}
