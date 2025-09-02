@@ -3,6 +3,7 @@ import react from '@vitejs/plugin-react'
 
 export default defineConfig({
   plugins: [react()],
+  // base: '/geriatrics-platform/', // Commented out for Vercel/Netlify
   build: {
     rollupOptions: {
       output: {
