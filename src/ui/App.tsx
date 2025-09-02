@@ -18,7 +18,8 @@ import Welcome from './components/Welcome';
 import PatientDatabase from './components/PatientDatabase';
 import Education from './components/Education';
 import Protocols from './components/Protocols';
-import { Home, Calculator, FileText, Package, LogOut, Menu, X, Pill, ClipboardList, BarChart3, Shield, Printer, Users, BookOpen, FileCheck } from 'lucide-react';
+import AssessmentTools from './components/AssessmentTools';
+import { Home, Calculator, FileText, Package, LogOut, Menu, X, Pill, ClipboardList, BarChart3, Shield, Printer, Users, BookOpen, FileCheck, Brain } from 'lucide-react';
 import { auditLogger } from '../services/auditLog';
 import { PDFGenerator } from '../services/pdfGenerator';
 
@@ -86,6 +87,7 @@ function AppContent() {
   const navigation = [
     { name: language === 'en' ? 'Dashboard' : 'לוח בקרה', href: '/', icon: Home },
     { name: language === 'en' ? 'Patients' : 'מטופלים', href: '/patients', icon: Users },
+    { name: language === 'en' ? 'Assessments' : 'הערכות', href: '/assessments', icon: Brain },
     { name: language === 'en' ? 'Calculators' : 'מחשבונים', href: '/calculators', icon: Calculator },
     { name: language === 'en' ? 'Medications' : 'תרופות', href: '/medications', icon: Pill },
     { name: language === 'en' ? 'Shift Handoff' : 'העברת משמרת', href: '/handoff', icon: ClipboardList },
@@ -184,6 +186,9 @@ function AppContent() {
               } />
               <Route path="/patients" element={
                 <PatientDatabase language={language} />
+              } />
+              <Route path="/assessments" element={
+                <AssessmentTools language={language} />
               } />
               <Route path="/calculators" element={
                 <Calculators language={language} />
