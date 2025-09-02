@@ -1,0 +1,1022 @@
+{
+  "patients": [
+    {
+      "id": "pt011",
+      "name": "Rebecca Feldman",
+      "age": 79,
+      "gender": "Female",
+      "ward": "Geriatrics B",
+      "bed": "B-205",
+      "room": "205",
+      "admissionDate": "2025-02-28",
+      "primaryPhysician": "Dr. Sarah Miller",
+      "diagnoses": [
+        "Bipolar Disorder - Geriatric Onset",
+        "Osteoporosis",
+        "GERD",
+        "Insomnia"
+      ],
+      "medications": [
+        "Lithium 300mg twice daily",
+        "Quetiapine 50mg at bedtime",
+        "Omeprazole 20mg daily",
+        "Zolpidem 5mg at bedtime",
+        "Calcium with Vitamin D daily"
+      ],
+      "allergies": ["Sulfa drugs"],
+      "mmse": [
+        {"date": "2025-02-28", "score": 28},
+        {"date": "2025-03-01", "score": 28}
+      ],
+      "fallRisk": 40,
+      "acuity": "moderate",
+      "socialHistory": "Former social worker, lives with husband",
+      "codeStatus": "Full Code",
+      "lastUpdated": "2025-03-02T09:00:00Z"
+    },
+    {
+      "id": "pt012",
+      "name": "Samuel Roth",
+      "age": 86,
+      "gender": "Male",
+      "ward": "Geriatrics A",
+      "bed": "A-107",
+      "room": "107",
+      "admissionDate": "2025-01-28",
+      "primaryPhysician": "Dr. Michael Ross",
+      "diagnoses": [
+        "Prostate Cancer - Stage III",
+        "Chronic Pain",
+        "Depression",
+        "Urinary Incontinence"
+      ],
+      "medications": [
+        "Lupron Depot 22.5mg every 3 months",
+        "Oxycodone 10mg every 8 hours",
+        "Venlafaxine 150mg daily",
+        "Oxybutynin 5mg twice daily"
+      ],
+      "allergies": ["Penicillin"],
+      "mmse": [
+        {"date": "2025-01-28", "score": 25},
+        {"date": "2025-02-28", "score": 24}
+      ],
+      "fallRisk": 55,
+      "acuity": "moderate",
+      "socialHistory": "Retired dentist, widower for 3 years",
+      "codeStatus": "DNR",
+      "lastUpdated": "2025-03-02T10:15:00Z"
+    },
+    {
+      "id": "pt013",
+      "name": "Leah Weinstein",
+      "age": 90,
+      "gender": "Female",
+      "ward": "Geriatrics B",
+      "bed": "B-206",
+      "room": "206",
+      "admissionDate": "2024-10-15",
+      "primaryPhysician": "Dr. Sarah Miller",
+      "diagnoses": [
+        "Severe Dementia",
+        "Failure to Thrive",
+        "Recurrent Pneumonia",
+        "Dehydration"
+      ],
+      "medications": [
+        "Ensure supplements TID",
+        "IV fluids as needed",
+        "Lorazepam 0.5mg as needed for agitation",
+        "Morphine 2mg sublingual as needed"
+      ],
+      "allergies": ["None known"],
+      "mmse": [
+        {"date": "2024-10-15", "score": 8},
+        {"date": "2024-12-15", "score": 6},
+        {"date": "2025-02-15", "score": 4}
+      ],
+      "fallRisk": 100,
+      "acuity": "critical",
+      "socialHistory": "Former teacher, family considering hospice",
+      "codeStatus": "Comfort Care Only",
+      "lastUpdated": "2025-03-02T11:30:00Z"
+    },
+    {
+      "id": "pt014",
+      "name": "Morris Schwartz",
+      "age": 83,
+      "gender": "Male",
+      "ward": "Geriatrics A",
+      "bed": "A-108",
+      "room": "108",
+      "admissionDate": "2025-02-15",
+      "primaryPhysician": "Dr. Michael Ross",
+      "diagnoses": [
+        "ALS (Amyotrophic Lateral Sclerosis)",
+        "Dysphagia",
+        "Respiratory Insufficiency",
+        "Depression"
+      ],
+      "medications": [
+        "Riluzole 50mg twice daily",
+        "BiPAP at night",
+        "Sertraline 100mg daily",
+        "Glycopyrrolate 1mg three times daily for secretions"
+      ],
+      "allergies": ["Codeine"],
+      "mmse": [
+        {"date": "2025-02-15", "score": 29},
+        {"date": "2025-03-01", "score": 29}
+      ],
+      "fallRisk": 90,
+      "acuity": "critical",
+      "socialHistory": "Retired professor, strong family support",
+      "codeStatus": "DNI",
+      "lastUpdated": "2025-03-02T12:45:00Z"
+    },
+    {
+      "id": "pt015",
+      "name": "Golda Steinberg",
+      "age": 88,
+      "gender": "Female",
+      "ward": "Geriatrics B",
+      "bed": "B-207",
+      "room": "207",
+      "admissionDate": "2025-01-10",
+      "primaryPhysician": "Dr. Sarah Miller",
+      "diagnoses": [
+        "Macular Degeneration",
+        "Legally Blind",
+        "Anxiety Disorder",
+        "Hypothyroidism"
+      ],
+      "medications": [
+        "AREDS2 vitamins daily",
+        "Alprazolam 0.25mg twice daily",
+        "Levothyroxine 75mcg daily",
+        "Artificial tears as needed"
+      ],
+      "allergies": ["NSAIDs"],
+      "mmse": [
+        {"date": "2025-01-10", "score": 26},
+        {"date": "2025-02-10", "score": 26},
+        {"date": "2025-03-01", "score": 25}
+      ],
+      "fallRisk": 75,
+      "acuity": "moderate",
+      "socialHistory": "Former artist, uses audio books extensively",
+      "codeStatus": "Full Code",
+      "lastUpdated": "2025-03-02T14:00:00Z"
+    },
+    {
+      "id": "pt016",
+      "name": "Benjamin Katz",
+      "age": 77,
+      "gender": "Male",
+      "ward": "Geriatrics A",
+      "bed": "A-109",
+      "room": "109",
+      "admissionDate": "2025-02-20",
+      "primaryPhysician": "Dr. Michael Ross",
+      "diagnoses": [
+        "Liver Cirrhosis",
+        "Hepatic Encephalopathy",
+        "Ascites",
+        "Esophageal Varices"
+      ],
+      "medications": [
+        "Lactulose 30ml three times daily",
+        "Rifaximin 550mg twice daily",
+        "Furosemide 40mg daily",
+        "Spironolactone 100mg daily",
+        "Propranolol 20mg twice daily"
+      ],
+      "allergies": ["Contrast dye"],
+      "mmse": [
+        {"date": "2025-02-20", "score": 22},
+        {"date": "2025-03-01", "score": 21}
+      ],
+      "fallRisk": 70,
+      "acuity": "critical",
+      "socialHistory": "Former businessman, history of alcohol use",
+      "codeStatus": "Full Code",
+      "lastUpdated": "2025-03-02T15:30:00Z"
+    },
+    {
+      "id": "pt017",
+      "name": "Sylvia Bloom",
+      "age": 92,
+      "gender": "Female",
+      "ward": "Geriatrics B",
+      "bed": "B-208",
+      "room": "208",
+      "admissionDate": "2024-12-20",
+      "primaryPhysician": "Dr. Sarah Miller",
+      "diagnoses": [
+        "Chronic Lymphocytic Leukemia",
+        "Anemia",
+        "Frequent Falls",
+        "Mild Cognitive Impairment"
+      ],
+      "medications": [
+        "Ibrutinib 420mg daily",
+        "Ferrous sulfate 325mg daily",
+        "Vitamin B12 1000mcg weekly",
+        "Physical therapy daily"
+      ],
+      "allergies": ["Aspirin"],
+      "mmse": [
+        {"date": "2024-12-20", "score": 24},
+        {"date": "2025-01-20", "score": 23},
+        {"date": "2025-02-20", "score": 23}
+      ],
+      "fallRisk": 85,
+      "acuity": "moderate",
+      "socialHistory": "Holocaust survivor, lives in assisted living",
+      "codeStatus": "DNR",
+      "lastUpdated": "2025-03-02T16:45:00Z"
+    },
+    {
+      "id": "pt018",
+      "name": "Max Goldfarb",
+      "age": 81,
+      "gender": "Male",
+      "ward": "Geriatrics A",
+      "bed": "A-110",
+      "room": "110",
+      "admissionDate": "2025-02-25",
+      "primaryPhysician": "Dr. Michael Ross",
+      "diagnoses": [
+        "Diabetes Type 1",
+        "Diabetic Neuropathy",
+        "Diabetic Retinopathy",
+        "Chronic Kidney Disease Stage 4"
+      ],
+      "medications": [
+        "Insulin pump continuous",
+        "Gabapentin 600mg three times daily",
+        "Lisinopril 5mg daily",
+        "Sevelamer 800mg with meals",
+        "Erythropoietin weekly injection"
+      ],
+      "allergies": ["Sulfa drugs", "Shellfish"],
+      "mmse": [
+        {"date": "2025-02-25", "score": 27},
+        {"date": "2025-03-02", "score": 27}
+      ],
+      "fallRisk": 60,
+      "acuity": "critical",
+      "socialHistory": "Retired engineer, on dialysis waitlist",
+      "codeStatus": "Full Code",
+      "lastUpdated": "2025-03-02T17:00:00Z"
+    },
+    {
+      "id": "pt019",
+      "name": "Dorothy Singer",
+      "age": 85,
+      "gender": "Female",
+      "ward": "Geriatrics B",
+      "bed": "B-209",
+      "room": "209",
+      "admissionDate": "2025-01-25",
+      "primaryPhysician": "Dr. Sarah Miller",
+      "diagnoses": [
+        "Schizophrenia - Geriatric",
+        "Tardive Dyskinesia",
+        "Osteoarthritis",
+        "Constipation"
+      ],
+      "medications": [
+        "Clozapine 100mg at bedtime",
+        "Tetrabenazine 25mg twice daily",
+        "Acetaminophen 650mg three times daily",
+        "Docusate 100mg twice daily"
+      ],
+      "allergies": ["Haloperidol"],
+      "mmse": [
+        {"date": "2025-01-25", "score": 20},
+        {"date": "2025-02-25", "score": 19}
+      ],
+      "fallRisk": 65,
+      "acuity": "moderate",
+      "socialHistory": "Long history of psychiatric illness, no family",
+      "codeStatus": "Full Code",
+      "lastUpdated": "2025-03-02T18:15:00Z"
+    },
+    {
+      "id": "pt020",
+      "name": "Herbert Weiss",
+      "age": 89,
+      "gender": "Male",
+      "ward": "Geriatrics A",
+      "bed": "A-111",
+      "room": "111",
+      "admissionDate": "2025-02-01",
+      "primaryPhysician": "Dr. Michael Ross",
+      "diagnoses": [
+        "Normal Pressure Hydrocephalus",
+        "Gait Disturbance",
+        "Urinary Incontinence",
+        "Cognitive Decline"
+      ],
+      "medications": [
+        "VP shunt in place",
+        "Carbidopa-Levodopa 25/100mg three times daily",
+        "Tolterodine 2mg twice daily",
+        "Memantine 10mg twice daily"
+      ],
+      "allergies": ["None known"],
+      "mmse": [
+        {"date": "2025-02-01", "score": 21},
+        {"date": "2025-03-01", "score": 22}
+      ],
+      "fallRisk": 80,
+      "acuity": "moderate",
+      "socialHistory": "Former architect, symptoms improved after shunt",
+      "codeStatus": "Full Code",
+      "lastUpdated": "2025-03-02T19:30:00Z"
+    },
+    {
+      "id": "pt021",
+      "name": "Ethel Rosenbaum",
+      "age": 87,
+      "gender": "Female",
+      "ward": "Geriatrics B",
+      "bed": "B-210",
+      "room": "210",
+      "admissionDate": "2025-02-12",
+      "primaryPhysician": "Dr. Sarah Miller",
+      "diagnoses": [
+        "Polymyalgia Rheumatica",
+        "Giant Cell Arteritis",
+        "Osteoporosis",
+        "Cataracts"
+      ],
+      "medications": [
+        "Prednisone 15mg daily",
+        "Methotrexate 15mg weekly",
+        "Folic acid 1mg daily",
+        "Alendronate 70mg weekly",
+        "Calcium carbonate 1200mg daily"
+      ],
+      "allergies": ["Latex"],
+      "mmse": [
+        {"date": "2025-02-12", "score": 28},
+        {"date": "2025-03-02", "score": 28}
+      ],
+      "fallRisk": 45,
+      "acuity": "moderate",
+      "socialHistory": "Retired teacher, very active in community",
+      "codeStatus": "Full Code",
+      "lastUpdated": "2025-03-02T20:00:00Z"
+    },
+    {
+      "id": "pt022",
+      "name": "Leonard Fox",
+      "age": 84,
+      "gender": "Male",
+      "ward": "Geriatrics A",
+      "bed": "A-112",
+      "room": "112",
+      "admissionDate": "2025-02-18",
+      "primaryPhysician": "Dr. Michael Ross",
+      "diagnoses": [
+        "Bladder Cancer",
+        "Chronic UTIs",
+        "Benign Prostatic Hyperplasia",
+        "Anemia"
+      ],
+      "medications": [
+        "BCG intravesical therapy weekly",
+        "Trimethoprim prophylaxis daily",
+        "Tamsulosin 0.4mg daily",
+        "Iron supplements daily"
+      ],
+      "allergies": ["Quinolones"],
+      "mmse": [
+        {"date": "2025-02-18", "score": 26},
+        {"date": "2025-03-02", "score": 26}
+      ],
+      "fallRisk": 50,
+      "acuity": "moderate",
+      "socialHistory": "Retired postal worker, lives alone",
+      "codeStatus": "Full Code",
+      "lastUpdated": "2025-03-02T21:15:00Z"
+    },
+    {
+      "id": "pt023",
+      "name": "Pearl Hoffman",
+      "age": 91,
+      "gender": "Female",
+      "ward": "Geriatrics B",
+      "bed": "B-211",
+      "room": "211",
+      "admissionDate": "2024-11-30",
+      "primaryPhysician": "Dr. Sarah Miller",
+      "diagnoses": [
+        "End-stage Alzheimer's Disease",
+        "Aspiration Pneumonia",
+        "Dysphagia",
+        "Pressure Ulcers"
+      ],
+      "medications": [
+        "Comfort care measures",
+        "Morphine 2-4mg sublingual as needed",
+        "Atropine drops as needed for secretions",
+        "Wound care daily"
+      ],
+      "allergies": ["None known"],
+      "mmse": [
+        {"date": "2024-11-30", "score": 3},
+        {"date": "2025-01-30", "score": 2},
+        {"date": "2025-03-01", "score": 0}
+      ],
+      "fallRisk": 100,
+      "acuity": "critical",
+      "socialHistory": "Former nurse, on hospice care",
+      "codeStatus": "Comfort Measures Only",
+      "lastUpdated": "2025-03-02T22:30:00Z"
+    },
+    {
+      "id": "pt024",
+      "name": "Arthur Glassman",
+      "age": 78,
+      "gender": "Male",
+      "ward": "Geriatrics A",
+      "bed": "A-113",
+      "room": "113",
+      "admissionDate": "2025-02-22",
+      "primaryPhysician": "Dr. Michael Ross",
+      "diagnoses": [
+        "Myasthenia Gravis",
+        "Dysphagia",
+        "Respiratory Muscle Weakness",
+        "Depression"
+      ],
+      "medications": [
+        "Pyridostigmine 60mg every 4 hours",
+        "Prednisone 20mg daily",
+        "Azathioprine 150mg daily",
+        "Citalopram 20mg daily"
+      ],
+      "allergies": ["None known"],
+      "mmse": [
+        {"date": "2025-02-22", "score": 28},
+        {"date": "2025-03-02", "score": 28}
+      ],
+      "fallRisk": 70,
+      "acuity": "critical",
+      "socialHistory": "Retired physician, very knowledgeable about condition",
+      "codeStatus": "Full Code",
+      "lastUpdated": "2025-03-02T23:00:00Z"
+    },
+    {
+      "id": "pt025",
+      "name": "Bella Zimmerman",
+      "age": 86,
+      "gender": "Female",
+      "ward": "Geriatrics B",
+      "bed": "B-212",
+      "room": "212",
+      "admissionDate": "2025-01-30",
+      "primaryPhysician": "Dr. Sarah Miller",
+      "diagnoses": [
+        "Chronic Vertigo",
+        "Meniere's Disease",
+        "Hearing Loss",
+        "Frequent Falls"
+      ],
+      "medications": [
+        "Meclizine 25mg three times daily",
+        "Betahistine 16mg three times daily",
+        "Diuretics as needed",
+        "Hearing aids bilateral"
+      ],
+      "allergies": ["Penicillin"],
+      "mmse": [
+        {"date": "2025-01-30", "score": 27},
+        {"date": "2025-03-01", "score": 27}
+      ],
+      "fallRisk": 90,
+      "acuity": "moderate",
+      "socialHistory": "Former musician, frustrated by hearing loss",
+      "codeStatus": "Full Code",
+      "lastUpdated": "2025-03-03T08:00:00Z"
+    },
+    {
+      "id": "pt026",
+      "name": "Simon Abrams",
+      "age": 82,
+      "gender": "Male",
+      "ward": "Geriatrics A",
+      "bed": "A-114",
+      "room": "114",
+      "admissionDate": "2025-02-05",
+      "primaryPhysician": "Dr. Michael Ross",
+      "diagnoses": [
+        "Pancreatic Cancer - Stage IV",
+        "Cachexia",
+        "Chronic Pain",
+        "Depression"
+      ],
+      "medications": [
+        "Fentanyl patch 50mcg every 72 hours",
+        "Morphine 5-10mg breakthrough pain",
+        "Creon with meals",
+        "Mirtazapine 15mg at bedtime",
+        "Ensure supplements"
+      ],
+      "allergies": ["Iodine"],
+      "mmse": [
+        {"date": "2025-02-05", "score": 25},
+        {"date": "2025-03-01", "score": 24}
+      ],
+      "fallRisk": 75,
+      "acuity": "critical",
+      "socialHistory": "Retired chef, family very involved",
+      "codeStatus": "DNR/DNI",
+      "lastUpdated": "2025-03-03T09:15:00Z"
+    },
+    {
+      "id": "pt027",
+      "name": "Frances Gordon",
+      "age": 88,
+      "gender": "Female",
+      "ward": "Geriatrics B",
+      "bed": "B-213",
+      "room": "213",
+      "admissionDate": "2025-01-15",
+      "primaryPhysician": "Dr. Sarah Miller",
+      "diagnoses": [
+        "Fibromyalgia",
+        "Chronic Fatigue Syndrome",
+        "Depression",
+        "IBS"
+      ],
+      "medications": [
+        "Duloxetine 60mg daily",
+        "Pregabalin 150mg twice daily",
+        "Tramadol 50mg as needed",
+        "Dicyclomine 20mg as needed"
+      ],
+      "allergies": ["Codeine"],
+      "mmse": [
+        {"date": "2025-01-15", "score": 29},
+        {"date": "2025-02-15", "score": 29},
+        {"date": "2025-03-01", "score": 29}
+      ],
+      "fallRisk": 35,
+      "acuity": "low",
+      "socialHistory": "Former lawyer, still mentally sharp",
+      "codeStatus": "Full Code",
+      "lastUpdated": "2025-03-03T10:30:00Z"
+    },
+    {
+      "id": "pt028",
+      "name": "Julius Marcus",
+      "age": 85,
+      "gender": "Male",
+      "ward": "Geriatrics A",
+      "bed": "A-115",
+      "room": "115",
+      "admissionDate": "2025-02-14",
+      "primaryPhysician": "Dr. Michael Ross",
+      "diagnoses": [
+        "Peripheral Artery Disease",
+        "Intermittent Claudication",
+        "Coronary Artery Disease",
+        "Hyperlipidemia"
+      ],
+      "medications": [
+        "Cilostazol 100mg twice daily",
+        "Aspirin 81mg daily",
+        "Atorvastatin 80mg daily",
+        "Metoprolol 50mg twice daily",
+        "Isosorbide mononitrate 30mg daily"
+      ],
+      "allergies": ["None known"],
+      "mmse": [
+        {"date": "2025-02-14", "score": 27},
+        {"date": "2025-03-01", "score": 27}
+      ],
+      "fallRisk": 55,
+      "acuity": "moderate",
+      "socialHistory": "Retired tailor, limited mobility",
+      "codeStatus": "Full Code",
+      "lastUpdated": "2025-03-03T11:45:00Z"
+    },
+    {
+      "id": "pt029",
+      "name": "Shirley Rubin",
+      "age": 90,
+      "gender": "Female",
+      "ward": "Geriatrics B",
+      "bed": "B-214",
+      "room": "214",
+      "admissionDate": "2024-12-25",
+      "primaryPhysician": "Dr. Sarah Miller",
+      "diagnoses": [
+        "Corticobasal Degeneration",
+        "Alien Hand Syndrome",
+        "Dysphagia",
+        "Depression"
+      ],
+      "medications": [
+        "Levodopa-Carbidopa 25/100mg four times daily",
+        "Clonazepam 0.5mg twice daily",
+        "Sertraline 100mg daily",
+        "Speech therapy daily"
+      ],
+      "allergies": ["Sulfa drugs"],
+      "mmse": [
+        {"date": "2024-12-25", "score": 20},
+        {"date": "2025-01-25", "score": 18},
+        {"date": "2025-02-25", "score": 17}
+      ],
+      "fallRisk": 85,
+      "acuity": "critical",
+      "socialHistory": "Former dancer, frustrated by movement disorder",
+      "codeStatus": "Full Code",
+      "lastUpdated": "2025-03-03T13:00:00Z"
+    },
+    {
+      "id": "pt030",
+      "name": "Harold Levine",
+      "age": 83,
+      "gender": "Male",
+      "ward": "Geriatrics A",
+      "bed": "A-116",
+      "room": "116",
+      "admissionDate": "2025-02-08",
+      "primaryPhysician": "Dr. Michael Ross",
+      "diagnoses": [
+        "Glaucoma - Advanced",
+        "Legal Blindness",
+        "Depression",
+        "Hypertension"
+      ],
+      "medications": [
+        "Latanoprost eye drops daily",
+        "Timolol eye drops twice daily",
+        "Brimonidine eye drops three times daily",
+        "Sertraline 50mg daily",
+        "Lisinopril 10mg daily"
+      ],
+      "allergies": ["Beta blockers (systemic)"],
+      "mmse": [
+        {"date": "2025-02-08", "score": 26},
+        {"date": "2025-03-01", "score": 26}
+      ],
+      "fallRisk": 80,
+      "acuity": "moderate",
+      "socialHistory": "Former optometrist, ironic about vision loss",
+      "codeStatus": "Full Code",
+      "lastUpdated": "2025-03-03T14:15:00Z"
+    },
+    {
+      "id": "pt031",
+      "name": "Rose Kaufman",
+      "age": 89,
+      "gender": "Female",
+      "ward": "Geriatrics B",
+      "bed": "B-215",
+      "room": "215",
+      "admissionDate": "2025-01-20",
+      "primaryPhysician": "Dr. Sarah Miller",
+      "diagnoses": [
+        "Sjogren's Syndrome",
+        "Dry Eye Syndrome",
+        "Xerostomia",
+        "Arthritis"
+      ],
+      "medications": [
+        "Pilocarpine 5mg four times daily",
+        "Artificial tears hourly",
+        "Artificial saliva as needed",
+        "Hydroxychloroquine 200mg daily",
+        "Prednisone 5mg daily"
+      ],
+      "allergies": ["NSAIDs"],
+      "mmse": [
+        {"date": "2025-01-20", "score": 28},
+        {"date": "2025-02-20", "score": 28},
+        {"date": "2025-03-01", "score": 28}
+      ],
+      "fallRisk": 40,
+      "acuity": "low",
+      "socialHistory": "Former librarian, avid reader despite dry eyes",
+      "codeStatus": "Full Code",
+      "lastUpdated": "2025-03-03T15:30:00Z"
+    },
+    {
+      "id": "pt032",
+      "name": "Milton Green",
+      "age": 80,
+      "gender": "Male",
+      "ward": "Geriatrics A",
+      "bed": "A-117",
+      "room": "117",
+      "admissionDate": "2025-02-16",
+      "primaryPhysician": "Dr. Michael Ross",
+      "diagnoses": [
+        "Multiple System Atrophy",
+        "Orthostatic Hypotension",
+        "Neurogenic Bladder",
+        "REM Sleep Behavior Disorder"
+      ],
+      "medications": [
+        "Midodrine 10mg three times daily",
+        "Fludrocortisone 0.2mg daily",
+        "Droxidopa 300mg three times daily",
+        "Clonazepam 1mg at bedtime",
+        "Intermittent catheterization"
+      ],
+      "allergies": ["None known"],
+      "mmse": [
+        {"date": "2025-02-16", "score": 24},
+        {"date": "2025-03-01", "score": 23}
+      ],
+      "fallRisk": 95,
+      "acuity": "critical",
+      "socialHistory": "Former pilot, difficulty accepting loss of autonomy",
+      "codeStatus": "Full Code",
+      "lastUpdated": "2025-03-03T16:45:00Z"
+    },
+    {
+      "id": "pt033",
+      "name": "Ida Friedman",
+      "age": 93,
+      "gender": "Female",
+      "ward": "Geriatrics B",
+      "bed": "B-216",
+      "room": "216",
+      "admissionDate": "2024-12-10",
+      "primaryPhysician": "Dr. Sarah Miller",
+      "diagnoses": [
+        "Centenarian Syndrome",
+        "Frailty",
+        "Sensory Deficits",
+        "Social Isolation"
+      ],
+      "medications": [
+        "Multivitamin daily",
+        "Vitamin D 2000IU daily",
+        "Ensure supplements twice daily",
+        "Melatonin 3mg at bedtime"
+      ],
+      "allergies": ["None known"],
+      "mmse": [
+        {"date": "2024-12-10", "score": 22},
+        {"date": "2025-01-10", "score": 21},
+        {"date": "2025-02-10", "score": 21},
+        {"date": "2025-03-01", "score": 20}
+      ],
+      "fallRisk": 70,
+      "acuity": "moderate",
+      "socialHistory": "Outlived all family, remarkably resilient",
+      "codeStatus": "DNR",
+      "lastUpdated": "2025-03-03T18:00:00Z"
+    },
+    {
+      "id": "pt034",
+      "name": "Norman Siegel",
+      "age": 79,
+      "gender": "Male",
+      "ward": "Geriatrics A",
+      "bed": "A-118",
+      "room": "118",
+      "admissionDate": "2025-02-24",
+      "primaryPhysician": "Dr. Michael Ross",
+      "diagnoses": [
+        "Essential Tremor",
+        "Anxiety Disorder",
+        "GERD",
+        "BPH"
+      ],
+      "medications": [
+        "Propranolol 60mg twice daily",
+        "Primidone 250mg at bedtime",
+        "Buspirone 10mg three times daily",
+        "Omeprazole 20mg daily",
+        "Tamsulosin 0.4mg daily"
+      ],
+      "allergies": ["Penicillin"],
+      "mmse": [
+        {"date": "2025-02-24", "score": 29},
+        {"date": "2025-03-03", "score": 29}
+      ],
+      "fallRisk": 45,
+      "acuity": "low",
+      "socialHistory": "Retired watchmaker, tremor affects quality of life",
+      "codeStatus": "Full Code",
+      "lastUpdated": "2025-03-03T19:15:00Z"
+    },
+    {
+      "id": "pt035",
+      "name": "Gertrude Weiner",
+      "age": 87,
+      "gender": "Female",
+      "ward": "Geriatrics B",
+      "bed": "B-217",
+      "room": "217",
+      "admissionDate": "2025-01-05",
+      "primaryPhysician": "Dr. Sarah Miller",
+      "diagnoses": [
+        "Chronic Migraine",
+        "Medication Overuse Headache",
+        "Depression",
+        "Insomnia"
+      ],
+      "medications": [
+        "Topiramate 100mg twice daily",
+        "Botox injections quarterly",
+        "Amitriptyline 25mg at bedtime",
+        "Sumatriptan 50mg as needed (limited)",
+        "Magnesium 400mg daily"
+      ],
+      "allergies": ["Ergotamines"],
+      "mmse": [
+        {"date": "2025-01-05", "score": 27},
+        {"date": "2025-02-05", "score": 27},
+        {"date": "2025-03-01", "score": 27}
+      ],
+      "fallRisk": 50,
+      "acuity": "moderate",
+      "socialHistory": "Former journalist, headaches limit activities",
+      "codeStatus": "Full Code",
+      "lastUpdated": "2025-03-03T20:30:00Z"
+    },
+    {
+      "id": "pt036",
+      "name": "Albert Rosen",
+      "age": 84,
+      "gender": "Male",
+      "ward": "Geriatrics A",
+      "bed": "A-119",
+      "room": "119",
+      "admissionDate": "2025-02-11",
+      "primaryPhysician": "Dr. Michael Ross",
+      "diagnoses": [
+        "Post-Polio Syndrome",
+        "Progressive Muscle Weakness",
+        "Respiratory Insufficiency",
+        "Chronic Pain"
+      ],
+      "medications": [
+        "Modafinil 200mg daily",
+        "BiPAP at night",
+        "Gabapentin 300mg three times daily",
+        "Physical therapy daily",
+        "Pyridostigmine 60mg three times daily"
+      ],
+      "allergies": ["None known"],
+      "mmse": [
+        {"date": "2025-02-11", "score": 30},
+        {"date": "2025-03-01", "score": 30}
+      ],
+      "fallRisk": 75,
+      "acuity": "moderate",
+      "socialHistory": "Polio survivor from 1950s, advocate for disabled",
+      "codeStatus": "Full Code",
+      "lastUpdated": "2025-03-03T21:45:00Z"
+    },
+    {
+      "id": "pt037",
+      "name": "Celia Diamond",
+      "age": 86,
+      "gender": "Female",
+      "ward": "Geriatrics B",
+      "bed": "B-218",
+      "room": "218",
+      "admissionDate": "2025-01-18",
+      "primaryPhysician": "Dr. Sarah Miller",
+      "diagnoses": [
+        "Lupus - Late Onset",
+        "Lupus Nephritis",
+        "Antiphospholipid Syndrome",
+        "Chronic Fatigue"
+      ],
+      "medications": [
+        "Hydroxychloroquine 400mg daily",
+        "Prednisone 10mg daily",
+        "Mycophenolate 1000mg twice daily",
+        "Warfarin 5mg daily",
+        "Vitamin D 50000IU weekly"
+      ],
+      "allergies": ["Sulfa drugs"],
+      "mmse": [
+        {"date": "2025-01-18", "score": 28},
+        {"date": "2025-02-18", "score": 28},
+        {"date": "2025-03-01", "score": 28}
+      ],
+      "fallRisk": 55,
+      "acuity": "moderate",
+      "socialHistory": "Former fashion designer, concerned about appearance changes",
+      "codeStatus": "Full Code",
+      "lastUpdated": "2025-03-03T23:00:00Z"
+    },
+    {
+      "id": "pt038",
+      "name": "Louis Brenner",
+      "age": 81,
+      "gender": "Male",
+      "ward": "Geriatrics A",
+      "bed": "A-120",
+      "room": "120",
+      "admissionDate": "2025-02-19",
+      "primaryPhysician": "Dr. Michael Ross",
+      "diagnoses": [
+        "Chronic Pancreatitis",
+        "Diabetes Secondary to Pancreatitis",
+        "Malabsorption",
+        "Chronic Pain"
+      ],
+      "medications": [
+        "Creon 36000 units with meals",
+        "Insulin glargine 30 units at bedtime",
+        "Insulin lispro sliding scale",
+        "Oxycodone 5mg every 6 hours",
+        "Omeprazole 40mg daily"
+      ],
+      "allergies": ["Morphine"],
+      "mmse": [
+        {"date": "2025-02-19", "score": 27},
+        {"date": "2025-03-03", "score": 27}
+      ],
+      "fallRisk": 50,
+      "acuity": "moderate",
+      "socialHistory": "Former restaurateur, struggles with dietary restrictions",
+      "codeStatus": "Full Code",
+      "lastUpdated": "2025-03-04T08:15:00Z"
+    },
+    {
+      "id": "pt039",
+      "name": "Beatrice Solomon",
+      "age": 88,
+      "gender": "Female",
+      "ward": "Geriatrics B",
+      "bed": "B-219",
+      "room": "219",
+      "admissionDate": "2025-01-12",
+      "primaryPhysician": "Dr. Sarah Miller",
+      "diagnoses": [
+        "Thyroid Cancer - Papillary",
+        "Post-thyroidectomy",
+        "Hypoparathyroidism",
+        "Osteoporosis"
+      ],
+      "medications": [
+        "Levothyroxine 150mcg daily",
+        "Calcium carbonate 1000mg three times daily",
+        "Calcitriol 0.5mcg twice daily",
+        "Alendronate 70mg weekly",
+        "Vitamin D 2000IU daily"
+      ],
+      "allergies": ["Iodine contrast"],
+      "mmse": [
+        {"date": "2025-01-12", "score": 29},
+        {"date": "2025-02-12", "score": 29},
+        {"date": "2025-03-01", "score": 29}
+      ],
+      "fallRisk": 45,
+      "acuity": "low",
+      "socialHistory": "Former opera singer, voice changed after surgery",
+      "codeStatus": "Full Code",
+      "lastUpdated": "2025-03-04T09:30:00Z"
+    },
+    {
+      "id": "pt040",
+      "name": "Emanuel Fisher",
+      "age": 85,
+      "gender": "Male",
+      "ward": "Geriatrics A",
+      "bed": "A-121",
+      "room": "121",
+      "admissionDate": "2025-02-03",
+      "primaryPhysician": "Dr. Michael Ross",
+      "diagnoses": [
+        "Huntington's Disease - Late Onset",
+        "Chorea",
+        "Dysphagia",
+        "Weight Loss"
+      ],
+      "medications": [
+        "Tetrabenazine 25mg three times daily",
+        "Risperidone 1mg at bedtime",
+        "Ensure supplements three times daily",
+        "Speech therapy daily",
+        "Occupational therapy daily"
+      ],
+      "allergies": ["None known"],
+      "mmse": [
+        {"date": "2025-02-03", "score": 22},
+        {"date": "2025-03-01", "score": 21}
+      ],
+      "fallRisk": 90,
+      "acuity": "critical",
+      "socialHistory": "Late diagnosis, no family history known",
+      "codeStatus": "DNR",
+      "lastUpdated": "2025-03-04T10:45:00Z"
+    }
+  ]
+}
