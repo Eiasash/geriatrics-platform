@@ -14,6 +14,7 @@ import ShiftHandoff from './components/ShiftHandoff';
 import Analytics from './components/Analytics';
 import AuditLogViewer from './components/AuditLogViewer';
 import DemoMode from './components/DemoMode';
+import Welcome from './components/Welcome';
 import { Home, Calculator, FileText, Package, LogOut, Menu, X, Pill, ClipboardList, BarChart3, Shield, Printer } from 'lucide-react';
 import { auditLogger } from '../services/auditLog';
 import { PDFGenerator } from '../services/pdfGenerator';
@@ -203,10 +204,13 @@ function AppContent() {
       </div>
       <PWAInstallPrompt />
       {user && (
-        <DemoMode 
-          onNavigate={(path) => navigate(path)} 
-          language={language} 
-        />
+        <>
+          <DemoMode 
+            onNavigate={(path) => navigate(path)} 
+            language={language} 
+          />
+          <Welcome />
+        </>
       )}
     </>
   );
