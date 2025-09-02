@@ -93,7 +93,7 @@ function AppContent() {
 
   return (
     <>
-      <div className={`min-h-screen bg-gray-50 flex ${language === 'he' ? 'rtl' : 'ltr'}`} dir={language === 'he' ? 'rtl' : 'ltr'}>
+      <div className={`min-h-screen bg-gray-50 ${language === 'he' ? 'rtl' : 'ltr'}`} dir={language === 'he' ? 'rtl' : 'ltr'}>
         {/* Mobile sidebar backdrop */}
         {sidebarOpen && (
           <div 
@@ -103,7 +103,7 @@ function AppContent() {
         )}
 
         {/* Sidebar */}
-        <div className={`fixed inset-y-0 ${language === 'he' ? 'right-0' : 'left-0'} z-50 w-64 bg-white shadow-lg transform ${sidebarOpen ? 'translate-x-0' : language === 'he' ? 'translate-x-full' : '-translate-x-full'} transition-transform duration-300 ease-in-out lg:translate-x-0 lg:fixed`}>
+        <div className={`fixed inset-y-0 ${language === 'he' ? 'right-0' : 'left-0'} z-50 w-64 bg-white shadow-lg transform ${sidebarOpen ? 'translate-x-0' : language === 'he' ? 'translate-x-full' : '-translate-x-full'} transition-transform duration-300 ease-in-out lg:translate-x-0`}>
           <div className="flex flex-col h-full">
             <div className="flex items-center justify-between h-16 px-4 border-b">
               <h1 className="text-xl font-bold text-gray-800">
@@ -153,7 +153,7 @@ function AppContent() {
         </div>
 
         {/* Main content */}
-        <div className="lg:ml-64">
+        <div className="lg:pl-64">
           {/* Mobile header */}
           <div className="lg:hidden bg-white shadow-sm">
             <div className="flex items-center justify-between h-16 px-4">
