@@ -1,0 +1,290 @@
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 20px;
+  padding: 20px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* Hero Card */
+.hero-card {
+  grid-column: span 2;
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  color: white;
+  padding: 40px;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(99, 102, 241, 0.3);
+}
+
+.hero-card h1 {
+  font-size: 2.5rem;
+  margin-bottom: 10px;
+}
+
+.hero-card p {
+  font-size: 1.2rem;
+  opacity: 0.9;
+  margin-bottom: 30px;
+}
+
+.stats-row {
+  display: flex;
+  gap: 40px;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+}
+
+.stat-number {
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+.stat-label {
+  font-size: 0.9rem;
+  opacity: 0.8;
+  margin-top: 5px;
+}
+
+/* Quick Actions */
+.quick-actions {
+  grid-column: span 2;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 15px;
+}
+
+.action-card {
+  background: white;
+  border: 2px solid #e5e7eb;
+  border-radius: 16px;
+  padding: 25px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.action-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  border-color: #6366f1;
+}
+
+.action-card.emergency {
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  color: white;
+  border: none;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.02); }
+}
+
+.action-card .icon {
+  font-size: 2rem;
+}
+
+.action-card .label {
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+/* Guide Card */
+.guide-card {
+  background: white;
+  border-radius: 16px;
+  padding: 25px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+}
+
+.guide-card h2 {
+  color: #1f2937;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.timeline-item {
+  display: flex;
+  align-items: center;
+  padding: 12px;
+  background: #f9fafb;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.timeline-item:hover {
+  background: #f3f4f6;
+  transform: translateX(5px);
+}
+
+.timeline-item.active {
+  background: #eef2ff;
+  border-left: 3px solid #6366f1;
+}
+
+.time {
+  font-weight: 600;
+  color: #6366f1;
+  min-width: 60px;
+}
+
+.task {
+  color: #4b5563;
+  margin-left: 15px;
+}
+
+/* Must Know Card */
+.must-know-card {
+  background: white;
+  border-radius: 16px;
+  padding: 25px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+}
+
+.must-know-card h2 {
+  color: #1f2937;
+  margin-bottom: 20px;
+}
+
+.knowledge-section {
+  margin-bottom: 20px;
+}
+
+.knowledge-section h3 {
+  color: #6366f1;
+  font-size: 1rem;
+  margin-bottom: 10px;
+}
+
+.knowledge-section ul {
+  list-style: none;
+  padding: 0;
+}
+
+.knowledge-section li {
+  padding: 8px 0;
+  color: #4b5563;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+/* Rounds Card */
+.rounds-card {
+  background: white;
+  border-radius: 16px;
+  padding: 25px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+}
+
+.template-box {
+  background: #f9fafb;
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.template-box p {
+  margin: 5px 0;
+  color: #4b5563;
+}
+
+.template-box strong {
+  color: #1f2937;
+}
+
+.systems-review h3 {
+  color: #6366f1;
+  margin-bottom: 10px;
+}
+
+.systems-review ul {
+  list-style: none;
+  padding: 0;
+}
+
+.systems-review li {
+  padding: 6px 0;
+  color: #4b5563;
+  font-size: 0.9rem;
+}
+
+/* Hebrew Card */
+.hebrew-card {
+  background: white;
+  border-radius: 16px;
+  padding: 25px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+}
+
+.phrases-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.phrase-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px;
+  background: #f9fafb;
+  border-radius: 8px;
+}
+
+.english {
+  color: #1f2937;
+  font-weight: 500;
+}
+
+.hebrew {
+  color: #6366f1;
+  font-weight: 600;
+  direction: rtl;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .hero-card,
+  .quick-actions {
+    grid-column: span 1;
+  }
+  
+  .quick-actions {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .hero-card h1 {
+    font-size: 1.8rem;
+  }
+  
+  .stats-row {
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .quick-actions {
+    grid-template-columns: 1fr;
+  }
+}

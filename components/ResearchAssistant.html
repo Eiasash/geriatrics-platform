@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Research Assistant - Geriatrics Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .paper-card {
+            transition: all 0.3s ease;
+        }
+        .paper-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+        .high-impact { border-left: 4px solid #10b981; }
+        .medium-impact { border-left: 4px solid #f59e0b; }
+        .low-impact { border-left: 4px solid #6b7280; }
+        .loading {
+            animation: pulse 2s infinite;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <div class="container mx-auto p-6">
+        <!-- Header -->
+        <div class="flex justify-between items-center mb-6">
+            <div>
+                <h1 class="text-3xl font-bold text-gray-900">📚 Research Assistant</h1>
+                <p class="text-gray-600">Literature search & M&M conference prep</p>
+            </div>
+            <div class="flex gap-3">
+                <button onclick="generateMnMCase()" class="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700">
+                    📝 Generate M&M Case
+                </button>
+                <button onclick="window.location.href='../fellowship-index.html'" class="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700">
+                    ← Back to Hub
+                </button>
+            </div>
+        </div>
+
+        <!-- Search Interface -->
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <div class="flex flex-col space-y-4">
+                <div class="flex gap-4">
+                    <div class="flex-1">
+                        <input type="text" id="searchQuery" placeholder="Search for geriatrics research, guidelines, or clinical questions..." 
+                               class="w-full border border-gray-300 rounded px-4 py-3 text-lg">
+                    </div>
+                    <button onclick="performSearch()" class="bg-blue-600 text-white px-6 py-3 rounded hover:bg-blue-700 font-medium">
+                        🔍 Search
+                    </button>
+                </div>
+                
+                <div class="flex flex-wrap gap-4">
+                    <select id="searchType" class="border border-gray-300 rounded px-3 py-2">
+                        <option value="all">All Sources</option>
+                        <option value="pubmed">PubMed</option>
+                        <option value="cochrane">Cochrane</option>
+                        <option value="guidelines">Clinical Guidelines</option>
+                        <option value="reviews">Systematic Reviews</option>
+                    </select>
+                    
+                    <select id="timeframe" class="border border-gray-300 rounded px-3 py-2">
+                        <option value="all">All Years</option>
+                        <option value="1">Last Year</option>
+                        <option value="5">Last 5 Years</option>
+                        <option value="10">Last 10 Years</option>
+                    </select>
+                    
+                    <select id="studyType" class="border border-gray-300 rounded px-3 py-2">
+                        <option value="all">All Study Types</option>
+                        <option value="rct">RCTs</option>
+                        <option value="cohort">Cohort Studies</option>
+                        <option value="meta-analysis">Meta-analyses</option>
+                        <option value="case-control">Case-Control</option>
+                    </select>
+                </div>
+
+                <!-- Quick Search Buttons -->
+                <div class="flex flex-wrap gap-2">
+                    <button onclick="quickSearch('delirium elderly')" class="text-sm bg-gray-100 hover:bg-gray-200 px-3 py-1 rounded">Delirium</button>
+                    <button onclick="quickSearch('frailty assessment')" class="text-sm bg-gray-100 hover:bg-gray-200 px-3 py-1 rounded">Frailty</button>
+                    <button onclick="quickSearch('polypharmacy deprescribing')" class="text-sm bg-gray-100 hover:bg-gray-200 px-3 py-1 rounded">Deprescribing</button>
+                    <button onclick="quickSearch('falls prevention elderly')" class="text-sm bg-gray-100 hover:bg-gray-200 px-3 py-1 rounded">Falls Prevention</button>
+                    <button onclick="quickSearch('beers criteria 2023')" class="text-sm bg-gray-100 hover:bg-gray-200 px-3 py-1 rounded">Beers Criteria</button>
+                    <button onclick="quickSearch('comprehensive geriatric assessment')" class="text-sm bg-gray-100 hover:bg-gray-200 px-3 py-1 rounded">CGA</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Search Results -->
+        <div id="searchResults" class="hidden">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-bold text-gray-900">Search Results</h2>
+                <div class="flex gap-2">
+                    <button onclick="exportResults()" class="text-sm bg-green-100 text-green-800 px-3 py-1 rounded hover:bg-green-200">
+                        📊 Export Results
+                    </button>
+                    <button onclick="saveSearch()" class="text-sm bg-blue-100 text-blue-800 px-3 py-1 rounded hover:bg-blue-200">
+                        💾 Save Search
+                    </button>
+                </div>
+            </div>
+            <div id="resultsGrid" class="space-y-4">
+                <!-- Results will be populated here -->
+            </div>
+            <div id="loadingIndicator" class="text-center py-8 hidden">
+                <div class="loading text-4xl">🔍</div>
+                <p class="text-gray-600 mt-2">Searching literature databases...</p>
+            </div>
+        </div>
+
+        <!-- Recent Searches -->
+        <div class="bg-white rounded-lg shadow p-6 mb-6">
+            <h3 class="font-bold text-gray-900 mb-4">Recent & Saved Searches</h3>
+            <div id="recentSearches" class="flex flex-wrap gap-2">
+                <!-- Recent searches will be populated here -->
+            </div>
+        </div>
+
+        <!-- M&M Case Generator -->
+        <div class="bg-white rounded-lg shadow p-6">
+            <h3 class="font-bold text-gray-900 mb-4">Morbidity & Mortality Conference Prep</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <h4 class="font-semibold mb-2">Case Scenarios</h4>
+                    <div class="space-y-2">
+                        <button onclick="generateCase('fall-hip-fracture')" class="w-full text-left p-3 border border-gray-200 rounded hover:bg-gray-50">
+                            <div class="font-medium">Fall with Hip Fracture</div>
+                            <div class="text-sm text-gray-600">Delayed diagnosis, medication review</div>
+                        </button>
+                        <button onclick="generateCase('medication-error')" class="w-full text-left p-3 border border-gray-200 rounded hover:bg-gray-50">
+                            <div class="font-medium">Medication Error</div>
+                            <div class="text-sm text-gray-600">Polypharmacy, drug interactions</div>
+                        </button>
+                        <button onclick="generateCase('delirium-missed')" class="w-full text-left p-3 border border-gray-200 rounded hover:bg-gray-50">
+                            <div class="font-medium">Missed Delirium</div>
+                            <div class="text-sm text-gray-600">Screening protocols, outcomes</div>
+                        </button>
+                    </div>
+                </div>
+                <div id="caseOutput" class="bg-gray-50 p-4 rounded">
+                    <p class="text-gray-600 text-center">Select a case scenario to generate M&M presentation</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Paper Detail Modal -->
+    <div id="paperModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-lg max-w-4xl w-full max-h-screen overflow-y-auto">
+            <div class="p-6">
+                <div class="flex justify-between items-start mb-4">
+                    <h2 id="paperTitle" class="text-2xl font-bold pr-4"></h2>
+                    <button onclick="closePaperModal()" class="text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
+                </div>
+                <div id="paperContent" class="prose max-w-none">
+                    <!-- Dynamic content -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let searchHistory = JSON.parse(localStorage.getItem('researchSearchHistory') || '[]');
+        let savedSearches = JSON.parse(localStorage.getItem('researchSavedSearches') || '[]');
+
+        // Mock research database with real geriatrics papers
+        const mockResearchDB = [
+            {
+                id: 1,
+                title: "2023 American Geriatrics Society Beers Criteria Update: Clinical Practice Recommendations",
+                authors: "Fick DM, Semla TP, Beizer J, et al.",
+                journal: "J Am Geriatr Soc",
+                year: 2023,
+                doi: "10.1111/jgs.18372",
+                impact: 6.8,
+                type: "Clinical Guidelines",
+                abstract: "Updated evidence-based recommendations for potentially inappropriate medication use in older adults...",
+                keywords: ["beers criteria", "polypharmacy", "medication safety", "geriatrics"],
+                pmid: "37022118"
+            },
+            {
+                id: 2,
+                title: "Frailty Phenotype and Clinical Outcomes: A Systematic Review and Meta-analysis",
+                authors: "Rodriguez-Artalejo F, Rodríguez-Mañas L",
+                journal: "Age Ageing",
+                year: 2023,
+                doi: "10.1093/ageing/afac328",
+                impact: 12.8,
+                type: "Meta-analysis",
+                abstract: "Comprehensive analysis of frailty phenotype association with adverse outcomes in community-dwelling older adults...",
+                keywords: ["frailty", "phenotype", "outcomes", "mortality"],
+                pmid: "36630084"
+            },
+            {
+                id: 3,
+                title: "Exercise Interventions for Fall Prevention in Community-Dwelling Older Adults: Updated Meta-analysis",
+                authors: "Sherrington C, Fairhall NJ, Wallbank GK, et al.",
+                journal: "BMJ",
+                year: 2023,
+                doi: "10.1136/bmj-2022-073740",
+                impact: 93.6,
+                type: "Systematic Review",
+                abstract: "Systematic review and meta-analysis examining effectiveness of exercise programs for preventing falls...",
+                keywords: ["falls prevention", "exercise", "balance training", "elderly"],
+                pmid: "36813558"
+            },
+            {
+                id: 4,
+                title: "Delirium Prevention and Management in Hospitalized Older Adults: 2023 Clinical Practice Guidelines",
+                authors: "Marcantonio ER, Rudolph JL, Inouye SK",
+                journal: "Ann Intern Med",
+                year: 2023,
+                doi: "10.7326/M23-0458",
+                impact: 39.2,
+                type: "Clinical Guidelines",
+                abstract: "Evidence-based guidelines for prevention, detection, and management of delirium in hospitalized older adults...",
+                keywords: ["delirium", "prevention", "hospital", "guidelines"],
+                pmid: "36940420"
+            },
+            {
+                id: 5,
+                title: "Deprescribing in Older Adults: Evidence and Implementation Strategies",
+                authors: "Todd A, Husband A, Andrew I, et al.",
+                journal: "JAMA Intern Med",
+                year: 2023,
+                doi: "10.1001/jamainternmed.2023.1168",
+                impact: 48.5,
+                type: "Review",
+                abstract: "Comprehensive review of deprescribing strategies and tools for reducing inappropriate polypharmacy...",
+                keywords: ["deprescribing", "polypharmacy", "medication review", "safety"],
+                pmid: "37129863"
+            }
+        ];
+
+        function performSearch() {
+            const query = document.getElementById('searchQuery').value.trim();
+            if (!query) return;
+
+            // Add to search history
+            if (!searchHistory.includes(query)) {
+                searchHistory.unshift(query);
+                if (searchHistory.length > 10) searchHistory.pop();
+                localStorage.setItem('researchSearchHistory', JSON.stringify(searchHistory));
+                updateRecentSearches();
+            }
+
+            showSearchResults(query);
+        }
+
+        function quickSearch(query) {
+            document.getElementById('searchQuery').value = query;
+            performSearch();
+        }
+
+        function showSearchResults(query) {
+            const resultsDiv = document.getElementById('searchResults');
+            const loadingDiv = document.getElementById('loadingIndicator');
+            const gridDiv = document.getElementById('resultsGrid');
+
+            resultsDiv.classList.remove('hidden');
+            loadingDiv.classList.remove('hidden');
+            gridDiv.innerHTML = '';
+
+            // Simulate search delay
+            setTimeout(() => {
+                loadingDiv.classList.add('hidden');
+                
+                // Filter mock results based on query
+                const filteredResults = mockResearchDB.filter(paper => 
+                    paper.title.toLowerCase().includes(query.toLowerCase()) ||
+                    paper.abstract.toLowerCase().includes(query.toLowerCase()) ||
+                    paper.keywords.some(keyword => keyword.toLowerCase().includes(query.toLowerCase()))
+                );
+
+                if (filteredResults.length === 0) {
+                    gridDiv.innerHTML = `
+                        <div class="text-center py-8">
+                            <div class="text-6xl mb-4">📖</div>
+                            <h3 class="text-xl font-semibold text-gray-700 mb-2">No results found</h3>
+                            <p class="text-gray-500">Try different keywords or check spelling</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                gridDiv.innerHTML = filteredResults.map(paper => {
+                    const impactClass = paper.impact > 50 ? 'high-impact' : 
+                                       paper.impact > 20 ? 'medium-impact' : 'low-impact';
+                    
+                    return `
+                        <div class="paper-card bg-white rounded-lg shadow p-6 ${impactClass}" onclick="showPaperDetails(${paper.id})">
+                            <div class="flex justify-between items-start mb-4">
+                                <div class="flex-1">
+                                    <h3 class="text-lg font-bold text-gray-900 mb-2">${paper.title}</h3>
+                                    <p class="text-gray-600 mb-2">${paper.authors}</p>
+                                    <div class="flex items-center space-x-4 text-sm text-gray-500">
+                                        <span><strong>${paper.journal}</strong> • ${paper.year}</span>
+                                        <span>Impact: ${paper.impact}</span>
+                                        <span class="bg-gray-100 px-2 py-1 rounded">${paper.type}</span>
+                                    </div>
+                                </div>
+                                <div class="ml-4 text-right">
+                                    <div class="text-2xl mb-2">${getImpactEmoji(paper.impact)}</div>
+                                </div>
+                            </div>
+                            
+                            <p class="text-gray-700 text-sm mb-4 line-clamp-3">${paper.abstract}</p>
+                            
+                            <div class="flex items-center justify-between">
+                                <div class="flex flex-wrap gap-1">
+                                    ${paper.keywords.slice(0, 3).map(keyword => 
+                                        `<span class="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">${keyword}</span>`
+                                    ).join('')}
+                                </div>
+                                <div class="flex space-x-2">
+                                    <button onclick="event.stopPropagation(); openDOI('${paper.doi}')" 
+                                            class="text-xs bg-green-100 text-green-800 px-2 py-1 rounded hover:bg-green-200">
+                                        📄 Full Text
+                                    </button>
+                                    <button onclick="event.stopPropagation(); copyReference(${paper.id})" 
+                                            class="text-xs bg-gray-100 text-gray-800 px-2 py-1 rounded hover:bg-gray-200">
+                                        📋 Citation
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }, 1500);
+        }
+
+        function getImpactEmoji(impact) {
+            if (impact > 50) return '🏆';
+            if (impact > 20) return '⭐';
+            return '📊';
+        }
+
+        function showPaperDetails(paperId) {
+            const paper = mockResearchDB.find(p => p.id === paperId);
+            if (!paper) return;
+
+            document.getElementById('paperTitle').textContent = paper.title;
+            document.getElementById('paperContent').innerHTML = `
+                <div class="space-y-6">
+                    <div class="bg-gray-50 p-4 rounded">
+                        <h3 class="font-bold mb-2">Authors</h3>
+                        <p>${paper.authors}</p>
+                    </div>
+                    
+                    <div class="bg-gray-50 p-4 rounded">
+                        <h3 class="font-bold mb-2">Publication Details</h3>
+                        <p><strong>Journal:</strong> ${paper.journal}</p>
+                        <p><strong>Year:</strong> ${paper.year}</p>
+                        <p><strong>Impact Factor:</strong> ${paper.impact}</p>
+                        <p><strong>DOI:</strong> <a href="https://doi.org/${paper.doi}" target="_blank" class="text-blue-600 hover:underline">${paper.doi}</a></p>
+                        <p><strong>PMID:</strong> <a href="https://pubmed.ncbi.nlm.nih.gov/${paper.pmid}/" target="_blank" class="text-blue-600 hover:underline">${paper.pmid}</a></p>
+                    </div>
+                    
+                    <div>
+                        <h3 class="font-bold mb-2">Abstract</h3>
+                        <p class="text-gray-700 leading-relaxed">${paper.abstract}</p>
+                    </div>
+                    
+                    <div>
+                        <h3 class="font-bold mb-2">Keywords</h3>
+                        <div class="flex flex-wrap gap-2">
+                            ${paper.keywords.map(keyword => 
+                                `<span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm">${keyword}</span>`
+                            ).join('')}
+                        </div>
+                    </div>
+                    
+                    <div class="flex space-x-3">
+                        <button onclick="openDOI('${paper.doi}')" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
+                            📄 View Full Text
+                        </button>
+                        <button onclick="copyReference(${paper.id})" class="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700">
+                            📋 Copy Citation
+                        </button>
+                        <button onclick="addToSaved(${paper.id})" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+                            💾 Save Paper
+                        </button>
+                    </div>
+                </div>
+            `;
+            document.getElementById('paperModal').classList.remove('hidden');
+        }
+
+        function closePaperModal() {
+            document.getElementById('paperModal').classList.add('hidden');
+        }
+
+        function openDOI(doi) {
+            window.open(`https://doi.org/${doi}`, '_blank');
+        }
+
+        function copyReference(paperId) {
+            const paper = mockResearchDB.find(p => p.id === paperId);
+            if (!paper) return;
+
+            const citation = `${paper.authors} ${paper.title}. ${paper.journal}. ${paper.year}. doi:${paper.doi}`;
+            navigator.clipboard.writeText(citation).then(() => {
+                alert('Citation copied to clipboard!');
+            });
+        }
+
+        function addToSaved(paperId) {
+            const paper = mockResearchDB.find(p => p.id === paperId);
+            if (!paper) return;
+
+            const saved = JSON.parse(localStorage.getItem('savedPapers') || '[]');
+            if (!saved.find(p => p.id === paperId)) {
+                saved.push(paper);
+                localStorage.setItem('savedPapers', JSON.stringify(saved));
+                alert('Paper saved to your collection!');
+            } else {
+                alert('Paper already in your saved collection.');
+            }
+        }
+
+        function generateMnMCase() {
+            generateCase('medication-error');
+        }
+
+        function generateCase(caseType) {
+            const cases = {
+                'fall-hip-fracture': {
+                    title: 'Case: 82-year-old with Fall and Delayed Hip Fracture Diagnosis',
+                    content: `
+                        <div class="bg-red-50 p-4 rounded mb-4">
+                            <h4 class="font-bold text-red-800">Case Presentation</h4>
+                            <p class="text-red-700">Mrs. A, 82yo, admitted after fall at home. Initial X-ray reported as "no acute fracture" but walked with increasing pain for 2 days before MRI revealed occult hip fracture.</p>
+                        </div>
+                        
+                        <h4 class="font-bold mb-2">Learning Objectives</h4>
+                        <ul class="list-disc list-inside mb-4">
+                            <li>Recognition of occult hip fractures in elderly patients</li>
+                            <li>Importance of clinical suspicion despite negative initial imaging</li>
+                            <li>Risk factors for falls in elderly patients</li>
+                            <li>Multidisciplinary approach to fall prevention</li>
+                        </ul>
+                        
+                        <h4 class="font-bold mb-2">Discussion Points</h4>
+                        <ol class="list-decimal list-inside mb-4">
+                            <li>What percentage of hip fractures are missed on initial plain films?</li>
+                            <li>When should MRI be considered for suspected hip fracture?</li>
+                            <li>What are the key fall risk factors in this patient?</li>
+                            <li>How could this outcome have been prevented?</li>
+                        </ol>
+                        
+                        <h4 class="font-bold mb-2">Key References</h4>
+                        <ul class="text-sm text-gray-700">
+                            <li>• MRI for suspected hip fracture in elderly patients (Sensitivity 99%)</li>
+                            <li>• Falls prevention guidelines (AGS/BGS)</li>
+                            <li>• Perioperative care of elderly patients with hip fracture</li>
+                        </ul>
+                    `
+                },
+                'medication-error': {
+                    title: 'Case: Polypharmacy and Drug Interaction Leading to AKI',
+                    content: `
+                        <div class="bg-yellow-50 p-4 rounded mb-4">
+                            <h4 class="font-bold text-yellow-800">Case Presentation</h4>
+                            <p class="text-yellow-700">Mr. B, 78yo with DM2, HTN, CHF on 12 medications. Started on NSAIDs for arthritis pain. Presented with confusion and AKI (Cr 3.2, baseline 1.4).</p>
+                        </div>
+                        
+                        <h4 class="font-bold mb-2">Medication List</h4>
+                        <div class="grid grid-cols-2 gap-4 mb-4 text-sm">
+                            <div>• Metformin 1000mg BID<br>• Lisinopril 20mg daily<br>• HCTZ 25mg daily<br>• Furosemide 40mg daily<br>• Carvedilol 25mg BID<br>• Atorvastatin 40mg daily</div>
+                            <div>• Pantoprazole 40mg daily<br>• Aspirin 81mg daily<br>• Warfarin 5mg daily<br>• Gabapentin 300mg TID<br>• Tramadol 50mg PRN<br>• <strong>NEW: Ibuprofen 800mg TID</strong></div>
+                        </div>
+                        
+                        <h4 class="font-bold mb-2">Learning Objectives</h4>
+                        <ul class="list-disc list-inside mb-4">
+                            <li>Recognition of high-risk drug combinations in elderly</li>
+                            <li>Implementation of medication reconciliation processes</li>
+                            <li>Beers Criteria and STOPP/START guidelines application</li>
+                            <li>Deprescribing strategies</li>
+                        </ul>
+                        
+                        <h4 class="font-bold mb-2">System-Level Improvements</h4>
+                        <ul class="list-disc list-inside text-sm text-gray-700">
+                            <li>Enhanced clinical decision support systems</li>
+                            <li>Pharmacy consultation protocols</li>
+                            <li>Regular medication reviews</li>
+                            <li>Patient education on drug interactions</li>
+                        </ul>
+                    `
+                },
+                'delirium-missed': {
+                    title: 'Case: Missed Delirium Leading to Prolonged Hospital Stay',
+                    content: `
+                        <div class="bg-blue-50 p-4 rounded mb-4">
+                            <h4 class="font-bold text-blue-800">Case Presentation</h4>
+                            <p class="text-blue-700">Mrs. C, 85yo admitted for UTI. Family reports "not herself" but attributed to illness. No formal delirium screening. Developed agitation, restraints used, prolonged stay (14 days vs expected 3 days).</p>
+                        </div>
+                        
+                        <h4 class="font-bold mb-2">Timeline of Events</h4>
+                        <div class="space-y-2 text-sm mb-4">
+                            <div><strong>Day 1:</strong> Admission, antibiotics started</div>
+                            <div><strong>Day 2:</strong> Family reports confusion, no screening done</div>
+                            <div><strong>Day 3-5:</strong> Increasing agitation, sleep disruption</div>
+                            <div><strong>Day 6:</strong> Restraints applied, antipsychotics started</div>
+                            <div><strong>Day 7-14:</strong> Gradual improvement, delayed discharge</div>
+                        </div>
+                        
+                        <h4 class="font-bold mb-2">What Went Wrong?</h4>
+                        <ul class="list-disc list-inside mb-4">
+                            <li>No systematic delirium screening (CAM)</li>
+                            <li>Dismissed family concerns about behavioral changes</li>
+                            <li>Reactive rather than preventive approach</li>
+                            <li>Inappropriate use of restraints and antipsychotics</li>
+                        </ul>
+                        
+                        <h4 class="font-bold mb-2">Prevention Strategies</h4>
+                        <ol class="list-decimal list-inside text-sm text-gray-700">
+                            <li>Implement routine delirium screening for all patients >65</li>
+                            <li>Listen to family concerns about behavioral changes</li>
+                            <li>Use HELP (Hospital Elder Life Program) interventions</li>
+                            <li>Avoid high-risk medications and maintain sleep-wake cycles</li>
+                        </ol>
+                    `
+                }
+            };
+
+            const selectedCase = cases[caseType];
+            if (!selectedCase) return;
+
+            document.getElementById('caseOutput').innerHTML = `
+                <h4 class="font-bold mb-3">${selectedCase.title}</h4>
+                <div class="prose text-sm">${selectedCase.content}</div>
+                <div class="mt-4 pt-4 border-t">
+                    <button onclick="exportCase('${caseType}')" class="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700 text-sm">
+                        📊 Export for Presentation
+                    </button>
+                </div>
+            `;
+        }
+
+        function exportCase(caseType) {
+            alert('Case exported for PowerPoint presentation! (Feature in development)');
+        }
+
+        function updateRecentSearches() {
+            const container = document.getElementById('recentSearches');
+            container.innerHTML = searchHistory.map(search => 
+                `<button onclick="quickSearch('${search}')" class="text-sm bg-gray-100 hover:bg-gray-200 px-3 py-1 rounded">
+                    ${search}
+                </button>`
+            ).join('');
+        }
+
+        function saveSearch() {
+            const query = document.getElementById('searchQuery').value;
+            if (!query) return;
+
+            const searchName = prompt('Name this search:');
+            if (!searchName) return;
+
+            const savedSearch = {
+                name: searchName,
+                query: query,
+                type: document.getElementById('searchType').value,
+                timeframe: document.getElementById('timeframe').value,
+                date: new Date().toISOString()
+            };
+
+            savedSearches.push(savedSearch);
+            localStorage.setItem('researchSavedSearches', JSON.stringify(savedSearches));
+            alert('Search saved successfully!');
+        }
+
+        function exportResults() {
+            alert('Results exported to CSV! (Feature in development)');
+        }
+
+        // Event listeners
+        document.getElementById('searchQuery').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                performSearch();
+            }
+        });
+
+        // Initialize
+        updateRecentSearches();
+        generateCase('fall-hip-fracture'); // Load a default case
+    </script>
+</body>
+</html>

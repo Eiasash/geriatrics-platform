@@ -1,0 +1,397 @@
+/* src/components/ClinicalAssistant/ClinicalAssistant.css */
+
+.clinical-assistant {
+  max-width: 800px;
+  margin: 20px auto;
+  padding: 20px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.assistant-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 2px solid #e0e0e0;
+}
+
+.assistant-header h2 {
+  color: #667eea;
+  margin: 0;
+  font-size: 24px;
+}
+
+.status {
+  font-size: 14px;
+  font-weight: 600;
+  color: #666;
+}
+
+.quick-prompts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.prompt-btn {
+  padding: 12px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 14px;
+  transition: all 0.3s;
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+}
+
+.prompt-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+.prompt-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.query-input {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.query-input textarea {
+  flex: 1;
+  min-height: 80px;
+  padding: 12px;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 16px; /* Prevents zoom on mobile */
+  font-family: inherit;
+  resize: vertical;
+  transition: border-color 0.3s;
+}
+
+.query-input textarea:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.query-input textarea:disabled {
+  background: #f5f5f5;
+  cursor: not-allowed;
+}
+
+.ask-btn {
+  padding: 20px;
+  background: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  font-size: 16px;
+  cursor: pointer;
+  min-width: 120px;
+  transition: all 0.3s;
+}
+
+.ask-btn:hover:not(:disabled) {
+  background: #45a049;
+  transform: scale(1.02);
+}
+
+.ask-btn:disabled {
+  background: #cccccc;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.response-container {
+  background: #f8f9fa;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 20px;
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.response-header {
+  background: linear-gradient(135deg, #2196f3, #1976d2);
+  color: white;
+  padding: 12px 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.response-header span {
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.copy-btn {
+  background: white;
+  color: #2196f3;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 13px;
+  transition: all 0.3s;
+}
+
+.copy-btn:hover {
+  background: #f0f0f0;
+  transform: scale(1.05);
+}
+
+.response-content {
+  padding: 20px;
+  white-space: pre-wrap;
+  line-height: 1.6;
+  color: #333;
+  font-size: 15px;
+  max-height: 500px;
+  overflow-y: auto;
+}
+
+.response-content p {
+  margin: 8px 0;
+}
+
+.history {
+  background: #fafafa;
+  padding: 15px;
+  border-radius: 8px;
+  margin-top: 20px;
+  border: 1px solid #e0e0e0;
+}
+
+.history summary {
+  cursor: pointer;
+  font-weight: 600;
+  color: #667eea;
+  padding: 5px;
+  user-select: none;
+}
+
+.history summary:hover {
+  color: #5a67d8;
+}
+
+.history-item {
+  padding: 12px;
+  background: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  margin: 10px 0;
+  position: relative;
+  font-size: 14px;
+}
+
+.history-item strong {
+  color: #667eea;
+  display: inline-block;
+  margin-right: 5px;
+}
+
+.reuse-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: 4px 8px;
+  background: #667eea;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 11px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.reuse-btn:hover {
+  background: #5a67d8;
+}
+
+.offline-notice {
+  text-align: center;
+  padding: 10px;
+  background: #fff3cd;
+  color: #856404;
+  border-radius: 6px;
+  margin-top: 15px;
+  font-size: 14px;
+}
+
+/* Scrollbar styling */
+.response-content::-webkit-scrollbar,
+.history::-webkit-scrollbar {
+  width: 8px;
+}
+
+.response-content::-webkit-scrollbar-track,
+.history::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.response-content::-webkit-scrollbar-thumb,
+.history::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+.response-content::-webkit-scrollbar-thumb:hover,
+.history::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* Mobile optimizations */
+@media (max-width: 768px) {
+  .clinical-assistant {
+    margin: 10px;
+    padding: 15px;
+  }
+
+  .assistant-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .assistant-header h2 {
+    font-size: 20px;
+  }
+
+  .quick-prompts {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .prompt-btn {
+    padding: 10px 8px;
+    font-size: 12px;
+  }
+
+  .query-input {
+    flex-direction: column;
+  }
+
+  .ask-btn {
+    width: 100%;
+    padding: 15px;
+  }
+
+  .response-content {
+    padding: 15px;
+    font-size: 14px;
+    max-height: 400px;
+  }
+
+  .history-item {
+    padding-right: 50px;
+  }
+}
+
+@media (max-width: 480px) {
+  .quick-prompts {
+    grid-template-columns: 1fr;
+  }
+
+  .prompt-btn {
+    padding: 12px;
+    font-size: 14px;
+  }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .clinical-assistant {
+    background: #2d3748;
+    color: #e2e8f0;
+  }
+
+  .query-input textarea {
+    background: #1a202c;
+    color: #e2e8f0;
+    border-color: #4a5568;
+  }
+
+  .response-container {
+    background: #1a202c;
+    border-color: #4a5568;
+  }
+
+  .response-content {
+    color: #e2e8f0;
+  }
+
+  .history {
+    background: #1a202c;
+    border-color: #4a5568;
+  }
+
+  .history-item {
+    background: #2d3748;
+    border-color: #4a5568;
+  }
+
+  .offline-notice {
+    background: #2d3748;
+    color: #fbd38d;
+  }
+}
+
+/* Loading animation */
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.loading {
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+/* Print styles */
+@media print {
+  .quick-prompts,
+  .query-input,
+  .ask-btn,
+  .copy-btn,
+  .reuse-btn,
+  .offline-notice {
+    display: none;
+  }
+
+  .clinical-assistant {
+    box-shadow: none;
+    border: 1px solid #000;
+  }
+
+  .response-content {
+    max-height: none;
+  }
+}

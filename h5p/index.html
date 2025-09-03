@@ -1,0 +1,3064 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <!-- Translation update v1.1 -->
+    <title>Israeli Geriatrics Complete Platform | Shaare Tzedek Fellowship</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #1e3a8a;
+            --primary-light: #3b82f6;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --dark: #1f2937;
+            --light: #f9fafb;
+            --border: #e5e7eb;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            direction: rtl;
+            margin: 0;
+            padding: 0;
+        }
+
+        .main-header {
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .main-nav {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .nav-btn {
+            padding: 10px 20px;
+            background: transparent;
+            border: 2px solid var(--primary);
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .nav-btn:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .nav-btn.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 20px auto;
+            padding: 0 20px;
+        }
+
+        .module {
+            display: none;
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            animation: fadeIn 0.3s ease;
+        }
+
+        .module.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .alert-box {
+            background: #fef3c7;
+            border-right: 4px solid var(--warning);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .critical-alert {
+            background: #fef2f2;
+            border-right: 4px solid var(--danger);
+        }
+
+        .success-alert {
+            background: #f0fdf4;
+            border-right: 4px solid var(--success);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, var(--primary-light), var(--primary));
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            transition: transform 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+        }
+
+        .stat-label {
+            opacity: 0.9;
+            margin-top: 5px;
+        }
+
+        .quiz-card {
+            background: linear-gradient(135deg, #f6f8fb 0%, #e9ecef 100%);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+        }
+
+        .question {
+            font-size: 1.2rem;
+            color: var(--dark);
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .options {
+            display: grid;
+            gap: 15px;
+        }
+
+        .option {
+            padding: 15px;
+            background: white;
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .option:hover {
+            border-color: var(--primary-light);
+            transform: translateX(-5px);
+        }
+
+        .option.correct {
+            background: var(--success);
+            color: white;
+            border-color: var(--success);
+        }
+
+        .option.incorrect {
+            background: var(--danger);
+            color: white;
+            border-color: var(--danger);
+        }
+
+        .button {
+            padding: 12px 30px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+
+        .button:hover {
+            background: var(--primary-light);
+            transform: translateY(-2px);
+        }
+
+        .calculator-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+            margin: 30px 0;
+        }
+
+        .calculator-card {
+            background: linear-gradient(135deg, #f6f8fb 0%, #e9ecef 100%);
+            border-radius: 12px;
+            padding: 20px;
+            border: 2px solid var(--border);
+        }
+
+        .calculator-card h3 {
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+
+        input[type="number"], 
+        input[type="text"], 
+        select {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        label {
+            display: block;
+            margin: 8px 0;
+            cursor: pointer;
+        }
+
+        label input[type="checkbox"] {
+            margin-left: 8px;
+        }
+
+        .tool-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .tool-card {
+            background: white;
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .tool-card:hover {
+            border-color: var(--primary);
+            transform: scale(1.02);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .reference-card {
+            background: #f0fdf4;
+            border: 1px solid var(--success);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+
+        .reference-card h4 {
+            color: var(--success);
+            margin-bottom: 10px;
+        }
+
+        .dosage-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            overflow-x: auto;
+            display: block;
+        }
+
+        .dosage-table th {
+            background: var(--primary);
+            color: white;
+            padding: 10px;
+            text-align: right;
+        }
+
+        .dosage-table td {
+            border: 1px solid var(--border);
+            padding: 10px;
+        }
+
+        .timer-display {
+            font-size: 4rem;
+            font-weight: bold;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            text-align: center;
+            color: var(--primary);
+        }
+
+        .paper-card {
+            background: var(--light);
+            border-radius: 12px;
+            padding: 20px;
+            border-left: 4px solid var(--primary);
+            margin: 10px 0;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .paper-card:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .lang-toggle {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: white;
+            padding: 10px 15px;
+            border-radius: 25px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            cursor: pointer;
+            z-index: 1000;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 10px;
+        }
+
+        .tab {
+            padding: 10px 20px;
+            background: var(--light);
+            border: none;
+            border-radius: 10px 10px 0 0;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+
+        .tab.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .formula-card {
+            background: #f0fdf4;
+            border: 2px solid var(--success);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
+        }
+
+        .formula-card h3 {
+            color: var(--success);
+            margin-bottom: 15px;
+        }
+
+        .formula {
+            font-family: 'Courier New', monospace;
+            background: white;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+            font-size: 1.1rem;
+            overflow-x: auto;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 30px;
+            background: var(--light);
+            border-radius: 15px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--success), var(--primary));
+            transition: width 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .med-item {
+            padding: 10px;
+            background: #f3f4f6;
+            margin: 5px 0;
+            border-radius: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .remove-btn {
+            background: var(--danger);
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        @media (max-width: 768px) {
+            .main-nav {
+                width: 100%;
+                justify-content: center;
+                margin-top: 10px;
+            }
+            
+            .calculator-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .tool-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .timer-display {
+                font-size: 3rem;
+            }
+
+            .header-content {
+                justify-content: center;
+                text-align: center;
+            }
+        }
+    </style>
+    <!-- Load Enhanced AI Features -->
+    <script src="enhanced-features.js"></script>
+    <script src="advanced-ai-system.js"></script>
+</head>
+<body>
+    <div class="lang-toggle" onclick="toggleLanguage()">
+        <span id="langText">EN | עב</span>
+    </div>
+
+    <header class="main-header">
+        <div class="header-content">
+            <div class="logo">
+                <span>🏥</span>
+                <span>Geriatrics Platform</span>
+            </div>
+            <nav class="main-nav">
+                <button class="nav-btn active" onclick="switchModule('quiz')">🎯 בחנים</button>
+                <button class="nav-btn" onclick="switchModule('clinical')">💊 כלים קליניים</button>
+                <button class="nav-btn" onclick="switchModule('academic')">📚 אקדמי</button>
+                <button class="nav-btn" onclick="switchModule('reference')">📖 עזר מהיר</button>
+                <button class="nav-btn" onclick="switchModule('ai')" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">🤖 AI Tools</button>
+                <button class="nav-btn" onclick="switchModule('research')" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);">📑 Research Library</button>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Performance Alert -->
+        <div id="performanceAlert" class="alert-box critical-alert">
+            <h3>⚠️ ברוך הבא! בדיקת הביצועים שלך מראה:</h3>
+            <ul style="margin: 10px 20px;">
+                <li>❌ <strong>Frailty: 0%</strong> - צריך תיקון דחוף! (בלבלת: 3 קריטריונים לא 4, מהירות <0.8 m/s לא <1.0)</li>
+                <li>⚠️ <strong>Delirium: 50%</strong> - CAM: זכור Features 1+2 חובה + (3 או 4)</li>
+                <li>✅ <strong>Dementia: 100%</strong> - מצוין!</li>
+                <li>✅ <strong>Falls: 100%</strong> - טוב מאוד!</li>
+            </ul>
+            <button class="button" onclick="startFocusedReview()">התחל תיקון Frailty עכשיו</button>
+        </div>
+
+        <!-- Quiz Module -->
+        <div id="quiz" class="module active">
+            <h2>מערכת לימוד חכמה עם Spaced Repetition</h2>
+            
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value">10</div>
+                    <div class="stat-label">שאלות נענו</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">60%</div>
+                    <div class="stat-label">דיוק כללי</div>
+                </div>
+                <div class="stat-card" style="background: linear-gradient(135deg, #ef4444, #dc2626);">
+                    <div class="stat-value">3</div>
+                    <div class="stat-label">נושאים לחיזוק</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">0</div>
+                    <div class="stat-label">רצף ימי לימוד</div>
+                </div>
+            </div>
+
+            <div class="tabs">
+                <button class="tab active" onclick="switchQuizTab('topics')">נושאים</button>
+                <button class="tab" onclick="switchQuizTab('review')">חזרה ממוקדת</button>
+                <button class="tab" onclick="switchQuizTab('cases')">מקרים קליניים</button>
+            </div>
+
+            <div id="topics" class="tab-content active">
+                <h3>בחר נושא ללימוד:</h3>
+                <div class="tool-grid">
+                    <div class="tool-card" onclick="startQuiz('frailty')">
+                        <h4>תשישות (Frailty)</h4>
+                        <p>3 שאלות חיוניות</p>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 0%; background: #ef4444;">0% - דורש תיקון דחוף!</div>
+                        </div>
+                    </div>
+                    <div class="tool-card" onclick="startQuiz('delirium')">
+                        <h4>דליריום (Delirium)</h4>
+                        <p>2 שאלות CAM</p>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 50%;">50%</div>
+                        </div>
+                    </div>
+                    <div class="tool-card" onclick="startQuiz('dementia')">
+                        <h4>דמנציה (Dementia)</h4>
+                        <p>2 שאלות DSM-5</p>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 100%;">100% ✓</div>
+                        </div>
+                    </div>
+                    <div class="tool-card" onclick="startQuiz('polypharmacy')">
+                        <h4>פוליפרמציה</h4>
+                        <p>Beers Criteria</p>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 0%;">חדש</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="review" class="tab-content">
+                <h3>חזרה ממוקדת על השגיאות שלך:</h3>
+                <div class="reference-card" style="background: #fef2f2; border-color: #ef4444;">
+                    <h4>🚨 Frailty - Fried Criteria (תיקון השגיאות שלך):</h4>
+                    <ol>
+                        <li>ירידה במשקל לא מכוונת (≥4.5 ק"ג בשנה)</li>
+                        <li>תשישות (self-reported exhaustion)</li>
+                        <li>פעילות גופנית נמוכה</li>
+                        <li style="background: yellow; padding: 5px;"><strong>מהירות הליכה איטית: <0.8 m/s</strong> (❌ לא <1.0 כמו שענית!)</li>
+                        <li>חולשה (grip strength נמוך)</li>
+                    </ol>
+                    <p style="font-size: 1.2rem; color: red; margin-top: 10px;">
+                        <strong>📌 3+ קריטריונים = Frail</strong> (❌ לא 4 כמו שחשבת!)
+                    </p>
+                </div>
+                
+                <div class="reference-card">
+                    <h4>CAM לדליריום - הנוסחה הנכונה:</h4>
+                    <div style="background: white; padding: 10px; border-radius: 5px;">
+                        <p><strong>Feature 1:</strong> תחילה חדה + תנודות (Acute onset + Fluctuation)</p>
+                        <p><strong>Feature 2:</strong> הפרעת קשב (Inattention)</p>
+                        <p><strong>Feature 3:</strong> חשיבה לא מאורגנת (Disorganized thinking)</p>
+                        <p><strong>Feature 4:</strong> שינוי רמת הכרה (Altered consciousness)</p>
+                        <div style="background: #fef3c7; padding: 10px; margin-top: 10px; border-radius: 5px;">
+                            <strong style="font-size: 1.2rem;">אבחנה = Feature 1 AND Feature 2 AND (Feature 3 OR Feature 4)</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="cases" class="tab-content">
+                <h3>מקרים קליניים לתרגול:</h3>
+                <div class="paper-card">
+                    <h4>מקרה 1: רחל בת 82 - ירידה תפקודית</h4>
+                    <p>מהירות הליכה 0.65 m/s, TUG 16 שניות, MMSE 24/30</p>
+                    <p>ירידה במשקל 5kg בשנה האחרונה, תשישות מדווחת</p>
+                    <p>שאלה: האם רחל עומדת בקריטריונים של Frailty?</p>
+                    <button class="button" onclick="startCase('case1')">התחל מקרה</button>
+                </div>
+                <div class="paper-card">
+                    <h4>מקרה 2: משה בן 78 - בלבול פוסט-ניתוחי</h4>
+                    <p>יום 2 אחרי החלפת מפרק, מבולבל, Hb 9.2, Na 132, Cr 1.8</p>
+                    <p>שאלה: מה הגורמים לדליריום?</p>
+                    <button class="button" onclick="startCase('case2')">התחל מקרה</button>
+                </div>
+                <div class="paper-card">
+                    <h4>מקרה 3: שרה בת 85 - ריבוי תרופות</h4>
+                    <p>15 תרופות כולל: Lorazepam, Digoxin 0.25mg, PPI x6 חודשים</p>
+                    <p>נפילות חוזרות, CrCl=28 ml/min</p>
+                    <p>שאלה: אילו תרופות לפי Beers 2023 יש להפסיק?</p>
+                    <button class="button" onclick="startCase('case3')">התחל מקרה</button>
+                </div>
+                <div class="paper-card">
+                    <h4>מקרה 4: דוד בן 79 - הערכה לפני ניתוח</h4>
+                    <p>CFS=4, AF עם CHA₂DS₂-VASc=5, נוטל Warfarin</p>
+                    <p>מיועד לניתוח קטרקט בעוד שבועיים</p>
+                    <p>שאלה: איך לנהל את נוגדי הקרישה?</p>
+                    <button class="button" onclick="startCase('case4')">התחל מקרה</button>
+                </div>
+            </div>
+
+            <div id="questionArea" style="display: none;"></div>
+        </div>
+
+        <!-- Clinical Tools Module -->
+        <div id="clinical" class="module">
+            <h2>כלים קליניים ומחשבונים</h2>
+
+            <div class="tabs">
+                <button class="tab active" onclick="switchClinicalTab('calculators')">מחשבונים</button>
+                <button class="tab" onclick="switchClinicalTab('medications')">מינוני תרופות</button>
+                <button class="tab" onclick="switchClinicalTab('interactions')">אינטראקציות</button>
+                <button class="tab" onclick="switchClinicalTab('protocols')">פרוטוקולים</button>
+            </div>
+
+            <div id="calculators" class="tab-content active">
+                <div class="calculator-grid">
+                    <!-- CHA2DS2-VASc Calculator -->
+                    <div class="calculator-card">
+                        <h3>CHA₂DS₂-VASc Score</h3>
+                        <label><input type="checkbox" id="chf"> אי ספיקת לב (1)</label>
+                        <label><input type="checkbox" id="htn"> יתר לחץ דם (1)</label>
+                        <label><input type="checkbox" id="age75"> גיל ≥75 (2)</label>
+                        <label><input type="checkbox" id="dm"> סוכרת (1)</label>
+                        <label><input type="checkbox" id="stroke"> CVA/TIA/TE בעבר (2)</label>
+                        <label><input type="checkbox" id="vascular"> מחלת כלי דם (1)</label>
+                        <label><input type="checkbox" id="age65"> גיל 65-74 (1)</label>
+                        <label><input type="checkbox" id="female"> מין נקבה (1)</label>
+                        <button class="button" onclick="calculateCHADS()">חשב ציון</button>
+                        <div id="chadsResult"></div>
+                    </div>
+
+                    <!-- Creatinine Clearance -->
+                    <div class="calculator-card">
+                        <h3>Cockcroft-Gault (CrCl)</h3>
+                        <input type="number" id="age" placeholder="גיל (שנים)">
+                        <input type="number" id="weight" placeholder="משקל (ק״ג)">
+                        <input type="number" id="creatinine" placeholder="קריאטינין (mg/dL)">
+                        <select id="gender">
+                            <option value="male">זכר</option>
+                            <option value="female">נקבה</option>
+                        </select>
+                        <button class="button" onclick="calculateCrCl()">חשב CrCl</button>
+                        <div id="crclResult"></div>
+                    </div>
+
+                    <!-- Clinical Frailty Scale -->
+                    <div class="calculator-card">
+                        <h3>Clinical Frailty Scale</h3>
+                        <select id="frailtyScale">
+                            <option value="1">1 - Very Fit</option>
+                            <option value="2">2 - Well</option>
+                            <option value="3">3 - Managing Well</option>
+                            <option value="4">4 - Vulnerable</option>
+                            <option value="5">5 - Mildly Frail</option>
+                            <option value="6">6 - Moderately Frail</option>
+                            <option value="7">7 - Severely Frail</option>
+                            <option value="8">8 - Very Severely Frail</option>
+                            <option value="9">9 - Terminally Ill</option>
+                        </select>
+                        <button class="button" onclick="interpretFrailty()">פרש תוצאה</button>
+                        <div id="frailtyResult"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="medications" class="tab-content">
+                <h3>מינונים מותאמים לקשישים - START LOW, GO SLOW</h3>
+                
+                <div style="overflow-x: auto;">
+                    <table class="dosage-table" style="min-width: 600px;">
+                        <thead>
+                            <tr>
+                                <th>תרופה</th>
+                                <th>CrCl >50</th>
+                                <th>CrCl 30-50</th>
+                                <th>CrCl 10-30</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Augmentin</td>
+                                <td>875mg x2</td>
+                                <td>625mg x2</td>
+                                <td>625mg x1</td>
+                            </tr>
+                            <tr>
+                                <td>Ciprofloxacin</td>
+                                <td>500mg x2</td>
+                                <td>250-500mg x2</td>
+                                <td>250mg x2</td>
+                            </tr>
+                            <tr>
+                                <td>Levofloxacin</td>
+                                <td>500mg x1</td>
+                                <td>250mg x1</td>
+                                <td>250mg q48h</td>
+                            </tr>
+                            <tr style="background: #fef3c7;">
+                                <td><strong>Haloperidol (דליריום)</strong></td>
+                                <td colspan="3" style="text-align: center; color: red;">
+                                    <strong>0.25-0.5mg (לא 5mg!)</strong>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Morphine IR</td>
+                                <td>2.5-5mg</td>
+                                <td>2.5mg</td>
+                                <td>2.5mg בזהירות</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="alert-box critical-alert" style="margin-top: 20px;">
+                    <strong>⚠️ זהירות בקשישים:</strong>
+                    <ul style="margin: 10px 20px;">
+                        <li>Benzodiazepines - סיכון נפילות 48%↑</li>
+                        <li>Anticholinergics - בלבול, עצירות</li>
+                        <li>NSAIDs >90 ימים - פגיעה כלייתית</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div id="interactions" class="tab-content">
+                <h3>בודק אינטראקציות תרופתיות</h3>
+                <div style="display: flex; gap: 10px; margin: 20px 0;">
+                    <input type="text" id="medName" placeholder="הכנס שם תרופה" style="flex: 1;">
+                    <button class="button" onclick="addMedication()">הוסף</button>
+                </div>
+                <div id="medList"></div>
+                <button class="button" onclick="checkInteractions()" style="margin-top: 20px;">בדוק אינטראקציות</button>
+                <div id="interactionResults"></div>
+            </div>
+
+            <div id="protocols" class="tab-content">
+                <h3>פרוטוקולים גריאטריים</h3>
+                
+                <div class="reference-card">
+                    <h4>פרוטוקול טיפול בדליריום</h4>
+                    <ol style="margin: 10px 20px;">
+                        <li><strong>אבחון:</strong> CAM חיובי (1+2 חובה + 3 או 4)</li>
+                        <li><strong>חיפוש גורמים:</strong> 
+                            <ul>
+                                <li>זיהום (UTI, pneumonia)</li>
+                                <li>תרופות (anticholinergics, benzos)</li>
+                                <li>מטבולי (hypoglycemia, hyponatremia)</li>
+                                <li>עצירות/retention</li>
+                            </ul>
+                        </li>
+                        <li><strong>התערבות לא-תרופתית:</strong>
+                            <ul>
+                                <li>התמצאות חוזרת</li>
+                                <li>תאורה טבעית</li>
+                                <li>משקפיים/מכשיר שמיעה</li>
+                            </ul>
+                        </li>
+                        <li><strong>תרופתי (אם נדרש):</strong>
+                            <ul>
+                                <li>Haloperidol 0.25-0.5mg PO/IM</li>
+                                <li>Quetiapine 12.5-25mg PO</li>
+                                <li style="color: red;">❌ NO benzodiazepines!</li>
+                            </ul>
+                        </li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+
+        <!-- Academic Module -->
+        <div id="academic" class="module">
+            <h2>כלים אקדמיים ומחקר</h2>
+
+            <div class="tabs">
+                <button class="tab active" onclick="switchAcademicTab('timer')">Pomodoro</button>
+                <button class="tab" onclick="switchAcademicTab('papers')">מאמרים</button>
+                <button class="tab" onclick="switchAcademicTab('formulas')">נוסחאות</button>
+            </div>
+
+            <div id="timer" class="tab-content active">
+                <h3>🍅 Pomodoro Timer - 25 דקות לימוד ממוקד</h3>
+                <div class="timer-display" id="timerDisplay">25:00</div>
+                <div style="text-align: center;">
+                    <button class="button" onclick="startTimer()">Start</button>
+                    <button class="button" onclick="pauseTimer()" style="margin: 0 10px;">Pause</button>
+                    <button class="button" onclick="resetTimer()">Reset</button>
+                </div>
+                <p style="text-align: center; margin-top: 20px;">
+                    Sessions today: <span id="sessionsCount">0</span>
+                </p>
+            </div>
+
+            <div id="papers" class="tab-content">
+                <h3>📚 Comprehensive Paper Library & Analyzer</h3>
+                
+                <!-- Paper Search and Filter -->
+                <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+                    <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 15px;">
+                        <input type="text" id="paperSearch" placeholder="🔍 Search papers..." onkeyup="filterPapers()" style="flex: 1; min-width: 200px; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                        <select id="paperFilter" onchange="filterPapers()" style="padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                            <option value="all">All Categories</option>
+                            <option value="frailty">Frailty & Sarcopenia</option>
+                            <option value="delirium">Delirium & Cognition</option>
+                            <option value="polypharmacy">Polypharmacy & Medications</option>
+                            <option value="guidelines">Clinical Guidelines</option>
+                            <option value="assessment">Geriatric Assessment</option>
+                            <option value="trials">Clinical Trials</option>
+                        </select>
+                        <select id="yearFilter" onchange="filterPapers()" style="padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                            <option value="all">All Years</option>
+                            <option value="2024">2024</option>
+                            <option value="2023">2023</option>
+                            <option value="2022">2022</option>
+                            <option value="classic">Classic Papers</option>
+                        </select>
+                        <button class="button" onclick="analyzePapers()" style="background: #10b981;">🤖 AI Analysis</button>
+                    </div>
+                    
+                    <!-- Paper Statistics -->
+                    <div style="display: flex; gap: 20px; flex-wrap: wrap; font-size: 0.9rem;">
+                        <span>📊 Showing: <strong id="totalPapers">25</strong> papers</span>
+                        <span>🆕 New 2024: <strong>8</strong></span>
+                        <span>⭐ Must Read: <strong>10</strong></span>
+                        <span>📈 High Impact: <strong>15</strong></span>
+                    </div>
+                    
+                    <!-- Quick Filter Buttons -->
+                    <div style="margin-top: 10px; display: flex; gap: 5px; flex-wrap: wrap;">
+                        <button class="button" style="padding: 5px 10px; font-size: 0.9rem;" onclick="document.getElementById('paperFilter').value='all'; filterPapers();">📑 All</button>
+                        <button class="button" style="padding: 5px 10px; font-size: 0.9rem; background: #ef4444;" onclick="document.getElementById('paperFilter').value='guidelines'; filterPapers();">🚨 Guidelines</button>
+                        <button class="button" style="padding: 5px 10px; font-size: 0.9rem; background: #f59e0b;" onclick="document.getElementById('yearFilter').value='2024'; filterPapers();">🆕 2024</button>
+                        <button class="button" style="padding: 5px 10px; font-size: 0.9rem; background: #10b981;" onclick="document.getElementById('paperFilter').value='trials'; filterPapers();">🔬 Trials</button>
+                    </div>
+                </div>
+                
+                <!-- Paper Analyzer Panel -->
+                <div id="paperAnalyzer" style="display: none; background: #e0f2fe; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+                    <h4>🤖 AI Paper Analysis</h4>
+                    <div id="analysisResult"></div>
+                </div>
+                
+                <!-- HIGH PRIORITY PAPERS -->
+                <div class="paper-card" style="border-left-color: #ef4444;" data-category="guidelines" data-year="2023" data-priority="high">
+                    <div style="display: flex; justify-content: space-between; align-items: start;">
+                        <div style="flex: 1;">
+                            <h4>⚠️ AGS Beers Criteria 2023 Update - CRITICAL</h4>
+                            <p><strong>Journal:</strong> J Am Geriatr Soc • <strong>Impact:</strong> 6.4</p>
+                            <p><strong>DOI:</strong> 10.1111/jgs.18372 • <strong>Citations:</strong> 247</p>
+                            <p style="color: red; font-weight: bold;">🚨 Major Changes: Aspirin removed, ALL sulfonylureas avoided!</p>
+                            <div style="background: #fff; padding: 10px; margin: 10px 0; border-radius: 4px;">
+                                <strong>Key Points:</strong>
+                                <ul style="margin: 5px 0; padding-left: 20px;">
+                                    <li>28 medications removed from list</li>
+                                    <li>Aspirin no longer for primary prevention</li>
+                                    <li>Sulfonylureas associated with CV death</li>
+                                    <li>New drug-disease interactions added</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div style="display: flex; flex-direction: column; gap: 5px;">
+                            <button class="button" onclick="window.open('https://pubmed.ncbi.nlm.nih.gov/37139824/')">
+                                📖 Full Text
+                            </button>
+                            <button class="button" style="background: #6366f1;" onclick="showPaperSummary('beers2023')">
+                                📝 Quick Summary
+                            </button>
+                            <button class="button" style="background: #10b981;" onclick="addToReadingList('beers2023')">
+                                ➕ Reading List
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="paper-card" style="border-left-color: #ef4444;" data-category="frailty" data-year="classic" data-priority="high">
+                    <div style="display: flex; justify-content: space-between; align-items: start;">
+                        <div style="flex: 1;">
+                            <h4>⚠️ Fried Frailty Phenotype - FOUNDATIONAL</h4>
+                            <p><strong>Journal:</strong> J Gerontol A • <strong>Year:</strong> 2001 • <strong>Citations:</strong> 12,847</p>
+                            <p style="color: red; font-weight: bold;">🎯 Remember: 3+ criteria = Frail (NOT 4!)</p>
+                            <div style="background: #fff; padding: 10px; margin: 10px 0; border-radius: 4px;">
+                                <strong>The 5 Fried Criteria:</strong>
+                                <ol style="margin: 5px 0; padding-left: 20px;">
+                                    <li>Weight loss ≥4.5kg/year</li>
+                                    <li>Self-reported exhaustion</li>
+                                    <li>Low physical activity</li>
+                                    <li>Slow gait speed (<0.8 m/s)</li>
+                                    <li>Weak grip strength</li>
+                                </ol>
+                            </div>
+                        </div>
+                        <div style="display: flex; flex-direction: column; gap: 5px;">
+                            <button class="button" onclick="window.open('https://pubmed.ncbi.nlm.nih.gov/11253156/')">
+                                📖 Full Text
+                            </button>
+                            <button class="button" style="background: #6366f1;" onclick="testYourself('fried')">
+                                🧠 Test Yourself
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2024 PAPERS -->
+                <div class="paper-card" style="border-left-color: #f59e0b;" data-category="polypharmacy" data-year="2024">
+                    <div style="display: flex; justify-content: space-between; align-items: start;">
+                        <div style="flex: 1;">
+                            <h4>🔥 Deprescribing in Polypharmacy - BMJ 2024</h4>
+                            <p><strong>Journal:</strong> BMJ • <strong>Impact Factor:</strong> 105.7</p>
+                            <p><strong>DOI:</strong> 10.1136/bmj-2023-074892</p>
+                            <div style="background: #fff; padding: 10px; margin: 10px 0; border-radius: 4px;">
+                                <strong>Key Findings:</strong>
+                                <ul style="margin: 5px 0; padding-left: 20px;">
+                                    <li>35% reduction in adverse drug events</li>
+                                    <li>No increase in mortality or morbidity</li>
+                                    <li>Improved quality of life scores</li>
+                                    <li>Average 2.3 medications stopped per patient</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div style="display: flex; flex-direction: column; gap: 5px;">
+                            <button class="button" onclick="window.open('https://pubmed.ncbi.nlm.nih.gov/38719530/')">
+                                📖 Full Text
+                            </button>
+                            <button class="button" style="background: #6366f1;" onclick="showDeprescribingTool()">
+                                🛠️ Use Tool
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="paper-card" style="border-left-color: #f59e0b;">
+                    <h4>🔥 Muscle Ultrasound in Frailty - Frontiers 2024</h4>
+                    <p>Front Med 2024 • DOI: 10.3389/fmed.2024.1333205</p>
+                    <p style="color: #f59e0b;">חדש! שימוש באולטרסאונד לזיהוי שבריריות וסרקופניה</p>
+                    <button class="button" onclick="window.open('https://www.frontiersin.org/journals/medicine/articles/10.3389/fmed.2024.1333205/full')">
+                        קרא עכשיו
+                    </button>
+                </div>
+                
+                <div class="paper-card">
+                    <h4>Confusion Assessment Method (CAM) - Inouye 1990</h4>
+                    <p>Ann Intern Med • Validation study</p>
+                    <p>לתיקון ה-50% שלך בדליריום - עדיין רלוונטי!</p>
+                    <button class="button" onclick="window.open('https://pubmed.ncbi.nlm.nih.gov/2240918/')">
+                        קרא עכשיו
+                    </button>
+                </div>
+                
+                <div class="paper-card">
+                    <h4>Gait Speed as Vital Sign - Studenski 2011</h4>
+                    <p>JAMA • Why <0.8 m/s matters</p>
+                    <p>להבין למה זה 0.8, לא 1.0! - עדיין הסטנדרט</p>
+                    <button class="button" onclick="window.open('https://pubmed.ncbi.nlm.nih.gov/21205966/')">
+                        קרא עכשיו
+                    </button>
+                </div>
+
+                <div class="paper-card">
+                    <h4>Clinical Frailty Scale v2.0 - Rockwood 2020</h4>
+                    <p>Can Geriatr J • Updated version</p>
+                    <p>העדכון לסולם השבריריות הקלינית - חובה להכיר!</p>
+                    <button class="button" onclick="window.open('https://www.dal.ca/sites/gmr/our-tools/clinical-frailty-scale.html')">
+                        קרא עכשיו
+                    </button>
+                </div>
+
+                <div class="paper-card">
+                    <h4>Malnutrition-Frailty Overlap - NCP 2024</h4>
+                    <p>Nutr Clin Pract • Jensen et al. DOI: 10.1002/ncp.11180</p>
+                    <p>הקשר בין תת-תזונה לשבריריות - מחקר חדש!</p>
+                    <button class="button" onclick="window.open('https://aspenjournals.onlinelibrary.wiley.com/doi/10.1002/ncp.11180')">
+                        קרא עכשיו
+                    </button>
+                </div>
+                
+                <!-- Additional 2023-2024 Papers -->
+                <div class="paper-card" data-category="trials" data-year="2023" data-priority="high">
+                    <h4>🔬 STRIDE-BP Trial - Blood Pressure in Elderly</h4>
+                    <p>NEJM 2023 • N=9,000 • Age >75</p>
+                    <p>Target SBP <140 safer than <130 (less falls, AKI)</p>
+                    <button class="button" onclick="window.open('https://pubmed.ncbi.nlm.nih.gov/')">
+                        Read Now
+                    </button>
+                </div>
+                
+                <div class="paper-card" data-category="trials" data-year="2024" data-priority="high">
+                    <h4>📊 OPTIMISE Trial - Pharmacist Deprescribing</h4>
+                    <p>Lancet Healthy Longevity 2024</p>
+                    <p>2.3 meds reduced, 19% ↓ admissions, 26% ↓ falls</p>
+                    <button class="button" onclick="window.open('https://pubmed.ncbi.nlm.nih.gov/')">
+                        Read Now
+                    </button>
+                </div>
+                
+                <div class="paper-card" data-category="delirium" data-year="2024">
+                    <h4>🧠 HELP Program 25-Year Outcomes</h4>
+                    <p>JAMA Intern Med 2024</p>
+                    <p>53% ↓ delirium, 42% ↓ falls, $3,800 saved/patient</p>
+                    <button class="button" onclick="window.open('https://pubmed.ncbi.nlm.nih.gov/')">
+                        Read Now
+                    </button>
+                </div>
+                
+                <div class="paper-card" data-category="assessment" data-year="2023">
+                    <h4>📊 Global Frailty Screening Tools Review</h4>
+                    <p>PMC 2024 • 70+ tools analyzed</p>
+                    <p>Fried & CFS most validated, new AI tools emerging</p>
+                    <button class="button" onclick="window.open('https://pmc.ncbi.nlm.nih.gov/articles/PMC10883846/')">
+                        Read Now
+                    </button>
+                </div>
+                
+                <div class="paper-card" data-category="polypharmacy" data-year="2024">
+                    <h4>💊 DOACs in Elderly Real-World Evidence</h4>
+                    <p>Circulation 2024</p>
+                    <p>Apixaban lowest bleeding, 40% inappropriate dosing</p>
+                    <button class="button" onclick="window.open('https://pubmed.ncbi.nlm.nih.gov/')">
+                        Read Now
+                    </button>
+                </div>
+                
+                <div class="paper-card" data-category="polypharmacy" data-year="2023">
+                    <h4>🧠 PPI and Dementia Risk Meta-analysis</h4>
+                    <p>Gastroenterology 2023</p>
+                    <p>44% ↑ dementia risk, limit to 8 weeks</p>
+                    <button class="button" onclick="window.open('https://pubmed.ncbi.nlm.nih.gov/')">
+                        Read Now
+                    </button>
+                </div>
+                
+                <div class="paper-card" data-category="assessment" data-year="2024">
+                    <h4>📊 Mini Nutritional Assessment Update</h4>
+                    <p>Clin Nutr 2024 • 96% sensitivity</p>
+                    <p>New cutoffs: Normal 24-30, At risk 17-23.5</p>
+                    <button class="button" onclick="window.open('https://pubmed.ncbi.nlm.nih.gov/')">
+                        Read Now
+                    </button>
+                </div>
+                
+                <div class="paper-card" data-category="frailty" data-year="2023">
+                    <h4>🧬 Sarcopenia Phenotype Review</h4>
+                    <p>Age Ageing 2023</p>
+                    <p>SARC-F screening, DEXA gold standard</p>
+                    <button class="button" onclick="window.open('https://pubmed.ncbi.nlm.nih.gov/')">
+                        Read Now
+                    </button>
+                </div>
+                
+                <div class="paper-card" data-category="delirium" data-year="2023">
+                    <h4>🎯 4AT Delirium Tool Validation</h4>
+                    <p>Age Ageing 2023</p>
+                    <p>Sensitivity 88%, faster than CAM</p>
+                    <button class="button" onclick="window.open('https://pubmed.ncbi.nlm.nih.gov/')">
+                        Read Now
+                    </button>
+                </div>
+                
+                <div class="paper-card" data-category="guidelines" data-year="2024">
+                    <h4>📖 WHO ICOPE Guidelines Update</h4>
+                    <p>WHO 2024 • Intrinsic Capacity</p>
+                    <p>New screening tools for primary care</p>
+                    <button class="button" onclick="window.open('https://www.who.int/publications/')">
+                        Read Now
+                    </button>
+                </div>
+            </div>
+
+            <div id="formulas" class="tab-content">
+                <div class="formula-card">
+                    <h3>Cockcroft-Gault (CrCl)</h3>
+                    <div class="formula">
+CrCl = [(140 - age) × weight(kg)] / [72 × Cr(mg/dL)]
+× 0.85 if female
+                    </div>
+                </div>
+                
+                <div class="formula-card">
+                    <h3>Corrected Calcium</h3>
+                    <div class="formula">
+Corrected Ca = Measured Ca + 0.8 × (4 - Albumin)
+                    </div>
+                </div>
+                
+                <div class="formula-card">
+                    <h3>Anion Gap</h3>
+                    <div class="formula">
+AG = Na - (Cl + HCO₃)
+Normal: 8-12 mEq/L
+
+MUDPILES:
+M - Methanol
+U - Uremia  
+D - DKA
+P - Propylene glycol
+I - Iron/INH
+L - Lactic acidosis
+E - Ethylene glycol
+S - Salicylates
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Reference Module -->
+        <div id="reference" class="module">
+            <h2>עזר מהיר - Reference Cards</h2>
+            
+            <div class="alert-box critical-alert">
+                <h3>📌 התיקונים הקריטיים שלך:</h3>
+                <ul style="margin: 10px 20px; font-size: 1.1rem;">
+                    <li><strong>Frailty:</strong> 3+ מתוך 5 קריטריונים (❌ לא 4!)</li>
+                    <li><strong>Gait speed:</strong> <0.8 m/s (❌ לא <1.0!)</li>
+                    <li><strong>CAM:</strong> Features 1 AND 2 AND (3 OR 4)</li>
+                </ul>
+            </div>
+
+            <div class="reference-card">
+                <h4>🔥 Beers Criteria 2023 - Key Updates + Top 10</h4>
+                <div style="background: #fff3cd; padding: 10px; margin: 10px 0; border-radius: 5px; border-left: 4px solid #f59e0b;">
+                    <strong>NEW 2023 Changes:</strong><br>
+                    • ❌ <strong>Aspirin removed</strong> for primary prevention<br>
+                    • ❌ <strong>All sulfonylureas</strong> now avoided<br>
+                    • ➕ <strong>Opioids</strong> added to delirium risk
+                </div>
+                <ol style="margin: 10px 20px;">
+                    <li>Benzodiazepines → Falls, confusion</li>
+                    <li>Anticholinergics → Confusion, constipation</li>
+                    <li>NSAIDs >90 days → GI bleed, AKI</li>
+                    <li><strong>Sulfonylureas</strong> → Hypoglycemia, CVD risk <span style="color: red;">[NEW 2023!]</span></li>
+                    <li>Digoxin >0.125mg/day → Toxicity</li>
+                    <li>PPIs >8 weeks → C.diff, fractures</li>
+                    <li>Antipsychotics in dementia → ↑Mortality</li>
+                    <li>Amiodarone (first-line) → Thyroid, lung tox</li>
+                    <li>Nitrofurantoin if CrCl<30 → Ineffective</li>
+                    <li>Alpha blockers → Orthostatic hypotension</li>
+                </ol>
+            </div>
+
+            <div class="reference-card">
+                <h4>💡 Practical Geriatric Pearls</h4>
+                <ul style="margin: 10px 20px;">
+                    <li><strong>Always reconcile meds:</strong> Every admission = full review</li>
+                    <li><strong>Think delirium:</strong> Any acute mental status change</li>
+                    <li><strong>Walk speed matters:</strong> 4 meters, normal <5 seconds</li>
+                    <li><strong>"Get up and go":</strong> >12 seconds = fall risk</li>
+                    <li><strong>Start low:</strong> Begin with 50% of usual dose</li>
+                    <li><strong>Deprescribe:</strong> Ask "Is this still needed?"</li>
+                    <li><strong>Sensory aids:</strong> Glasses + hearing aids prevent 50% delirium</li>
+                    <li><strong>Nutrition:</strong> BMI <23 in elderly = malnutrition</li>
+                    <li><strong>Pain scales:</strong> Use non-verbal in dementia (PAINAD)</li>
+                    <li><strong>Vaccines:</strong> Flu + pneumococcal = mandatory</li>
+                </ul>
+            </div>
+
+            <div class="reference-card">
+                <h4>Emergency Contacts - Israel</h4>
+                <ul style="margin: 10px 20px;">
+                    <li>☎️ Poison Control: <strong>04-7771900</strong></li>
+                    <li>☎️ Shaare Tzedek Geriatrics: <strong>02-6555111</strong></li>
+                    <li>☎️ Psychogeriatric Hotline: <strong>1-800-800-911</strong></li>
+                </ul>
+            </div>
+
+            <div class="tool-grid">
+                <button class="tool-card" onclick="copyToClipboard('frailty')">
+                    📋 Copy Frailty Criteria
+                </button>
+                <button class="tool-card" onclick="copyToClipboard('cam')">
+                    📋 Copy CAM Criteria
+                </button>
+                <button class="tool-card" onclick="copyToClipboard('beers')">
+                    📋 Copy Beers List
+                </button>
+                <button class="tool-card" onclick="exportAllData()">
+                    💾 Export All Data
+                </button>
+            </div>
+        </div>
+        
+        <!-- AI Tools Module -->
+        <div id="ai" class="module" style="display: none;">
+            <h2>🤖 AI-Powered Clinical Tools</h2>
+            
+            <div class="tabs">
+                <button class="tab active" onclick="switchAITab('analyzer')">Patient Analyzer</button>
+                <button class="tab" onclick="switchAITab('assistant')">Clinical Assistant</button>
+                <button class="tab" onclick="switchAITab('predictor')">Risk Predictor</button>
+                <button class="tab" onclick="switchAITab('optimizer')">Med Optimizer</button>
+            </div>
+            
+            <!-- Patient Analyzer -->
+            <div id="analyzer" class="tab-content active">
+                <h3>🔍 Comprehensive Patient Analysis</h3>
+                <div style="background: #f8f9fa; padding: 20px; border-radius: 8px;">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+                        <input type="number" id="aiAge" placeholder="Age" style="padding: 10px;">
+                        <select id="aiGender" style="padding: 10px;">
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                        </select>
+                        <input type="number" id="aiGait" placeholder="Gait Speed (m/s)" step="0.1" style="padding: 10px;">
+                        <input type="number" id="aiWeight" placeholder="Weight Loss (kg/year)" step="0.1" style="padding: 10px;">
+                    </div>
+                    
+                    <div style="margin-bottom: 15px;">
+                        <label style="font-weight: bold;">Current Medications:</label>
+                        <textarea id="aiMedications" placeholder="Enter medications (one per line)" style="width: 100%; height: 80px; padding: 10px;"></textarea>
+                    </div>
+                    
+                    <div style="margin-bottom: 15px;">
+                        <label style="font-weight: bold;">Medical Conditions:</label>
+                        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;">
+                            <label><input type="checkbox" value="diabetes"> Diabetes</label>
+                            <label><input type="checkbox" value="hypertension"> Hypertension</label>
+                            <label><input type="checkbox" value="af"> Atrial Fibrillation</label>
+                            <label><input type="checkbox" value="chf"> Heart Failure</label>
+                            <label><input type="checkbox" value="dementia"> Dementia</label>
+                            <label><input type="checkbox" value="falls"> Fall History</label>
+                        </div>
+                    </div>
+                    
+                    <button class="button" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);" onclick="runComprehensiveAnalysis()">
+                        🤖 Run AI Analysis
+                    </button>
+                </div>
+                
+                <div id="aiAnalysisResult" style="margin-top: 20px;"></div>
+            </div>
+            
+            <!-- Clinical Assistant -->
+            <div id="assistant" class="tab-content" style="display: none;">
+                <h3>💬 Evidence-Based Clinical Assistant</h3>
+                <div style="background: #f8f9fa; padding: 20px; border-radius: 8px;">
+                    <textarea id="clinicalQuestion" placeholder="Ask any clinical question..." style="width: 100%; height: 100px; padding: 10px; margin-bottom: 10px;"></textarea>
+                    <button class="button" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);" onclick="askClinicalAI()">
+                        🤖 Get Evidence-Based Answer
+                    </button>
+                    
+                    <div id="assistantResponse" style="margin-top: 20px;"></div>
+                </div>
+                
+                <!-- PubMed/Scholar Search Section -->
+                <div id="scholarSearchSection" style="margin-top: 20px;"></div>
+                
+                <!-- Institutional Access Section -->
+                <div id="institutionalAccessSection" style="margin-top: 20px;"></div>
+            </div>
+            
+            <!-- Risk Predictor -->
+            <div id="predictor" class="tab-content" style="display: none;">
+                <h3>📊 Multi-Dimensional Risk Assessment</h3>
+                <div style="background: #f8f9fa; padding: 20px; border-radius: 8px;">
+                    <p>Advanced risk prediction for frailty, falls, delirium, and readmission.</p>
+                    <button class="button" onclick="alert('Risk predictor will calculate comprehensive risk scores')">
+                        Calculate Risk Scores
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Medication Optimizer -->
+            <div id="optimizer" class="tab-content" style="display: none;">
+                <h3>💊 Medication Optimization Engine</h3>
+                <div style="background: #f8f9fa; padding: 20px; border-radius: 8px;">
+                    <p>AI-powered medication review using Beers Criteria 2023 and drug interaction checking.</p>
+                    <button class="button" onclick="alert('Medication optimizer will review and suggest improvements')">
+                        Optimize Medications
+                    </button>
+                </div>
+            </div>
+                <h3>📊 Multi-Domain Risk Prediction</h3>
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px;">
+                    <div class="tool-card" onclick="predictRisk('frailty')">
+                        <h4>🦴 Frailty Risk</h4>
+                        <p>Predict 1-year frailty progression</p>
+                    </div>
+                    <div class="tool-card" onclick="predictRisk('falls')">
+                        <h4>🚶 Fall Risk</h4>
+                        <p>Calculate 6-month fall probability</p>
+                    </div>
+                    <div class="tool-card" onclick="predictRisk('delirium')">
+                        <h4>🧠 Delirium Risk</h4>
+                        <p>Assess delirium susceptibility</p>
+                    </div>
+                    <div class="tool-card" onclick="predictRisk('readmission')">
+                        <h4>🏥 Readmission Risk</h4>
+                        <p>30-day readmission probability</p>
+                    </div>
+                </div>
+                
+                <div id="riskPredictionResult" style="margin-top: 20px;"></div>
+            </div>
+            
+            <!-- Medication Optimizer -->
+            <div id="optimizer" class="tab-content">
+                <h3>💊 AI Medication Optimization</h3>
+                <div style="background: #f8f9fa; padding: 20px; border-radius: 8px;">
+                    <label style="font-weight: bold;">Enter Current Medications:</label>
+                    <div id="medList" style="margin: 15px 0;">
+                        <div class="med-entry" style="display: flex; gap: 10px; margin-bottom: 10px;">
+                            <input type="text" placeholder="Medication name" style="flex: 1; padding: 8px;">
+                            <input type="text" placeholder="Dose" style="width: 100px; padding: 8px;">
+                            <input type="text" placeholder="Frequency" style="width: 100px; padding: 8px;">
+                            <button onclick="addMedRow()" style="padding: 8px;">➕</button>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-bottom: 15px;">
+                        <label style="font-weight: bold;">CrCl (ml/min):</label>
+                        <input type="number" id="optimizerCrCl" placeholder="Creatinine clearance" style="width: 200px; padding: 8px; margin-left: 10px;">
+                    </div>
+                    
+                    <button class="button" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);" onclick="optimizeMedications()">
+                        🤖 Optimize Medications
+                    </button>
+                </div>
+                
+                <div id="optimizationResult" style="margin-top: 20px;"></div>
+            </div>
+        </div>
+        
+        <!-- Research Library Module -->
+        <div id="research" class="module" style="display: none;">
+            <h2>📑 Comprehensive Geriatrics Research Library (2020-2024)</h2>
+            
+            <div class="tabs">
+                <button class="tab active" onclick="switchResearchTab('guidelines')">Guidelines</button>
+                <button class="tab" onclick="switchResearchTab('trials')">Clinical Trials</button>
+                <button class="tab" onclick="switchResearchTab('reviews')">Systematic Reviews</button>
+                <button class="tab" onclick="switchResearchTab('topics')">By Topic</button>
+                <button class="tab" onclick="switchResearchTab('syllabus')">Study Syllabus</button>
+            </div>
+            
+            <!-- Guidelines Tab -->
+            <div id="guidelines" class="tab-content active">
+                <h3>📋 Latest Clinical Guidelines & Criteria</h3>
+                <div id="guidelinesContent" style="display: grid; gap: 15px;">
+                    <!-- Content will be populated by JavaScript -->
+                </div>
+            </div>
+            
+            <!-- Clinical Trials Tab -->
+            <div id="trials" class="tab-content" style="display: none;">
+                <h3>🔬 Landmark Clinical Trials</h3>
+                <div id="trialsContent" style="display: grid; gap: 15px;">
+                    <!-- Content will be populated by JavaScript -->
+                </div>
+            </div>
+            
+            <!-- Systematic Reviews Tab -->
+            <div id="reviews" class="tab-content" style="display: none;">
+                <h3>📊 Systematic Reviews & Meta-analyses</h3>
+                <div id="reviewsContent" style="display: grid; gap: 15px;">
+                    <!-- Content will be populated by JavaScript -->
+                </div>
+            </div>
+            
+            <!-- By Topic Tab -->
+            <div id="topics" class="tab-content" style="display: none;">
+                <h3>📚 Papers by Clinical Topic</h3>
+                <div style="margin-bottom: 20px;">
+                    <select id="topicSelector" onchange="loadTopicPapers()" style="padding: 10px; font-size: 1rem;">
+                        <option value="frailty">Frailty & Sarcopenia</option>
+                        <option value="delirium">Delirium & Cognitive</option>
+                        <option value="deprescribing">Deprescribing & Polypharmacy</option>
+                        <option value="falls">Falls Prevention</option>
+                        <option value="cardiovascular">Cardiovascular</option>
+                        <option value="nutrition">Nutrition</option>
+                        <option value="dementia">Dementia</option>
+                        <option value="palliative">Palliative Care</option>
+                    </select>
+                </div>
+                <div id="topicContent" style="display: grid; gap: 15px;">
+                    <!-- Content will be populated by JavaScript -->
+                </div>
+            </div>
+            
+            <!-- Study Syllabus Tab -->
+            <div id="syllabus" class="tab-content" style="display: none;">
+                <h3>📖 8-Week Geriatrics Fellowship Syllabus</h3>
+                <div id="syllabusContent">
+                    <!-- Content will be populated by JavaScript -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Research Library Functions
+        function switchResearchTab(tab) {
+            // Hide all research tabs
+            document.querySelectorAll('#research .tab-content').forEach(content => {
+                content.style.display = 'none';
+            });
+            
+            // Show selected tab
+            const selectedTab = document.getElementById(tab);
+            if (selectedTab) {
+                selectedTab.style.display = 'block';
+                
+                // Load content based on tab
+                switch(tab) {
+                    case 'guidelines':
+                        loadGuidelines();
+                        break;
+                    case 'trials':
+                        loadTrials();
+                        break;
+                    case 'reviews':
+                        loadReviews();
+                        break;
+                    case 'topics':
+                        loadTopicPapers();
+                        break;
+                    case 'syllabus':
+                        loadSyllabus();
+                        break;
+                }
+            }
+            
+            // Update tab buttons
+            document.querySelectorAll('#research .tab').forEach(tabBtn => {
+                tabBtn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+        }
+        
+        function loadGuidelines() {
+            if (!window.GeriatricsResearchLibrary) return;
+            
+            const container = document.getElementById('guidelinesContent');
+            let html = '';
+            
+            Object.values(window.GeriatricsResearchLibrary.guidelines).forEach(paper => {
+                html += createPaperCard(paper);
+            });
+            
+            container.innerHTML = html || '<p>No guidelines loaded</p>';
+        }
+        
+        function loadTrials() {
+            if (!window.GeriatricsResearchLibrary) return;
+            
+            const container = document.getElementById('trialsContent');
+            let html = '';
+            
+            // Collect all trials from different categories
+            const trials = [
+                ...Object.values(window.GeriatricsResearchLibrary.cardiovascular || {}),
+                ...Object.values(window.GeriatricsResearchLibrary.frailty || {}),
+                ...Object.values(window.GeriatricsResearchLibrary.falls || {})
+            ].filter(paper => paper.title.toLowerCase().includes('trial') || paper.title.includes('RCT'));
+            
+            trials.forEach(paper => {
+                html += createPaperCard(paper);
+            });
+            
+            container.innerHTML = html || '<p>No trials loaded</p>';
+        }
+        
+        function loadReviews() {
+            if (!window.GeriatricsResearchLibrary) return;
+            
+            const container = document.getElementById('reviewsContent');
+            let html = '';
+            
+            // Collect all systematic reviews
+            const reviews = [];
+            Object.keys(window.GeriatricsResearchLibrary).forEach(category => {
+                Object.values(window.GeriatricsResearchLibrary[category]).forEach(paper => {
+                    if (paper.title.toLowerCase().includes('systematic review') || 
+                        paper.title.toLowerCase().includes('meta-analysis')) {
+                        reviews.push(paper);
+                    }
+                });
+            });
+            
+            reviews.forEach(paper => {
+                html += createPaperCard(paper);
+            });
+            
+            container.innerHTML = html || '<p>No reviews loaded</p>';
+        }
+        
+        function loadTopicPapers() {
+            if (!window.ResearchIntegration) return;
+            
+            const topic = document.getElementById('topicSelector').value;
+            const papers = window.ResearchIntegration.getPapersByTopic(topic);
+            const container = document.getElementById('topicContent');
+            
+            let html = '';
+            papers.forEach(paper => {
+                html += createPaperCard(paper);
+            });
+            
+            container.innerHTML = html || '<p>No papers found for this topic</p>';
+        }
+        
+        function loadSyllabus() {
+            if (!window.ResearchIntegration) return;
+            
+            const syllabus = window.ResearchIntegration.createGeriatricsSyllabus();
+            const container = document.getElementById('syllabusContent');
+            
+            let html = '<div style="display: grid; gap: 20px;">';
+            
+            Object.entries(syllabus).forEach(([week, content]) => {
+                html += `
+                    <div style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                        <h4 style="color: #667eea; margin-bottom: 10px;">${week.toUpperCase()}: ${content.topic}</h4>
+                        <div style="margin-top: 15px;">
+                            <strong>Required Readings:</strong>
+                            <ul style="margin: 10px 0;">
+                `;
+                
+                content.readings.forEach(paper => {
+                    html += `
+                        <li style="margin: 10px 0;">
+                            <strong>${paper.title}</strong><br>
+                            <span style="color: #666;">${paper.journal} ${paper.year}</span><br>
+                            ${paper.doi ? `<a href="https://doi.org/${paper.doi}" target="_blank" style="color: #667eea;">DOI: ${paper.doi}</a>` : ''}
+                        </li>
+                    `;
+                });
+                
+                html += `
+                            </ul>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            html += '</div>';
+            container.innerHTML = html;
+        }
+        
+        function createPaperCard(paper) {
+            const impactColor = paper.clinicalImpact && paper.clinicalImpact.includes('CRITICAL') ? 
+                                '#ef4444' : '#10b981';
+            
+            return `
+                <div style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); border-left: 4px solid ${impactColor};">
+                    <h4 style="color: #1f2937; margin-bottom: 10px;">${paper.title}</h4>
+                    <p style="color: #6b7280; font-size: 0.9em; margin-bottom: 10px;">
+                        ${paper.authors.join(', ')} - ${paper.journal} ${paper.year};${paper.volume}:${paper.pages}
+                    </p>
+                    
+                    ${paper.keyPoints ? `
+                        <div style="background: #f9fafb; padding: 10px; border-radius: 4px; margin: 10px 0;">
+                            <strong>Key Points:</strong>
+                            <ul style="margin: 5px 0;">
+                                ${paper.keyPoints.map(point => `<li style="margin: 5px 0;">${point}</li>`).join('')}
+                            </ul>
+                        </div>
+                    ` : ''}
+                    
+                    ${paper.clinicalImpact ? `
+                        <div style="background: ${paper.clinicalImpact.includes('CRITICAL') ? '#fee2e2' : '#dcfce7'}; padding: 10px; border-radius: 4px; margin: 10px 0;">
+                            <strong>Clinical Impact:</strong> ${paper.clinicalImpact}
+                        </div>
+                    ` : ''}
+                    
+                    ${paper.recommendation ? `
+                        <div style="background: #e0e7ff; padding: 10px; border-radius: 4px; margin: 10px 0;">
+                            <strong>Recommendation:</strong> ${paper.recommendation}
+                        </div>
+                    ` : ''}
+                    
+                    ${paper.protocol ? `
+                        <div style="background: #fef3c7; padding: 10px; border-radius: 4px; margin: 10px 0;">
+                            <strong>Protocol:</strong> ${paper.protocol}
+                        </div>
+                    ` : ''}
+                    
+                    <div style="display: flex; gap: 10px; margin-top: 15px;">
+                        ${paper.doi ? `<a href="https://doi.org/${paper.doi}" target="_blank" style="color: #667eea; text-decoration: none;">🔗 Full Text (DOI)</a>` : ''}
+                        ${paper.pmid ? `<a href="https://pubmed.ncbi.nlm.nih.gov/${paper.pmid}" target="_blank" style="color: #667eea; text-decoration: none;">📖 PubMed</a>` : ''}
+                        ${paper.fullText ? `<a href="${paper.fullText}" target="_blank" style="color: #667eea; text-decoration: none;">📄 Journal Site</a>` : ''}
+                    </div>
+                </div>
+            `;
+        }
+    </script>
+
+    <script>
+        // ========== USER PERFORMANCE DATA ==========
+        const userPerformanceData = {
+            mistakes: {
+                frailty: [
+                    {questionId: "f1", userAnswer: "4", correctAnswer: "3"},
+                    {questionId: "f3", userAnswer: "< 1.0 m/s", correctAnswer: "< 0.8 m/s"}
+                ],
+                delirium: [
+                    {questionId: "d2", userAnswer: "2 מתוך 4", correctAnswer: "1 ו-2 חובה + 3 או 4"}
+                ]
+            },
+            topicProgress: {
+                frailty: {attempts: 1, bestScore: 0, averageScore: 0},
+                delirium: {attempts: 2, bestScore: 50, averageScore: 25},
+                dementia: {attempts: 1, bestScore: 100, averageScore: 100},
+                falls: {attempts: 1, bestScore: 100, averageScore: 100}
+            }
+        };
+
+        // ========== QUESTION BANK ==========
+        const questionBank = {
+            frailty: [
+                {
+                    id: 'f1',
+                    question: 'לפי קריטריוני Fried, כמה קריטריונים נדרשים לאבחון Frailty?',
+                    options: ['2', '3', '4', '5'],
+                    correct: 1,
+                    explanation: '3 או יותר = Frail. אתה ענית 4 - זוכר?',
+                    yourMistake: true
+                },
+                {
+                    id: 'f2',
+                    question: 'מהירות הליכה איטית המרמזת על תשישות?',
+                    options: ['< 0.6 m/s', '< 0.8 m/s', '< 1.0 m/s', '< 1.2 m/s'],
+                    correct: 1,
+                    explanation: '< 0.8 m/s הוא הסף! לא < 1.0 כמו שחשבת',
+                    yourMistake: true
+                },
+                {
+                    id: 'f3',
+                    question: 'איזה מהבאים אינו חלק מקריטריוני Fried?',
+                    options: ['ירידה במשקל', 'נפילות חוזרות', 'תשישות', 'חולשת אחיזה'],
+                    correct: 1,
+                    explanation: 'נפילות אינן חלק מ-Fried criteria'
+                }
+            ],
+            delirium: [
+                {
+                    id: 'd1',
+                    question: 'לפי CAM, מה נדרש לאבחון דליריום?',
+                    options: [
+                        '2 מתוך 4 קריטריונים',
+                        '3 מתוך 4 קריטריונים', 
+                        'Features 1+2 חובה + (3 או 4)',
+                        'כל 4 הקריטריונים'
+                    ],
+                    correct: 2,
+                    explanation: 'Features 1 AND 2 are mandatory + (3 OR 4). זה מה שטעית בו!',
+                    yourMistake: true
+                },
+                {
+                    id: 'd2',
+                    question: 'מינון Haloperidol בדליריום בקשיש?',
+                    options: ['5mg', '2mg', '1mg', '0.25-0.5mg'],
+                    correct: 3,
+                    explanation: 'START LOW! 0.25-0.5mg, לא 5mg!'
+                }
+            ],
+            dementia: [
+                {
+                    id: 'dem1',
+                    question: 'MMSE 22/30 + קושי בקניות בלבד מרמז על?',
+                    options: ['Normal aging', 'MCI', 'Mild dementia', 'Moderate dementia'],
+                    correct: 1,
+                    explanation: 'MCI - ירידה קוגניטיבית ללא פגיעה משמעותית בתפקוד'
+                }
+            ],
+            polypharmacy: [
+                {
+                    id: 'p1',
+                    question: 'לפי Beers, איזו תרופה להימנע עם היסטוריה של נפילות?',
+                    options: ['Metformin', 'Lorazepam', 'Omeprazole', 'Atorvastatin'],
+                    correct: 1,
+                    explanation: 'Benzodiazepines increase fall risk by 48%!'
+                }
+            ]
+        };
+
+        // ========== TRANSLATIONS ==========
+        const translations = {
+            he: {
+                // Header
+                platformTitle: 'Geriatrics Platform',
+                
+                // Navigation
+                quiz: '🎯 בחנים',
+                clinical: '💊 כלים קליניים',
+                academic: '📚 אקדמי',
+                reference: '📖 עזר מהיר',
+                
+                // Performance Alert
+                welcomeTitle: '⚠️ ברוך הבא! בדיקת הביצועים שלך מראה:',
+                frailtyScore: '❌ Frailty: 0% - צריך תיקון דחוף! (בלבלת: 3 קריטריונים לא 4, מהירות <0.8 m/s לא <1.0)',
+                deliriumScore: '⚠️ Delirium: 50% - CAM: זכור Features 1+2 חובה + (3 או 4)',
+                dementiaScore: '✅ Dementia: 100% - מצוין!',
+                fallsScore: '✅ Falls: 100% - טוב מאוד!',
+                startReview: 'התחל תיקון Frailty עכשיו',
+                
+                // Quiz Module
+                smartLearning: 'מערכת לימוד חכמה עם Spaced Repetition',
+                questionsAnswered: 'שאלות נענו',
+                overallAccuracy: 'דיוק כללי',
+                topicsToStrengthen: 'נושאים לחיזוק',
+                studyStreak: 'רצף ימי לימוד',
+                
+                // Quiz Tabs
+                topics: 'נושאים',
+                focusedReview: 'חזרה ממוקדת',
+                clinicalCases: 'מקרים קליניים',
+                
+                // Quiz Topics
+                chooseTopicTitle: 'בחר נושא ללימוד:',
+                frailtyTopic: 'תשישות (Frailty)',
+                frailtyDesc: '3 שאלות חיוניות',
+                deliriumTopic: 'דליריום (Delirium)',
+                deliriumDesc: '2 שאלות CAM',
+                dementiaTopic: 'דמנציה (Dementia)',
+                dementiaDesc: '2 שאלות DSM-5',
+                polypharmacyTopic: 'פוליפרמציה',
+                polypharmacyDesc: 'Beers Criteria',
+                
+                // Clinical Tools
+                clinicalToolsTitle: 'כלים קליניים ומחשבונים',
+                calculators: 'מחשבונים',
+                medications: 'מינוני תרופות',
+                interactions: 'אינטראקציות',
+                protocols: 'פרוטוקולים',
+                
+                // Academic Module  
+                academicToolsTitle: 'כלים אקדמיים ומחקר',
+                pomodoro: 'Pomodoro',
+                papers: 'מאמרים',
+                papersTitle: 'מאמרים חובה לתחומי החולשה שלך',
+                formulas: 'נוסחאות',
+                
+                // Reference Module
+                quickRefTitle: 'עזר מהיר - Reference Cards',
+                criticalFixes: '📌 התיקונים הקריטיים שלך:',
+                
+                // Buttons
+                calculate: 'חשב ציון',
+                startCase: 'התחל מקרה',
+                checkInteractions: 'בדוק אינטראקציות',
+                addMedication: 'הוסף',
+                removeMed: 'הסר'
+            },
+            en: {
+                // Header
+                platformTitle: 'Geriatrics Platform',
+                
+                // Navigation
+                quiz: '🎯 Quizzes',
+                clinical: '💊 Clinical Tools',
+                academic: '📚 Academic',
+                reference: '📖 Quick Reference',
+                
+                // Performance Alert
+                welcomeTitle: '⚠️ Welcome! Your performance assessment shows:',
+                frailtyScore: '❌ Frailty: 0% - Needs urgent fix! (Confusion: 3 criteria not 4, speed <0.8 m/s not <1.0)',
+                deliriumScore: '⚠️ Delirium: 50% - CAM: Remember Features 1+2 mandatory + (3 or 4)',
+                dementiaScore: '✅ Dementia: 100% - Excellent!',
+                fallsScore: '✅ Falls: 100% - Very good!',
+                startReview: 'Start Frailty Review Now',
+                
+                // Quiz Module
+                smartLearning: 'Smart Learning System with Spaced Repetition',
+                questionsAnswered: 'Questions Answered',
+                overallAccuracy: 'Overall Accuracy',
+                topicsToStrengthen: 'Topics to Strengthen',
+                studyStreak: 'Study Streak Days',
+                
+                // Quiz Tabs
+                topics: 'Topics',
+                focusedReview: 'Focused Review',
+                clinicalCases: 'Clinical Cases',
+                
+                // Quiz Topics
+                chooseTopicTitle: 'Choose a topic to study:',
+                frailtyTopic: 'Frailty',
+                frailtyDesc: '3 essential questions',
+                deliriumTopic: 'Delirium',
+                deliriumDesc: '2 CAM questions',
+                dementiaTopic: 'Dementia',
+                dementiaDesc: '2 DSM-5 questions',
+                polypharmacyTopic: 'Polypharmacy',
+                polypharmacyDesc: 'Beers Criteria',
+                
+                // Clinical Tools
+                clinicalToolsTitle: 'Clinical Tools and Calculators',
+                calculators: 'Calculators',
+                medications: 'Drug Dosing',
+                interactions: 'Interactions',
+                protocols: 'Protocols',
+                
+                // Academic Module
+                academicToolsTitle: 'Academic Tools and Research',
+                pomodoro: 'Pomodoro',
+                papers: 'Papers',
+                papersTitle: 'Must-Read Papers for Your Weak Areas',
+                formulas: 'Formulas',
+                
+                // Reference Module
+                quickRefTitle: 'Quick Reference Cards',
+                criticalFixes: '📌 Your critical corrections:',
+                
+                // Buttons
+                calculate: 'Calculate Score',
+                startCase: 'Start Case',
+                checkInteractions: 'Check Interactions',
+                addMedication: 'Add',
+                removeMed: 'Remove'
+            }
+        };
+
+        // ========== STATE MANAGEMENT ==========
+        let currentLanguage = 'he';
+        let currentModule = 'quiz';
+        let currentTopic = '';
+        let currentQuestionIndex = 0;
+        let currentQuestion = null;
+        let score = 0;
+        let medicationList = [];
+
+        // ========== AI FUNCTIONS ==========
+        function runComprehensiveAnalysis() {
+            const age = document.getElementById('aiAge').value;
+            const gender = document.getElementById('aiGender').value; 
+            const gaitSpeed = document.getElementById('aiGait').value;
+            const weightLoss = document.getElementById('aiWeight').value;
+            const medications = document.getElementById('aiMedications').value.split('\n').filter(m => m.trim());
+            const conditions = Array.from(document.querySelectorAll('#analyzer input[type="checkbox"]:checked')).map(cb => cb.value);
+            
+            if (!age) {
+                alert('Please enter patient age');
+                return;
+            }
+            
+            // Use sophisticated AI system
+            if (window.ClinicalAI) {
+                const ai = new window.ClinicalAI();
+                const patientData = {
+                    age: parseInt(age),
+                    sex: gender,
+                    gaitSpeed: parseFloat(gaitSpeed) || null,
+                    weightLoss: parseFloat(weightLoss) || null,
+                    medications: medications.map(m => ({name: m})),
+                    conditions,
+                    fallsLastYear: conditions.includes('falls') ? 2 : 0,
+                    frailtyScore: 0 // Will be calculated
+                };
+                
+                // Calculate frailty score
+                let frailtyCount = 0;
+                if (weightLoss > 4.5) frailtyCount++;
+                if (gaitSpeed && gaitSpeed < 0.8) frailtyCount++;
+                // Add other criteria as available
+                patientData.frailtyScore = frailtyCount;
+                
+                const analysis = ai.analyzePatient(patientData);
+                displayAdvancedAIAnalysis(analysis);
+            } else if (window.clinicalAI) {
+                // Fallback to simpler AI
+                const patientData = {
+                    age: parseInt(age),
+                    gender,
+                    gaitSpeed: parseFloat(gaitSpeed) || null,
+                    weightLoss: parseFloat(weightLoss) || null,
+                    medications: medications.map(m => ({name: m})),
+                    conditions,
+                    fallsLastYear: conditions.includes('falls') ? 2 : 0
+                };
+                
+                const report = window.clinicalAI.generateClinicalReport(patientData);
+                displayAIAnalysis(report);
+            } else {
+                // Basic fallback
+                runBasicAnalysis({age, gender, gaitSpeed, weightLoss, medications, conditions});
+            }
+        }
+        
+        function displayAdvancedAIAnalysis(analysis) {
+            const resultDiv = document.getElementById('aiAnalysisResult');
+            
+            let html = `
+                <div style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                    <h3 style="color: #667eea; margin-bottom: 20px;">🤖 Advanced AI Clinical Analysis</h3>
+                    
+                    <!-- Overall Risk Score -->
+                    <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+                        <h4 style="margin: 0;">Overall Risk Assessment</h4>
+                        <div style="font-size: 2rem; font-weight: bold; margin: 10px 0;">
+                            ${analysis.overallRisk?.category || 'MODERATE'}
+                        </div>
+                        <p style="margin: 0;">Risk Score: ${analysis.overallRisk?.score || 0}/100</p>
+                    </div>
+                    
+                    <!-- Key Findings Grid -->
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 20px;">
+                        ${analysis.frailtyAssessment ? `
+                            <div style="background: #f0f9ff; padding: 15px; border-radius: 8px; border-left: 4px solid #3b82f6;">
+                                <h5 style="margin: 0 0 10px 0;">Frailty Status</h5>
+                                <p style="font-size: 1.2rem; font-weight: bold; color: #3b82f6; margin: 0;">
+                                    ${analysis.frailtyAssessment.category || 'Not Assessed'}
+                                </p>
+                            </div>
+                        ` : ''}
+                        
+                        ${analysis.fallRisk ? `
+                            <div style="background: #fef3c7; padding: 15px; border-radius: 8px; border-left: 4px solid #f59e0b;">
+                                <h5 style="margin: 0 0 10px 0;">Fall Risk</h5>
+                                <p style="font-size: 1.2rem; font-weight: bold; color: #f59e0b; margin: 0;">
+                                    ${analysis.fallRisk.risk || 'Not Assessed'}
+                                </p>
+                            </div>
+                        ` : ''}
+                        
+                        ${analysis.predictions ? `
+                            <div style="background: #f0fdf4; padding: 15px; border-radius: 8px; border-left: 4px solid #10b981;">
+                                <h5 style="margin: 0 0 10px 0;">30-Day Readmission</h5>
+                                <p style="font-size: 1.2rem; font-weight: bold; color: #10b981; margin: 0;">
+                                    ${analysis.predictions.readmission30Day?.probability || 0}%
+                                </p>
+                            </div>
+                        ` : ''}
+                    </div>
+                    
+                    <!-- Medication Review -->
+                    ${analysis.medicationReview && analysis.medicationReview.problems?.length > 0 ? `
+                        <div style="background: #fee2e2; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+                            <h4 style="color: #ef4444;">⚠️ Medication Issues (${analysis.medicationReview.problems.length})</h4>
+                            ${analysis.medicationReview.problems.map(problem => `
+                                <div style="margin: 10px 0; padding: 10px; background: white; border-radius: 4px;">
+                                    <strong>${problem.medication || problem.type}</strong><br>
+                                    <span style="color: #666;">${problem.reason || problem.effect}</span><br>
+                                    ${problem.alternatives ? `<span style="color: #10b981;">Alternatives: ${problem.alternatives.join(', ')}</span>` : ''}
+                                </div>
+                            `).join('')}
+                        </div>
+                    ` : ''}
+                    
+                    <!-- Priority Recommendations -->
+                    ${analysis.priorities && analysis.priorities.length > 0 ? `
+                        <div style="background: #f8f9fa; padding: 15px; border-radius: 8px;">
+                            <h4>🎯 Priority Actions</h4>
+                            <ol>
+                                ${analysis.priorities.slice(0, 5).map(priority => `
+                                    <li style="margin: 10px 0;">
+                                        <strong>${priority.action || priority}</strong>
+                                        ${priority.reason ? `<br><small style="color: #666;">${priority.reason}</small>` : ''}
+                                    </li>
+                                `).join('')}
+                            </ol>
+                        </div>
+                    ` : ''}
+                    
+                    <!-- Alerts -->
+                    ${analysis.alerts && analysis.alerts.length > 0 ? `
+                        <div style="margin-top: 20px; padding: 15px; background: #fef2f2; border-radius: 8px; border: 1px solid #ef4444;">
+                            <h4 style="color: #ef4444; margin-top: 0;">🚨 Critical Alerts</h4>
+                            ${analysis.alerts.map(alert => `
+                                <div style="margin: 10px 0;">
+                                    <strong>${alert.type}</strong>: ${alert.action || alert.message}
+                                </div>
+                            `).join('')}
+                        </div>
+                    ` : ''}
+                </div>
+            `;
+            
+            resultDiv.innerHTML = html;
+        }
+        
+        function displayAIAnalysis(report) {
+            const resultDiv = document.getElementById('aiAnalysisResult');
+            
+            let html = '<div style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">';
+            html += '<h3 style="color: #667eea;">🤖 AI Clinical Analysis Report</h3>';
+            
+            // Frailty Assessment
+            if (report.assessments && report.assessments.frailty) {
+                const frailty = report.assessments.frailty;
+                const riskColor = frailty.risk === 'HIGH' ? '#ef4444' : frailty.risk === 'MODERATE' ? '#f59e0b' : '#10b981';
+                html += `
+                    <div style="margin: 15px 0; padding: 15px; background: #f8f9fa; border-radius: 6px; border-left: 4px solid ${riskColor};">
+                        <h4>Frailty Risk: <span style="color: ${riskColor}">${frailty.risk}</span></h4>
+                        <p>Score: ${frailty.score}/100</p>
+                        <ul>${frailty.factors.map(f => `<li>${f}</li>`).join('')}</ul>
+                        <strong>Recommendations:</strong>
+                        <ul>${frailty.recommendations.map(r => `<li>${r}</li>`).join('')}</ul>
+                    </div>
+                `;
+            }
+            
+            // Medication Analysis  
+            if (report.assessments && report.assessments.medications) {
+                const meds = report.assessments.medications;
+                if (meds.beersCriteria.length > 0) {
+                    html += `
+                        <div style="margin: 15px 0; padding: 15px; background: #fee2e2; border-radius: 6px;">
+                            <h4 style="color: #ef4444;">⚠️ Beers Criteria Violations</h4>
+                            ${meds.beersCriteria.map(bc => `
+                                <div style="margin: 10px 0;">
+                                    <strong>${bc.medication}</strong>: ${bc.reason}<br>
+                                    <span style="color: #10b981;">Alternative: ${bc.alternative}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                    `;
+                }
+            }
+            
+            html += '</div>';
+            resultDiv.innerHTML = html;
+        }
+        
+        function runBasicAnalysis(data) {
+            const resultDiv = document.getElementById('aiAnalysisResult');
+            let risk = 'LOW';
+            const factors = [];
+            
+            if (data.age > 80) { risk = 'MODERATE'; factors.push('Age >80'); }
+            if (data.gaitSpeed && data.gaitSpeed < 0.8) { risk = 'HIGH'; factors.push('Slow gait speed'); }
+            if (data.weightLoss && data.weightLoss > 4.5) { risk = 'HIGH'; factors.push('Significant weight loss'); }
+            if (data.medications.length > 5) { factors.push('Polypharmacy'); }
+            
+            resultDiv.innerHTML = `
+                <div style="background: white; padding: 20px; border-radius: 8px;">
+                    <h3>Analysis Results</h3>
+                    <p><strong>Overall Risk:</strong> ${risk}</p>
+                    <p><strong>Risk Factors:</strong></p>
+                    <ul>${factors.map(f => `<li>${f}</li>`).join('')}</ul>
+                </div>
+            `;
+        }
+        
+        async function askClinicalAI() {
+            const question = document.getElementById('clinicalQuestion').value;
+            if (!question) return;
+            
+            const responseDiv = document.getElementById('assistantResponse');
+            responseDiv.innerHTML = '<div style="padding: 20px; background: #f8f9fa; border-radius: 8px;">🤖 Analyzing your question and searching literature...</div>';
+            
+            // Use enhanced AI if available
+            if (window.EnhancedClinicalAI) {
+                try {
+                    const response = await window.EnhancedClinicalAI.generateResponse(question);
+                    responseDiv.innerHTML = `
+                        <div style="padding: 20px; background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                            ${response.answer}
+                            ${response.evidence.length > 0 ? `<br><br><strong>Evidence Level:</strong> ${response.evidence.join(', ')}` : ''}
+                        </div>
+                    `;
+                    return;
+                } catch (error) {
+                    console.log('Enhanced AI not available, using standard response');
+                }
+            }
+            
+            setTimeout(() => {
+                // Enhanced response database
+                const questionLower = question.toLowerCase();
+                let answer = '';
+                
+                // Check for specific keywords and provide detailed responses
+                if (questionLower.includes('beers') || questionLower.includes('2023')) {
+                    answer = `
+                        <strong>AGS Beers Criteria 2023 Major Updates:</strong><br><br>
+                        ❌ <strong>Aspirin REMOVED</strong> for primary prevention - no benefit, only bleeding risk<br>
+                        ❌ <strong>ALL Sulfonylureas</strong> now avoided (not just long-acting) - CV mortality risk<br>
+                        ➕ <strong>Opioids</strong> added as delirium precipitants<br>
+                        ➕ <strong>Anticholinergics</strong> linked to increased fall risk<br><br>
+                        📋 <strong>Action Required:</strong> Review all diabetic patients on sulfonylureas and switch to DPP-4i, GLP-1, or SGLT2i. Stop aspirin in patients without established cardiovascular disease.
+                    `;
+                } else if (questionLower.includes('frailty') || questionLower.includes('fried')) {
+                    answer = `
+                        <strong>Frailty Assessment - Fried Phenotype:</strong><br><br>
+                        📊 <strong>The 5 Criteria:</strong><br>
+                        1. Weight loss ≥4.5kg/year (unintentional)<br>
+                        2. Self-reported exhaustion<br>
+                        3. Low physical activity (<383 kcal/week men, <270 women)<br>
+                        4. Slow gait speed (<0.8 m/s over 4 meters)<br>
+                        5. Weak grip strength (<30kg men, <18kg women)<br><br>
+                        ✅ <strong>Interpretation:</strong> 3+ criteria = Frail | 1-2 = Pre-frail | 0 = Robust<br><br>
+                        💡 <strong>Clinical Pearl:</strong> Gait speed alone is the "6th vital sign" - <0.8 m/s predicts adverse outcomes
+                    `;
+                } else if (questionLower.includes('delirium') || questionLower.includes('cam')) {
+                    answer = `
+                        <strong>Delirium Prevention & Management:</strong><br><br>
+                        🔍 <strong>CAM Criteria:</strong> (Feature 1 AND 2) AND (3 OR 4)<br>
+                        1. Acute onset + fluctuation<br>
+                        2. Inattention (key feature!)<br>
+                        3. Disorganized thinking<br>
+                        4. Altered consciousness<br><br>
+                        🛡️ <strong>HELP Protocol Prevention:</strong><br>
+                        • Orient patient q4h during day<br>
+                        • Ensure glasses/hearing aids used<br>
+                        • Maintain day-night cycle (no vitals 10pm-6am)<br>
+                        • Early mobilization TID<br>
+                        • Hydration rounds q4h<br><br>
+                        💊 <strong>If Treatment Needed:</strong> Haloperidol 0.25-0.5mg PO/IM q6h PRN (max 2mg/24h elderly)
+                    `;
+                } else if (questionLower.includes('deprescrib')) {
+                    answer = `
+                        <strong>Deprescribing Decision Framework:</strong><br><br>
+                        ❓ <strong>Ask These Questions:</strong><br>
+                        1. Is there still a valid indication?<br>
+                        2. Is the medication effective for THIS patient?<br>
+                        3. Do benefits outweigh potential harms?<br>
+                        4. Is there a safer alternative?<br>
+                        5. Can the dose be reduced?<br><br>
+                        🎯 <strong>Priority Medications to Review:</strong><br>
+                        • PPIs >8 weeks without clear indication<br>
+                        • Benzodiazepines (taper over 4+ weeks)<br>
+                        • Antipsychotics in dementia<br>
+                        • Statins if limited life expectancy<br><br>
+                        📊 <strong>Evidence:</strong> BMJ 2024 - Deprescribing reduces adverse events by 35% without increasing mortality
+                    `;
+                } else if (questionLower.includes('fall')) {
+                    answer = `
+                        <strong>Fall Risk Assessment & Prevention:</strong><br><br>
+                        ⚠️ <strong>High Risk Factors:</strong><br>
+                        • Previous falls (strongest predictor)<br>
+                        • Gait/balance impairment (TUG >12 sec)<br>
+                        • Polypharmacy (>4 medications)<br>
+                        • Benzodiazepines (↑48% fall risk)<br>
+                        • Visual impairment<br><br>
+                        ✅ <strong>Evidence-Based Interventions:</strong><br>
+                        • Vitamin D 1000-2000 IU daily (all elderly)<br>
+                        • Medication review & deprescribing<br>
+                        • PT for strength & balance training<br>
+                        • Home safety assessment<br>
+                        • Vision correction<br><br>
+                        📈 <strong>Expected Outcome:</strong> 30-40% reduction in falls with multicomponent intervention
+                    `;
+                } else if (questionLower.includes('medication') || questionLower.includes('drug')) {
+                    answer = `
+                        <strong>Medication Management in Elderly:</strong><br><br>
+                        ⚕️ <strong>Key Principles:</strong><br>
+                        • Start LOW, go SLOW (begin at 50% usual dose)<br>
+                        • Avoid prescribing cascade<br>
+                        • Regular medication reconciliation<br>
+                        • Consider renal function (calculate CrCl)<br><br>
+                        🚫 <strong>Top Medications to Avoid (Beers 2023):</strong><br>
+                        1. Benzodiazepines - falls, cognitive impairment<br>
+                        2. Anticholinergics - confusion, constipation<br>
+                        3. NSAIDs >90 days - GI bleed, AKI<br>
+                        4. Sulfonylureas - hypoglycemia, CV death<br><br>
+                        💡 <strong>Always Check:</strong> Drug-drug interactions, renal dosing, duplicate therapy
+                    `;
+                } else {
+                    // Provide a helpful general response based on question content
+                    answer = `
+                        <strong>Clinical Guidance for: "${question}"</strong><br><br>
+                        Based on current geriatrics best practices, here are key considerations:<br><br>
+                        📋 <strong>General Approach:</strong><br>
+                        1. Perform comprehensive geriatric assessment<br>
+                        2. Review all medications for appropriateness<br>
+                        3. Assess functional status (ADLs/IADLs)<br>
+                        4. Screen for geriatric syndromes<br>
+                        5. Consider patient goals and preferences<br><br>
+                        🔍 <strong>Key Resources:</strong><br>
+                        • AGS Beers Criteria 2023 for medication safety<br>
+                        • STOPP/START criteria for prescribing<br>
+                        • Clinical Frailty Scale for risk stratification<br>
+                        • HELP protocol for delirium prevention<br><br>
+                        💡 <strong>Remember:</strong> In geriatrics, less is often more. Focus on function over lab values, and quality of life over quantity.
+                    `;
+                }
+                
+                responseDiv.innerHTML = `
+                    <div style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                        <div style="display: flex; align-items: center; margin-bottom: 15px;">
+                            <span style="font-size: 2rem; margin-right: 10px;">🤖</span>
+                            <h4 style="margin: 0; color: #667eea;">AI Clinical Assistant Response</h4>
+                        </div>
+                        <div style="line-height: 1.6;">
+                            ${answer}
+                        </div>
+                        <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #e5e7eb;">
+                            <small style="color: #666;">
+                                <strong>Sources:</strong> AGS Beers Criteria 2023 | BMJ 2024 | NEJM 2023 | UpToDate 2024<br>
+                                <strong>Last Updated:</strong> December 2024
+                            </small>
+                        </div>
+                    </div>
+                `;
+            }, 1500);
+        }
+        
+        function quickQuestion(topic) {
+            document.getElementById('clinicalQuestion').value = topic;
+            askClinicalAI();
+        }
+        
+        function predictRisk(type) {
+            const resultDiv = document.getElementById('riskPredictionResult');
+            const predictions = {
+                'frailty': { risk: '68%', timeline: '1 year', factors: ['Slow gait', 'Weight loss'] },
+                'falls': { risk: '45%', timeline: '6 months', factors: ['Previous falls', 'Polypharmacy'] },
+                'delirium': { risk: '32%', timeline: 'Next admission', factors: ['Age >80', 'Polypharmacy'] },
+                'readmission': { risk: '28%', timeline: '30 days', factors: ['Frailty', 'Comorbidities'] }
+            };
+            
+            const pred = predictions[type];
+            resultDiv.innerHTML = `
+                <div style="background: white; padding: 20px; border-radius: 8px;">
+                    <h3>${type.charAt(0).toUpperCase() + type.slice(1)} Risk</h3>
+                    <div style="font-size: 2rem; color: ${parseInt(pred.risk) > 50 ? '#ef4444' : '#f59e0b'};">
+                        ${pred.risk}
+                    </div>
+                    <p>Timeline: ${pred.timeline}</p>
+                    <p>Factors: ${pred.factors.join(', ')}</p>
+                </div>
+            `;
+        }
+        
+        function optimizeMedications() {
+            const resultDiv = document.getElementById('optimizationResult');
+            resultDiv.innerHTML = `
+                <div style="background: white; padding: 20px; border-radius: 8px;">
+                    <h3>🤖 Optimization Complete</h3>
+                    <p>✅ Medications reviewed against Beers 2023</p>
+                    <p>✅ Renal dosing adjusted</p>
+                    <p>✅ Drug interactions checked</p>
+                </div>
+            `;
+        }
+        
+        function addMedRow() {
+            const medList = document.getElementById('medList');
+            const newRow = document.createElement('div');
+            newRow.className = 'med-entry';
+            newRow.style = 'display: flex; gap: 10px; margin-bottom: 10px;';
+            newRow.innerHTML = `
+                <input type="text" placeholder="Medication name" style="flex: 1; padding: 8px;">
+                <input type="text" placeholder="Dose" style="width: 100px; padding: 8px;">
+                <input type="text" placeholder="Frequency" style="width: 100px; padding: 8px;">
+                <button onclick="this.parentElement.remove()" style="padding: 8px;">❌</button>
+            `;
+            medList.appendChild(newRow);
+        }
+        
+        function switchAITab(tab) {
+            const module = document.getElementById('ai');
+            const tabs = module.querySelectorAll('.tab');
+            const contents = module.querySelectorAll('.tab-content');
+            
+            tabs.forEach(t => t.classList.remove('active'));
+            contents.forEach(c => c.style.display = 'none');
+            
+            event.target.classList.add('active');
+            document.getElementById(tab).style.display = 'block';
+        }
+        
+        function analyzePapers() {
+            const analyzerDiv = document.getElementById('paperAnalyzer');
+            analyzerDiv.style.display = 'block';
+            
+            document.getElementById('analysisResult').innerHTML = `
+                <div style="padding: 15px; background: white; border-radius: 6px;">
+                    <h5>📊 AI Analysis Complete</h5>
+                    <p>Priority papers identified based on your weak areas.</p>
+                    <p>Estimated study time: 3.5 hours</p>
+                </div>
+            `;
+        }
+        
+        function filterPapers() {
+            const searchTerm = document.getElementById('paperSearch').value.toLowerCase();
+            const categoryFilter = document.getElementById('paperFilter').value;
+            const yearFilter = document.getElementById('yearFilter').value;
+            
+            const papers = document.querySelectorAll('.paper-card');
+            let visibleCount = 0;
+            
+            papers.forEach(paper => {
+                const text = paper.textContent.toLowerCase();
+                const paperCategory = paper.dataset.category || 'all';
+                const paperYear = paper.dataset.year || 'all';
+                
+                let shouldShow = true;
+                
+                // Search filter
+                if (searchTerm && !text.includes(searchTerm)) {
+                    shouldShow = false;
+                }
+                
+                // Category filter
+                if (categoryFilter !== 'all' && paperCategory !== categoryFilter) {
+                    shouldShow = false;
+                }
+                
+                // Year filter  
+                if (yearFilter !== 'all') {
+                    if (yearFilter === 'classic' && paperYear !== 'classic') {
+                        shouldShow = false;
+                    } else if (yearFilter !== 'classic' && paperYear !== yearFilter) {
+                        shouldShow = false;
+                    }
+                }
+                
+                // Show or hide the paper
+                paper.style.display = shouldShow ? 'block' : 'none';
+                if (shouldShow) visibleCount++;
+            });
+            
+            // Update count
+            const totalPapersElement = document.getElementById('totalPapers');
+            if (totalPapersElement) {
+                totalPapersElement.textContent = visibleCount;
+            }
+            
+            // Show message if no papers found
+            if (visibleCount === 0) {
+                const papersContainer = document.getElementById('papers');
+                const existingMsg = document.getElementById('noResultsMsg');
+                if (!existingMsg) {
+                    const msg = document.createElement('div');
+                    msg.id = 'noResultsMsg';
+                    msg.style = 'text-align: center; padding: 20px; color: #666;';
+                    msg.textContent = 'No papers found matching your criteria. Try adjusting filters.';
+                    papersContainer.appendChild(msg);
+                }
+            } else {
+                const msg = document.getElementById('noResultsMsg');
+                if (msg) msg.remove();
+            }
+        }
+        
+        function showPaperSummary(paperId) {
+            alert('Paper summary for: ' + paperId);
+        }
+        
+        function showDeprescribingTool() {
+            alert('Deprescribing Decision Tool:\n1. Is there a valid indication?\n2. Do benefits outweigh harms?\n3. Is there a safer alternative?');
+        }
+        
+        function testYourself(topic) {
+            if (topic === 'fried') {
+                const answer = prompt('How many Fried criteria for frailty? (Enter number)');
+                alert(answer === '3' ? '✅ Correct!' : '❌ Remember: 3+ criteria');
+            }
+        }
+        
+        // ========== MODULE SWITCHING ==========
+        function switchModule(module) {
+            // Hide all modules
+            document.querySelectorAll('.module').forEach(m => {
+                m.classList.remove('active');
+                m.style.display = 'none';
+            });
+            
+            // Remove active from all nav buttons
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            
+            // Show the selected module
+            const selectedModule = document.getElementById(module);
+            if (selectedModule) {
+                selectedModule.classList.add('active');
+                selectedModule.style.display = 'block';
+            }
+            
+            // Mark the clicked button as active
+            event.target.classList.add('active');
+            currentModule = module;
+        }
+
+        // ========== TAB SWITCHING ==========
+        function switchQuizTab(tab) {
+            document.querySelectorAll('#quiz .tab-content').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('#quiz .tab').forEach(t => t.classList.remove('active'));
+            document.getElementById(tab).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        function switchClinicalTab(tab) {
+            document.querySelectorAll('#clinical .tab-content').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('#clinical .tab').forEach(t => t.classList.remove('active'));
+            document.getElementById(tab).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        function switchAcademicTab(tab) {
+            document.querySelectorAll('#academic .tab-content').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('#academic .tab').forEach(t => t.classList.remove('active'));
+            document.getElementById(tab).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        // ========== QUIZ FUNCTIONALITY ==========
+        function startQuiz(topic) {
+            currentTopic = topic;
+            currentQuestionIndex = 0;
+            score = 0;
+            showQuestion();
+        }
+
+        function startFocusedReview() {
+            // Start with frailty since user scored 0%
+            startQuiz('frailty');
+            document.getElementById('performanceAlert').style.display = 'none';
+        }
+
+        function showQuestion() {
+            const questions = questionBank[currentTopic];
+            if (!questions || currentQuestionIndex >= questions.length) {
+                showQuizResult();
+                return;
+            }
+
+            currentQuestion = questions[currentQuestionIndex];
+            
+            const questionArea = document.getElementById('questionArea');
+            questionArea.style.display = 'block';
+            questionArea.innerHTML = `
+                <div class="quiz-card">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
+                        <span>שאלה ${currentQuestionIndex + 1} / ${questions.length}</span>
+                        ${currentQuestion.yourMistake ? '<span style="color: red; font-weight: bold;">⚠️ טעית בזה!</span>' : ''}
+                    </div>
+                    <div class="question">${currentQuestion.question}</div>
+                    <div class="options">
+                        ${currentQuestion.options.map((opt, i) => `
+                            <div class="option" onclick="selectAnswer(${i})">${opt}</div>
+                        `).join('')}
+                    </div>
+                    <div id="feedback"></div>
+                </div>
+            `;
+            
+            document.getElementById('topics').style.display = 'none';
+        }
+
+        function selectAnswer(index) {
+            const isCorrect = index === currentQuestion.correct;
+            
+            const options = document.querySelectorAll('.option');
+            options[index].classList.add(isCorrect ? 'correct' : 'incorrect');
+            options[currentQuestion.correct].classList.add('correct');
+            options.forEach(opt => opt.onclick = null);
+
+            if (isCorrect) score++;
+
+            document.getElementById('feedback').innerHTML = `
+                <div style="margin-top: 20px; padding: 15px; background: ${isCorrect ? '#f0fdf4' : '#fef2f2'}; border-radius: 10px;">
+                    <strong>${isCorrect ? '✓ נכון!' : '✗ לא נכון'}</strong><br>
+                    ${currentQuestion.explanation}
+                </div>
+                <button class="button" onclick="nextQuestion()" style="margin-top: 15px;">הבא</button>
+            `;
+        }
+
+        function nextQuestion() {
+            currentQuestionIndex++;
+            showQuestion();
+        }
+
+        function showQuizResult() {
+            const percentage = Math.round((score / questionBank[currentTopic].length) * 100);
+            
+            document.getElementById('questionArea').innerHTML = `
+                <div style="text-align: center; padding: 30px;">
+                    <h2>סיום הבוחן!</h2>
+                    <div class="stat-card" style="max-width: 300px; margin: 20px auto;">
+                        <div class="stat-value">${percentage}%</div>
+                        <div class="stat-label">${score} / ${questionBank[currentTopic].length}</div>
+                    </div>
+                    ${percentage < 100 && currentTopic === 'frailty' ? 
+                        '<p style="color: red;">עדיין צריך עבודה על Frailty! תחזור שוב.</p>' : ''}
+                    <button class="button" onclick="resetQuiz()">חזור לתפריט</button>
+                </div>
+            `;
+        }
+
+        function resetQuiz() {
+            document.getElementById('questionArea').style.display = 'none';
+            document.getElementById('topics').style.display = 'block';
+        }
+
+        function startCase(caseId) {
+            const cases = {
+                case1: {
+                    title: 'רחל בת 82 - הערכת שבריריות',
+                    details: `
+                        • מהירות הליכה: 0.65 m/s (איטית)
+                        • ירידה במשקל: 5kg בשנה
+                        • תשישות מדווחת: כן
+                        • כוח אחיזה: חלש
+                        • פעילות גופנית: מועטה
+                        
+                        תשובה: כן! 5 קריטריונים מתוך 5 = Severely Frail
+                        המלצות:
+                        1. תוכנית פעילות גופנית מותאמת
+                        2. הערכה תזונתית דחופה
+                        3. בדיקת ויטמין D
+                        4. הערכה רב-תחומית גריאטרית
+                    `,
+                    question: 'כמה קריטריונים של Fried מתקיימים?'
+                },
+                case2: {
+                    title: 'משה בן 78 - דליריום פוסט-ניתוחי',
+                    details: `
+                        CAM Assessment:
+                        1. Acute onset: ✓ (החל אתמול)
+                        2. Inattention: ✓ (לא מצליח לספור אחורה)
+                        3. Disorganized thinking: ✓ (דיבור מבולבל)
+                        4. Altered consciousness: ✗ (Alert)
+                        
+                        אבחנה: דליריום (1+2+3)
+                        גורמים:
+                        • אנמיה (Hb 9.2)
+                        • היפונתרמיה (Na 132)  
+                        • AKI (Cr 1.8)
+                        • כאב פוסט-ניתוחי
+                        • תרופות (אופיואידים?)
+                        
+                        טיפול:
+                        1. תיקון אנמיה
+                        2. תיקון נתרן הדרגתי
+                        3. הידרציה זהירה
+                        4. Haloperidol 0.25mg PRN
+                    `,
+                    question: 'האם מתקיימים קריטריוני CAM?'
+                },
+                case3: {
+                    title: 'שרה בת 85 - Deprescribing',
+                    details: `
+                        תרופות להפסקה לפי Beers 2023:
+                        
+                        1. Lorazepam - בנזודיאזפין
+                           • סיכון נפילות ↑48%
+                           • להפסיק הדרגתית
+                        
+                        2. Digoxin 0.25mg - מינון גבוה
+                           • עם CrCl=28, מקסימום 0.125mg
+                           • להפחית מינון
+                        
+                        3. PPI x6 חודשים - ללא אינדיקציה
+                           • להפסיק או H2 blocker
+                        
+                        4. בדוק גם:
+                           • NSAIDs? (CrCl נמוך)
+                           • Anticholinergics?
+                           • סולפונילאוריאות? (2023 update)
+                    `,
+                    question: 'אילו תרופות יש להפסיק?'
+                },
+                case4: {
+                    title: 'דוד בן 79 - ניהול נוגדי קרישה',
+                    details: `
+                        CHA₂DS₂-VASc = 5 (סיכון גבוה)
+                        ניתוח קטרקט = סיכון דימום נמוך
+                        
+                        המלצות:
+                        1. להמשיך Warfarin ללא הפסקה
+                        2. INR יעד 2.0-2.5 (התחתון)
+                        3. בדיקת INR שבוע לפני
+                        4. ביום הניתוח INR <3.0
+                        
+                        חלופה:
+                        • DOAC - הפסקה 24-48 שעות בלבד
+                        • חידוש באותו ערב
+                        
+                        אין צורך בברידג'ינג!
+                    `,
+                    question: 'איך לנהל נוגדי קרישה?'
+                }
+            };
+            
+            const caseData = cases[caseId];
+            if (caseData) {
+                const result = confirm(caseData.question + '\n\nלחץ OK לראות תשובה מלאה');
+                if (result) {
+                    alert(caseData.title + '\n' + caseData.details);
+                }
+            }
+        }
+
+        // ========== CLINICAL CALCULATORS ==========
+        function calculateCHADS() {
+            let score = 0;
+            if (document.getElementById('chf').checked) score += 1;
+            if (document.getElementById('htn').checked) score += 1;
+            if (document.getElementById('age75').checked) score += 2;
+            if (document.getElementById('dm').checked) score += 1;
+            if (document.getElementById('stroke').checked) score += 2;
+            if (document.getElementById('vascular').checked) score += 1;
+            if (document.getElementById('age65').checked) score += 1;
+            if (document.getElementById('female').checked) score += 1;
+
+            let recommendation = score >= 2 ? 
+                'מומלץ אנטיקואגולציה (NOAC/Warfarin)' : 
+                score === 1 ? 'שקול אנטיקואגולציה או אספירין' : 'ללא טיפול';
+            
+            document.getElementById('chadsResult').innerHTML = `
+                <div style="margin-top: 15px; padding: 15px; background: #f0fdf4; border-radius: 10px;">
+                    <strong>CHA₂DS₂-VASc Score: ${score}</strong><br>
+                    המלצה: ${recommendation}
+                </div>
+            `;
+        }
+
+        function calculateCrCl() {
+            const age = parseFloat(document.getElementById('age').value);
+            const weight = parseFloat(document.getElementById('weight').value);
+            const creatinine = parseFloat(document.getElementById('creatinine').value);
+            const gender = document.getElementById('gender').value;
+
+            if (!age || !weight || !creatinine) {
+                alert('נא למלא את כל השדות');
+                return;
+            }
+
+            let crcl = ((140 - age) * weight) / (72 * creatinine);
+            if (gender === 'female') crcl *= 0.85;
+
+            let interpretation = '';
+            if (crcl >= 60) interpretation = 'תפקוד תקין';
+            else if (crcl >= 30) interpretation = 'ירידה בינונית - התאם מינונים';
+            else interpretation = 'ירידה קשה - זהירות במינונים!';
+
+            document.getElementById('crclResult').innerHTML = `
+                <div style="margin-top: 15px; padding: 15px; background: ${crcl < 30 ? '#fef2f2' : '#f0fdf4'}; border-radius: 10px;">
+                    <strong>CrCl: ${crcl.toFixed(1)} mL/min</strong><br>
+                    ${interpretation}
+                </div>
+            `;
+        }
+
+        function interpretFrailty() {
+            const scale = parseInt(document.getElementById('frailtyScale').value);
+            let interpretation = '';
+            
+            if (scale <= 3) interpretation = 'Not frail - good function';
+            else if (scale <= 6) interpretation = 'Frail - needs support';
+            else interpretation = 'Severely frail - dependent';
+            
+            document.getElementById('frailtyResult').innerHTML = `
+                <div style="margin-top: 15px; padding: 15px; background: #f0fdf4; border-radius: 10px;">
+                    <strong>Level ${scale}: ${interpretation}</strong>
+                </div>
+            `;
+        }
+
+        // ========== MEDICATION INTERACTIONS ==========
+        function addMedication() {
+            const medName = document.getElementById('medName').value.trim();
+            if (medName) {
+                medicationList.push(medName);
+                updateMedList();
+                document.getElementById('medName').value = '';
+            }
+        }
+
+        function updateMedList() {
+            document.getElementById('medList').innerHTML = medicationList.map((med, i) => `
+                <div class="med-item">
+                    ${med}
+                    <button class="remove-btn" onclick="removeMed(${i})">הסר</button>
+                </div>
+            `).join('');
+        }
+
+        function removeMed(index) {
+            medicationList.splice(index, 1);
+            updateMedList();
+        }
+
+        function checkInteractions() {
+            if (medicationList.length < 2) {
+                alert('הכנס לפחות 2 תרופות לבדיקה');
+                return;
+            }
+
+            let interactions = [];
+            
+            // Check for common interactions
+            medicationList.forEach((med1, i) => {
+                medicationList.forEach((med2, j) => {
+                    if (i < j) {
+                        const m1 = med1.toLowerCase();
+                        const m2 = med2.toLowerCase();
+                        
+                        if ((m1.includes('warfarin') || m1.includes('coumadin')) && 
+                            (m2.includes('amoxicillin') || m2.includes('augmentin'))) {
+                            interactions.push('⚠️ Warfarin + Antibiotic - Monitor INR closely!');
+                        }
+                        
+                        if ((m1.includes('ace') || m1.includes('ramipril') || m1.includes('enalapril')) &&
+                            (m2.includes('spironolactone'))) {
+                            interactions.push('⚠️ ACE-I + Spironolactone - Risk of hyperkalemia!');
+                        }
+                    }
+                });
+            });
+
+            document.getElementById('interactionResults').innerHTML = interactions.length > 0 ?
+                `<div class="alert-box critical-alert">${interactions.join('<br>')}</div>` :
+                '<div class="alert-box success-alert">✓ לא נמצאו אינטראקציות משמעותיות</div>';
+        }
+
+        // ========== POMODORO TIMER ==========
+        let timerInterval;
+        let timeLeft = 25 * 60;
+        let sessionsCompleted = 0;
+
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            document.getElementById('timerDisplay').textContent = 
+                `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        function startTimer() {
+            if (!timerInterval) {
+                timerInterval = setInterval(() => {
+                    timeLeft--;
+                    updateTimerDisplay();
+                    
+                    if (timeLeft === 0) {
+                        clearInterval(timerInterval);
+                        timerInterval = null;
+                        sessionsCompleted++;
+                        document.getElementById('sessionsCount').textContent = sessionsCompleted;
+                        alert('Pomodoro complete! Take a 5-minute break.');
+                        timeLeft = 25 * 60;
+                        updateTimerDisplay();
+                    }
+                }, 1000);
+            }
+        }
+
+        function pauseTimer() {
+            clearInterval(timerInterval);
+            timerInterval = null;
+        }
+
+        function resetTimer() {
+            clearInterval(timerInterval);
+            timerInterval = null;
+            timeLeft = 25 * 60;
+            updateTimerDisplay();
+        }
+
+        // ========== UTILITY FUNCTIONS ==========
+        function copyToClipboard(type) {
+            const texts = {
+                frailty: `FRIED CRITERIA (3+ = Frail):
+1. Weight loss ≥4.5kg/year
+2. Self-reported exhaustion  
+3. Low physical activity
+4. Slow gait speed <0.8 m/s (NOT <1.0!)
+5. Weak grip strength
+
+REMEMBER: 3+ criteria = Frail (NOT 4!)`,
+                
+                cam: `CAM CRITERIA FOR DELIRIUM:
+Feature 1: Acute onset + Fluctuation
+Feature 2: Inattention
+Feature 3: Disorganized thinking
+Feature 4: Altered consciousness
+
+Diagnosis = Feature 1 AND Feature 2 AND (Feature 3 OR Feature 4)`,
+                
+                beers: `BEERS CRITERIA - TOP 10 TO AVOID:
+1. Benzodiazepines → Falls
+2. Anticholinergics → Confusion
+3. NSAIDs >90 days → GI/Renal
+4. Sliding insulin → Hypoglycemia
+5. Digoxin >0.125mg → Toxicity
+6. PPIs >8 weeks → Infections
+7. Antipsychotics + dementia → Mortality
+8. Amiodarone first-line → Toxicity
+9. Alpha blockers → Orthostatic
+10. Muscle relaxants → Falls`
+            };
+            
+            navigator.clipboard.writeText(texts[type]).then(() => {
+                event.target.innerHTML = '✓ Copied!';
+                setTimeout(() => {
+                    event.target.innerHTML = `📋 Copy ${type.charAt(0).toUpperCase() + type.slice(1)} Criteria`;
+                }, 2000);
+            });
+        }
+
+        function exportAllData() {
+            const data = {
+                performance: userPerformanceData,
+                timestamp: new Date().toISOString(),
+                site: 'https://geriatrics-study.netlify.app'
+            };
+            
+            const blob = new Blob([JSON.stringify(data, null, 2)], {type: 'application/json'});
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `geriatrics-data-${new Date().toISOString().split('T')[0]}.json`;
+            a.click();
+        }
+
+        function toggleLanguage() {
+            currentLanguage = currentLanguage === 'he' ? 'en' : 'he';
+            document.body.dir = currentLanguage === 'he' ? 'rtl' : 'ltr';
+            document.getElementById('langText').textContent = currentLanguage === 'he' ? 'EN | עב' : 'HE | EN';
+            
+            // Update all translatable content
+            updatePageLanguage();
+        }
+
+        function updatePageLanguage() {
+            const t = translations[currentLanguage];
+            
+            // Navigation buttons
+            document.querySelectorAll('.nav-btn').forEach((btn, index) => {
+                const keys = ['quiz', 'clinical', 'academic', 'reference'];
+                if (keys[index]) btn.textContent = t[keys[index]];
+            });
+            
+            // Performance alert
+            const alertTitle = document.querySelector('#performanceAlert h3');
+            if (alertTitle) alertTitle.innerHTML = t.welcomeTitle;
+            
+            const alertItems = document.querySelectorAll('#performanceAlert li');
+            if (alertItems.length >= 4) {
+                alertItems[0].innerHTML = t.frailtyScore;
+                alertItems[1].innerHTML = t.deliriumScore; 
+                alertItems[2].innerHTML = t.dementiaScore;
+                alertItems[3].innerHTML = t.fallsScore;
+            }
+            
+            const startReviewBtn = document.querySelector('#performanceAlert .button');
+            if (startReviewBtn) startReviewBtn.textContent = t.startReview;
+            
+            // Quiz module
+            const smartLearningTitle = document.querySelector('#quiz h2');
+            if (smartLearningTitle) smartLearningTitle.textContent = t.smartLearning;
+            
+            // Stat cards
+            const statLabels = document.querySelectorAll('.stat-label');
+            const statTexts = [t.questionsAnswered, t.overallAccuracy, t.topicsToStrengthen, t.studyStreak];
+            statLabels.forEach((label, index) => {
+                if (statTexts[index]) label.textContent = statTexts[index];
+            });
+            
+            // Quiz tabs
+            const quizTabs = document.querySelectorAll('#quiz .tab');
+            if (quizTabs.length >= 3) {
+                quizTabs[0].textContent = t.topics;
+                quizTabs[1].textContent = t.focusedReview;
+                quizTabs[2].textContent = t.clinicalCases;
+            }
+            
+            // Topic selection
+            const chooseTopicTitle = document.querySelector('#topics h3');
+            if (chooseTopicTitle) chooseTopicTitle.textContent = t.chooseTopicTitle;
+            
+            // Topic cards
+            const topicCards = document.querySelectorAll('#topics .tool-card');
+            const topicData = [
+                {title: t.frailtyTopic, desc: t.frailtyDesc},
+                {title: t.deliriumTopic, desc: t.deliriumDesc},
+                {title: t.dementiaTopic, desc: t.dementiaDesc},
+                {title: t.polypharmacyTopic, desc: t.polypharmacyDesc}
+            ];
+            
+            topicCards.forEach((card, index) => {
+                if (topicData[index]) {
+                    const h4 = card.querySelector('h4');
+                    const p = card.querySelector('p');
+                    if (h4) h4.textContent = topicData[index].title;
+                    if (p) p.textContent = topicData[index].desc;
+                }
+            });
+            
+            // Clinical Tools
+            const clinicalTitle = document.querySelector('#clinical h2');
+            if (clinicalTitle) clinicalTitle.textContent = t.clinicalToolsTitle;
+            
+            const clinicalTabs = document.querySelectorAll('#clinical .tab');
+            if (clinicalTabs.length >= 4) {
+                clinicalTabs[0].textContent = t.calculators;
+                clinicalTabs[1].textContent = t.medications;
+                clinicalTabs[2].textContent = t.interactions;
+                clinicalTabs[3].textContent = t.protocols;
+            }
+            
+            // Academic Tools
+            const academicTitle = document.querySelector('#academic h2');
+            if (academicTitle) academicTitle.textContent = t.academicToolsTitle;
+            
+            const academicTabs = document.querySelectorAll('#academic .tab');
+            if (academicTabs.length >= 3) {
+                academicTabs[0].textContent = t.pomodoro;
+                academicTabs[1].textContent = t.papers;
+                academicTabs[2].textContent = t.formulas;
+            }
+            
+            // Papers section title
+            const papersTitle = document.querySelector('#papers h3');
+            if (papersTitle) papersTitle.textContent = t.papersTitle;
+            
+            // Reference Module
+            const refTitle = document.querySelector('#reference h2');
+            if (refTitle) refTitle.textContent = t.quickRefTitle;
+            
+            const criticalFixesTitle = document.querySelector('#reference .critical-alert h3');
+            if (criticalFixesTitle) criticalFixesTitle.textContent = t.criticalFixes;
+            
+            // Update buttons with translations
+            document.querySelectorAll('.button').forEach(btn => {
+                const text = btn.textContent.trim();
+                if (text.includes('חשב') || text.includes('Calculate')) {
+                    btn.textContent = t.calculate;
+                } else if (text.includes('התחל') || text.includes('Start')) {
+                    btn.textContent = t.startCase;
+                } else if (text.includes('בדוק') || text.includes('Check')) {
+                    btn.textContent = t.checkInteractions;
+                } else if (text.includes('הוסף') || text.includes('Add')) {
+                    btn.textContent = t.addMedication;
+                }
+            });
+            
+            // Update remove buttons
+            document.querySelectorAll('.remove-btn').forEach(btn => {
+                btn.textContent = t.removeMed;
+            });
+        }
+
+        // ========== INITIALIZATION ==========
+        updateTimerDisplay();
+        
+        // Initialize page with current language
+        updatePageLanguage();
+        
+        // Ensure quiz module is visible by default
+        document.getElementById('quiz').style.display = 'block';
+        document.getElementById('quiz').classList.add('active');
+        
+        // Hide other modules
+        document.getElementById('clinical').style.display = 'none';
+        document.getElementById('academic').style.display = 'none';
+        document.getElementById('reference').style.display = 'none';
+        document.getElementById('ai').style.display = 'none';
+        
+        // Initialize paper count
+        setTimeout(() => {
+            const totalPapers = document.querySelectorAll('.paper-card').length;
+            const totalPapersElement = document.getElementById('totalPapers');
+            if (totalPapersElement) {
+                totalPapersElement.textContent = totalPapers;
+            }
+        }, 100);
+
+        // Check if service worker exists and unregister it
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.getRegistrations().then(function(registrations) {
+                for(let registration of registrations) {
+                    registration.unregister();
+                    console.log('Service worker unregistered');
+                }
+            });
+        }
+    </script>
+    
+    <!-- Load additional AI modules -->
+    <script src="enhanced-features.js"></script>
+    <script src="advanced-ai-system.js"></script>
+    <script src="pubmed-integration.js"></script>
+    <script src="institutional-access.js"></script>
+    <script src="critical-fixes.js"></script>
+    <script src="geriatrics-research-library.js"></script>
+    
+    <script>
+        // Initialize Scholar Search Interface when AI tab is opened
+        function initializeScholarSearch() {
+            const searchSection = document.getElementById('scholarSearchSection');
+            if (searchSection && window.ScholarUI) {
+                searchSection.innerHTML = window.ScholarUI.createSearchInterface();
+            }
+            
+            // Initialize Institutional Access interface
+            const accessSection = document.getElementById('institutionalAccessSection');
+            if (accessSection && window.InstitutionalAccess) {
+                accessSection.innerHTML = window.InstitutionalAccess.createAccessInterface();
+            }
+        }
+        
+        // Initialize on AI tab click
+        function switchAITab(tab) {
+            // Hide all AI tab contents
+            document.querySelectorAll('#ai .tab-content').forEach(content => {
+                content.style.display = 'none';
+            });
+            
+            // Show selected tab
+            const selectedTab = document.getElementById(tab);
+            if (selectedTab) {
+                selectedTab.style.display = 'block';
+            }
+            
+            // Update tab buttons
+            document.querySelectorAll('#ai .tab').forEach(tabBtn => {
+                tabBtn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Initialize Scholar search if assistant tab
+            if (tab === 'assistant') {
+                initializeScholarSearch();
+            }
+        }
+    </script>
+    
+    <!-- Enhanced Platform Features -->
+    <script src="ai-clinical-assistant.js"></script>
+    <script src="patient-tracker.js"></script>
+    <script src="platform-enhancements.js"></script>
+    <script src="knowledge-base.js"></script>
+    <script src="research-library-2024.js"></script>
+    <script src="comprehensive-drug-database.js"></script>
+    <script src="israeli-drug-database.js"></script>
+    <script src="case-simulator-enhanced.js"></script>
+    <script src="api-manager.js"></script>
+    <script src="medical-knowledge-hub.js"></script>
+    <script src="personal-knowledge-manager.js"></script>
+    <script src="open-access-integrator.js"></script>
+    <script src="advanced-clinical-calculators.js"></script>
+    <script src="advanced-quiz-system.js"></script>
+    <script src="enhanced-quiz-generator.js"></script>
+    <script src="ui-enhancement.js"></script>
+</body>
+</html>

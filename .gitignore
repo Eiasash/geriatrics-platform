@@ -1,7 +1,58 @@
-node_modules
-dist
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Testing
+coverage/
+
+# Production
+build/
+dist/
+
+# Misc
+.DS_Store
 .env
 .env.local
-coverage
+.env.development.local
+.env.test.local
+.env.production
+.env.production.local
 
-.vercel
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# Editor directories and files
+.idea
+.vscode
+*.swp
+*.swo
+*~
+
+# OS generated files
+Thumbs.db
+desktop.ini
+
+# Claude specific
+.claude/
+CLAUDE.md
+
+# Temporary files
+New folder/
+Fixed Geriatrics App*
+22222*
+Continuing*
+*.docx
+*.xlsx
+*.pdf
+*.csv
+*.lnk
+*.url
+*.ico
+Stocks/
+nul
+# Local Netlify folder
+.netlify

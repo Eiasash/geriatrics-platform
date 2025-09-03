@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comprehensive Geriatrics Tools - All Features</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .tool-card {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .tool-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <div class="container mx-auto p-6">
+        <!-- Header -->
+        <header class="flex justify-between items-center mb-6">
+            <div>
+                <h1 class="text-3xl font-bold text-gray-900">🛠️ Comprehensive Geriatrics Tools</h1>
+                <p class="text-gray-600">All Clinical Calculators & Assessment Tools</p>
+            </div>
+            <button onclick="window.location.href='index.html'" class="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600">
+                🏠 Home
+            </button>
+        </header>
+
+        <!-- Clinical Calculators Section -->
+        <div class="mb-8">
+            <h2 class="text-2xl font-bold mb-4 text-blue-600">🧮 Clinical Calculators</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                
+                <!-- Frailty Index -->
+                <div class="tool-card bg-white rounded-lg shadow p-4">
+                    <h3 class="font-bold text-lg mb-2">Frailty Index Calculator</h3>
+                    <p class="text-sm text-gray-600 mb-3">Rockwood Frailty Index assessment</p>
+                    <button onclick="openFrailtyCalculator()" class="px-3 py-1 bg-blue-500 text-white rounded text-sm hover:bg-blue-600">
+                        Calculate
+                    </button>
+                </div>
+
+                <!-- MMSE -->
+                <div class="tool-card bg-white rounded-lg shadow p-4">
+                    <h3 class="font-bold text-lg mb-2">MMSE Score</h3>
+                    <p class="text-sm text-gray-600 mb-3">Mini-Mental State Examination</p>
+                    <button onclick="openMMSE()" class="px-3 py-1 bg-blue-500 text-white rounded text-sm hover:bg-blue-600">
+                        Assess
+                    </button>
+                </div>
+
+                <!-- GDS -->
+                <div class="tool-card bg-white rounded-lg shadow p-4">
+                    <h3 class="font-bold text-lg mb-2">Geriatric Depression Scale</h3>
+                    <p class="text-sm text-gray-600 mb-3">15-item GDS screening</p>
+                    <button onclick="openGDS()" class="px-3 py-1 bg-blue-500 text-white rounded text-sm hover:bg-blue-600">
+                        Screen
+                    </button>
+                </div>
+
+                <!-- Barthel Index -->
+                <div class="tool-card bg-white rounded-lg shadow p-4">
+                    <h3 class="font-bold text-lg mb-2">Barthel Index</h3>
+                    <p class="text-sm text-gray-600 mb-3">Activities of daily living assessment</p>
+                    <button onclick="openBarthel()" class="px-3 py-1 bg-blue-500 text-white rounded text-sm hover:bg-blue-600">
+                        Evaluate
+                    </button>
+                </div>
+
+                <!-- CAGE -->
+                <div class="tool-card bg-white rounded-lg shadow p-4">
+                    <h3 class="font-bold text-lg mb-2">CAGE Questionnaire</h3>
+                    <p class="text-sm text-gray-600 mb-3">Alcohol use screening</p>
+                    <button onclick="openCAGE()" class="px-3 py-1 bg-blue-500 text-white rounded text-sm hover:bg-blue-600">
+                        Screen
+                    </button>
+                </div>
+
+                <!-- Morse Fall Scale -->
+                <div class="tool-card bg-white rounded-lg shadow p-4">
+                    <h3 class="font-bold text-lg mb-2">Morse Fall Scale</h3>
+                    <p class="text-sm text-gray-600 mb-3">Fall risk assessment</p>
+                    <button onclick="openMorse()" class="px-3 py-1 bg-blue-500 text-white rounded text-sm hover:bg-blue-600">
+                        Assess Risk
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Assessment Tools Section -->
+        <div class="mb-8">
+            <h2 class="text-2xl font-bold mb-4 text-green-600">📊 Comprehensive Assessments</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                
+                <!-- CGA Tool -->
+                <div class="bg-white rounded-lg shadow p-6">
+                    <h3 class="font-bold text-lg mb-3">Comprehensive Geriatric Assessment (CGA)</h3>
+                    <div class="space-y-3">
+                        <div>
+                            <h4 class="font-semibold text-sm mb-2">Medical Assessment</h4>
+                            <div class="space-y-2">
+                                <label class="flex items-center text-sm">
+                                    <input type="checkbox" class="mr-2"> Problem list reviewed
+                                </label>
+                                <label class="flex items-center text-sm">
+                                    <input type="checkbox" class="mr-2"> Medication reconciliation
+                                </label>
+                                <label class="flex items-center text-sm">
+                                    <input type="checkbox" class="mr-2"> Nutritional status
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <h4 class="font-semibold text-sm mb-2">Functional Status</h4>
+                            <div class="space-y-2">
+                                <label class="flex items-center text-sm">
+                                    <input type="checkbox" class="mr-2"> ADLs assessed
+                                </label>
+                                <label class="flex items-center text-sm">
+                                    <input type="checkbox" class="mr-2"> IADLs assessed
+                                </label>
+                                <label class="flex items-center text-sm">
+                                    <input type="checkbox" class="mr-2"> Gait & balance
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <h4 class="font-semibold text-sm mb-2">Cognitive/Psychological</h4>
+                            <div class="space-y-2">
+                                <label class="flex items-center text-sm">
+                                    <input type="checkbox" class="mr-2"> Cognitive screening
+                                </label>
+                                <label class="flex items-center text-sm">
+                                    <input type="checkbox" class="mr-2"> Mood assessment
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <h4 class="font-semibold text-sm mb-2">Social/Environmental</h4>
+                            <div class="space-y-2">
+                                <label class="flex items-center text-sm">
+                                    <input type="checkbox" class="mr-2"> Living situation
+                                </label>
+                                <label class="flex items-center text-sm">
+                                    <input type="checkbox" class="mr-2"> Social support
+                                </label>
+                                <label class="flex items-center text-sm">
+                                    <input type="checkbox" class="mr-2"> Safety assessment
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <button onclick="generateCGAReport()" class="mt-4 w-full px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600">
+                        Generate CGA Report
+                    </button>
+                </div>
+
+                <!-- Medication Review -->
+                <div class="bg-white rounded-lg shadow p-6">
+                    <h3 class="font-bold text-lg mb-3">Medication Review Tool</h3>
+                    <div class="space-y-3">
+                        <div>
+                            <label class="block text-sm font-medium mb-1">Current Medications</label>
+                            <textarea id="medications" rows="4" class="w-full p-2 border border-gray-300 rounded text-sm"
+                                placeholder="List all current medications..."></textarea>
+                        </div>
+                        
+                        <div>
+                            <h4 class="font-semibold text-sm mb-2">Review Checklist</h4>
+                            <div class="space-y-2">
+                                <label class="flex items-center text-sm">
+                                    <input type="checkbox" id="beers"> Beers Criteria reviewed
+                                </label>
+                                <label class="flex items-center text-sm">
+                                    <input type="checkbox" id="stopp"> STOPP/START applied
+                                </label>
+                                <label class="flex items-center text-sm">
+                                    <input type="checkbox" id="interactions"> Drug interactions checked
+                                </label>
+                                <label class="flex items-center text-sm">
+                                    <input type="checkbox" id="renal"> Renal dosing verified
+                                </label>
+                                <label class="flex items-center text-sm">
+                                    <input type="checkbox" id="indication"> Indication for each drug confirmed
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <button onclick="performMedReview()" class="w-full px-4 py-2 bg-purple-500 text-white rounded hover:bg-purple-600">
+                            Perform Medication Review
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Reference Section -->
+        <div class="bg-white rounded-lg shadow p-6">
+            <h2 class="text-xl font-bold mb-4">📚 Quick Reference</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div>
+                    <h3 class="font-semibold mb-2">Normal Values in Elderly</h3>
+                    <ul class="text-sm space-y-1">
+                        <li>• BP Target: <140/90 (or <130/80 if tolerated)</li>
+                        <li>• HbA1c: 7.5-8.5% (less stringent)</li>
+                        <li>• LDL: <100 mg/dL (primary prevention)</li>
+                        <li>• BMI: 22-27 kg/m²</li>
+                        <li>• Albumin: >3.5 g/dL</li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="font-semibold mb-2">Red Flags in Geriatrics</h3>
+                    <ul class="text-sm space-y-1">
+                        <li>• New confusion → Delirium workup</li>
+                        <li>• Weight loss >5% → Malignancy screen</li>
+                        <li>• Recurrent falls → Comprehensive assessment</li>
+                        <li>• Functional decline → Look for reversible causes</li>
+                        <li>• New incontinence → UTI, retention</li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="font-semibold mb-2">Geriatric Dosing Principles</h3>
+                    <ul class="text-sm space-y-1">
+                        <li>• Start low, go slow</li>
+                        <li>• Avoid prescribing cascades</li>
+                        <li>• Consider renal function (CrCl)</li>
+                        <li>• Review drug-drug interactions</li>
+                        <li>• Reassess need regularly</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Calculator Modals (Hidden by default) -->
+        <div id="calculatorModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+            <div class="relative top-20 mx-auto p-5 border w-11/12 md:w-3/4 lg:w-1/2 shadow-lg rounded-md bg-white">
+                <div class="mt-3">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 id="modalTitle" class="text-xl font-bold text-gray-900"></h3>
+                        <button onclick="closeModal()" class="text-gray-400 hover:text-gray-600 text-2xl">&times;</button>
+                    </div>
+                    <div id="modalContent" class="text-gray-700">
+                        <!-- Calculator content will be loaded here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Frailty Index Calculator
+        function openFrailtyCalculator() {
+            document.getElementById('modalTitle').textContent = 'Frailty Index Calculator';
+            document.getElementById('modalContent').innerHTML = `
+                <div class="space-y-3">
+                    <p class="text-sm text-gray-600">Check all that apply to the patient:</p>
+                    <div class="space-y-2 max-h-60 overflow-y-auto">
+                        <label class="flex items-center text-sm">
+                            <input type="checkbox" class="frailty-item mr-2"> Weight loss (unintentional)
+                        </label>
+                        <label class="flex items-center text-sm">
+                            <input type="checkbox" class="frailty-item mr-2"> Self-reported exhaustion
+                        </label>
+                        <label class="flex items-center text-sm">
+                            <input type="checkbox" class="frailty-item mr-2"> Weakness (grip strength)
+                        </label>
+                        <label class="flex items-center text-sm">
+                            <input type="checkbox" class="frailty-item mr-2"> Slow walking speed
+                        </label>
+                        <label class="flex items-center text-sm">
+                            <input type="checkbox" class="frailty-item mr-2"> Low physical activity
+                        </label>
+                        <label class="flex items-center text-sm">
+                            <input type="checkbox" class="frailty-item mr-2"> Visual impairment
+                        </label>
+                        <label class="flex items-center text-sm">
+                            <input type="checkbox" class="frailty-item mr-2"> Hearing impairment
+                        </label>
+                        <label class="flex items-center text-sm">
+                            <input type="checkbox" class="frailty-item mr-2"> Cognitive impairment
+                        </label>
+                        <label class="flex items-center text-sm">
+                            <input type="checkbox" class="frailty-item mr-2"> Depression symptoms
+                        </label>
+                        <label class="flex items-center text-sm">
+                            <input type="checkbox" class="frailty-item mr-2"> Multiple comorbidities (≥3)
+                        </label>
+                    </div>
+                    <button onclick="calculateFrailty()" class="w-full px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+                        Calculate Frailty Index
+                    </button>
+                    <div id="frailtyResult" class="hidden p-4 bg-blue-50 rounded-lg"></div>
+                </div>
+            `;
+            document.getElementById('calculatorModal').classList.remove('hidden');
+        }
+
+        function calculateFrailty() {
+            const items = document.querySelectorAll('.frailty-item:checked');
+            const score = items.length;
+            let interpretation = '';
+            
+            if (score === 0) {
+                interpretation = 'Robust: No frailty indicators';
+            } else if (score <= 2) {
+                interpretation = 'Pre-frail: At risk for frailty';
+            } else if (score <= 4) {
+                interpretation = 'Frail: Requires comprehensive assessment';
+            } else {
+                interpretation = 'Severely frail: High risk for adverse outcomes';
+            }
+            
+            document.getElementById('frailtyResult').innerHTML = `
+                <h4 class="font-semibold text-blue-900">Frailty Score: ${score}/10</h4>
+                <p class="text-blue-800 mt-1">${interpretation}</p>
+                <p class="text-sm text-blue-600 mt-2">Consider comprehensive geriatric assessment and targeted interventions.</p>
+            `;
+            document.getElementById('frailtyResult').classList.remove('hidden');
+        }
+
+        // MMSE Calculator
+        function openMMSE() {
+            document.getElementById('modalTitle').textContent = 'Mini-Mental State Examination (MMSE)';
+            document.getElementById('modalContent').innerHTML = `
+                <div class="space-y-3">
+                    <div>
+                        <h4 class="font-semibold text-sm mb-2">Orientation (10 points)</h4>
+                        <div class="grid grid-cols-2 gap-2">
+                            <label class="text-sm">Time (0-5): <input type="number" id="mmse-time" min="0" max="5" class="w-16 p-1 border rounded"></label>
+                            <label class="text-sm">Place (0-5): <input type="number" id="mmse-place" min="0" max="5" class="w-16 p-1 border rounded"></label>
+                        </div>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold text-sm mb-2">Registration (3 points)</h4>
+                        <label class="text-sm">Repeat 3 words (0-3): <input type="number" id="mmse-reg" min="0" max="3" class="w-16 p-1 border rounded"></label>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold text-sm mb-2">Attention & Calculation (5 points)</h4>
+                        <label class="text-sm">Serial 7s or WORLD (0-5): <input type="number" id="mmse-calc" min="0" max="5" class="w-16 p-1 border rounded"></label>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold text-sm mb-2">Recall (3 points)</h4>
+                        <label class="text-sm">Recall 3 words (0-3): <input type="number" id="mmse-recall" min="0" max="3" class="w-16 p-1 border rounded"></label>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold text-sm mb-2">Language (9 points)</h4>
+                        <div class="space-y-1">
+                            <label class="text-sm">Naming (0-2): <input type="number" id="mmse-name" min="0" max="2" class="w-16 p-1 border rounded"></label>
+                            <label class="text-sm">Repetition (0-1): <input type="number" id="mmse-repeat" min="0" max="1" class="w-16 p-1 border rounded"></label>
+                            <label class="text-sm">3-stage command (0-3): <input type="number" id="mmse-command" min="0" max="3" class="w-16 p-1 border rounded"></label>
+                            <label class="text-sm">Reading (0-1): <input type="number" id="mmse-read" min="0" max="1" class="w-16 p-1 border rounded"></label>
+                            <label class="text-sm">Writing (0-1): <input type="number" id="mmse-write" min="0" max="1" class="w-16 p-1 border rounded"></label>
+                            <label class="text-sm">Copy design (0-1): <input type="number" id="mmse-copy" min="0" max="1" class="w-16 p-1 border rounded"></label>
+                        </div>
+                    </div>
+                    <button onclick="calculateMMSE()" class="w-full px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+                        Calculate MMSE Score
+                    </button>
+                    <div id="mmseResult" class="hidden p-4 bg-blue-50 rounded-lg"></div>
+                </div>
+            `;
+            document.getElementById('calculatorModal').classList.remove('hidden');
+        }
+
+        function calculateMMSE() {
+            const time = parseInt(document.getElementById('mmse-time').value) || 0;
+            const place = parseInt(document.getElementById('mmse-place').value) || 0;
+            const reg = parseInt(document.getElementById('mmse-reg').value) || 0;
+            const calc = parseInt(document.getElementById('mmse-calc').value) || 0;
+            const recall = parseInt(document.getElementById('mmse-recall').value) || 0;
+            const name = parseInt(document.getElementById('mmse-name').value) || 0;
+            const repeat = parseInt(document.getElementById('mmse-repeat').value) || 0;
+            const command = parseInt(document.getElementById('mmse-command').value) || 0;
+            const read = parseInt(document.getElementById('mmse-read').value) || 0;
+            const write = parseInt(document.getElementById('mmse-write').value) || 0;
+            const copy = parseInt(document.getElementById('mmse-copy').value) || 0;
+            
+            const total = time + place + reg + calc + recall + name + repeat + command + read + write + copy;
+            
+            let interpretation = '';
+            if (total >= 24) {
+                interpretation = 'Normal cognition';
+            } else if (total >= 19) {
+                interpretation = 'Mild cognitive impairment';
+            } else if (total >= 10) {
+                interpretation = 'Moderate cognitive impairment';
+            } else {
+                interpretation = 'Severe cognitive impairment';
+            }
+            
+            document.getElementById('mmseResult').innerHTML = `
+                <h4 class="font-semibold text-blue-900">MMSE Score: ${total}/30</h4>
+                <p class="text-blue-800 mt-1">${interpretation}</p>
+                <p class="text-sm text-blue-600 mt-2">Consider education level (add 1 point if ≤8 years education)</p>
+            `;
+            document.getElementById('mmseResult').classList.remove('hidden');
+        }
+
+        // GDS Calculator
+        function openGDS() {
+            document.getElementById('modalTitle').textContent = 'Geriatric Depression Scale (GDS-15)';
+            document.getElementById('modalContent').innerHTML = `
+                <div class="space-y-3">
+                    <p class="text-sm text-gray-600">Answer Yes or No to each question:</p>
+                    <div class="space-y-2 max-h-60 overflow-y-auto">
+                        <label class="flex items-center text-sm">
+                            <input type="checkbox" class="gds-item" data-points="1"> Are you basically satisfied with your life? (No=1)
+                        </label>
+                        <label class="flex items-center text-sm">
+                            <input type="checkbox" class="gds-item" data-points="1"> Have you dropped many activities and interests?
+                        </label>
+                        <label class="flex items-center text-sm">
+                            <input type="checkbox" class="gds-item" data-points="1"> Do you feel that your life is empty?
+                        </label>
+                        <label class="flex items-center text-sm">
+                            <input type="checkbox" class="gds-item" data-points="1"> Do you often get bored?
+                        </label>
+                        <label class="flex items-center text-sm">
+                            <input type="checkbox" class="gds-item" data-points="1"> Are you in good spirits most of the time? (No=1)
+                        </label>
+                        <label class="flex items-center text-sm">
+                            <input type="checkbox" class="gds-item" data-points="1"> Are you afraid something bad will happen?
+                        </label>
+                        <label class="flex items-center text-sm">
+                            <input type="checkbox" class="gds-item" data-points="1"> Do you feel happy most of the time? (No=1)
+                        </label>
+                        <label class="flex items-center text-sm">
+                            <input type="checkbox" class="gds-item" data-points="1"> Do you often feel helpless?
+                        </label>
+                        <label class="flex items-center text-sm">
+                            <input type="checkbox" class="gds-item" data-points="1"> Do you prefer staying home to going out?
+                        </label>
+                        <label class="flex items-center text-sm">
+                            <input type="checkbox" class="gds-item" data-points="1"> Do you have more memory problems than most?
+                        </label>
+                        <label class="flex items-center text-sm">
+                            <input type="checkbox" class="gds-item" data-points="1"> Do you think it's wonderful to be alive? (No=1)
+                        </label>
+                        <label class="flex items-center text-sm">
+                            <input type="checkbox" class="gds-item" data-points="1"> Do you feel worthless?
+                        </label>
+                        <label class="flex items-center text-sm">
+                            <input type="checkbox" class="gds-item" data-points="1"> Do you feel full of energy? (No=1)
+                        </label>
+                        <label class="flex items-center text-sm">
+                            <input type="checkbox" class="gds-item" data-points="1"> Do you feel hopeless?
+                        </label>
+                        <label class="flex items-center text-sm">
+                            <input type="checkbox" class="gds-item" data-points="1"> Do you think others are better off?
+                        </label>
+                    </div>
+                    <button onclick="calculateGDS()" class="w-full px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+                        Calculate GDS Score
+                    </button>
+                    <div id="gdsResult" class="hidden p-4 bg-blue-50 rounded-lg"></div>
+                </div>
+            `;
+            document.getElementById('calculatorModal').classList.remove('hidden');
+        }
+
+        function calculateGDS() {
+            const items = document.querySelectorAll('.gds-item:checked');
+            const score = items.length;
+            
+            let interpretation = '';
+            if (score <= 4) {
+                interpretation = 'Normal - No depression';
+            } else if (score <= 8) {
+                interpretation = 'Mild depression';
+            } else if (score <= 11) {
+                interpretation = 'Moderate depression';
+            } else {
+                interpretation = 'Severe depression';
+            }
+            
+            document.getElementById('gdsResult').innerHTML = `
+                <h4 class="font-semibold text-blue-900">GDS Score: ${score}/15</h4>
+                <p class="text-blue-800 mt-1">${interpretation}</p>
+                <p class="text-sm text-blue-600 mt-2">Score >5 suggests depression - consider further evaluation and treatment.</p>
+            `;
+            document.getElementById('gdsResult').classList.remove('hidden');
+        }
+
+        // Other calculator stubs
+        function openBarthel() {
+            alert('Barthel Index calculator - Full implementation coming soon!');
+        }
+
+        function openCAGE() {
+            alert('CAGE questionnaire - Full implementation coming soon!');
+        }
+
+        function openMorse() {
+            alert('Morse Fall Scale - Full implementation coming soon!');
+        }
+
+        function closeModal() {
+            document.getElementById('calculatorModal').classList.add('hidden');
+        }
+
+        // CGA Report Generator
+        function generateCGAReport() {
+            const checkboxes = document.querySelectorAll('input[type="checkbox"]:checked');
+            const completed = Array.from(checkboxes).map(cb => cb.parentElement.textContent.trim());
+            
+            const report = `COMPREHENSIVE GERIATRIC ASSESSMENT
+Date: ${new Date().toLocaleDateString()}
+
+Completed Assessments:
+${completed.join('\n')}
+
+Recommendations:
+- Continue comprehensive evaluation
+- Address identified deficits
+- Involve multidisciplinary team
+- Schedule follow-up assessment
+
+Generated by Geriatrics Fellowship Platform`;
+            
+            navigator.clipboard.writeText(report);
+            alert('CGA report copied to clipboard!');
+        }
+
+        // Medication Review
+        function performMedReview() {
+            const meds = document.getElementById('medications').value;
+            const beers = document.getElementById('beers').checked;
+            const stopp = document.getElementById('stopp').checked;
+            const interactions = document.getElementById('interactions').checked;
+            const renal = document.getElementById('renal').checked;
+            const indication = document.getElementById('indication').checked;
+            
+            if (!meds) {
+                alert('Please enter medications first');
+                return;
+            }
+            
+            let review = `MEDICATION REVIEW
+Date: ${new Date().toLocaleDateString()}
+
+Medications Reviewed:
+${meds}
+
+Criteria Applied:
+${beers ? '✓ Beers Criteria reviewed\n' : ''}${stopp ? '✓ STOPP/START applied\n' : ''}${interactions ? '✓ Drug interactions checked\n' : ''}${renal ? '✓ Renal dosing verified\n' : ''}${indication ? '✓ Indications confirmed\n' : ''}
+
+Recommendations:
+- Consider deprescribing where appropriate
+- Monitor for adverse effects
+- Reassess at next visit
+
+Generated by Geriatrics Fellowship Platform`;
+            
+            navigator.clipboard.writeText(review);
+            alert('Medication review copied to clipboard!');
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clinical Note Analyzer - Geriatrics Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .highlight-drug { background-color: #bfdbfe; padding: 2px 4px; border-radius: 3px; }
+        .highlight-abbr { background-color: #fde68a; padding: 2px 4px; border-radius: 3px; }
+        .interaction-major { border-left: 4px solid #dc2626; }
+        .interaction-moderate { border-left: 4px solid #f59e0b; }
+        .interaction-minor { border-left: 4px solid #10b981; }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <div class="container mx-auto p-6">
+        <!-- Header -->
+        <div class="flex justify-between items-center mb-6">
+            <div>
+                <h1 class="text-3xl font-bold text-gray-900">🔬 Clinical Note Analyzer</h1>
+                <p class="text-gray-600">NLP for abbreviations & drug interaction checking</p>
+            </div>
+            <div class="flex gap-3">
+                <button onclick="loadSampleNote()" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
+                    📄 Load Sample Note
+                </button>
+                <button onclick="window.location.href='../fellowship-index.html'" class="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700">
+                    ← Back to Hub
+                </button>
+            </div>
+        </div>
+
+        <!-- Note Input -->
+        <div class="bg-white rounded-lg shadow p-6 mb-6">
+            <h3 class="font-bold text-gray-900 mb-4">Paste Clinical Note</h3>
+            <textarea id="clinicalNote" placeholder="Paste clinical note here...
+
+Example:
+82 y/o F with PMH of DM2, HTN, CHF presents with SOB x2 days. 
+Home meds: Metformin 1000mg BID, HCTZ 25mg daily, Lasix 40mg PRN
+PE: BP 160/95, HR 110, RR 24, O2sat 88% RA
+Assessment: CHF exacerbation, ? medication noncompliance
+Plan: Increase Lasix to 80mg daily, start Lisinopril 5mg daily, DC Ibuprofen"
+                      class="w-full h-64 border border-gray-300 rounded px-4 py-3 font-mono text-sm resize-vertical"
+                      oninput="analyzeNote()"></textarea>
+            
+            <div class="flex justify-between items-center mt-4">
+                <div class="text-sm text-gray-600">
+                    Characters: <span id="charCount">0</span> | Words: <span id="wordCount">0</span>
+                </div>
+                <div class="flex gap-2">
+                    <button onclick="clearNote()" class="text-sm bg-gray-100 text-gray-700 px-3 py-1 rounded hover:bg-gray-200">
+                        Clear
+                    </button>
+                    <button onclick="exportAnalysis()" class="text-sm bg-blue-100 text-blue-700 px-3 py-1 rounded hover:bg-blue-200">
+                        📊 Export Analysis
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Analysis Results -->
+        <div id="analysisResults" class="hidden space-y-6">
+            <!-- Summary Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div class="bg-white p-4 rounded-lg shadow text-center">
+                    <div class="text-2xl font-bold text-blue-600" id="drugsFound">0</div>
+                    <div class="text-sm text-gray-600">Medications Found</div>
+                </div>
+                <div class="bg-white p-4 rounded-lg shadow text-center">
+                    <div class="text-2xl font-bold text-yellow-600" id="abbreviationsFound">0</div>
+                    <div class="text-sm text-gray-600">Abbreviations</div>
+                </div>
+                <div class="bg-white p-4 rounded-lg shadow text-center">
+                    <div class="text-2xl font-bold text-red-600" id="interactionsFound">0</div>
+                    <div class="text-sm text-gray-600">Drug Interactions</div>
+                </div>
+                <div class="bg-white p-4 rounded-lg shadow text-center">
+                    <div class="text-2xl font-bold text-purple-600" id="riskScore">0</div>
+                    <div class="text-sm text-gray-600">Safety Score</div>
+                </div>
+            </div>
+
+            <!-- Processed Note -->
+            <div class="bg-white rounded-lg shadow p-6">
+                <h3 class="font-bold text-gray-900 mb-4">📝 Processed Note</h3>
+                <div id="processedNote" class="bg-gray-50 p-4 rounded font-mono text-sm whitespace-pre-wrap border">
+                    <!-- Processed note with highlights will appear here -->
+                </div>
+                <div class="flex items-center mt-4 space-x-4 text-sm">
+                    <div class="flex items-center">
+                        <div class="w-4 h-4 bg-blue-200 rounded mr-2"></div>
+                        <span>Medications</span>
+                    </div>
+                    <div class="flex items-center">
+                        <div class="w-4 h-4 bg-yellow-200 rounded mr-2"></div>
+                        <span>Abbreviations</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Drug Interactions -->
+            <div id="interactionsSection" class="bg-white rounded-lg shadow p-6 hidden">
+                <h3 class="font-bold text-gray-900 mb-4">⚠️ Drug Interactions</h3>
+                <div id="interactionsList" class="space-y-4">
+                    <!-- Interactions will be populated here -->
+                </div>
+            </div>
+
+            <!-- Medications List -->
+            <div class="bg-white rounded-lg shadow p-6">
+                <h3 class="font-bold text-gray-900 mb-4">💊 Identified Medications</h3>
+                <div id="medicationsList" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- Medications will be populated here -->
+                </div>
+            </div>
+
+            <!-- Clinical Insights -->
+            <div class="bg-white rounded-lg shadow p-6">
+                <h3 class="font-bold text-gray-900 mb-4">🎯 Clinical Insights</h3>
+                <div id="clinicalInsights" class="space-y-3">
+                    <!-- Insights will be populated here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../utils/shared-utilities.js"></script>
+    <script>
+        // NLP and Drug Processing Engine
+        class ClinicalNoteProcessor {
+            constructor() {
+                this.abbreviations = {
+                    // Common medical abbreviations
+                    'HTN': 'Hypertension',
+                    'DM2': 'Diabetes Mellitus Type 2',
+                    'CHF': 'Congestive Heart Failure',
+                    'SOB': 'Shortness of Breath',
+                    'BP': 'Blood Pressure',
+                    'HR': 'Heart Rate',
+                    'RR': 'Respiratory Rate',
+                    'PE': 'Physical Examination',
+                    'PMH': 'Past Medical History',
+                    'HCTZ': 'Hydrochlorothiazide',
+                    'BID': 'Twice Daily',
+                    'PRN': 'As Needed',
+                    'RA': 'Room Air',
+                    'DC': 'Discontinue',
+                    'CKD': 'Chronic Kidney Disease',
+                    'CAD': 'Coronary Artery Disease',
+                    'A-fib': 'Atrial Fibrillation',
+                    'TIA': 'Transient Ischemic Attack',
+                    'COPD': 'Chronic Obstructive Pulmonary Disease',
+                    'UTI': 'Urinary Tract Infection',
+                    'GI': 'Gastrointestinal',
+                    'IV': 'Intravenous',
+                    'PO': 'By Mouth',
+                    'IM': 'Intramuscular',
+                    'SC': 'Subcutaneous',
+                    'QD': 'Once Daily',
+                    'QID': 'Four Times Daily',
+                    'TID': 'Three Times Daily',
+                    'HS': 'At Bedtime',
+                    'AC': 'Before Meals',
+                    'PC': 'After Meals',
+                    'NPO': 'Nothing By Mouth',
+                    'DNR': 'Do Not Resuscitate',
+                    'CBC': 'Complete Blood Count',
+                    'BMP': 'Basic Metabolic Panel',
+                    'LFT': 'Liver Function Tests',
+                    'PT/INR': 'Prothrombin Time/International Normalized Ratio',
+                    'ECG': 'Electrocardiogram',
+                    'CXR': 'Chest X-ray',
+                    'CT': 'Computed Tomography',
+                    'MRI': 'Magnetic Resonance Imaging'
+                };
+
+                this.medications = [
+                    // Common geriatric medications with variations
+                    { names: ['metformin', 'glucophage'], category: 'Antidiabetic', interactions: ['contrast agents', 'alcohol'] },
+                    { names: ['lisinopril', 'zestril', 'prinivil'], category: 'ACE Inhibitor', interactions: ['potassium', 'nsaids'] },
+                    { names: ['hctz', 'hydrochlorothiazide', 'microzide'], category: 'Diuretic', interactions: ['lithium', 'digoxin'] },
+                    { names: ['furosemide', 'lasix'], category: 'Loop Diuretic', interactions: ['lithium', 'digoxin', 'aminoglycosides'] },
+                    { names: ['warfarin', 'coumadin'], category: 'Anticoagulant', interactions: ['nsaids', 'antibiotics', 'alcohol'] },
+                    { names: ['ibuprofen', 'advil', 'motrin'], category: 'NSAID', interactions: ['warfarin', 'ace inhibitors', 'lithium'] },
+                    { names: ['aspirin', 'asa'], category: 'Antiplatelet', interactions: ['warfarin', 'methotrexate'] },
+                    { names: ['atorvastatin', 'lipitor'], category: 'Statin', interactions: ['gemfibrozil', 'clarithromycin'] },
+                    { names: ['amlodipine', 'norvasc'], category: 'CCB', interactions: ['simvastatin'] },
+                    { names: ['digoxin', 'lanoxin'], category: 'Cardiac Glycoside', interactions: ['diuretics', 'quinidine'] },
+                    { names: ['lorazepam', 'ativan'], category: 'Benzodiazepine', interactions: ['alcohol', 'opioids'] },
+                    { names: ['tramadol', 'ultram'], category: 'Opioid', interactions: ['ssris', 'maois'] },
+                    { names: ['gabapentin', 'neurontin'], category: 'Anticonvulsant', interactions: ['morphine', 'alcohol'] },
+                    { names: ['pantoprazole', 'protonix'], category: 'PPI', interactions: ['clopidogrel', 'warfarin'] },
+                    { names: ['levothyroxine', 'synthroid'], category: 'Thyroid', interactions: ['calcium', 'iron', 'coffee'] },
+                    { names: ['insulin'], category: 'Antidiabetic', interactions: ['alcohol', 'beta blockers'] }
+                ];
+
+                this.drugInteractions = [
+                    { drugs: ['warfarin', 'nsaid'], severity: 'Major', description: 'Increased bleeding risk', recommendation: 'Monitor INR closely, consider PPI' },
+                    { drugs: ['warfarin', 'ibuprofen'], severity: 'Major', description: 'Major bleeding risk', recommendation: 'Avoid combination, use acetaminophen instead' },
+                    { drugs: ['ace inhibitor', 'nsaid'], severity: 'Moderate', description: 'Reduced antihypertensive effect, renal impairment risk', recommendation: 'Monitor BP and renal function' },
+                    { drugs: ['lisinopril', 'ibuprofen'], severity: 'Moderate', description: 'Reduced BP control, kidney damage risk', recommendation: 'Monitor BP and creatinine' },
+                    { drugs: ['furosemide', 'digoxin'], severity: 'Major', description: 'Diuretic-induced hypokalemia increases digoxin toxicity', recommendation: 'Monitor potassium and digoxin levels' },
+                    { drugs: ['benzodiazepine', 'opioid'], severity: 'Major', description: 'Respiratory depression, sedation', recommendation: 'Avoid combination, monitor respiratory status' },
+                    { drugs: ['statin', 'gemfibrozil'], severity: 'Major', description: 'Increased myopathy risk', recommendation: 'Use fenofibrate instead' },
+                    { drugs: ['metformin', 'contrast'], severity: 'Major', description: 'Lactic acidosis risk', recommendation: 'Hold metformin 48h before and after contrast' }
+                ];
+            }
+
+            analyzeNote(noteText) {
+                const results = {
+                    processedText: noteText,
+                    medications: [],
+                    abbreviations: [],
+                    interactions: [],
+                    insights: [],
+                    riskScore: 0
+                };
+
+                // Find and expand abbreviations
+                let processedText = noteText;
+                Object.keys(this.abbreviations).forEach(abbr => {
+                    const regex = new RegExp(`\\b${abbr}\\b`, 'gi');
+                    if (regex.test(noteText)) {
+                        results.abbreviations.push({ abbr: abbr, expansion: this.abbreviations[abbr] });
+                        processedText = processedText.replace(regex, `<span class="highlight-abbr" title="${this.abbreviations[abbr]}">${abbr}</span>`);
+                    }
+                });
+
+                // Find medications
+                this.medications.forEach(med => {
+                    med.names.forEach(name => {
+                        const regex = new RegExp(`\\b${name}\\b`, 'gi');
+                        if (regex.test(noteText.toLowerCase())) {
+                            results.medications.push({
+                                name: name,
+                                category: med.category,
+                                interactions: med.interactions
+                            });
+                            processedText = processedText.replace(new RegExp(`\\b${name}\\b`, 'gi'), 
+                                `<span class="highlight-drug" title="${med.category}">${name}</span>`);
+                        }
+                    });
+                });
+
+                // Check for drug interactions
+                results.interactions = this.findInteractions(results.medications);
+
+                // Generate clinical insights
+                results.insights = this.generateInsights(results.medications, noteText);
+
+                // Calculate risk score
+                results.riskScore = this.calculateRiskScore(results);
+
+                results.processedText = processedText;
+                return results;
+            }
+
+            findInteractions(medications) {
+                const interactions = [];
+                const medNames = medications.map(m => m.name.toLowerCase());
+
+                this.drugInteractions.forEach(interaction => {
+                    const [drug1, drug2] = interaction.drugs;
+                    
+                    // Check for exact matches or category matches
+                    const hasInteraction = medNames.some(med1 => {
+                        return medNames.some(med2 => {
+                            if (med1 === med2) return false;
+                            return (med1.includes(drug1) && med2.includes(drug2)) ||
+                                   (med1.includes(drug2) && med2.includes(drug1)) ||
+                                   (this.getMedCategory(med1) === drug1 && med2.includes(drug2)) ||
+                                   (this.getMedCategory(med2) === drug2 && med1.includes(drug1));
+                        });
+                    });
+
+                    if (hasInteraction) {
+                        interactions.push(interaction);
+                    }
+                });
+
+                return interactions;
+            }
+
+            getMedCategory(medName) {
+                const med = this.medications.find(m => m.names.some(name => name.toLowerCase() === medName));
+                return med ? med.category.toLowerCase() : '';
+            }
+
+            generateInsights(medications, noteText) {
+                const insights = [];
+
+                // Polypharmacy check
+                if (medications.length > 5) {
+                    insights.push({
+                        type: 'warning',
+                        title: 'Polypharmacy Detected',
+                        description: `${medications.length} medications identified. Consider medication review and deprescribing opportunities.`
+                    });
+                }
+
+                // High-risk medications in elderly
+                const highRiskMeds = medications.filter(m => 
+                    ['benzodiazepine', 'nsaid', 'anticoagulant'].includes(m.category.toLowerCase())
+                );
+                
+                if (highRiskMeds.length > 0) {
+                    insights.push({
+                        type: 'alert',
+                        title: 'High-Risk Medications',
+                        description: `Beers Criteria medications detected: ${highRiskMeds.map(m => m.name).join(', ')}. Monitor for adverse effects.`
+                    });
+                }
+
+                // Cardiovascular concerns
+                const hasCardiacMeds = medications.some(m => 
+                    ['ace inhibitor', 'diuretic', 'cardiac glycoside'].includes(m.category.toLowerCase())
+                );
+                
+                if (hasCardiacMeds && noteText.toLowerCase().includes('chf')) {
+                    insights.push({
+                        type: 'info',
+                        title: 'Heart Failure Management',
+                        description: 'Patient on heart failure medications. Monitor fluid status, weight, and renal function.'
+                    });
+                }
+
+                // Diabetes management
+                const hasDiabetesMeds = medications.some(m => 
+                    m.category.toLowerCase() === 'antidiabetic'
+                );
+                
+                if (hasDiabetesMeds) {
+                    insights.push({
+                        type: 'info',
+                        title: 'Diabetes Management',
+                        description: 'Monitor blood glucose, HbA1c, and screen for complications. Consider renal dosing adjustments.'
+                    });
+                }
+
+                return insights;
+            }
+
+            calculateRiskScore(results) {
+                let score = 0;
+                
+                // Base score from medication count
+                score += Math.min(results.medications.length, 10);
+                
+                // Interaction penalties
+                results.interactions.forEach(interaction => {
+                    switch (interaction.severity) {
+                        case 'Major': score += 5; break;
+                        case 'Moderate': score += 3; break;
+                        case 'Minor': score += 1; break;
+                    }
+                });
+
+                // High-risk medication penalties
+                results.medications.forEach(med => {
+                    if (['benzodiazepine', 'anticoagulant', 'opioid'].includes(med.category.toLowerCase())) {
+                        score += 2;
+                    }
+                });
+
+                return Math.min(score, 100);
+            }
+        }
+
+        // Initialize processor
+        const processor = new ClinicalNoteProcessor();
+        let currentAnalysis = null;
+
+        function analyzeNote() {
+            const noteText = document.getElementById('clinicalNote').value.trim();
+            
+            // Update character and word counts
+            document.getElementById('charCount').textContent = noteText.length;
+            document.getElementById('wordCount').textContent = noteText.split(/\s+/).filter(word => word.length > 0).length;
+
+            if (noteText.length < 10) {
+                document.getElementById('analysisResults').classList.add('hidden');
+                return;
+            }
+
+            // Analyze note
+            currentAnalysis = processor.analyzeNote(noteText);
+            
+            // Update statistics
+            updateStats(currentAnalysis);
+            
+            // Update processed note
+            document.getElementById('processedNote').innerHTML = currentAnalysis.processedText;
+            
+            // Update interactions
+            updateInteractions(currentAnalysis.interactions);
+            
+            // Update medications list
+            updateMedicationsList(currentAnalysis.medications);
+            
+            // Update insights
+            updateInsights(currentAnalysis.insights);
+            
+            // Show results
+            document.getElementById('analysisResults').classList.remove('hidden');
+
+            // Update analytics
+            updateAnalytics();
+        }
+
+        function updateStats(analysis) {
+            document.getElementById('drugsFound').textContent = analysis.medications.length;
+            document.getElementById('abbreviationsFound').textContent = analysis.abbreviations.length;
+            document.getElementById('interactionsFound').textContent = analysis.interactions.length;
+            document.getElementById('riskScore').textContent = analysis.riskScore;
+            
+            // Update risk score color
+            const riskElement = document.getElementById('riskScore');
+            if (analysis.riskScore > 50) {
+                riskElement.className = 'text-2xl font-bold text-red-600';
+            } else if (analysis.riskScore > 25) {
+                riskElement.className = 'text-2xl font-bold text-yellow-600';
+            } else {
+                riskElement.className = 'text-2xl font-bold text-green-600';
+            }
+        }
+
+        function updateInteractions(interactions) {
+            const section = document.getElementById('interactionsSection');
+            const list = document.getElementById('interactionsList');
+            
+            if (interactions.length === 0) {
+                section.classList.add('hidden');
+                return;
+            }
+            
+            section.classList.remove('hidden');
+            list.innerHTML = interactions.map(interaction => `
+                <div class="interaction-${interaction.severity.toLowerCase()} bg-gray-50 p-4 rounded">
+                    <div class="flex justify-between items-start mb-2">
+                        <h4 class="font-bold text-gray-900">${interaction.drugs.join(' + ')}</h4>
+                        <span class="text-xs px-2 py-1 rounded ${
+                            interaction.severity === 'Major' ? 'bg-red-100 text-red-800' :
+                            interaction.severity === 'Moderate' ? 'bg-yellow-100 text-yellow-800' :
+                            'bg-green-100 text-green-800'
+                        }">
+                            ${interaction.severity}
+                        </span>
+                    </div>
+                    <p class="text-gray-700 mb-2">${interaction.description}</p>
+                    <div class="bg-blue-50 p-3 rounded">
+                        <strong class="text-blue-800">Recommendation:</strong>
+                        <span class="text-blue-700">${interaction.recommendation}</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function updateMedicationsList(medications) {
+            const list = document.getElementById('medicationsList');
+            
+            if (medications.length === 0) {
+                list.innerHTML = '<div class="col-span-2 text-gray-500 text-center py-4">No medications detected</div>';
+                return;
+            }
+            
+            list.innerHTML = medications.map(med => `
+                <div class="bg-gray-50 p-4 rounded">
+                    <h4 class="font-bold text-gray-900 capitalize">${med.name}</h4>
+                    <p class="text-sm text-gray-600">${med.category}</p>
+                    ${med.interactions.length > 0 ? 
+                        `<div class="mt-2">
+                            <span class="text-xs text-orange-600">Interacts with:</span>
+                            <div class="flex flex-wrap gap-1 mt-1">
+                                ${med.interactions.map(int => 
+                                    `<span class="text-xs bg-orange-100 text-orange-800 px-2 py-1 rounded">${int}</span>`
+                                ).join('')}
+                            </div>
+                        </div>` : ''
+                    }
+                </div>
+            `).join('');
+        }
+
+        function updateInsights(insights) {
+            const container = document.getElementById('clinicalInsights');
+            
+            if (insights.length === 0) {
+                container.innerHTML = '<div class="text-gray-500 text-center py-4">No specific insights available</div>';
+                return;
+            }
+            
+            container.innerHTML = insights.map(insight => `
+                <div class="flex items-start space-x-3 p-4 rounded ${
+                    insight.type === 'alert' ? 'bg-red-50' :
+                    insight.type === 'warning' ? 'bg-yellow-50' :
+                    'bg-blue-50'
+                }">
+                    <div class="text-2xl">
+                        ${insight.type === 'alert' ? '🚨' : insight.type === 'warning' ? '⚠️' : 'ℹ️'}
+                    </div>
+                    <div>
+                        <h4 class="font-bold ${
+                            insight.type === 'alert' ? 'text-red-800' :
+                            insight.type === 'warning' ? 'text-yellow-800' :
+                            'text-blue-800'
+                        }">${insight.title}</h4>
+                        <p class="text-sm ${
+                            insight.type === 'alert' ? 'text-red-700' :
+                            insight.type === 'warning' ? 'text-yellow-700' :
+                            'text-blue-700'
+                        }">${insight.description}</p>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function loadSampleNote() {
+            const sampleNote = `82 y/o F with PMH of DM2, HTN, CHF (EF 35%) presents with SOB x2 days, orthopnea, and bilateral LE edema.
+
+Home medications:
+- Metformin 1000mg BID
+- Lisinopril 10mg daily
+- HCTZ 25mg daily
+- Furosemide 40mg daily
+- Warfarin 5mg daily (INR 2.3 last week)
+- Ibuprofen 600mg TID for arthritis pain (started 1 week ago)
+
+PE: BP 160/95, HR 110, RR 24, O2sat 88% RA
+Wt: 72kg (up 3kg from baseline)
+CV: S3 gallop, JVD to 12cm
+Lungs: Bibasilar crackles
+Ext: 2+ pitting edema bilateral LE
+
+Labs: BUN 45, Cr 1.8 (baseline 1.2), K+ 3.2, INR 4.1
+
+Assessment & Plan:
+1. CHF exacerbation - likely 2/2 medication noncompliance and NSAIDs
+   - Increase Lasix to 80mg daily
+   - DC Ibuprofen immediately
+   - Strict I/Os, daily weights
+   - Cardiology consult
+
+2. Supratherapeutic INR - likely 2/2 drug interaction
+   - Hold warfarin x1 dose
+   - Recheck INR tomorrow
+   - Restart at lower dose
+
+3. AKI - likely pre-renal 2/2 poor forward flow + NSAIDs
+   - Monitor renal function
+   - Consider ACE inhibitor hold if worsening
+
+4. Hypokalemia
+   - KCl 20mEq PO daily
+   - Recheck lytes in AM`;
+
+            document.getElementById('clinicalNote').value = sampleNote;
+            analyzeNote();
+        }
+
+        function clearNote() {
+            document.getElementById('clinicalNote').value = '';
+            document.getElementById('analysisResults').classList.add('hidden');
+            document.getElementById('charCount').textContent = '0';
+            document.getElementById('wordCount').textContent = '0';
+        }
+
+        function exportAnalysis() {
+            if (!currentAnalysis) {
+                alert('No analysis to export. Please analyze a note first.');
+                return;
+            }
+
+            const exportData = {
+                timestamp: new Date().toISOString(),
+                medications: currentAnalysis.medications.length,
+                abbreviations: currentAnalysis.abbreviations.length,
+                interactions: currentAnalysis.interactions.length,
+                riskScore: currentAnalysis.riskScore,
+                details: currentAnalysis
+            };
+
+            const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `note-analysis-${new Date().toISOString().split('T')[0]}.json`;
+            document.body.appendChild(a);
+            a.click();
+            URL.revokeObjectURL(url);
+            document.body.removeChild(a);
+        }
+
+        function updateAnalytics() {
+            // Update usage statistics
+            const stats = JSON.parse(localStorage.getItem('noteAnalyzerStats') || '{"analyzed": 0}');
+            stats.analyzed = (stats.analyzed || 0) + 1;
+            stats.lastUsed = new Date().toISOString();
+            localStorage.setItem('noteAnalyzerStats', JSON.stringify(stats));
+        }
+
+        // Initialize
+        document.getElementById('clinicalNote').addEventListener('input', analyzeNote);
+    </script>
+</body>
+</html>

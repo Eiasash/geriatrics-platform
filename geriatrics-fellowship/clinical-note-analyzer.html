@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clinical Note Analyzer - Hebrew/English NLP</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .hebrew { direction: rtl; text-align: right; }
+        .highlight-drug { background-color: #fef3c7; padding: 2px 4px; border-radius: 3px; }
+        .highlight-symptom { background-color: #dbeafe; padding: 2px 4px; border-radius: 3px; }
+        .highlight-lab { background-color: #ecfccb; padding: 2px 4px; border-radius: 3px; }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <div class="container mx-auto p-6">
+        <!-- Header -->
+        <header class="flex justify-between items-center mb-6">
+            <div>
+                <h1 class="text-3xl font-bold text-gray-900">📝 Clinical Note Analyzer</h1>
+                <p class="text-gray-600">Hebrew/English Medical NLP - Abbreviation Expansion</p>
+            </div>
+            <button onclick="window.location.href='index.html'" class="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600">
+                🏠 Home
+            </button>
+        </header>
+
+        <!-- Input Section -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+            <div class="bg-white rounded-lg shadow p-6">
+                <h2 class="text-xl font-semibold mb-4">📋 Input Clinical Note</h2>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Language Detection</label>
+                    <div class="flex gap-4">
+                        <label class="flex items-center">
+                            <input type="radio" name="language" value="auto" checked class="mr-2">
+                            Auto-detect
+                        </label>
+                        <label class="flex items-center">
+                            <input type="radio" name="language" value="hebrew" class="mr-2">
+                            Hebrew
+                        </label>
+                        <label class="flex items-center">
+                            <input type="radio" name="language" value="english" class="mr-2">
+                            English
+                        </label>
+                    </div>
+                </div>
+                <textarea 
+                    id="noteInput" 
+                    rows="10" 
+                    class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    placeholder="Enter clinical note here... 
+                    
+Example Hebrew: חולה בן 75 עם יל״ד, יל״ח, לח״ד, ודקליף. טופל בליזינופריל, מטפורמין, ואטורבסטטין.
+
+Example English: 75yo M with DM, HTN, CAD, and COPD. ROS: SOB, chest pain. PE: JVD, crackles bilaterally."
+                ></textarea>
+                <div class="flex gap-3 mt-4">
+                    <button onclick="analyzeNote()" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
+                        🔍 Analyze Note
+                    </button>
+                    <button onclick="clearAll()" class="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600">
+                        🗑️ Clear
+                    </button>
+                    <button onclick="loadSample()" class="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600">
+                        📄 Load Sample
+                    </button>
+                </div>
+            </div>
+
+            <!-- Analysis Results -->
+            <div class="bg-white rounded-lg shadow p-6">
+                <h2 class="text-xl font-semibold mb-4">🤖 Analysis Results</h2>
+                <div id="analysisResults" class="space-y-4">
+                    <div class="text-center text-gray-500 py-8">
+                        <div class="text-4xl mb-4">🔍</div>
+                        <p>Enter a clinical note and click "Analyze Note" to see results</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Processed Note Display -->
+        <div class="bg-white rounded-lg shadow p-6 mb-6">
+            <h2 class="text-xl font-semibold mb-4">📋 Processed Note</h2>
+            <div id="processedNote" class="p-4 bg-gray-50 rounded-lg min-h-[100px] border">
+                <p class="text-gray-500 text-center">Processed note with expanded abbreviations will appear here</p>
+            </div>
+        </div>
+
+        <!-- Abbreviation Dictionary -->
+        <div class="bg-white rounded-lg shadow p-6">
+            <h2 class="text-xl font-semibold mb-4">📚 Abbreviation Dictionary</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <h3 class="font-medium text-gray-900 mb-3">Hebrew Abbreviations</h3>
+                    <div id="hebrewDict" class="space-y-2 text-sm">
+                        <!-- Hebrew abbreviations will be loaded here -->
+                    </div>
+                </div>
+                <div>
+                    <h3 class="font-medium text-gray-900 mb-3">English Abbreviations</h3>
+                    <div id="englishDict" class="space-y-2 text-sm">
+                        <!-- English abbreviations will be loaded here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Hebrew medical abbreviations dictionary
+        const hebrewAbbreviations = {
+            'יל״ד': 'יתר לחץ דם (Hypertension)',
+            'יל״ח': 'יתר לחץ חזה (Intracranial pressure)',
+            'לח״ד': 'לחץ חזה דחוף (Chest pressure)',
+            'דקליף': 'דלקת קליפת המוח (Encephalitis)',
+            'סד״נ': 'סוכרת דם נפוצה (Diabetes Mellitus)',
+            'אוב״ל': 'אובדן לב (Heart failure)',
+            'דו״ח': 'דלקת ושט חריפה (Acute gastritis)',
+            'מח״כ': 'מחלת כבד כרונית (Chronic liver disease)',
+            'שת״ש': 'שתוק תאי שד (Breast cancer)',
+            'עו״ח': 'עור וחום (Fever and rash)',
+            'נש״מ': 'נשימה מלאכותית (Mechanical ventilation)',
+            'טל״ג': 'טיפול לב גדול (Cardiomegaly treatment)',
+            'כא״ר': 'כאב ראש (Headache)',
+            'בח״י': 'בחילה והקאה (Nausea and vomiting)',
+            'שו״ת': 'שאלות ותשובות (Q&A - differential diagnosis)'
+        };
+
+        const englishAbbreviations = {
+            'HTN': 'Hypertension',
+            'DM': 'Diabetes Mellitus',
+            'CAD': 'Coronary Artery Disease',
+            'CHF': 'Congestive Heart Failure',
+            'COPD': 'Chronic Obstructive Pulmonary Disease',
+            'CKD': 'Chronic Kidney Disease',
+            'AF': 'Atrial Fibrillation',
+            'PVD': 'Peripheral Vascular Disease',
+            'CVA': 'Cerebrovascular Accident (Stroke)',
+            'TIA': 'Transient Ischemic Attack',
+            'SOB': 'Shortness of Breath',
+            'CP': 'Chest Pain',
+            'N/V': 'Nausea/Vomiting',
+            'LOC': 'Loss of Consciousness',
+            'AMS': 'Altered Mental Status',
+            'JVD': 'Jugular Venous Distension',
+            'RRR': 'Regular Rate and Rhythm',
+            'CTAB': 'Clear to Auscultation Bilaterally',
+            'NAD': 'No Acute Distress',
+            'A&O': 'Alert and Oriented',
+            'BUN': 'Blood Urea Nitrogen',
+            'Cr': 'Creatinine',
+            'WBC': 'White Blood Cell count',
+            'Hgb': 'Hemoglobin',
+            'PLT': 'Platelets',
+            'PT/PTT': 'Prothrombin Time/Partial Thromboplastin Time',
+            'INR': 'International Normalized Ratio',
+            'EKG': 'Electrocardiogram',
+            'CXR': 'Chest X-Ray',
+            'CT': 'Computed Tomography',
+            'MRI': 'Magnetic Resonance Imaging',
+            'US': 'Ultrasound'
+        };
+
+        const drugNames = [
+            'Lisinopril', 'Metformin', 'Atorvastatin', 'Furosemide', 'Warfarin',
+            'Aspirin', 'Digoxin', 'Carvedilol', 'Losartan', 'Amlodipine',
+            'ליזינופריל', 'מטפורמין', 'אטורבסטטין', 'פורוסמיד', 'ורפרין'
+        ];
+
+        const symptoms = [
+            'chest pain', 'shortness of breath', 'nausea', 'vomiting', 'dizziness',
+            'headache', 'fatigue', 'confusion', 'כאב בחזה', 'קוצר נשימה', 'בחילה'
+        ];
+
+        const labValues = [
+            'Cr', 'BUN', 'Na', 'K', 'Cl', 'CO2', 'Glucose', 'Hgb', 'Hct', 'WBC', 'PLT'
+        ];
+
+        function init() {
+            loadDictionaries();
+        }
+
+        function loadDictionaries() {
+            const hebrewDiv = document.getElementById('hebrewDict');
+            const englishDiv = document.getElementById('englishDict');
+
+            hebrewDiv.innerHTML = Object.entries(hebrewAbbreviations)
+                .slice(0, 10)
+                .map(([abbr, full]) => `
+                    <div class="flex justify-between items-center p-2 bg-gray-50 rounded">
+                        <span class="font-mono hebrew">${abbr}</span>
+                        <span class="text-gray-600 hebrew">${full}</span>
+                    </div>
+                `).join('');
+
+            englishDiv.innerHTML = Object.entries(englishAbbreviations)
+                .slice(0, 10)
+                .map(([abbr, full]) => `
+                    <div class="flex justify-between items-center p-2 bg-gray-50 rounded">
+                        <span class="font-mono">${abbr}</span>
+                        <span class="text-gray-600">${full}</span>
+                    </div>
+                `).join('');
+        }
+
+        function detectLanguage(text) {
+            const hebrewPattern = /[\u0590-\u05FF]/;
+            const hebrewMatches = (text.match(hebrewPattern) || []).length;
+            const totalChars = text.length;
+            
+            if (hebrewMatches / totalChars > 0.3) {
+                return 'hebrew';
+            } else {
+                return 'english';
+            }
+        }
+
+        function analyzeNote() {
+            try {
+                const noteInput = document.getElementById('noteInput');
+                if (!noteInput) {
+                    alert('Note input field not found. Please refresh the page.');
+                    return;
+                }
+                
+                const noteText = noteInput.value.trim();
+                if (!noteText) {
+                    alert('Please enter a clinical note first');
+                    return;
+                }
+
+                const languageInput = document.querySelector('input[name="language"]:checked');
+                if (!languageInput) {
+                    alert('Please select a language option');
+                    return;
+                }
+                
+                const language = languageInput.value;
+                const detectedLang = language === 'auto' ? detectLanguage(noteText) : language;
+                
+                const analysis = performAnalysis(noteText, detectedLang);
+                displayResults(analysis, detectedLang);
+                displayProcessedNote(noteText, analysis);
+            } catch (error) {
+                console.error('Error analyzing note:', error);
+                alert('Error analyzing note. Please try again.');
+            }
+        }
+
+        function performAnalysis(text, language) {
+            const analysis = {
+                abbreviations: [],
+                drugs: [],
+                symptoms: [],
+                labs: [],
+                language: language,
+                wordCount: text.split(/\s+/).length,
+                sentences: text.split(/[.!?]+/).length - 1
+            };
+
+            // Find abbreviations
+            const abbrevDict = language === 'hebrew' ? hebrewAbbreviations : englishAbbreviations;
+            Object.keys(abbrevDict).forEach(abbr => {
+                const regex = new RegExp('\\b' + abbr.replace(/[״״]/g, '[״״]?') + '\\b', 'gi');
+                if (regex.test(text)) {
+                    analysis.abbreviations.push({
+                        abbreviation: abbr,
+                        expansion: abbrevDict[abbr],
+                        count: (text.match(regex) || []).length
+                    });
+                }
+            });
+
+            // Find drugs
+            drugNames.forEach(drug => {
+                const regex = new RegExp('\\b' + drug + '\\b', 'gi');
+                if (regex.test(text)) {
+                    analysis.drugs.push({
+                        name: drug,
+                        count: (text.match(regex) || []).length
+                    });
+                }
+            });
+
+            // Find symptoms
+            symptoms.forEach(symptom => {
+                const regex = new RegExp('\\b' + symptom + '\\b', 'gi');
+                if (regex.test(text)) {
+                    analysis.symptoms.push({
+                        name: symptom,
+                        count: (text.match(regex) || []).length
+                    });
+                }
+            });
+
+            // Find lab values
+            labValues.forEach(lab => {
+                const regex = new RegExp('\\b' + lab + '\\b', 'gi');
+                if (regex.test(text)) {
+                    analysis.labs.push({
+                        name: lab,
+                        count: (text.match(regex) || []).length
+                    });
+                }
+            });
+
+            return analysis;
+        }
+
+        function displayResults(analysis, language) {
+            const resultsDiv = document.getElementById('analysisResults');
+            
+            resultsDiv.innerHTML = `
+                <div class="space-y-4">
+                    <div class="p-3 bg-blue-50 rounded-lg border border-blue-200">
+                        <h3 class="font-medium text-blue-900 mb-2">📊 Text Statistics</h3>
+                        <div class="grid grid-cols-2 gap-2 text-sm">
+                            <div>Language: <span class="font-medium">${analysis.language}</span></div>
+                            <div>Word Count: <span class="font-medium">${analysis.wordCount}</span></div>
+                            <div>Sentences: <span class="font-medium">${analysis.sentences}</span></div>
+                            <div>Abbreviations: <span class="font-medium">${analysis.abbreviations.length}</span></div>
+                        </div>
+                    </div>
+
+                    ${analysis.abbreviations.length > 0 ? `
+                        <div class="p-3 bg-yellow-50 rounded-lg border border-yellow-200">
+                            <h3 class="font-medium text-yellow-900 mb-2">📝 Abbreviations Found</h3>
+                            <div class="space-y-1 text-sm">
+                                ${analysis.abbreviations.map(item => `
+                                    <div class="flex justify-between">
+                                        <span class="font-mono ${language === 'hebrew' ? 'hebrew' : ''}">${item.abbreviation}</span>
+                                        <span class="text-gray-600 ${language === 'hebrew' ? 'hebrew' : ''}">${item.expansion}</span>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    ` : ''}
+
+                    ${analysis.drugs.length > 0 ? `
+                        <div class="p-3 bg-green-50 rounded-lg border border-green-200">
+                            <h3 class="font-medium text-green-900 mb-2">💊 Medications Found</h3>
+                            <div class="flex flex-wrap gap-2">
+                                ${analysis.drugs.map(drug => `
+                                    <span class="px-2 py-1 bg-green-200 rounded text-green-800 text-sm">${drug.name}</span>
+                                `).join('')}
+                            </div>
+                        </div>
+                    ` : ''}
+
+                    ${analysis.symptoms.length > 0 ? `
+                        <div class="p-3 bg-red-50 rounded-lg border border-red-200">
+                            <h3 class="font-medium text-red-900 mb-2">🎯 Symptoms Found</h3>
+                            <div class="flex flex-wrap gap-2">
+                                ${analysis.symptoms.map(symptom => `
+                                    <span class="px-2 py-1 bg-red-200 rounded text-red-800 text-sm">${symptom.name}</span>
+                                `).join('')}
+                            </div>
+                        </div>
+                    ` : ''}
+
+                    ${analysis.labs.length > 0 ? `
+                        <div class="p-3 bg-purple-50 rounded-lg border border-purple-200">
+                            <h3 class="font-medium text-purple-900 mb-2">🧪 Lab Values Found</h3>
+                            <div class="flex flex-wrap gap-2">
+                                ${analysis.labs.map(lab => `
+                                    <span class="px-2 py-1 bg-purple-200 rounded text-purple-800 text-sm">${lab.name}</span>
+                                `).join('')}
+                            </div>
+                        </div>
+                    ` : ''}
+                </div>
+            `;
+        }
+
+        function displayProcessedNote(originalText, analysis) {
+            let processedText = originalText;
+            const language = analysis.language;
+            
+            // Replace abbreviations with expanded forms
+            const abbrevDict = language === 'hebrew' ? hebrewAbbreviations : englishAbbreviations;
+            Object.entries(abbrevDict).forEach(([abbr, expansion]) => {
+                const regex = new RegExp('\\b' + abbr.replace(/[״״]/g, '[״״]?') + '\\b', 'gi');
+                processedText = processedText.replace(regex, `<span class="highlight-drug" title="${expansion}">${abbr}</span>`);
+            });
+
+            // Highlight drugs
+            drugNames.forEach(drug => {
+                const regex = new RegExp('\\b' + drug + '\\b', 'gi');
+                processedText = processedText.replace(regex, `<span class="highlight-drug">${drug}</span>`);
+            });
+
+            // Highlight symptoms
+            symptoms.forEach(symptom => {
+                const regex = new RegExp('\\b' + symptom + '\\b', 'gi');
+                processedText = processedText.replace(regex, `<span class="highlight-symptom">${symptom}</span>`);
+            });
+
+            // Highlight lab values
+            labValues.forEach(lab => {
+                const regex = new RegExp('\\b' + lab + '\\b', 'gi');
+                processedText = processedText.replace(regex, `<span class="highlight-lab">${lab}</span>`);
+            });
+
+            const processedDiv = document.getElementById('processedNote');
+            processedDiv.innerHTML = `
+                <div class="${language === 'hebrew' ? 'hebrew' : ''}">
+                    ${processedText}
+                </div>
+                <div class="mt-4 text-xs text-gray-500">
+                    <div class="flex flex-wrap gap-4">
+                        <span><span class="highlight-drug">●</span> Medications/Abbreviations</span>
+                        <span><span class="highlight-symptom">●</span> Symptoms</span>
+                        <span><span class="highlight-lab">●</span> Lab Values</span>
+                    </div>
+                </div>
+            `;
+        }
+
+        function loadSample() {
+            const hebrewSample = `חולה בן 75 עם יל״ד, סד״נ, וכא״ר כרוני. 
+התקבל עם בח״י ושו״ת נשימה. 
+בבדיקה: לח״ד 150/90, דופק 100, חום 37.2.
+מטופל בליזינופריל, מטפורמין, ואטורבסטטין.
+מעבדה: Cr 1.8, BUN 45, Na 135.
+המלצה: התאמת טיפול והמשך מעקב.`;
+
+            const englishSample = `75yo M with HTN, DM, CAD presents with CP and SOB.
+ROS: N/V, dizziness, no LOC.
+PE: JVD present, crackles bilaterally, no AMS.
+Meds: Lisinopril, Metformin, Atorvastatin, Aspirin.
+Labs: Cr 1.8, BUN 45, Na 135, Glucose 180.
+Plan: Adjust medications, monitor renal function.`;
+
+            const language = document.querySelector('input[name="language"]:checked').value;
+            const sampleToUse = (language === 'hebrew') ? hebrewSample : 
+                              (language === 'english') ? englishSample : hebrewSample;
+
+            document.getElementById('noteInput').value = sampleToUse;
+        }
+
+        function clearAll() {
+            document.getElementById('noteInput').value = '';
+            document.getElementById('analysisResults').innerHTML = `
+                <div class="text-center text-gray-500 py-8">
+                    <div class="text-4xl mb-4">🔍</div>
+                    <p>Enter a clinical note and click "Analyze Note" to see results</p>
+                </div>
+            `;
+            document.getElementById('processedNote').innerHTML = `
+                <p class="text-gray-500 text-center">Processed note with expanded abbreviations will appear here</p>
+            `;
+        }
+
+        // Initialize when page loads
+        window.addEventListener('load', init);
+    </script>
+</body>
+</html>

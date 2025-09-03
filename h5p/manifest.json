@@ -1,0 +1,61 @@
+{
+  "name": "מערכת לימוד גריאטריה - שערי צדק",
+  "short_name": "גריאטריה",
+  "description": "פלטפורמת לימוד למתמחים בגריאטריה",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "theme_color": "#6B46C1",
+  "background_color": "#6B46C1",
+  "lang": "he",
+  "dir": "rtl",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect fill='%236B46C1' width='192' height='192'/><text x='50%25' y='50%25' font-size='96' fill='white' text-anchor='middle' dominant-baseline='middle'>📚</text></svg>",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect fill='%236B46C1' width='512' height='512'/><text x='50%25' y='50%25' font-size='256' fill='white' text-anchor='middle' dominant-baseline='middle'>📚</text></svg>",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": [ "medical", "education" ],
+  "screenshots": [
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 540 1170'><rect fill='%236B46C1' width='540' height='1170'/><text x='50%25' y='50%25' font-size='48' fill='white' text-anchor='middle' dominant-baseline='middle'>גריאטריה - צילום מסך</text></svg>",
+      "sizes": "540x1170",
+      "type": "image/svg+xml",
+      "label": "Home screen"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "חזרה על טעויות",
+      "url": "/?action=mistakes",
+      "description": "התחל חזרה על שאלות שטעית",
+      "icons": [
+        {
+          "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 96 96'><text x='50%25' y='50%25' font-size='48' text-anchor='middle' dominant-baseline='middle'>❌</text></svg>",
+          "sizes": "96x96"
+        }
+      ]
+    },
+    {
+      "name": "התקדמות",
+      "url": "/?action=dashboard",
+      "description": "צפה בהתקדמות שלך",
+      "icons": [
+        {
+          "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 96 96'><text x='50%25' y='50%25' font-size='48' text-anchor='middle' dominant-baseline='middle'>📊</text></svg>",
+          "sizes": "96x96"
+        }
+      ]
+    }
+  ],
+  "prefer_related_applications": false,
+  "related_applications": []
+}

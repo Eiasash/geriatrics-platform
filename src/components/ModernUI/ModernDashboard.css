@@ -1,0 +1,114 @@
+.modern-dashboard {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 20px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 100vh;
+}
+
+.protocol-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 15px;
+  margin-bottom: 30px;
+}
+
+.protocol-btn {
+  background: rgba(255, 255, 255, 0.95);
+  border: 2px solid transparent;
+  border-radius: 16px;
+  padding: 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.protocol-btn:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.protocol-btn.urgent {
+  background: linear-gradient(135deg, #ff6b6b, #ff4444);
+  color: white;
+  animation: pulse 2s infinite;
+}
+
+.protocol-btn.active {
+  border-color: #667eea;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+.protocol-btn .icon {
+  font-size: 32px;
+}
+
+.protocol-btn .label {
+  font-weight: 600;
+  font-size: 14px;
+  text-align: center;
+}
+
+.protocol-display {
+  background: rgba(255, 255, 255, 0.98);
+  border-radius: 20px;
+  padding: 30px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+}
+
+.protocol-display h2 {
+  color: #333;
+  margin-bottom: 25px;
+  padding-bottom: 15px;
+  border-bottom: 3px solid #667eea;
+}
+
+.protocol-section {
+  margin-bottom: 25px;
+  padding: 20px;
+  background: #f8f9fa;
+  border-radius: 12px;
+}
+
+.protocol-section h3 {
+  color: #667eea;
+  margin-bottom: 15px;
+  text-transform: capitalize;
+}
+
+.nested-content {
+  margin-left: 20px;
+  margin-top: 10px;
+}
+
+.content-item {
+  margin-bottom: 10px;
+  line-height: 1.6;
+}
+
+.content-item strong {
+  color: #764ba2;
+  display: inline-block;
+  min-width: 120px;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .protocol-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .protocol-display {
+    padding: 20px;
+  }
+}

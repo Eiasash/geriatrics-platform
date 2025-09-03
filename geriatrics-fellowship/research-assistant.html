@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Research Assistant - PICO & M&M Builder</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .tab-active { 
+            background-color: #3b82f6;
+            color: white;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <div class="container mx-auto p-6">
+        <!-- Header -->
+        <header class="flex justify-between items-center mb-6">
+            <div>
+                <h1 class="text-3xl font-bold text-gray-900">🔬 Research Assistant</h1>
+                <p class="text-gray-600">PICO Search Builder & M&M Case Presenter</p>
+            </div>
+            <button onclick="window.location.href='index.html'" class="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600">
+                🏠 Home
+            </button>
+        </header>
+
+        <!-- Tab Navigation -->
+        <div class="bg-white rounded-lg shadow mb-6">
+            <div class="flex border-b">
+                <button id="picoTab" onclick="switchTab('pico')" class="flex-1 px-4 py-3 text-center font-medium tab-active">
+                    🔍 PICO Search Builder
+                </button>
+                <button id="mmTab" onclick="switchTab('mm')" class="flex-1 px-4 py-3 text-center font-medium hover:bg-gray-50">
+                    📊 M&M Case Builder
+                </button>
+                <button id="litTab" onclick="switchTab('literature')" class="flex-1 px-4 py-3 text-center font-medium hover:bg-gray-50">
+                    📚 Literature Review
+                </button>
+            </div>
+        </div>
+
+        <!-- PICO Builder Tab -->
+        <div id="picoContent" class="bg-white rounded-lg shadow p-6">
+            <h2 class="text-xl font-semibold mb-4">PICO Question Builder</h2>
+            <p class="text-gray-600 mb-6">Structure your clinical research question using the PICO framework</p>
+            
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        <span class="text-blue-600 font-bold">P</span> - Patient/Population
+                    </label>
+                    <textarea id="picoP" rows="2" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                        placeholder="e.g., Elderly patients (>75 years) with moderate dementia living in nursing homes"></textarea>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        <span class="text-green-600 font-bold">I</span> - Intervention
+                    </label>
+                    <textarea id="picoI" rows="2" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
+                        placeholder="e.g., Music therapy sessions twice weekly for 30 minutes"></textarea>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        <span class="text-yellow-600 font-bold">C</span> - Comparison
+                    </label>
+                    <textarea id="picoC" rows="2" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500"
+                        placeholder="e.g., Standard care without structured activities"></textarea>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        <span class="text-red-600 font-bold">O</span> - Outcome
+                    </label>
+                    <textarea id="picoO" rows="2" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500"
+                        placeholder="e.g., Reduction in behavioral symptoms measured by NPI-Q score"></textarea>
+                </div>
+            </div>
+
+            <div class="mt-6 p-4 bg-blue-50 rounded-lg">
+                <h3 class="font-semibold text-blue-900 mb-2">Generated Research Question:</h3>
+                <p id="picoQuestion" class="text-blue-800 italic">Fill in all PICO components to generate your research question...</p>
+            </div>
+
+            <div class="mt-6 flex gap-3">
+                <button onclick="generatePICO()" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
+                    Generate Question
+                </button>
+                <button onclick="generateSearchTerms()" class="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600">
+                    Generate Search Terms
+                </button>
+                <button onclick="exportPICO()" class="px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600">
+                    Export to PubMed Format
+                </button>
+            </div>
+
+            <div id="searchTerms" class="mt-6 p-4 bg-gray-50 rounded-lg hidden">
+                <h3 class="font-semibold mb-2">🔍 Suggested Search Terms:</h3>
+                <div id="searchTermsList" class="space-y-2 text-sm"></div>
+            </div>
+        </div>
+
+        <!-- M&M Builder Tab -->
+        <div id="mmContent" class="bg-white rounded-lg shadow p-6 hidden">
+            <h2 class="text-xl font-semibold mb-4">Morbidity & Mortality Case Builder</h2>
+            <p class="text-gray-600 mb-6">Structure your M&M presentation systematically</p>
+            
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Case Summary</label>
+                    <textarea id="mmSummary" rows="3" class="w-full p-3 border border-gray-300 rounded-lg"
+                        placeholder="Brief patient presentation and chief complaint..."></textarea>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Patient Demographics</label>
+                        <input type="text" id="mmDemographics" class="w-full p-3 border border-gray-300 rounded-lg"
+                            placeholder="e.g., 82yo M, nursing home resident">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Admission Date</label>
+                        <input type="date" id="mmDate" class="w-full p-3 border border-gray-300 rounded-lg">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Past Medical History</label>
+                    <textarea id="mmPMH" rows="2" class="w-full p-3 border border-gray-300 rounded-lg"
+                        placeholder="List relevant comorbidities..."></textarea>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Hospital Course</label>
+                    <textarea id="mmCourse" rows="4" class="w-full p-3 border border-gray-300 rounded-lg"
+                        placeholder="Describe the sequence of events, interventions, and complications..."></textarea>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Outcome</label>
+                    <select id="mmOutcome" class="w-full p-3 border border-gray-300 rounded-lg">
+                        <option value="">Select outcome...</option>
+                        <option value="death">Death</option>
+                        <option value="discharge-home">Discharge Home</option>
+                        <option value="discharge-snf">Discharge to SNF</option>
+                        <option value="discharge-hospice">Discharge to Hospice</option>
+                        <option value="transfer">Transfer to Higher Care</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Root Cause Analysis</label>
+                    <textarea id="mmRCA" rows="3" class="w-full p-3 border border-gray-300 rounded-lg"
+                        placeholder="What factors contributed to this outcome?"></textarea>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Learning Points</label>
+                    <textarea id="mmLearning" rows="3" class="w-full p-3 border border-gray-300 rounded-lg"
+                        placeholder="Key takeaways and system improvements..."></textarea>
+                </div>
+            </div>
+
+            <div class="mt-6 flex gap-3">
+                <button onclick="generateMMSlides()" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
+                    Generate Presentation
+                </button>
+                <button onclick="exportMMCase()" class="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600">
+                    Export Case
+                </button>
+            </div>
+        </div>
+
+        <!-- Literature Review Tab -->
+        <div id="literatureContent" class="bg-white rounded-lg shadow p-6 hidden">
+            <h2 class="text-xl font-semibold mb-4">Literature Review Helper</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <h3 class="font-semibold mb-3">Key Databases</h3>
+                    <div class="space-y-2">
+                        <a href="https://pubmed.ncbi.nlm.nih.gov/" target="_blank" 
+                           class="block p-3 bg-blue-50 rounded-lg hover:bg-blue-100">
+                            🔬 PubMed/MEDLINE
+                        </a>
+                        <a href="https://www.cochranelibrary.com/" target="_blank"
+                           class="block p-3 bg-green-50 rounded-lg hover:bg-green-100">
+                            📊 Cochrane Reviews
+                        </a>
+                        <a href="https://www.uptodate.com/" target="_blank"
+                           class="block p-3 bg-purple-50 rounded-lg hover:bg-purple-100">
+                            📚 UpToDate
+                        </a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3 class="font-semibold mb-3">Search Strategy Tips</h3>
+                    <ul class="space-y-2 text-sm text-gray-600">
+                        <li>• Use MeSH terms for comprehensive searches</li>
+                        <li>• Apply age filters: "Aged[MeSH]" or "Aged, 80 and over[MeSH]"</li>
+                        <li>• Limit to RCTs: "Randomized Controlled Trial[ptyp]"</li>
+                        <li>• Recent evidence: Set date range to last 5 years</li>
+                        <li>• Use Boolean operators: AND, OR, NOT</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="mt-6 p-4 bg-yellow-50 rounded-lg">
+                <h3 class="font-semibold mb-2">Critical Appraisal Checklist</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
+                    <label class="flex items-center">
+                        <input type="checkbox" class="mr-2"> Study design appropriate?
+                    </label>
+                    <label class="flex items-center">
+                        <input type="checkbox" class="mr-2"> Sample size adequate?
+                    </label>
+                    <label class="flex items-center">
+                        <input type="checkbox" class="mr-2"> Randomization described?
+                    </label>
+                    <label class="flex items-center">
+                        <input type="checkbox" class="mr-2"> Blinding implemented?
+                    </label>
+                    <label class="flex items-center">
+                        <input type="checkbox" class="mr-2"> Statistical analysis appropriate?
+                    </label>
+                    <label class="flex items-center">
+                        <input type="checkbox" class="mr-2"> Results clinically significant?
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function switchTab(tab) {
+            // Hide all content
+            document.getElementById('picoContent').classList.add('hidden');
+            document.getElementById('mmContent').classList.add('hidden');
+            document.getElementById('literatureContent').classList.add('hidden');
+            
+            // Remove active class from all tabs
+            document.getElementById('picoTab').classList.remove('tab-active');
+            document.getElementById('mmTab').classList.remove('tab-active');
+            document.getElementById('litTab').classList.remove('tab-active');
+            
+            // Show selected content and activate tab
+            if (tab === 'pico') {
+                document.getElementById('picoContent').classList.remove('hidden');
+                document.getElementById('picoTab').classList.add('tab-active');
+            } else if (tab === 'mm') {
+                document.getElementById('mmContent').classList.remove('hidden');
+                document.getElementById('mmTab').classList.add('tab-active');
+            } else if (tab === 'literature') {
+                document.getElementById('literatureContent').classList.remove('hidden');
+                document.getElementById('litTab').classList.add('tab-active');
+            }
+        }
+
+        function generatePICO() {
+            const p = document.getElementById('picoP').value;
+            const i = document.getElementById('picoI').value;
+            const c = document.getElementById('picoC').value;
+            const o = document.getElementById('picoO').value;
+            
+            if (p && i && c && o) {
+                const question = `In ${p}, does ${i} compared to ${c} result in ${o}?`;
+                document.getElementById('picoQuestion').textContent = question;
+            } else {
+                alert('Please fill in all PICO components');
+            }
+        }
+
+        function generateSearchTerms() {
+            const p = document.getElementById('picoP').value;
+            const i = document.getElementById('picoI').value;
+            const o = document.getElementById('picoO').value;
+            
+            if (!p || !i) {
+                alert('Please fill in at least Patient and Intervention fields');
+                return;
+            }
+            
+            const terms = [
+                `("${p}" OR "elderly" OR "geriatric" OR "older adults")`,
+                `AND ("${i}")`,
+                o ? `AND ("${o}")` : '',
+                'AND ("randomized controlled trial" OR "systematic review")',
+                'Filters: Aged: 65+ years, Publication date: 5 years'
+            ];
+            
+            document.getElementById('searchTerms').classList.remove('hidden');
+            document.getElementById('searchTermsList').innerHTML = terms.filter(t => t).map(term => 
+                `<div class="p-2 bg-white rounded border border-gray-200">${term}</div>`
+            ).join('');
+        }
+
+        function exportPICO() {
+            const p = document.getElementById('picoP').value;
+            const i = document.getElementById('picoI').value;
+            const c = document.getElementById('picoC').value;
+            const o = document.getElementById('picoO').value;
+            
+            const pubmedSearch = `(${p}) AND (${i}) ${c ? `AND (${c})` : ''} ${o ? `AND (${o})` : ''} AND (Aged[MeSH])`;
+            
+            navigator.clipboard.writeText(pubmedSearch);
+            alert('PubMed search string copied to clipboard!');
+        }
+
+        function generateMMSlides() {
+            const summary = document.getElementById('mmSummary').value;
+            const demographics = document.getElementById('mmDemographics').value;
+            const outcome = document.getElementById('mmOutcome').value;
+            
+            if (!summary || !demographics || !outcome) {
+                alert('Please fill in required fields: Summary, Demographics, and Outcome');
+                return;
+            }
+            
+            alert('M&M presentation outline generated! This would create a PowerPoint template in a full implementation.');
+        }
+
+        function exportMMCase() {
+            const data = {
+                summary: document.getElementById('mmSummary').value,
+                demographics: document.getElementById('mmDemographics').value,
+                date: document.getElementById('mmDate').value,
+                pmh: document.getElementById('mmPMH').value,
+                course: document.getElementById('mmCourse').value,
+                outcome: document.getElementById('mmOutcome').value,
+                rca: document.getElementById('mmRCA').value,
+                learning: document.getElementById('mmLearning').value
+            };
+            
+            const text = `M&M CASE PRESENTATION\n\n` +
+                `Demographics: ${data.demographics}\n` +
+                `Date: ${data.date}\n\n` +
+                `SUMMARY:\n${data.summary}\n\n` +
+                `PMH:\n${data.pmh}\n\n` +
+                `HOSPITAL COURSE:\n${data.course}\n\n` +
+                `OUTCOME: ${data.outcome}\n\n` +
+                `ROOT CAUSE ANALYSIS:\n${data.rca}\n\n` +
+                `LEARNING POINTS:\n${data.learning}`;
+            
+            navigator.clipboard.writeText(text);
+            alert('M&M case copied to clipboard!');
+        }
+    </script>
+</body>
+</html>

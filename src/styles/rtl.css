@@ -1,0 +1,299 @@
+/* RTL Support for Hebrew Language */
+[dir="rtl"] {
+  direction: rtl;
+  text-align: right;
+}
+
+[dir="rtl"] .calculator-form,
+[dir="rtl"] .quiz-container,
+[dir="rtl"] .medication-card {
+  direction: rtl;
+}
+
+[dir="rtl"] .input-group {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .input-group label {
+  margin-left: 1rem;
+  margin-right: 0;
+}
+
+[dir="rtl"] table {
+  direction: rtl;
+}
+
+[dir="rtl"] th,
+[dir="rtl"] td {
+  text-align: right;
+}
+
+[dir="rtl"] .button-group {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .navigation-menu {
+  right: auto;
+  left: 0;
+}
+
+[dir="rtl"] .breadcrumb {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .breadcrumb-separator {
+  transform: scaleX(-1);
+}
+
+/* Bidirectional text support */
+.bidi-text {
+  unicode-bidi: plaintext;
+}
+
+.medical-term {
+  unicode-bidi: embed;
+  direction: ltr;
+}
+
+[dir="rtl"] .medical-term {
+  unicode-bidi: embed;
+  direction: ltr;
+}
+
+/* Hebrew-specific typography */
+[lang="he"] {
+  font-family: 'Rubik', 'Arial Hebrew', Arial, sans-serif;
+  line-height: 1.6;
+}
+
+/* Fix for mixed Hebrew-English content */
+.mixed-content {
+  unicode-bidi: isolate;
+}
+
+/* RTL form adjustments */
+[dir="rtl"] input[type="number"],
+[dir="rtl"] input[type="text"],
+[dir="rtl"] select,
+[dir="rtl"] textarea {
+  text-align: right;
+  direction: rtl;
+}
+
+/* RTL icons */
+[dir="rtl"] .icon-left {
+  margin-left: 0;
+  margin-right: 0.5rem;
+}
+
+[dir="rtl"] .icon-right {
+  margin-right: 0;
+  margin-left: 0.5rem;
+}
+
+/* RTL cards and containers */
+[dir="rtl"] .card-header {
+  text-align: right;
+}
+
+[dir="rtl"] .list-item {
+  padding-left: 0;
+  padding-right: 1rem;
+}
+
+[dir="rtl"] .list-item::before {
+  left: auto;
+  right: 0;
+}
+
+/* RTL tooltips */
+[dir="rtl"] .tooltip {
+  text-align: right;
+}
+
+[dir="rtl"] .tooltip-arrow {
+  transform: scaleX(-1);
+}
+
+/* RTL modal */
+[dir="rtl"] .modal-header {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .modal-close {
+  margin-left: auto;
+  margin-right: 0;
+}
+
+/* RTL tabs */
+[dir="rtl"] .tabs-list {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .tab-content {
+  text-align: right;
+}
+
+/* RTL progress bars */
+[dir="rtl"] .progress-bar {
+  direction: ltr;
+}
+
+[dir="rtl"] .progress-label {
+  text-align: right;
+}
+
+/* RTL alerts */
+[dir="rtl"] .alert {
+  text-align: right;
+}
+
+[dir="rtl"] .alert-icon {
+  float: right;
+  margin-left: 0.5rem;
+  margin-right: 0;
+}
+
+/* RTL dropdowns */
+[dir="rtl"] .dropdown-menu {
+  right: 0;
+  left: auto;
+  text-align: right;
+}
+
+[dir="rtl"] .dropdown-item {
+  text-align: right;
+}
+
+/* RTL pagination */
+[dir="rtl"] .pagination {
+  flex-direction: row-reverse;
+}
+
+/* RTL breadcrumbs */
+[dir="rtl"] .breadcrumb-item + .breadcrumb-item::before {
+  content: "\\";
+  transform: scaleX(-1);
+}
+
+/* RTL timeline */
+[dir="rtl"] .timeline {
+  direction: rtl;
+}
+
+[dir="rtl"] .timeline-item {
+  text-align: right;
+}
+
+[dir="rtl"] .timeline-marker {
+  left: auto;
+  right: -8px;
+}
+
+/* RTL badges */
+[dir="rtl"] .badge {
+  margin-left: 0.25rem;
+  margin-right: 0;
+}
+
+/* RTL code blocks */
+[dir="rtl"] pre,
+[dir="rtl"] code {
+  direction: ltr;
+  text-align: left;
+}
+
+/* RTL charts and graphs */
+[dir="rtl"] .chart-container {
+  direction: ltr;
+}
+
+[dir="rtl"] .chart-legend {
+  text-align: right;
+}
+
+/* RTL datepicker */
+[dir="rtl"] .datepicker {
+  direction: rtl;
+}
+
+[dir="rtl"] .datepicker-header {
+  flex-direction: row-reverse;
+}
+
+/* RTL sidebar */
+[dir="rtl"] .sidebar {
+  right: 0;
+  left: auto;
+}
+
+[dir="rtl"] .sidebar-item {
+  text-align: right;
+}
+
+/* RTL floating elements */
+[dir="rtl"] .float-left {
+  float: right;
+}
+
+[dir="rtl"] .float-right {
+  float: left;
+}
+
+/* RTL margin and padding utilities */
+[dir="rtl"] .ml-auto {
+  margin-left: 0 !important;
+  margin-right: auto !important;
+}
+
+[dir="rtl"] .mr-auto {
+  margin-right: 0 !important;
+  margin-left: auto !important;
+}
+
+[dir="rtl"] .pl-3 {
+  padding-left: 0;
+  padding-right: 1rem;
+}
+
+[dir="rtl"] .pr-3 {
+  padding-right: 0;
+  padding-left: 1rem;
+}
+
+/* RTL flexbox utilities */
+[dir="rtl"] .flex-row {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .justify-start {
+  justify-content: flex-end;
+}
+
+[dir="rtl"] .justify-end {
+  justify-content: flex-start;
+}
+
+/* RTL grid adjustments */
+[dir="rtl"] .grid {
+  direction: rtl;
+}
+
+/* RTL animations */
+[dir="rtl"] @keyframes slide-in-left {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+[dir="rtl"] @keyframes slide-in-right {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}

@@ -1,0 +1,1650 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ultimate Geriatrics Platform - Comprehensive Medical Hub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root { 
+            color-scheme: light dark;
+            --primary: #3b82f6;
+            --secondary: #10b981;
+            --danger: #ef4444;
+        }
+        .glass { 
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .dark .glass {
+            background: rgba(17, 24, 39, 0.95);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        .pulse-animation {
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        .drag-over { 
+            outline: 2px dashed #3b82f6; 
+            outline-offset: 2px; 
+        }
+        .visually-hidden { 
+            position: absolute !important; 
+            height: 1px; 
+            width: 1px; 
+            overflow: hidden; 
+            clip: rect(1px, 1px, 1px, 1px); 
+            white-space: nowrap; 
+        }
+    </style>
+</head>
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useRef, useCallback, useMemo } = React;
+
+        // Comprehensive medication database with Hebrew translations
+        const MEDICATION_DATABASE = {
+            // Cardiovascular
+            'metoprolol': { class: 'Beta Blocker', hebrew: 'מטופרולול', interactions: ['verapamil', 'diltiazem'], beers: false, anticholinergic: 0 },
+            'atenolol': { class: 'Beta Blocker', hebrew: 'אטנולול', interactions: ['verapamil'], beers: false, anticholinergic: 0 },
+            'carvedilol': { class: 'Beta Blocker', hebrew: 'קרבדילול', interactions: ['verapamil', 'amiodarone'], beers: false, anticholinergic: 0 },
+            'bisoprolol': { class: 'Beta Blocker', hebrew: 'ביסופרולול', interactions: ['verapamil'], beers: false, anticholinergic: 0 },
+            'amlodipine': { class: 'CCB', hebrew: 'אמלודיפין', interactions: ['simvastatin'], beers: false, anticholinergic: 0 },
+            'lisinopril': { class: 'ACE-I', hebrew: 'ליזינופריל', interactions: ['spironolactone', 'potassium'], beers: false, anticholinergic: 0 },
+            'enalapril': { class: 'ACE-I', hebrew: 'אנלפריל', interactions: ['spironolactone'], beers: false, anticholinergic: 0 },
+            'losartan': { class: 'ARB', hebrew: 'לוסרטן', interactions: ['spironolactone'], beers: false, anticholinergic: 0 },
+            'warfarin': { class: 'Anticoagulant', hebrew: 'וורפרין', interactions: ['aspirin', 'amiodarone', 'fluconazole'], beers: false, anticholinergic: 0 },
+            'rivaroxaban': { class: 'DOAC', hebrew: 'ריברוקסבן', interactions: ['ketoconazole', 'clarithromycin'], beers: false, anticholinergic: 0 },
+            'apixaban': { class: 'DOAC', hebrew: 'אפיקסבן', interactions: ['ketoconazole'], beers: false, anticholinergic: 0 },
+            'furosemide': { class: 'Loop Diuretic', hebrew: 'פורוסמיד', interactions: ['digoxin', 'lithium'], beers: false, anticholinergic: 0 },
+            'spironolactone': { class: 'K-sparing Diuretic', hebrew: 'ספירונולקטון', interactions: ['ACE-I', 'ARB'], beers: false, anticholinergic: 0 },
+            'digoxin': { class: 'Cardiac Glycoside', hebrew: 'דיגוקסין', interactions: ['amiodarone', 'verapamil'], beers: true, anticholinergic: 0 },
+            'amiodarone': { class: 'Antiarrhythmic', hebrew: 'אמיודרון', interactions: ['warfarin', 'digoxin'], beers: true, anticholinergic: 0 },
+            
+            // Diabetes
+            'metformin': { class: 'Biguanide', hebrew: 'מטפורמין', interactions: [], beers: false, anticholinergic: 0 },
+            'glipizide': { class: 'Sulfonylurea', hebrew: 'גליפיזיד', interactions: [], beers: true, anticholinergic: 0 },
+            'glyburide': { class: 'Sulfonylurea', hebrew: 'גליבוריד', interactions: [], beers: true, anticholinergic: 0 },
+            'sitagliptin': { class: 'DPP-4', hebrew: 'סיטגליפטין', interactions: [], beers: false, anticholinergic: 0 },
+            'empagliflozin': { class: 'SGLT2', hebrew: 'אמפגליפלוזין', interactions: [], beers: false, anticholinergic: 0 },
+            'insulin glargine': { class: 'Insulin', hebrew: 'אינסולין גלרגין', interactions: [], beers: false, anticholinergic: 0 },
+            
+            // Neurological/Psychiatric
+            'levodopa': { class: 'Antiparkinsonian', hebrew: 'לבודופה', interactions: ['metoclopramide'], beers: false, anticholinergic: 0 },
+            'donepezil': { class: 'Cholinesterase Inhibitor', hebrew: 'דונפזיל', interactions: [], beers: false, anticholinergic: -1 },
+            'memantine': { class: 'NMDA Antagonist', hebrew: 'ממנטין', interactions: [], beers: false, anticholinergic: 0 },
+            'sertraline': { class: 'SSRI', hebrew: 'סרטרלין', interactions: ['tramadol', 'warfarin'], beers: false, anticholinergic: 0 },
+            'escitalopram': { class: 'SSRI', hebrew: 'אסציטלופרם', interactions: ['tramadol'], beers: false, anticholinergic: 0 },
+            'mirtazapine': { class: 'Antidepressant', hebrew: 'מירטזפין', interactions: [], beers: false, anticholinergic: 1 },
+            'trazodone': { class: 'Antidepressant', hebrew: 'טרזודון', interactions: [], beers: false, anticholinergic: 0 },
+            'quetiapine': { class: 'Antipsychotic', hebrew: 'קווטיאפין', interactions: [], beers: true, anticholinergic: 1 },
+            'risperidone': { class: 'Antipsychotic', hebrew: 'ריספרידון', interactions: [], beers: true, anticholinergic: 0 },
+            'haloperidol': { class: 'Antipsychotic', hebrew: 'הלופרידול', interactions: [], beers: true, anticholinergic: 1 },
+            'lorazepam': { class: 'Benzodiazepine', hebrew: 'לורזפם', interactions: ['opioids'], beers: true, anticholinergic: 0 },
+            'alprazolam': { class: 'Benzodiazepine', hebrew: 'אלפרזולם', interactions: ['opioids'], beers: true, anticholinergic: 0 },
+            'diazepam': { class: 'Benzodiazepine', hebrew: 'דיאזפם', interactions: ['opioids'], beers: true, anticholinergic: 0 },
+            'zolpidem': { class: 'Z-drug', hebrew: 'זולפידם', interactions: [], beers: true, anticholinergic: 0 },
+            
+            // Pain Management
+            'acetaminophen': { class: 'Analgesic', hebrew: 'אצטמינופן', interactions: ['warfarin'], beers: false, anticholinergic: 0 },
+            'ibuprofen': { class: 'NSAID', hebrew: 'איבופרופן', interactions: ['warfarin', 'aspirin'], beers: true, anticholinergic: 0 },
+            'naproxen': { class: 'NSAID', hebrew: 'נפרוקסן', interactions: ['warfarin', 'aspirin'], beers: true, anticholinergic: 0 },
+            'tramadol': { class: 'Opioid', hebrew: 'טרמדול', interactions: ['SSRIs', 'SNRIs'], beers: false, anticholinergic: 0 },
+            'oxycodone': { class: 'Opioid', hebrew: 'אוקסיקודון', interactions: ['benzodiazepines'], beers: false, anticholinergic: 0 },
+            'morphine': { class: 'Opioid', hebrew: 'מורפין', interactions: ['benzodiazepines'], beers: false, anticholinergic: 0 },
+            'gabapentin': { class: 'Anticonvulsant', hebrew: 'גבפנטין', interactions: [], beers: false, anticholinergic: 0 },
+            'pregabalin': { class: 'Anticonvulsant', hebrew: 'פרגבלין', interactions: [], beers: false, anticholinergic: 0 },
+            
+            // Gastrointestinal
+            'omeprazole': { class: 'PPI', hebrew: 'אומפרזול', interactions: ['clopidogrel'], beers: false, anticholinergic: 0 },
+            'pantoprazole': { class: 'PPI', hebrew: 'פנטופרזול', interactions: [], beers: false, anticholinergic: 0 },
+            'ranitidine': { class: 'H2 Blocker', hebrew: 'רניטידין', interactions: [], beers: false, anticholinergic: 1 },
+            'metoclopramide': { class: 'Prokinetic', hebrew: 'מטוקלופרמיד', interactions: ['levodopa'], beers: true, anticholinergic: 0 },
+            'ondansetron': { class: 'Antiemetic', hebrew: 'אונדנסטרון', interactions: [], beers: false, anticholinergic: 0 },
+            
+            // Anticholinergic Medications
+            'diphenhydramine': { class: 'Antihistamine', hebrew: 'דיפנהידרמין', interactions: [], beers: true, anticholinergic: 3 },
+            'hydroxyzine': { class: 'Antihistamine', hebrew: 'הידרוקסיזין', interactions: [], beers: true, anticholinergic: 3 },
+            'oxybutynin': { class: 'Antispasmodic', hebrew: 'אוקסיבוטינין', interactions: [], beers: true, anticholinergic: 3 },
+            'tolterodine': { class: 'Antispasmodic', hebrew: 'טולטרודין', interactions: [], beers: true, anticholinergic: 2 },
+            'benztropine': { class: 'Antiparkinsonian', hebrew: 'בנזטרופין', interactions: [], beers: true, anticholinergic: 3 },
+            'scopolamine': { class: 'Antispasmodic', hebrew: 'סקופולמין', interactions: [], beers: true, anticholinergic: 3 },
+            'promethazine': { class: 'Antihistamine', hebrew: 'פרומתזין', interactions: [], beers: true, anticholinergic: 3 },
+            
+            // Respiratory
+            'albuterol': { class: 'Beta Agonist', hebrew: 'אלבוטרול', interactions: [], beers: false, anticholinergic: 0 },
+            'ipratropium': { class: 'Anticholinergic', hebrew: 'איפרטרופיום', interactions: [], beers: false, anticholinergic: 1 },
+            'tiotropium': { class: 'Anticholinergic', hebrew: 'טיוטרופיום', interactions: [], beers: false, anticholinergic: 1 },
+            'fluticasone': { class: 'Corticosteroid', hebrew: 'פלוטיקזון', interactions: [], beers: false, anticholinergic: 0 },
+            'montelukast': { class: 'Leukotriene Antagonist', hebrew: 'מונטלוקסט', interactions: [], beers: false, anticholinergic: 0 },
+            
+            // Antibiotics
+            'amoxicillin': { class: 'Penicillin', hebrew: 'אמוקסיצילין', interactions: [], beers: false, anticholinergic: 0 },
+            'ciprofloxacin': { class: 'Fluoroquinolone', hebrew: 'ציפרופלוקסצין', interactions: ['warfarin'], beers: false, anticholinergic: 0 },
+            'levofloxacin': { class: 'Fluoroquinolone', hebrew: 'לבופלוקסצין', interactions: ['warfarin'], beers: false, anticholinergic: 0 },
+            'azithromycin': { class: 'Macrolide', hebrew: 'אזיתרומיצין', interactions: ['warfarin'], beers: false, anticholinergic: 0 },
+            'clarithromycin': { class: 'Macrolide', hebrew: 'קלריתרומיצין', interactions: ['statins', 'warfarin'], beers: false, anticholinergic: 0 },
+            'doxycycline': { class: 'Tetracycline', hebrew: 'דוקסיציקלין', interactions: [], beers: false, anticholinergic: 0 },
+            'cephalexin': { class: 'Cephalosporin', hebrew: 'צפלקסין', interactions: [], beers: false, anticholinergic: 0 },
+            'trimethoprim': { class: 'Antibiotic', hebrew: 'טרימטופרים', interactions: ['warfarin'], beers: false, anticholinergic: 0 },
+            'nitrofurantoin': { class: 'Antibiotic', hebrew: 'ניטרופורנטואין', interactions: [], beers: true, anticholinergic: 0 }
+        };
+
+        // Comprehensive Quiz Questions Database
+        const QUIZ_DATABASE = [
+            // Pharmacology
+            { category: 'Pharmacology', question: 'Which medication should be avoided in elderly patients with cognitive impairment?', options: ['Metformin', 'Diphenhydramine', 'Lisinopril', 'Atorvastatin'], correct: 1, explanation: 'Diphenhydramine has strong anticholinergic properties and can worsen cognitive impairment.' },
+            { category: 'Pharmacology', question: 'What is the maximum recommended dose of acetaminophen in elderly patients?', options: ['2g/day', '3g/day', '4g/day', '5g/day'], correct: 1, explanation: 'In elderly patients, maximum acetaminophen dose is 3g/day due to increased risk of hepatotoxicity.' },
+            { category: 'Pharmacology', question: 'Which sulfonylurea has the highest risk of hypoglycemia in elderly?', options: ['Glipizide', 'Glyburide', 'Glimepiride', 'Gliclazide'], correct: 1, explanation: 'Glyburide has the longest half-life and highest risk of prolonged hypoglycemia.' },
+            
+            // Geriatric Syndromes
+            { category: 'Syndromes', question: 'What is the most common cause of delirium in hospitalized elderly?', options: ['Dementia', 'Infection', 'Depression', 'Anxiety'], correct: 1, explanation: 'Infections, particularly UTIs and pneumonia, are the most common precipitants of delirium.' },
+            { category: 'Syndromes', question: 'Which tool is best for delirium screening?', options: ['MMSE', 'CAM', 'GDS', 'CDT'], correct: 1, explanation: 'The Confusion Assessment Method (CAM) is the gold standard for delirium screening.' },
+            { category: 'Syndromes', question: 'What percentage of falls in elderly result in serious injury?', options: ['5-10%', '10-15%', '20-30%', '40-50%'], correct: 1, explanation: 'Approximately 10-15% of falls result in serious injuries like fractures or head trauma.' },
+            
+            // Dementia
+            { category: 'Dementia', question: 'Which dementia type presents with visual hallucinations early?', options: ['Alzheimer\'s', 'Lewy Body', 'Frontotemporal', 'Vascular'], correct: 1, explanation: 'Lewy Body Dementia characteristically presents with early visual hallucinations.' },
+            { category: 'Dementia', question: 'What is the primary mechanism of donepezil?', options: ['NMDA antagonist', 'Cholinesterase inhibitor', 'Dopamine agonist', 'Serotonin reuptake inhibitor'], correct: 1, explanation: 'Donepezil is a cholinesterase inhibitor that increases acetylcholine levels.' },
+            
+            // Assessment
+            { category: 'Assessment', question: 'A score of what on the 4AT indicates possible delirium?', options: ['≥1', '≥2', '≥4', '≥6'], correct: 2, explanation: 'A 4AT score of ≥4 suggests possible delirium requiring further assessment.' },
+            { category: 'Assessment', question: 'Which ADL is typically lost first in dementia?', options: ['Bathing', 'Dressing', 'Toileting', 'Managing finances'], correct: 3, explanation: 'IADLs like managing finances are typically lost before basic ADLs.' },
+            
+            // Falls Prevention
+            { category: 'Falls', question: 'What constitutes orthostatic hypotension?', options: ['SBP drop ≥10mmHg', 'SBP drop ≥20mmHg', 'DBP drop ≥5mmHg', 'HR increase ≥30bpm'], correct: 1, explanation: 'Orthostatic hypotension is defined as SBP drop ≥20mmHg or DBP drop ≥10mmHg within 3 minutes of standing.' },
+            { category: 'Falls', question: 'Which intervention most effectively reduces fall risk?', options: ['Vitamin D alone', 'Exercise alone', 'Multifactorial intervention', 'Hip protectors'], correct: 2, explanation: 'Multifactorial interventions addressing multiple risk factors are most effective.' },
+            
+            // Polypharmacy
+            { category: 'Polypharmacy', question: 'How many medications define polypharmacy?', options: ['≥3', '≥5', '≥7', '≥10'], correct: 1, explanation: 'Polypharmacy is typically defined as regular use of ≥5 medications.' },
+            { category: 'Polypharmacy', question: 'Which tool identifies potentially inappropriate medications?', options: ['STOPP/START', 'FRAX', 'CAGE', 'PHQ-9'], correct: 0, explanation: 'STOPP/START criteria identify potentially inappropriate medications and prescribing omissions.' },
+            
+            // Nutrition
+            { category: 'Nutrition', question: 'What BMI indicates malnutrition risk in elderly?', options: ['<18.5', '<20', '<22', '<25'], correct: 2, explanation: 'In elderly, BMI <22 indicates increased malnutrition risk.' },
+            { category: 'Nutrition', question: 'Which vitamin deficiency is most common in elderly?', options: ['Vitamin A', 'Vitamin B12', 'Vitamin C', 'Vitamin K'], correct: 1, explanation: 'Vitamin B12 deficiency affects 10-15% of elderly due to decreased absorption.' },
+            
+            // End-of-Life Care
+            { category: 'Palliative', question: 'What is the primary goal of palliative care?', options: ['Cure disease', 'Prolong life', 'Improve quality of life', 'Reduce costs'], correct: 2, explanation: 'Palliative care focuses on improving quality of life and symptom management.' },
+            { category: 'Palliative', question: 'When should palliative care ideally be introduced?', options: ['Last weeks of life', 'Last months of life', 'At diagnosis of serious illness', 'When curative treatment fails'], correct: 2, explanation: 'Palliative care should be introduced early, at diagnosis of serious illness.' }
+        ];
+
+        // Clinical Protocols Database
+        const PROTOCOLS_DATABASE = {
+            'Delirium Management': {
+                assessment: ['CAM assessment every shift', '4AT screening on admission', 'Identify precipitating factors', 'Review medications'],
+                interventions: ['Treat underlying cause', 'Non-pharmacological measures first', 'Reorientation strategies', 'Ensure glasses/hearing aids', 'Promote sleep hygiene'],
+                medications: ['Avoid benzodiazepines except alcohol withdrawal', 'Low-dose haloperidol if severe agitation', 'Melatonin for sleep-wake cycle'],
+                monitoring: ['Daily CAM assessment', 'Monitor for resolution', 'Prevent complications', 'Family involvement']
+            },
+            'Falls Prevention': {
+                assessment: ['Comprehensive falls history', 'Medication review', 'Orthostatic vitals', 'Vision assessment', 'Gait and balance testing', 'Home safety evaluation'],
+                interventions: ['Strength and balance exercises', 'Medication optimization', 'Vision correction', 'Vitamin D supplementation', 'Environmental modifications'],
+                followUp: ['Regular reassessment', 'Post-fall huddles', 'Monitor intervention effectiveness']
+            },
+            'Polypharmacy Review': {
+                assessment: ['Complete medication reconciliation', 'Identify PIMs using Beers/STOPP', 'Calculate anticholinergic burden', 'Review indication for each medication'],
+                interventions: ['Deprescribe when possible', 'Start low, go slow', 'Consider non-pharmacological alternatives', 'Simplify regimens'],
+                monitoring: ['Regular medication reviews', 'Monitor for withdrawal effects', 'Assess adherence']
+            },
+            'Dementia Care': {
+                assessment: ['Cognitive testing (MMSE/MoCA)', 'Functional assessment', 'Behavioral symptoms', 'Caregiver burden'],
+                interventions: ['Cognitive stimulation', 'Structured routine', 'Environmental modifications', 'Caregiver education and support'],
+                medications: ['Cholinesterase inhibitors for mild-moderate', 'Memantine for moderate-severe', 'Avoid antipsychotics if possible'],
+                support: ['Day programs', 'Respite care', 'Support groups', 'Advanced care planning']
+            },
+            'Pressure Injury Prevention': {
+                assessment: ['Braden scale on admission', 'Skin assessment daily', 'Nutritional status', 'Mobility assessment'],
+                interventions: ['Reposition every 2 hours', 'Pressure redistribution surfaces', 'Optimize nutrition', 'Maintain skin hygiene', 'Manage incontinence'],
+                monitoring: ['Daily skin checks', 'Document all findings', 'Reassess risk weekly']
+            },
+            'Constipation Management': {
+                assessment: ['Bowel history', 'Medication review', 'Fluid intake assessment', 'Activity level', 'Red flags screening'],
+                interventions: ['Increase fluids to 1500-2000ml/day', 'Dietary fiber 20-35g/day', 'Regular toileting schedule', 'Encourage mobility'],
+                medications: ['First line: PEG', 'Second line: Senna/bisacodyl', 'Avoid long-term stimulant use', 'Consider lactulose'],
+                monitoring: ['Bowel diary', 'Monitor for impaction', 'Adjust regimen as needed']
+            },
+            'Urinary Incontinence': {
+                assessment: ['Type of incontinence', 'Voiding diary', 'Post-void residual', 'Medication review', 'Cognitive/functional status'],
+                interventions: ['Scheduled voiding', 'Pelvic floor exercises', 'Manage constipation', 'Optimize fluid intake timing'],
+                medications: ['Avoid anticholinergics if cognitive impairment', 'Consider mirabegron', 'Topical estrogen for women'],
+                devices: ['Consider pessaries', 'Appropriate continence products', 'Avoid indwelling catheters']
+            },
+            'Pain Management': {
+                assessment: ['Comprehensive pain assessment', 'Use validated scales', 'Consider pain behaviors in dementia', 'Assess function'],
+                interventions: ['Multimodal approach', 'Non-pharmacological first', 'Physical therapy', 'Heat/cold therapy', 'Psychological support'],
+                medications: ['Acetaminophen first line', 'Avoid NSAIDs if possible', 'Careful opioid use', 'Consider adjuvants'],
+                monitoring: ['Regular reassessment', 'Monitor for side effects', 'Assess functional improvement']
+            },
+            'Malnutrition Prevention': {
+                assessment: ['MNA-SF screening', 'Weight monitoring', 'Dietary intake assessment', 'Dentition check', 'Swallowing assessment'],
+                interventions: ['Optimize oral intake', 'Address barriers', 'Fortified foods', 'Consider supplements', 'Social dining'],
+                monitoring: ['Weekly weights', 'Intake monitoring', 'Lab monitoring (albumin, prealbumin)']
+            },
+            'Sleep Disorders': {
+                assessment: ['Sleep history', 'Sleep diary', 'Screen for sleep apnea', 'Medication review', 'Environmental factors'],
+                interventions: ['Sleep hygiene education', 'Consistent sleep schedule', 'Limit daytime naps', 'Optimize environment', 'Address pain/anxiety'],
+                medications: ['Avoid benzodiazepines/Z-drugs', 'Consider melatonin', 'Trazodone if needed', 'Treat underlying conditions'],
+                monitoring: ['Sleep diary', 'Daytime functioning', 'Monitor for improvement']
+            },
+            'Depression Screening': {
+                assessment: ['PHQ-9 or GDS-15', 'Assess suicide risk', 'Rule out medical causes', 'Medication review', 'Social assessment'],
+                interventions: ['Psychotherapy first line for mild', 'Increase social engagement', 'Exercise programs', 'Address losses/transitions'],
+                medications: ['SSRIs first line', 'Start low dose', 'Avoid TCAs', 'Monitor for hyponatremia'],
+                monitoring: ['Regular mood assessment', 'Monitor for side effects', 'Assess response at 6-8 weeks']
+            },
+            'Advance Care Planning': {
+                assessment: ['Current understanding', 'Values and preferences', 'Decision-making capacity', 'Identify surrogate', 'Cultural considerations'],
+                discussions: ['Prognosis understanding', 'Treatment preferences', 'Quality of life goals', 'Code status', 'Specific scenarios'],
+                documentation: ['Advance directives', 'POLST/MOLST', 'Document in medical record', 'Communicate with team'],
+                review: ['Regular review and updates', 'After major health changes', 'Ensure accessibility']
+            }
+        };
+
+        // Main Application Component
+        function UltimateGeriatricsPlatform() {
+            // State Management
+            const [darkMode, setDarkMode] = useState(false);
+            const [activeSection, setActiveSection] = useState('dashboard');
+            const [language, setLanguage] = useState('en');
+            const [searchQuery, setSearchQuery] = useState('');
+            const [sidebarOpen, setSidebarOpen] = useState(false);
+            
+            // Clinical Analyzer State
+            const [clinicalNote, setClinicalNote] = useState('');
+            const [analysisResults, setAnalysisResults] = useState(null);
+            
+            // Quiz State
+            const [currentQuizQuestion, setCurrentQuizQuestion] = useState(0);
+            const [quizScore, setQuizScore] = useState(0);
+            const [quizAnswered, setQuizAnswered] = useState(false);
+            const [selectedQuizCategory, setSelectedQuizCategory] = useState('all');
+            
+            // Knowledge Base State
+            const [knowledgeBase, setKnowledgeBase] = useState([
+                { id: 1, title: 'Delirium: 4AT', content: 'Alertness, AMT4, Attention, Acute change', tags: ['delirium', 'screening'], timestamp: Date.now() },
+                { id: 2, title: 'Falls: Initial Approach', content: 'History, meds review, orthostatics, gait/balance', tags: ['falls', 'assessment'], timestamp: Date.now() }
+            ]);
+            
+            // Patient Management State
+            const [patients, setPatients] = useState([
+                { id: 1, name: 'Mary Johnson', age: 84, sex: 'F', conditions: ['Hypertension', 'Osteoporosis'], nextAppt: '2024-01-15', notes: '' },
+                { id: 2, name: 'John Smith', age: 79, sex: 'M', conditions: ['AF', 'CKD Stage 3'], nextAppt: '2024-01-12', notes: '' }
+            ]);
+            
+            // Task Management State
+            const [tasks, setTasks] = useState([
+                { id: 1, title: 'Home safety assessment', description: 'Arrange OT visit', patientId: 1, dueDate: '2024-01-10', status: 'todo', priority: 'high' },
+                { id: 2, title: 'Polypharmacy review', description: 'Review medications for Beers criteria', patientId: 2, dueDate: '2024-01-08', status: 'inprogress', priority: 'medium' }
+            ]);
+            
+            // Calendar State
+            const [currentMonth, setCurrentMonth] = useState(new Date());
+            const [events, setEvents] = useState([]);
+            
+            // Email Templates State
+            const [emailTemplate, setEmailTemplate] = useState('appointment');
+            const [emailData, setEmailData] = useState({
+                to: '',
+                patientName: '',
+                appointmentDate: '',
+                location: '',
+                provider: '',
+                notes: ''
+            });
+            
+            // Data Extraction State
+            const [extractedData, setExtractedData] = useState(null);
+            const [extractInput, setExtractInput] = useState('');
+
+            // Load saved data on mount
+            useEffect(() => {
+                const savedData = localStorage.getItem('ultimateGeriatricsData');
+                if (savedData) {
+                    const parsed = JSON.parse(savedData);
+                    if (parsed.knowledgeBase) setKnowledgeBase(parsed.knowledgeBase);
+                    if (parsed.patients) setPatients(parsed.patients);
+                    if (parsed.tasks) setTasks(parsed.tasks);
+                    if (parsed.darkMode !== undefined) setDarkMode(parsed.darkMode);
+                }
+            }, []);
+
+            // Save data on changes
+            useEffect(() => {
+                const dataToSave = {
+                    knowledgeBase,
+                    patients,
+                    tasks,
+                    darkMode
+                };
+                localStorage.setItem('ultimateGeriatricsData', JSON.stringify(dataToSave));
+            }, [knowledgeBase, patients, tasks, darkMode]);
+
+            // Apply dark mode
+            useEffect(() => {
+                if (darkMode) {
+                    document.documentElement.classList.add('dark');
+                } else {
+                    document.documentElement.classList.remove('dark');
+                }
+            }, [darkMode]);
+
+            // Clinical Analysis Function
+            const analyzeClinicalNote = () => {
+                const note = clinicalNote.toLowerCase();
+                const detectedMedications = [];
+                const drugInteractions = [];
+                const beersViolations = [];
+                let anticholinergicBurden = 0;
+
+                // Detect medications
+                Object.entries(MEDICATION_DATABASE).forEach(([med, info]) => {
+                    if (note.includes(med) || (info.hebrew && note.includes(info.hebrew.toLowerCase()))) {
+                        detectedMedications.push({
+                            name: med,
+                            class: info.class,
+                            hebrew: info.hebrew,
+                            beers: info.beers,
+                            anticholinergic: info.anticholinergic
+                        });
+                        
+                        if (info.beers) {
+                            beersViolations.push(med);
+                        }
+                        
+                        anticholinergicBurden += info.anticholinergic;
+                        
+                        // Check for interactions
+                        info.interactions.forEach(interaction => {
+                            if (note.includes(interaction)) {
+                                drugInteractions.push({
+                                    drug1: med,
+                                    drug2: interaction,
+                                    severity: 'Moderate to Severe'
+                                });
+                            }
+                        });
+                    }
+                });
+
+                // Extract vital signs
+                const vitals = {
+                    bp: note.match(/(?:bp|blood pressure)[:\s]+(\d{2,3})[\/\-](\d{2,3})/i),
+                    hr: note.match(/(?:hr|heart rate)[:\s]+(\d{2,3})/i),
+                    temp: note.match(/(?:temp|temperature)[:\s]+(\d{2}\.?\d?)/i),
+                    spo2: note.match(/(?:spo2|oxygen)[:\s]+(\d{2,3})/i)
+                };
+
+                // Detect clinical conditions
+                const conditions = [];
+                const conditionKeywords = {
+                    'delirium': ['delirium', 'confused', 'disoriented', 'agitated'],
+                    'falls': ['fall', 'fell', 'stumbled', 'tripped'],
+                    'dementia': ['dementia', 'alzheimer', 'cognitive impairment', 'memory loss'],
+                    'depression': ['depression', 'depressed', 'sad', 'hopeless'],
+                    'malnutrition': ['malnutrition', 'weight loss', 'poor appetite', 'underweight'],
+                    'polypharmacy': ['polypharmacy', 'multiple medications', 'many drugs'],
+                    'incontinence': ['incontinence', 'incontinent', 'accidents', 'leakage'],
+                    'pressure injury': ['pressure', 'ulcer', 'bedsore', 'wound']
+                };
+
+                Object.entries(conditionKeywords).forEach(([condition, keywords]) => {
+                    if (keywords.some(keyword => note.includes(keyword))) {
+                        conditions.push(condition);
+                    }
+                });
+
+                setAnalysisResults({
+                    medications: detectedMedications,
+                    interactions: drugInteractions,
+                    beersViolations,
+                    anticholinergicBurden,
+                    vitals,
+                    conditions,
+                    recommendations: generateRecommendations(detectedMedications, conditions, anticholinergicBurden)
+                });
+            };
+
+            const generateRecommendations = (medications, conditions, acb) => {
+                const recommendations = [];
+                
+                if (medications.length >= 5) {
+                    recommendations.push('Consider comprehensive medication review for polypharmacy');
+                }
+                
+                if (acb >= 3) {
+                    recommendations.push('High anticholinergic burden - consider deprescribing');
+                }
+                
+                if (conditions.includes('delirium')) {
+                    recommendations.push('Implement delirium prevention protocol');
+                    recommendations.push('Review medications for delirium risk');
+                }
+                
+                if (conditions.includes('falls')) {
+                    recommendations.push('Conduct comprehensive falls assessment');
+                    recommendations.push('Review medications increasing fall risk');
+                }
+                
+                return recommendations;
+            };
+
+            // Data Extraction Function
+            const extractDataFromText = (text) => {
+                const patterns = {
+                    name: /Patient[:\s]+([A-Z][A-Za-z\.\-\s']+)/i,
+                    age: /Age[:\s]+(\d{1,3})/i,
+                    sex: /(?:Sex|Gender)[:\s]+(M|F|Male|Female|Other)/i,
+                    bp: /(?:BP|Blood Pressure)[:\s]+(\d{2,3})[\/\-](\d{2,3})/i,
+                    hr: /(?:HR|Heart Rate)[:\s]+(\d{2,3})/i,
+                    temp: /(?:Temp|Temperature)[:\s]+(\d{2}\.?\d?)/i,
+                    medications: /Medications?[:\s]+([\s\S]*?)(?:\n\n|$)/i,
+                    diagnosis: /Diagnosis[:\s]+([\s\S]*?)(?:\n\n|$)/i,
+                    labs: {
+                        hb: /(?:Hb|Hemoglobin)[:\s]+(\d{1,2}\.?\d?)/i,
+                        wbc: /(?:WBC)[:\s]+(\d{1,2}\.?\d?)/i,
+                        creatinine: /(?:Creatinine|Cr)[:\s]+(\d{1,3}\.?\d?)/i,
+                        sodium: /(?:Na|Sodium)[:\s]+(\d{2,3})/i,
+                        potassium: /(?:K|Potassium)[:\s]+(\d\.\d|\d{1,2})/i
+                    }
+                };
+
+                const extracted = {};
+                
+                Object.entries(patterns).forEach(([key, pattern]) => {
+                    if (key === 'labs') {
+                        extracted.labs = {};
+                        Object.entries(pattern).forEach(([labKey, labPattern]) => {
+                            const match = text.match(labPattern);
+                            if (match) extracted.labs[labKey] = match[1];
+                        });
+                    } else {
+                        const match = text.match(pattern);
+                        if (match) {
+                            extracted[key] = match[2] ? [match[1], match[2]] : match[1];
+                        }
+                    }
+                });
+
+                setExtractedData(extracted);
+                return extracted;
+            };
+
+            // Email Template Generator
+            const generateEmailTemplate = () => {
+                const templates = {
+                    appointment: {
+                        subject: `Appointment Reminder: ${emailData.patientName}`,
+                        body: `Dear ${emailData.patientName || '[Patient Name]'},
+
+This is a reminder of your upcoming appointment:
+
+Date: ${emailData.appointmentDate || '[Date]'}
+Location: ${emailData.location || '[Location]'}
+Provider: ${emailData.provider || '[Provider]'}
+
+${emailData.notes ? `Additional Notes: ${emailData.notes}` : ''}
+
+Please arrive 15 minutes early to complete any necessary paperwork.
+
+If you need to reschedule, please call us at [Phone Number].
+
+Best regards,
+${emailData.provider || '[Provider/Team]'}`
+                    },
+                    careplan: {
+                        subject: `Care Plan Update: ${emailData.patientName}`,
+                        body: `Dear Team,
+
+Please find the updated care plan for ${emailData.patientName || '[Patient Name]'}:
+
+Key Updates:
+- Medication review completed
+- Fall risk assessment updated
+- Goals of care discussed
+
+Next Steps:
+- Follow-up appointment: ${emailData.appointmentDate || '[Date]'}
+- Location: ${emailData.location || '[Location]'}
+
+${emailData.notes ? `Additional Notes: ${emailData.notes}` : ''}
+
+Please review and provide any feedback.
+
+Regards,
+${emailData.provider || '[Provider]'}`
+                    },
+                    followup: {
+                        subject: `Follow-up Required: ${emailData.patientName}`,
+                        body: `Dear ${emailData.provider || '[Provider]'},
+
+Patient ${emailData.patientName || '[Patient Name]'} requires follow-up for:
+
+${emailData.notes || '[Reason for follow-up]'}
+
+Suggested appointment: ${emailData.appointmentDate || '[Date]'}
+Location: ${emailData.location || '[Location]'}
+
+Please coordinate with the patient/family to schedule.
+
+Thank you,
+[Care Team]`
+                    }
+                };
+
+                return templates[emailTemplate] || templates.appointment;
+            };
+
+            // Task Management Functions
+            const addTask = (task) => {
+                const newTask = {
+                    id: Date.now(),
+                    ...task,
+                    createdAt: new Date().toISOString()
+                };
+                setTasks([...tasks, newTask]);
+            };
+
+            const updateTaskStatus = (taskId, newStatus) => {
+                setTasks(tasks.map(task => 
+                    task.id === taskId ? { ...task, status: newStatus } : task
+                ));
+            };
+
+            const deleteTask = (taskId) => {
+                setTasks(tasks.filter(task => task.id !== taskId));
+            };
+
+            // Patient Management Functions
+            const addPatient = (patient) => {
+                const newPatient = {
+                    id: Date.now(),
+                    ...patient,
+                    addedAt: new Date().toISOString()
+                };
+                setPatients([...patients, newPatient]);
+            };
+
+            const updatePatient = (patientId, updates) => {
+                setPatients(patients.map(patient => 
+                    patient.id === patientId ? { ...patient, ...updates } : patient
+                ));
+            };
+
+            const deletePatient = (patientId) => {
+                setPatients(patients.filter(patient => patient.id !== patientId));
+                // Also remove associated tasks
+                setTasks(tasks.filter(task => task.patientId !== patientId));
+            };
+
+            // Knowledge Base Functions
+            const addKnowledgeItem = (item) => {
+                const newItem = {
+                    id: Date.now(),
+                    ...item,
+                    timestamp: Date.now()
+                };
+                setKnowledgeBase([...knowledgeBase, newItem]);
+            };
+
+            const deleteKnowledgeItem = (itemId) => {
+                setKnowledgeBase(knowledgeBase.filter(item => item.id !== itemId));
+            };
+
+            // Export Functions
+            const exportData = (type) => {
+                let data, filename;
+                
+                switch(type) {
+                    case 'all':
+                        data = {
+                            patients,
+                            tasks,
+                            knowledgeBase,
+                            exportDate: new Date().toISOString()
+                        };
+                        filename = 'geriatrics-platform-backup.json';
+                        break;
+                    case 'patients':
+                        data = patients;
+                        filename = 'patients.json';
+                        break;
+                    case 'tasks':
+                        data = tasks;
+                        filename = 'tasks.json';
+                        break;
+                    case 'knowledge':
+                        data = knowledgeBase;
+                        filename = 'knowledge-base.json';
+                        break;
+                    default:
+                        return;
+                }
+                
+                const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = filename;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            };
+
+            // Import Function
+            const importData = (event, type) => {
+                const file = event.target.files[0];
+                if (!file) return;
+                
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    try {
+                        const data = JSON.parse(e.target.result);
+                        
+                        switch(type) {
+                            case 'all':
+                                if (data.patients) setPatients(data.patients);
+                                if (data.tasks) setTasks(data.tasks);
+                                if (data.knowledgeBase) setKnowledgeBase(data.knowledgeBase);
+                                alert('Data imported successfully!');
+                                break;
+                            case 'patients':
+                                setPatients(data);
+                                alert('Patients imported successfully!');
+                                break;
+                            case 'tasks':
+                                setTasks(data);
+                                alert('Tasks imported successfully!');
+                                break;
+                            case 'knowledge':
+                                setKnowledgeBase(data);
+                                alert('Knowledge base imported successfully!');
+                                break;
+                        }
+                    } catch (error) {
+                        alert('Error importing data: ' + error.message);
+                    }
+                };
+                reader.readAsText(file);
+            };
+
+            // Render Navigation
+            const renderNavigation = () => (
+                <header className="sticky top-0 z-40 glass">
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
+                        <div className="flex items-center justify-between">
+                            <div className="flex items-center space-x-4">
+                                <button
+                                    onClick={() => setSidebarOpen(!sidebarOpen)}
+                                    className="md:hidden p-2 rounded-md hover:bg-gray-200 dark:hover:bg-gray-700"
+                                >
+                                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                                    </svg>
+                                </button>
+                                <div className="flex items-center space-x-2">
+                                    <h1 className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                                        Ultimate Geriatrics Platform
+                                    </h1>
+                                    <span className="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
+                                        v3.0 Enhanced
+                                    </span>
+                                </div>
+                            </div>
+                            
+                            <nav className="hidden md:flex items-center space-x-6">
+                                {['Dashboard', 'Clinical', 'Study', 'Patients', 'Tasks', 'Protocols', 'Knowledge', 'Settings'].map(section => (
+                                    <button
+                                        key={section}
+                                        onClick={() => setActiveSection(section.toLowerCase())}
+                                        className={`px-3 py-2 rounded-md transition-colors ${
+                                            activeSection === section.toLowerCase()
+                                                ? 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-200'
+                                                : 'hover:bg-gray-100 dark:hover:bg-gray-700'
+                                        }`}
+                                    >
+                                        {section}
+                                    </button>
+                                ))}
+                            </nav>
+                            
+                            <div className="flex items-center space-x-4">
+                                <input
+                                    type="text"
+                                    placeholder="Search..."
+                                    value={searchQuery}
+                                    onChange={(e) => setSearchQuery(e.target.value)}
+                                    className="hidden lg:block px-3 py-1.5 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800"
+                                />
+                                
+                                <button
+                                    onClick={() => setLanguage(language === 'en' ? 'he' : 'en')}
+                                    className="p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700"
+                                >
+                                    {language === 'en' ? 'EN' : 'עב'}
+                                </button>
+                                
+                                <button
+                                    onClick={() => setDarkMode(!darkMode)}
+                                    className="p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700"
+                                >
+                                    {darkMode ? '☀️' : '🌙'}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </header>
+            );
+
+            // Render Sidebar (Mobile)
+            const renderSidebar = () => (
+                <aside className={`fixed inset-y-0 left-0 z-50 w-64 bg-white dark:bg-gray-800 transform transition-transform md:hidden ${
+                    sidebarOpen ? 'translate-x-0' : '-translate-x-full'
+                }`}>
+                    <div className="p-4">
+                        <div className="flex items-center justify-between mb-6">
+                            <h2 className="text-lg font-semibold">Navigation</h2>
+                            <button
+                                onClick={() => setSidebarOpen(false)}
+                                className="p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700"
+                            >
+                                ✕
+                            </button>
+                        </div>
+                        <nav className="space-y-2">
+                            {['Dashboard', 'Clinical', 'Study', 'Patients', 'Tasks', 'Protocols', 'Knowledge', 'Settings'].map(section => (
+                                <button
+                                    key={section}
+                                    onClick={() => {
+                                        setActiveSection(section.toLowerCase());
+                                        setSidebarOpen(false);
+                                    }}
+                                    className={`w-full text-left px-3 py-2 rounded-md transition-colors ${
+                                        activeSection === section.toLowerCase()
+                                            ? 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-200'
+                                            : 'hover:bg-gray-100 dark:hover:bg-gray-700'
+                                    }`}
+                                >
+                                    {section}
+                                </button>
+                            ))}
+                        </nav>
+                    </div>
+                </aside>
+            );
+
+            // Render Dashboard
+            const renderDashboard = () => (
+                <div className="space-y-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                        <div className="glass p-6 rounded-lg card-hover">
+                            <div className="flex items-center justify-between">
+                                <div>
+                                    <p className="text-sm text-gray-600 dark:text-gray-400">Total Patients</p>
+                                    <p className="text-2xl font-bold">{patients.length}</p>
+                                </div>
+                                <div className="p-3 bg-blue-100 dark:bg-blue-900 rounded-full">
+                                    <svg className="w-6 h-6 text-blue-600 dark:text-blue-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div className="glass p-6 rounded-lg card-hover">
+                            <div className="flex items-center justify-between">
+                                <div>
+                                    <p className="text-sm text-gray-600 dark:text-gray-400">Active Tasks</p>
+                                    <p className="text-2xl font-bold">{tasks.filter(t => t.status !== 'done').length}</p>
+                                </div>
+                                <div className="p-3 bg-green-100 dark:bg-green-900 rounded-full">
+                                    <svg className="w-6 h-6 text-green-600 dark:text-green-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div className="glass p-6 rounded-lg card-hover">
+                            <div className="flex items-center justify-between">
+                                <div>
+                                    <p className="text-sm text-gray-600 dark:text-gray-400">Knowledge Items</p>
+                                    <p className="text-2xl font-bold">{knowledgeBase.length}</p>
+                                </div>
+                                <div className="p-3 bg-purple-100 dark:bg-purple-900 rounded-full">
+                                    <svg className="w-6 h-6 text-purple-600 dark:text-purple-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div className="glass p-6 rounded-lg card-hover">
+                            <div className="flex items-center justify-between">
+                                <div>
+                                    <p className="text-sm text-gray-600 dark:text-gray-400">Protocols</p>
+                                    <p className="text-2xl font-bold">{Object.keys(PROTOCOLS_DATABASE).length}</p>
+                                </div>
+                                <div className="p-3 bg-amber-100 dark:bg-amber-900 rounded-full">
+                                    <svg className="w-6 h-6 text-amber-600 dark:text-amber-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <div className="glass p-6 rounded-lg">
+                            <h3 className="text-lg font-semibold mb-4">Recent Activities</h3>
+                            <div className="space-y-3">
+                                <div className="flex items-center space-x-3">
+                                    <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                                    <p className="text-sm">Clinical note analyzed for Mary Johnson</p>
+                                    <span className="text-xs text-gray-500">2 hours ago</span>
+                                </div>
+                                <div className="flex items-center space-x-3">
+                                    <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                                    <p className="text-sm">Medication review completed for John Smith</p>
+                                    <span className="text-xs text-gray-500">5 hours ago</span>
+                                </div>
+                                <div className="flex items-center space-x-3">
+                                    <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
+                                    <p className="text-sm">New protocol added: Sleep Disorders</p>
+                                    <span className="text-xs text-gray-500">1 day ago</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div className="glass p-6 rounded-lg">
+                            <h3 className="text-lg font-semibold mb-4">Upcoming Appointments</h3>
+                            <div className="space-y-3">
+                                {patients.slice(0, 3).map(patient => (
+                                    <div key={patient.id} className="flex items-center justify-between">
+                                        <div>
+                                            <p className="font-medium">{patient.name}</p>
+                                            <p className="text-sm text-gray-600 dark:text-gray-400">{patient.conditions[0]}</p>
+                                        </div>
+                                        <span className="text-sm text-blue-600 dark:text-blue-400">{patient.nextAppt}</span>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div className="glass p-6 rounded-lg">
+                        <h3 className="text-lg font-semibold mb-4">Quick Actions</h3>
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                            <button
+                                onClick={() => setActiveSection('clinical')}
+                                className="p-4 bg-blue-100 dark:bg-blue-900 rounded-lg hover:bg-blue-200 dark:hover:bg-blue-800 transition-colors"
+                            >
+                                <svg className="w-8 h-8 mx-auto mb-2 text-blue-600 dark:text-blue-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                </svg>
+                                <p className="text-sm font-medium">Analyze Note</p>
+                            </button>
+                            
+                            <button
+                                onClick={() => setActiveSection('patients')}
+                                className="p-4 bg-green-100 dark:bg-green-900 rounded-lg hover:bg-green-200 dark:hover:bg-green-800 transition-colors"
+                            >
+                                <svg className="w-8 h-8 mx-auto mb-2 text-green-600 dark:text-green-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                                </svg>
+                                <p className="text-sm font-medium">Add Patient</p>
+                            </button>
+                            
+                            <button
+                                onClick={() => setActiveSection('tasks')}
+                                className="p-4 bg-purple-100 dark:bg-purple-900 rounded-lg hover:bg-purple-200 dark:hover:bg-purple-800 transition-colors"
+                            >
+                                <svg className="w-8 h-8 mx-auto mb-2 text-purple-600 dark:text-purple-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                                </svg>
+                                <p className="text-sm font-medium">Create Task</p>
+                            </button>
+                            
+                            <button
+                                onClick={() => setActiveSection('study')}
+                                className="p-4 bg-amber-100 dark:bg-amber-900 rounded-lg hover:bg-amber-200 dark:hover:bg-amber-800 transition-colors"
+                            >
+                                <svg className="w-8 h-8 mx-auto mb-2 text-amber-600 dark:text-amber-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                                </svg>
+                                <p className="text-sm font-medium">Study Quiz</p>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            );
+
+            // Render Clinical Analyzer
+            const renderClinicalAnalyzer = () => (
+                <div className="space-y-6">
+                    <div className="glass p-6 rounded-lg">
+                        <h2 className="text-2xl font-bold mb-4">Enhanced Clinical Analyzer</h2>
+                        
+                        <div className="space-y-4">
+                            <div>
+                                <label className="block text-sm font-medium mb-2">Enter Clinical Note:</label>
+                                <textarea
+                                    value={clinicalNote}
+                                    onChange={(e) => setClinicalNote(e.target.value)}
+                                    placeholder="Paste clinical note here... (supports English and Hebrew)"
+                                    className="w-full h-48 p-4 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800"
+                                />
+                            </div>
+                            
+                            <button
+                                onClick={analyzeClinicalNote}
+                                className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                            >
+                                Analyze Note
+                            </button>
+                        </div>
+                        
+                        {analysisResults && (
+                            <div className="mt-6 space-y-6">
+                                {/* Detected Medications */}
+                                <div className="glass p-4 rounded-lg">
+                                    <h3 className="font-semibold mb-3">Detected Medications ({analysisResults.medications.length})</h3>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                        {analysisResults.medications.map((med, idx) => (
+                                            <div key={idx} className="flex items-center justify-between p-2 bg-gray-50 dark:bg-gray-800 rounded">
+                                                <div>
+                                                    <span className="font-medium">{med.name}</span>
+                                                    {med.hebrew && <span className="text-sm text-gray-600 dark:text-gray-400 ml-2">({med.hebrew})</span>}
+                                                    <span className="block text-xs text-gray-500">{med.class}</span>
+                                                </div>
+                                                <div className="flex space-x-2">
+                                                    {med.beers && (
+                                                        <span className="px-2 py-1 text-xs bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-200 rounded">
+                                                            Beers
+                                                        </span>
+                                                    )}
+                                                    {med.anticholinergic > 0 && (
+                                                        <span className="px-2 py-1 text-xs bg-orange-100 text-orange-700 dark:bg-orange-900 dark:text-orange-200 rounded">
+                                                            ACB: {med.anticholinergic}
+                                                        </span>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                                
+                                {/* Drug Interactions */}
+                                {analysisResults.interactions.length > 0 && (
+                                    <div className="glass p-4 rounded-lg border-2 border-yellow-400">
+                                        <h3 className="font-semibold mb-3 text-yellow-700 dark:text-yellow-400">
+                                            ⚠️ Drug Interactions Detected ({analysisResults.interactions.length})
+                                        </h3>
+                                        <div className="space-y-2">
+                                            {analysisResults.interactions.map((interaction, idx) => (
+                                                <div key={idx} className="p-2 bg-yellow-50 dark:bg-yellow-900/20 rounded">
+                                                    <span className="font-medium">{interaction.drug1}</span>
+                                                    <span className="mx-2">↔️</span>
+                                                    <span className="font-medium">{interaction.drug2}</span>
+                                                    <span className="ml-3 text-sm text-yellow-700 dark:text-yellow-400">
+                                                        ({interaction.severity})
+                                                    </span>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
+                                
+                                {/* Beers Criteria Violations */}
+                                {analysisResults.beersViolations.length > 0 && (
+                                    <div className="glass p-4 rounded-lg border-2 border-red-400">
+                                        <h3 className="font-semibold mb-3 text-red-700 dark:text-red-400">
+                                            🚫 Beers Criteria Violations ({analysisResults.beersViolations.length})
+                                        </h3>
+                                        <div className="flex flex-wrap gap-2">
+                                            {analysisResults.beersViolations.map((med, idx) => (
+                                                <span key={idx} className="px-3 py-1 bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-200 rounded">
+                                                    {med}
+                                                </span>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
+                                
+                                {/* Anticholinergic Burden */}
+                                <div className="glass p-4 rounded-lg">
+                                    <h3 className="font-semibold mb-3">Anticholinergic Burden Score</h3>
+                                    <div className="flex items-center space-x-4">
+                                        <div className={`text-3xl font-bold ${
+                                            analysisResults.anticholinergicBurden >= 3 ? 'text-red-600' :
+                                            analysisResults.anticholinergicBurden >= 1 ? 'text-yellow-600' :
+                                            'text-green-600'
+                                        }`}>
+                                            {analysisResults.anticholinergicBurden}
+                                        </div>
+                                        <div className="text-sm">
+                                            {analysisResults.anticholinergicBurden >= 3 && (
+                                                <span className="text-red-600">High risk - Consider deprescribing</span>
+                                            )}
+                                            {analysisResults.anticholinergicBurden >= 1 && analysisResults.anticholinergicBurden < 3 && (
+                                                <span className="text-yellow-600">Moderate risk - Monitor closely</span>
+                                            )}
+                                            {analysisResults.anticholinergicBurden === 0 && (
+                                                <span className="text-green-600">Low risk</span>
+                                            )}
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                {/* Clinical Conditions */}
+                                {analysisResults.conditions.length > 0 && (
+                                    <div className="glass p-4 rounded-lg">
+                                        <h3 className="font-semibold mb-3">Detected Clinical Conditions</h3>
+                                        <div className="flex flex-wrap gap-2">
+                                            {analysisResults.conditions.map((condition, idx) => (
+                                                <span key={idx} className="px-3 py-1 bg-purple-100 text-purple-700 dark:bg-purple-900 dark:text-purple-200 rounded capitalize">
+                                                    {condition}
+                                                </span>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
+                                
+                                {/* Recommendations */}
+                                {analysisResults.recommendations.length > 0 && (
+                                    <div className="glass p-4 rounded-lg border-2 border-green-400">
+                                        <h3 className="font-semibold mb-3 text-green-700 dark:text-green-400">
+                                            ✅ Clinical Recommendations
+                                        </h3>
+                                        <ul className="space-y-2">
+                                            {analysisResults.recommendations.map((rec, idx) => (
+                                                <li key={idx} className="flex items-start">
+                                                    <span className="text-green-600 mr-2">•</span>
+                                                    <span>{rec}</span>
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    </div>
+                                )}
+                            </div>
+                        )}
+                    </div>
+                </div>
+            );
+
+            // Render Study Section with Quiz
+            const renderStudySection = () => {
+                const filteredQuestions = selectedQuizCategory === 'all' 
+                    ? QUIZ_DATABASE 
+                    : QUIZ_DATABASE.filter(q => q.category === selectedQuizCategory);
+                
+                const currentQuestion = filteredQuestions[currentQuizQuestion % filteredQuestions.length];
+                
+                return (
+                    <div className="space-y-6">
+                        <div className="glass p-6 rounded-lg">
+                            <h2 className="text-2xl font-bold mb-4">Geriatrics Study & Quiz</h2>
+                            
+                            <div className="mb-4">
+                                <label className="block text-sm font-medium mb-2">Select Category:</label>
+                                <select
+                                    value={selectedQuizCategory}
+                                    onChange={(e) => {
+                                        setSelectedQuizCategory(e.target.value);
+                                        setCurrentQuizQuestion(0);
+                                        setQuizScore(0);
+                                    }}
+                                    className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800"
+                                >
+                                    <option value="all">All Categories</option>
+                                    <option value="Pharmacology">Pharmacology</option>
+                                    <option value="Syndromes">Geriatric Syndromes</option>
+                                    <option value="Dementia">Dementia</option>
+                                    <option value="Assessment">Assessment</option>
+                                    <option value="Falls">Falls Prevention</option>
+                                    <option value="Polypharmacy">Polypharmacy</option>
+                                    <option value="Nutrition">Nutrition</option>
+                                    <option value="Palliative">Palliative Care</option>
+                                </select>
+                            </div>
+                            
+                            <div className="glass p-6 rounded-lg">
+                                <div className="flex justify-between items-center mb-4">
+                                    <span className="text-sm text-gray-600 dark:text-gray-400">
+                                        Question {(currentQuizQuestion % filteredQuestions.length) + 1} of {filteredQuestions.length}
+                                    </span>
+                                    <span className="text-sm font-medium">
+                                        Score: {quizScore}/{currentQuizQuestion}
+                                    </span>
+                                </div>
+                                
+                                <h3 className="text-lg font-medium mb-4">{currentQuestion.question}</h3>
+                                
+                                <div className="space-y-3">
+                                    {currentQuestion.options.map((option, idx) => (
+                                        <button
+                                            key={idx}
+                                            onClick={() => {
+                                                if (!quizAnswered) {
+                                                    setQuizAnswered(true);
+                                                    if (idx === currentQuestion.correct) {
+                                                        setQuizScore(quizScore + 1);
+                                                    }
+                                                }
+                                            }}
+                                            disabled={quizAnswered}
+                                            className={`w-full text-left p-4 rounded-lg border transition-colors ${
+                                                quizAnswered
+                                                    ? idx === currentQuestion.correct
+                                                        ? 'bg-green-100 border-green-500 dark:bg-green-900 dark:border-green-400'
+                                                        : 'bg-gray-100 dark:bg-gray-800'
+                                                    : 'hover:bg-gray-100 dark:hover:bg-gray-800 border-gray-300 dark:border-gray-600'
+                                            }`}
+                                        >
+                                            {option}
+                                        </button>
+                                    ))}
+                                </div>
+                                
+                                {quizAnswered && (
+                                    <div className="mt-4 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+                                        <p className="text-sm">{currentQuestion.explanation}</p>
+                                    </div>
+                                )}
+                                
+                                <button
+                                    onClick={() => {
+                                        setCurrentQuizQuestion(currentQuizQuestion + 1);
+                                        setQuizAnswered(false);
+                                    }}
+                                    className="mt-4 px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                                >
+                                    Next Question
+                                </button>
+                            </div>
+                        </div>
+                        
+                        {/* Study Resources */}
+                        <div className="glass p-6 rounded-lg">
+                            <h3 className="text-xl font-semibold mb-4">Key Study Topics</h3>
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                                {[
+                                    { title: 'Day 1 Survival Guide', content: 'ABCDE assessment, Medication reconciliation, Falls risk screening, Delirium prevention' },
+                                    { title: 'Comprehensive Geriatric Assessment', content: 'Medical, Functional, Cognitive, Social, Environmental assessments' },
+                                    { title: 'Polypharmacy Management', content: 'Beers Criteria, STOPP/START, Deprescribing strategies, Medication review' },
+                                    { title: 'Falls Prevention', content: 'Risk assessment, Environmental modifications, Exercise programs, Medication optimization' },
+                                    { title: 'Delirium Management', content: 'CAM/4AT screening, Non-pharmacological interventions, Prevention strategies' },
+                                    { title: 'Dementia Care', content: 'Diagnosis, Behavioral management, Caregiver support, Advance care planning' }
+                                ].map((topic, idx) => (
+                                    <div key={idx} className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                                        <h4 className="font-semibold mb-2">{topic.title}</h4>
+                                        <p className="text-sm text-gray-600 dark:text-gray-400">{topic.content}</p>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                );
+            };
+
+            // Render Protocols Section
+            const renderProtocols = () => (
+                <div className="space-y-6">
+                    <div className="glass p-6 rounded-lg">
+                        <h2 className="text-2xl font-bold mb-4">Clinical Protocols</h2>
+                        
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                            {Object.entries(PROTOCOLS_DATABASE).map(([title, protocol]) => (
+                                <div key={title} className="glass p-4 rounded-lg">
+                                    <h3 className="text-lg font-semibold mb-3">{title}</h3>
+                                    
+                                    {protocol.assessment && (
+                                        <div className="mb-3">
+                                            <h4 className="font-medium text-sm text-gray-700 dark:text-gray-300 mb-2">Assessment:</h4>
+                                            <ul className="space-y-1">
+                                                {protocol.assessment.map((item, idx) => (
+                                                    <li key={idx} className="text-sm flex items-start">
+                                                        <span className="text-blue-600 mr-2">•</span>
+                                                        <span>{item}</span>
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        </div>
+                                    )}
+                                    
+                                    {protocol.interventions && (
+                                        <div className="mb-3">
+                                            <h4 className="font-medium text-sm text-gray-700 dark:text-gray-300 mb-2">Interventions:</h4>
+                                            <ul className="space-y-1">
+                                                {protocol.interventions.map((item, idx) => (
+                                                    <li key={idx} className="text-sm flex items-start">
+                                                        <span className="text-green-600 mr-2">•</span>
+                                                        <span>{item}</span>
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        </div>
+                                    )}
+                                    
+                                    {protocol.medications && (
+                                        <div className="mb-3">
+                                            <h4 className="font-medium text-sm text-gray-700 dark:text-gray-300 mb-2">Medications:</h4>
+                                            <ul className="space-y-1">
+                                                {protocol.medications.map((item, idx) => (
+                                                    <li key={idx} className="text-sm flex items-start">
+                                                        <span className="text-purple-600 mr-2">•</span>
+                                                        <span>{item}</span>
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        </div>
+                                    )}
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+            );
+
+            // Render Patients Section
+            const renderPatients = () => (
+                <div className="space-y-6">
+                    <div className="glass p-6 rounded-lg">
+                        <div className="flex justify-between items-center mb-6">
+                            <h2 className="text-2xl font-bold">Patient Management</h2>
+                            <button
+                                onClick={() => {
+                                    const name = prompt('Patient name:');
+                                    if (name) {
+                                        const age = prompt('Age:');
+                                        const conditions = prompt('Conditions (comma-separated):');
+                                        addPatient({
+                                            name,
+                                            age: parseInt(age) || 0,
+                                            sex: prompt('Sex (M/F/Other):') || '',
+                                            conditions: conditions ? conditions.split(',').map(c => c.trim()) : [],
+                                            nextAppt: prompt('Next appointment (YYYY-MM-DD):') || ''
+                                        });
+                                    }
+                                }}
+                                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                            >
+                                Add Patient
+                            </button>
+                        </div>
+                        
+                        <div className="overflow-x-auto">
+                            <table className="w-full">
+                                <thead>
+                                    <tr className="border-b border-gray-200 dark:border-gray-700">
+                                        <th className="text-left py-3 px-4">Name</th>
+                                        <th className="text-left py-3 px-4">Age</th>
+                                        <th className="text-left py-3 px-4">Sex</th>
+                                        <th className="text-left py-3 px-4">Conditions</th>
+                                        <th className="text-left py-3 px-4">Next Appt</th>
+                                        <th className="text-left py-3 px-4">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {patients.map(patient => (
+                                        <tr key={patient.id} className="border-b border-gray-100 dark:border-gray-800">
+                                            <td className="py-3 px-4 font-medium">{patient.name}</td>
+                                            <td className="py-3 px-4">{patient.age}</td>
+                                            <td className="py-3 px-4">{patient.sex}</td>
+                                            <td className="py-3 px-4">
+                                                <div className="flex flex-wrap gap-1">
+                                                    {patient.conditions.map((cond, idx) => (
+                                                        <span key={idx} className="px-2 py-1 text-xs bg-gray-100 dark:bg-gray-700 rounded">
+                                                            {cond}
+                                                        </span>
+                                                    ))}
+                                                </div>
+                                            </td>
+                                            <td className="py-3 px-4">{patient.nextAppt}</td>
+                                            <td className="py-3 px-4">
+                                                <div className="flex space-x-2">
+                                                    <button
+                                                        onClick={() => {
+                                                            const notes = prompt('Add notes for ' + patient.name + ':', patient.notes || '');
+                                                            if (notes !== null) {
+                                                                updatePatient(patient.id, { notes });
+                                                            }
+                                                        }}
+                                                        className="text-blue-600 hover:text-blue-700"
+                                                    >
+                                                        Edit
+                                                    </button>
+                                                    <button
+                                                        onClick={() => {
+                                                            if (confirm('Delete patient ' + patient.name + '?')) {
+                                                                deletePatient(patient.id);
+                                                            }
+                                                        }}
+                                                        className="text-red-600 hover:text-red-700"
+                                                    >
+                                                        Delete
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            );
+
+            // Render Tasks Section (Kanban Board)
+            const renderTasks = () => {
+                const tasksByStatus = {
+                    todo: tasks.filter(t => t.status === 'todo'),
+                    inprogress: tasks.filter(t => t.status === 'inprogress'),
+                    done: tasks.filter(t => t.status === 'done')
+                };
+                
+                return (
+                    <div className="space-y-6">
+                        <div className="glass p-6 rounded-lg">
+                            <div className="flex justify-between items-center mb-6">
+                                <h2 className="text-2xl font-bold">Task Management</h2>
+                                <button
+                                    onClick={() => {
+                                        const title = prompt('Task title:');
+                                        if (title) {
+                                            addTask({
+                                                title,
+                                                description: prompt('Description:') || '',
+                                                priority: prompt('Priority (high/medium/low):') || 'medium',
+                                                dueDate: prompt('Due date (YYYY-MM-DD):') || '',
+                                                status: 'todo'
+                                            });
+                                        }
+                                    }}
+                                    className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+                                >
+                                    Add Task
+                                </button>
+                            </div>
+                            
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                {Object.entries(tasksByStatus).map(([status, statusTasks]) => (
+                                    <div key={status} className="glass p-4 rounded-lg">
+                                        <h3 className="font-semibold mb-3 capitalize flex items-center justify-between">
+                                            {status === 'todo' ? 'To Do' : status === 'inprogress' ? 'In Progress' : 'Done'}
+                                            <span className="text-sm text-gray-500">({statusTasks.length})</span>
+                                        </h3>
+                                        
+                                        <div className="space-y-3">
+                                            {statusTasks.map(task => (
+                                                <div
+                                                    key={task.id}
+                                                    className="p-3 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700"
+                                                    draggable
+                                                    onDragStart={(e) => e.dataTransfer.setData('taskId', task.id)}
+                                                    onDragOver={(e) => e.preventDefault()}
+                                                    onDrop={(e) => {
+                                                        e.preventDefault();
+                                                        const draggedTaskId = parseInt(e.dataTransfer.getData('taskId'));
+                                                        updateTaskStatus(draggedTaskId, status);
+                                                    }}
+                                                >
+                                                    <div className="flex justify-between items-start mb-2">
+                                                        <h4 className="font-medium text-sm">{task.title}</h4>
+                                                        <button
+                                                            onClick={() => deleteTask(task.id)}
+                                                            className="text-red-500 hover:text-red-600"
+                                                        >
+                                                            ×
+                                                        </button>
+                                                    </div>
+                                                    
+                                                    {task.description && (
+                                                        <p className="text-xs text-gray-600 dark:text-gray-400 mb-2">
+                                                            {task.description}
+                                                        </p>
+                                                    )}
+                                                    
+                                                    <div className="flex items-center justify-between">
+                                                        <span className={`text-xs px-2 py-1 rounded ${
+                                                            task.priority === 'high' ? 'bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-200' :
+                                                            task.priority === 'medium' ? 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900 dark:text-yellow-200' :
+                                                            'bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300'
+                                                        }`}>
+                                                            {task.priority}
+                                                        </span>
+                                                        
+                                                        {task.dueDate && (
+                                                            <span className="text-xs text-gray-500">
+                                                                {task.dueDate}
+                                                            </span>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                );
+            };
+
+            // Render Knowledge Base
+            const renderKnowledgeBase = () => (
+                <div className="space-y-6">
+                    <div className="glass p-6 rounded-lg">
+                        <div className="flex justify-between items-center mb-6">
+                            <h2 className="text-2xl font-bold">Knowledge Base</h2>
+                            <button
+                                onClick={() => {
+                                    const title = prompt('Title:');
+                                    if (title) {
+                                        const content = prompt('Content:');
+                                        const tags = prompt('Tags (comma-separated):');
+                                        addKnowledgeItem({
+                                            title,
+                                            content: content || '',
+                                            tags: tags ? tags.split(',').map(t => t.trim()) : []
+                                        });
+                                    }
+                                }}
+                                className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
+                            >
+                                Add Item
+                            </button>
+                        </div>
+                        
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            {knowledgeBase
+                                .filter(item => 
+                                    !searchQuery || 
+                                    item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                                    item.content.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                                    item.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()))
+                                )
+                                .map(item => (
+                                    <div key={item.id} className="glass p-4 rounded-lg">
+                                        <div className="flex justify-between items-start mb-2">
+                                            <h3 className="font-semibold">{item.title}</h3>
+                                            <button
+                                                onClick={() => deleteKnowledgeItem(item.id)}
+                                                className="text-red-500 hover:text-red-600"
+                                            >
+                                                ×
+                                            </button>
+                                        </div>
+                                        
+                                        <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
+                                            {item.content}
+                                        </p>
+                                        
+                                        <div className="flex flex-wrap gap-1">
+                                            {item.tags.map((tag, idx) => (
+                                                <span key={idx} className="px-2 py-1 text-xs bg-purple-100 text-purple-700 dark:bg-purple-900 dark:text-purple-200 rounded">
+                                                    #{tag}
+                                                </span>
+                                            ))}
+                                        </div>
+                                    </div>
+                                ))}
+                        </div>
+                    </div>
+                </div>
+            );
+
+            // Render Settings
+            const renderSettings = () => (
+                <div className="space-y-6">
+                    <div className="glass p-6 rounded-lg">
+                        <h2 className="text-2xl font-bold mb-6">Settings & Data Management</h2>
+                        
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div className="space-y-4">
+                                <h3 className="text-lg font-semibold">Export Data</h3>
+                                <div className="space-y-2">
+                                    <button
+                                        onClick={() => exportData('all')}
+                                        className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                                    >
+                                        Export All Data
+                                    </button>
+                                    <button
+                                        onClick={() => exportData('patients')}
+                                        className="w-full px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
+                                    >
+                                        Export Patients
+                                    </button>
+                                    <button
+                                        onClick={() => exportData('tasks')}
+                                        className="w-full px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
+                                    >
+                                        Export Tasks
+                                    </button>
+                                    <button
+                                        onClick={() => exportData('knowledge')}
+                                        className="w-full px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
+                                    >
+                                        Export Knowledge Base
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div className="space-y-4">
+                                <h3 className="text-lg font-semibold">Import Data</h3>
+                                <div className="space-y-2">
+                                    <label className="block">
+                                        <span className="text-sm">Import All Data</span>
+                                        <input
+                                            type="file"
+                                            accept=".json"
+                                            onChange={(e) => importData(e, 'all')}
+                                            className="block w-full mt-1 text-sm"
+                                        />
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div className="mt-8 p-4 bg-red-50 dark:bg-red-900/20 rounded-lg">
+                            <h3 className="text-lg font-semibold text-red-700 dark:text-red-400 mb-2">Danger Zone</h3>
+                            <button
+                                onClick={() => {
+                                    if (confirm('Are you sure you want to reset all data? This action cannot be undone.')) {
+                                        localStorage.clear();
+                                        window.location.reload();
+                                    }
+                                }}
+                                className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+                            >
+                                Reset All Data
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div className="glass p-6 rounded-lg">
+                        <h3 className="text-lg font-semibold mb-4">About</h3>
+                        <div className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
+                            <p>Ultimate Geriatrics Platform v3.0 Enhanced</p>
+                            <p>A comprehensive medical hub for geriatric care management</p>
+                            <p>Features: Clinical Analysis, Patient Management, Task Tracking, Study Resources, and more</p>
+                            <div className="flex space-x-4 mt-4">
+                                <a href="https://geriatrics22.netlify.app/" target="_blank" className="text-blue-600 hover:underline">
+                                    Platform Link
+                                </a>
+                                <a href="https://geriatrics-study.netlify.app/" target="_blank" className="text-blue-600 hover:underline">
+                                    Study Link
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+
+            // Main Render
+            return (
+                <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+                    {renderNavigation()}
+                    {renderSidebar()}
+                    
+                    <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                        {activeSection === 'dashboard' && renderDashboard()}
+                        {activeSection === 'clinical' && renderClinicalAnalyzer()}
+                        {activeSection === 'study' && renderStudySection()}
+                        {activeSection === 'protocols' && renderProtocols()}
+                        {activeSection === 'patients' && renderPatients()}
+                        {activeSection === 'tasks' && renderTasks()}
+                        {activeSection === 'knowledge' && renderKnowledgeBase()}
+                        {activeSection === 'settings' && renderSettings()}
+                    </main>
+                    
+                    {/* Footer */}
+                    <footer className="mt-12 py-6 border-t border-gray-200 dark:border-gray-700">
+                        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                            <div className="flex flex-col md:flex-row justify-between items-center">
+                                <p className="text-sm text-gray-600 dark:text-gray-400">
+                                    © 2024 Ultimate Geriatrics Platform. All rights reserved.
+                                </p>
+                                <div className="flex space-x-6 mt-4 md:mt-0">
+                                    <a href="#" className="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100">
+                                        Privacy Policy
+                                    </a>
+                                    <a href="#" className="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100">
+                                        Terms of Service
+                                    </a>
+                                    <a href="#" className="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100">
+                                        Contact
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </footer>
+                </div>
+            );
+        }
+
+        // Render the application
+        ReactDOM.createRoot(document.getElementById('root')).render(<UltimateGeriatricsPlatform />);
+    </script>
+</body>
+</html>

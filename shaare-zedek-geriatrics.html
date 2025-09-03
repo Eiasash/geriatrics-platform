@@ -1,0 +1,1444 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shaare Zedek Geriatrics Platform | פלטפורמת גריאטריה שערי צדק</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * { font-family: 'Heebo', sans-serif; }
+        
+        :root {
+            --primary: #0052CC;
+            --secondary: #00A86B;
+            --accent: #FF6B6B;
+            --warning: #FFA500;
+            --dark: #1a1a2e;
+            --light: #f8f9fa;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .glass {
+            background: rgba(255, 255, 255, 0.97);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+        }
+
+        .dark .glass {
+            background: rgba(26, 26, 46, 0.95);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .gradient-primary {
+            background: linear-gradient(135deg, #0052CC 0%, #00A86B 100%);
+        }
+
+        .gradient-secondary {
+            background: linear-gradient(135deg, #FF6B6B 0%, #FFA500 100%);
+        }
+
+        .card-hover {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .card-hover:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .floating {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .pulse-dot {
+            position: relative;
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #00A86B;
+        }
+
+        .pulse-dot::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: #00A86B;
+            animation: pulse-ring 1.5s ease-out infinite;
+        }
+
+        @keyframes pulse-ring {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(2.5);
+                opacity: 0;
+            }
+        }
+
+        .sidebar-item {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .sidebar-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: right 0.5s;
+        }
+
+        .sidebar-item:hover::before {
+            right: 100%;
+        }
+
+        .badge-emergency {
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 50%, 100% { opacity: 1; }
+            25%, 75% { opacity: 0.5; }
+        }
+
+        .scroll-smooth {
+            scroll-behavior: smooth;
+        }
+
+        /* RTL Support Styles */
+        [dir="rtl"] .ltr-only {
+            direction: ltr;
+        }
+
+        .medication-card {
+            background: linear-gradient(135deg, rgba(0, 82, 204, 0.1) 0%, rgba(0, 168, 107, 0.1) 100%);
+        }
+
+        .beers-violation {
+            background: linear-gradient(135deg, rgba(255, 107, 107, 0.2) 0%, rgba(255, 165, 0, 0.2) 100%);
+            border-left: 4px solid #FF6B6B;
+        }
+
+        .interaction-warning {
+            background: linear-gradient(135deg, rgba(255, 165, 0, 0.2) 0%, rgba(255, 193, 7, 0.2) 100%);
+            border-left: 4px solid #FFA500;
+        }
+
+        .success-message {
+            background: linear-gradient(135deg, rgba(0, 168, 107, 0.2) 0%, rgba(0, 204, 102, 0.2) 100%);
+            border-left: 4px solid #00A86B;
+        }
+
+        /* Modern Scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+            height: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #0052CC 0%, #00A86B 100%);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, #0052CC 0%, #00A86B 100%);
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-purple-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800 min-h-screen">
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useRef, useCallback, useMemo } = React;
+
+        // Shaare Zedek Hospital Data
+        const SHAARE_ZEDEK_DATA = {
+            extensions: {
+                'ביוכימיה': '69261',
+                'המטולוגיה': '55983',
+                'אנדוקרינולוגיה': '55042',
+                'CT': '68724/55595/68187',
+                'גסטרו': '68611',
+                'טיפול נמרץ': '68236',
+                'CCU': '68339/55583',
+                'רדיולוגיה': '68435',
+                'חדר מיון': '68704',
+                'אורתופדיה': '68482/68483',
+                'פיזיותרפיה': '68182',
+                'אונקו-גינקולוגיה': '68621',
+                'תזונה': '68069',
+                'לב יוחנה': '68543',
+                'פלסטיקה': '68165',
+                'מעבדה': '66221',
+                'בית מרקחת': '68223',
+                'דיאליזה': '55545',
+                'מזכירות גריאטריה': '68069',
+                'IT Helpdesk': '55990'
+            },
+
+            antibiotics: {
+                'אוגמנטין': {
+                    generic: 'Amoxicillin-Clavulanate',
+                    normal: '875mg x2/יום',
+                    renalAdjustment: {
+                        'GFR>50': 'ללא שינוי',
+                        'GFR 30-50': '875mg x2/יום',
+                        'GFR 10-30': '875mg x1/יום',
+                        'GFR<10': '875mg כל 48 שעות'
+                    },
+                    hemodialysis: '875mg אחרי דיאליזה',
+                    peritoneal: '875mg כל 48 שעות'
+                },
+                'זוביראקס (אציקלוביר)': {
+                    dosing: '5-12mg/kg כל 8 שעות',
+                    renalAdjustment: {
+                        'GFR 10-50': '5-12mg/kg כל 12-24 שעות',
+                        'GFR<10': '2.5mg/kg כל 24 שעות'
+                    }
+                },
+                'אמפיצילין': {
+                    normal: '1-2g כל 4-6 שעות',
+                    renalAdjustment: {
+                        'GFR 10-50': 'כל 6-12 שעות',
+                        'GFR<10': 'כל 12-24 שעות'
+                    }
+                },
+                'צפאזולין': {
+                    normal: '1-2g כל 8 שעות',
+                    renalAdjustment: {
+                        'GFR 10-50': 'כל 12 שעות',
+                        'GFR<10': 'כל 24-48 שעות'
+                    }
+                },
+                'צפאפים': {
+                    normal: '1-2g כל 12 שעות',
+                    renalAdjustment: {
+                        'GFR 30-50': '1-2g כל 12-24 שעות',
+                        'GFR 10-30': '1g כל 24 שעות',
+                        'GFR<10': 'להימנע'
+                    }
+                },
+                'ציפרופלוקסצין': {
+                    normal: '500-750mg x2/יום PO',
+                    renalAdjustment: {
+                        'GFR 30-50': '50-75% מהמינון',
+                        'GFR<30': '50% מהמינון'
+                    }
+                },
+                'ונקומיצין': {
+                    normal: '500mg כל 6 שעות או 1g כל 12 שעות',
+                    renalAdjustment: 'לפי רמות',
+                    targetTrough: '15-20 לזיהומים חמורים'
+                },
+                'טזוצין': {
+                    normal: '4.5g כל 8 שעות',
+                    renalAdjustment: {
+                        'GFR 20-40': '2.25g כל 6 שעות',
+                        'GFR<20': '2.25g כל 8 שעות'
+                    }
+                },
+                'מרופנם': {
+                    normal: '1g כל 8 שעות',
+                    renalAdjustment: {
+                        'GFR 25-50': '1g כל 12 שעות',
+                        'GFR 10-25': '0.5g כל 24 שעות'
+                    }
+                }
+            },
+
+            protocols: {
+                hipFracture: {
+                    title: 'פרוטוקול שבר צוואר ירך',
+                    analgesia: {
+                        first: 'פרצטמול 1g PO/IV כל 6 שעות קבוע',
+                        second: 'טרמדול 25-50mg PO כל 12 שעות לפי צורך',
+                        avoid: 'NSAIDs - סיכון כלייתי',
+                        block: 'לשקול Fascia Iliaca Block'
+                    },
+                    timing: 'ניתוח תוך 48 שעות',
+                    dvtProphylaxis: 'אם ניתוח מתעכב >24 שעות',
+                    calcium: 'סידן קרבונט 1000-1500mg/יום + ויטמין D 2000IU'
+                },
+                painManagement: {
+                    title: 'ניהול כאב בקשישים',
+                    tramadol: {
+                        elderly: 'התחל 25mg x2/יום',
+                        max: '100mg/יום מעל גיל 75',
+                        caution: 'סיכון לפרכוסים עם SSRI'
+                    },
+                    opioids: {
+                        principle: 'התחל נמוך, העלה לאט',
+                        morphine: '2.5mg SC כל 4 שעות לפי צורך',
+                        oxycodone: '2.5mg PO כל 6 שעות לפי צורך'
+                    }
+                },
+                delirium: {
+                    title: 'פרוטוקול דליריום',
+                    screening: '4AT בקבלה',
+                    prevention: [
+                        'ודא משקפיים/מכשיר שמיעה',
+                        'אוריינטציה חוזרת',
+                        'מנע רעב/צמא',
+                        'הקדם ניידות',
+                        'שמור על מחזור שינה'
+                    ],
+                    treatment: {
+                        nonPharm: 'גישה לא תרופתית תחילה',
+                        pharm: 'הלופרידול 0.25-0.5mg במקרים חמורים בלבד'
+                    }
+                }
+            },
+
+            schedule: {
+                sunday: {
+                    '08:00': 'ביקור מחלקה',
+                    '09:00': 'ישיבת צוות - חדר 6',
+                    '14:00': 'Journal Club'
+                },
+                monday: {
+                    '08:00': 'ביקור מחלקה',
+                    '09:00': 'ישיבת צוות - חדר 6',
+                    '12:30': 'פרופ\' שפירא',
+                    '14:00': 'Journal Club - חדר 6'
+                },
+                tuesday: {
+                    '08:00': 'ביקור מחלקה',
+                    '13:00': 'הרצאת אורח'
+                },
+                wednesday: {
+                    '08:00': 'ביקור מחלקה',
+                    '09:00': 'ישיבת MDT'
+                },
+                thursday: {
+                    '08:00': 'ביקור גדול',
+                    '14:00': 'הוראה ליד המיטה'
+                }
+            },
+
+            credentials: {
+                portal: 'https://owa.szmc.org.il/owa',
+                username: 'iyasas',
+                email: 'iyasas@szmc.org.il',
+                helpdesk: '55990',
+                portalIT: 'PortalIT@szmc.org.il'
+            }
+        };
+
+        // Enhanced Medication Database with Hebrew
+        const MEDICATION_DATABASE = {
+            // Cardiovascular - לב וכלי דם
+            'metoprolol': { 
+                class: 'Beta Blocker', 
+                hebrew: 'מטופרולול', 
+                israeli: 'לופרסור',
+                interactions: ['verapamil', 'diltiazem'], 
+                beers: false, 
+                anticholinergic: 0 
+            },
+            'atenolol': { 
+                class: 'Beta Blocker', 
+                hebrew: 'אטנולול', 
+                israeli: 'נורמיטן',
+                interactions: ['verapamil'], 
+                beers: false, 
+                anticholinergic: 0 
+            },
+            'bisoprolol': { 
+                class: 'Beta Blocker', 
+                hebrew: 'ביסופרולול', 
+                israeli: 'קונקור',
+                interactions: ['verapamil'], 
+                beers: false, 
+                anticholinergic: 0 
+            },
+            'amlodipine': { 
+                class: 'CCB', 
+                hebrew: 'אמלודיפין', 
+                israeli: 'נורווסק',
+                interactions: ['simvastatin'], 
+                beers: false, 
+                anticholinergic: 0 
+            },
+            'lisinopril': { 
+                class: 'ACE-I', 
+                hebrew: 'ליזינופריל', 
+                israeli: 'פריניביל',
+                interactions: ['spironolactone', 'potassium'], 
+                beers: false, 
+                anticholinergic: 0 
+            },
+            'losartan': { 
+                class: 'ARB', 
+                hebrew: 'לוסרטן', 
+                israeli: 'אופטן',
+                interactions: ['spironolactone'], 
+                beers: false, 
+                anticholinergic: 0 
+            },
+            'warfarin': { 
+                class: 'Anticoagulant', 
+                hebrew: 'וורפרין', 
+                israeli: 'קומדין',
+                interactions: ['aspirin', 'amiodarone', 'fluconazole', 'clarithromycin'], 
+                beers: false, 
+                anticholinergic: 0 
+            },
+            'apixaban': { 
+                class: 'DOAC', 
+                hebrew: 'אפיקסבן', 
+                israeli: 'אליקוויס',
+                interactions: ['ketoconazole'], 
+                beers: false, 
+                anticholinergic: 0 
+            },
+            'furosemide': { 
+                class: 'Loop Diuretic', 
+                hebrew: 'פורוסמיד', 
+                israeli: 'פוסיד',
+                interactions: ['digoxin', 'lithium'], 
+                beers: false, 
+                anticholinergic: 0 
+            },
+            'spironolactone': { 
+                class: 'K-sparing Diuretic', 
+                hebrew: 'ספירונולקטון', 
+                israeli: 'אלדקטון',
+                interactions: ['ACE-I', 'ARB'], 
+                beers: false, 
+                anticholinergic: 0 
+            },
+            
+            // Diabetes - סוכרת
+            'metformin': { 
+                class: 'Biguanide', 
+                hebrew: 'מטפורמין', 
+                israeli: 'גלוקופאג\'',
+                interactions: [], 
+                beers: false, 
+                anticholinergic: 0 
+            },
+            'glipizide': { 
+                class: 'Sulfonylurea', 
+                hebrew: 'גליפיזיד', 
+                israeli: 'מינודיאב',
+                interactions: [], 
+                beers: true, 
+                anticholinergic: 0 
+            },
+            'glyburide': { 
+                class: 'Sulfonylurea', 
+                hebrew: 'גליבוריד', 
+                israeli: 'דאוניל',
+                interactions: [], 
+                beers: true, 
+                anticholinergic: 0 
+            },
+            'sitagliptin': { 
+                class: 'DPP-4', 
+                hebrew: 'סיטגליפטין', 
+                israeli: 'ג\'נוביה',
+                interactions: [], 
+                beers: false, 
+                anticholinergic: 0 
+            },
+            
+            // Neurological - נוירולוגיה
+            'donepezil': { 
+                class: 'Cholinesterase Inhibitor', 
+                hebrew: 'דונפזיל', 
+                israeli: 'אריספט',
+                interactions: [], 
+                beers: false, 
+                anticholinergic: -1 
+            },
+            'memantine': { 
+                class: 'NMDA Antagonist', 
+                hebrew: 'ממנטין', 
+                israeli: 'אביקסה',
+                interactions: [], 
+                beers: false, 
+                anticholinergic: 0 
+            },
+            'sertraline': { 
+                class: 'SSRI', 
+                hebrew: 'סרטרלין', 
+                israeli: 'לוסטרל',
+                interactions: ['tramadol', 'warfarin'], 
+                beers: false, 
+                anticholinergic: 0 
+            },
+            'escitalopram': { 
+                class: 'SSRI', 
+                hebrew: 'אסציטלופרם', 
+                israeli: 'ציפרלקס',
+                interactions: ['tramadol'], 
+                beers: false, 
+                anticholinergic: 0 
+            },
+            'quetiapine': { 
+                class: 'Antipsychotic', 
+                hebrew: 'קווטיאפין', 
+                israeli: 'סרוקוול',
+                interactions: [], 
+                beers: true, 
+                anticholinergic: 1 
+            },
+            'lorazepam': { 
+                class: 'Benzodiazepine', 
+                hebrew: 'לורזפם', 
+                israeli: 'לוריוון',
+                interactions: ['opioids'], 
+                beers: true, 
+                anticholinergic: 0 
+            },
+            
+            // Pain - כאב
+            'acetaminophen': { 
+                class: 'Analgesic', 
+                hebrew: 'אצטמינופן', 
+                israeli: 'אקמול',
+                interactions: ['warfarin'], 
+                beers: false, 
+                anticholinergic: 0 
+            },
+            'tramadol': { 
+                class: 'Opioid', 
+                hebrew: 'טרמדול', 
+                israeli: 'טרמל',
+                interactions: ['SSRIs', 'SNRIs'], 
+                beers: false, 
+                anticholinergic: 0 
+            },
+            
+            // GI - מערכת עיכול
+            'omeprazole': { 
+                class: 'PPI', 
+                hebrew: 'אומפרזול', 
+                israeli: 'לוסק',
+                interactions: ['clopidogrel'], 
+                beers: false, 
+                anticholinergic: 0 
+            },
+            'pantoprazole': { 
+                class: 'PPI', 
+                hebrew: 'פנטופרזול', 
+                israeli: 'קונטרולוק',
+                interactions: [], 
+                beers: false, 
+                anticholinergic: 0 
+            }
+        };
+
+        // Main Application Component
+        function ShaareZedekGeriatricsPlatform() {
+            // State Management
+            const [language, setLanguage] = useState('he');
+            const [darkMode, setDarkMode] = useState(false);
+            const [activeSection, setActiveSection] = useState('dashboard');
+            const [sidebarOpen, setSidebarOpen] = useState(true);
+            const [searchQuery, setSearchQuery] = useState('');
+            
+            // Clinical State
+            const [clinicalNote, setClinicalNote] = useState('');
+            const [analysisResults, setAnalysisResults] = useState(null);
+            const [selectedProtocol, setSelectedProtocol] = useState(null);
+            
+            // Patient State
+            const [patients, setPatients] = useState([
+                { 
+                    id: 1, 
+                    name: 'שרה כהן', 
+                    age: 84, 
+                    ward: 'גריאטריה א\'', 
+                    bed: '12',
+                    conditions: ['יתר לחץ דם', 'סוכרת', 'דמנציה'],
+                    medications: ['amlodipine', 'metformin', 'donepezil'],
+                    nextAppt: '2024-01-15'
+                },
+                { 
+                    id: 2, 
+                    name: 'משה לוי', 
+                    age: 79, 
+                    ward: 'גריאטריה ב\'', 
+                    bed: '8',
+                    conditions: ['פרפור עליות', 'אי ספיקת כליות'],
+                    medications: ['apixaban', 'furosemide', 'bisoprolol'],
+                    nextAppt: '2024-01-12'
+                }
+            ]);
+            
+            // Task State
+            const [tasks, setTasks] = useState([
+                { 
+                    id: 1, 
+                    title: 'בדיקת תרופות - שרה כהן',
+                    priority: 'high',
+                    dueTime: '10:00',
+                    status: 'pending',
+                    type: 'medication'
+                },
+                { 
+                    id: 2, 
+                    title: 'קונסולטציה אורתופדית - משה לוי',
+                    priority: 'medium',
+                    dueTime: '14:00',
+                    status: 'pending',
+                    type: 'consult'
+                }
+            ]);
+
+            // Notification State
+            const [notifications, setNotifications] = useState([
+                { id: 1, message: 'תוצאות מעבדה חדשות - שרה כהן', type: 'info', time: '08:30' },
+                { id: 2, message: 'התראת אינטראקציה תרופתית', type: 'warning', time: '09:15' }
+            ]);
+
+            // Apply dark mode
+            useEffect(() => {
+                if (darkMode) {
+                    document.documentElement.classList.add('dark');
+                } else {
+                    document.documentElement.classList.remove('dark');
+                }
+            }, [darkMode]);
+
+            // Set RTL/LTR based on language
+            useEffect(() => {
+                document.documentElement.dir = language === 'he' ? 'rtl' : 'ltr';
+                document.documentElement.lang = language;
+            }, [language]);
+
+            // Clinical Analysis Function
+            const analyzeClinicalNote = () => {
+                const note = clinicalNote.toLowerCase();
+                const detectedMedications = [];
+                const drugInteractions = [];
+                const beersViolations = [];
+                let anticholinergicBurden = 0;
+
+                // Detect medications (both English and Hebrew)
+                Object.entries(MEDICATION_DATABASE).forEach(([med, info]) => {
+                    if (note.includes(med) || 
+                        (info.hebrew && note.includes(info.hebrew.toLowerCase())) ||
+                        (info.israeli && note.includes(info.israeli.toLowerCase()))) {
+                        detectedMedications.push({
+                            name: med,
+                            hebrew: info.hebrew,
+                            israeli: info.israeli,
+                            class: info.class,
+                            beers: info.beers,
+                            anticholinergic: info.anticholinergic
+                        });
+                        
+                        if (info.beers) {
+                            beersViolations.push({ name: med, hebrew: info.hebrew });
+                        }
+                        
+                        anticholinergicBurden += info.anticholinergic;
+                        
+                        // Check for interactions
+                        info.interactions.forEach(interaction => {
+                            const interactingMed = MEDICATION_DATABASE[interaction];
+                            if (note.includes(interaction) || 
+                                (interactingMed && interactingMed.hebrew && note.includes(interactingMed.hebrew.toLowerCase()))) {
+                                drugInteractions.push({
+                                    drug1: med,
+                                    drug1Hebrew: info.hebrew,
+                                    drug2: interaction,
+                                    drug2Hebrew: interactingMed ? interactingMed.hebrew : interaction,
+                                    severity: 'בינונית עד חמורה'
+                                });
+                            }
+                        });
+                    }
+                });
+
+                setAnalysisResults({
+                    medications: detectedMedications,
+                    interactions: drugInteractions,
+                    beersViolations,
+                    anticholinergicBurden,
+                    recommendations: generateRecommendations(detectedMedications, anticholinergicBurden)
+                });
+            };
+
+            const generateRecommendations = (medications, acb) => {
+                const recommendations = [];
+                
+                if (medications.length >= 5) {
+                    recommendations.push('מומלץ לבצע סקירת תרופות מקיפה - פוליפרמצי');
+                }
+                
+                if (acb >= 3) {
+                    recommendations.push('עומס אנטיכולינרגי גבוה - שקול הפחתה');
+                }
+                
+                medications.forEach(med => {
+                    if (med.beers) {
+                        recommendations.push(`${med.hebrew || med.name} - תרופה בקריטריון Beers, שקול חלופה`);
+                    }
+                });
+                
+                return recommendations;
+            };
+
+            // Header Component
+            const renderHeader = () => (
+                <header className="glass sticky top-0 z-50 border-b border-gray-200 dark:border-gray-700">
+                    <div className="px-4 sm:px-6 lg:px-8">
+                        <div className="flex items-center justify-between h-16">
+                            <div className="flex items-center">
+                                <button
+                                    onClick={() => setSidebarOpen(!sidebarOpen)}
+                                    className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700"
+                                >
+                                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} 
+                                            d={sidebarOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16M4 18h16"} />
+                                    </svg>
+                                </button>
+                                
+                                <div className="mr-4 flex items-center">
+                                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%230052CC'/%3E%3Ctext x='50' y='50' text-anchor='middle' dy='.3em' fill='white' font-size='40' font-weight='bold'%3Eש״צ%3C/text%3E%3C/svg%3E" 
+                                         alt="Logo" className="h-10 w-10 rounded-lg ml-2" />
+                                    <div>
+                                        <h1 className="text-xl font-bold gradient-primary bg-clip-text text-transparent">
+                                            {language === 'he' ? 'מערכת גריאטריה' : 'Geriatrics System'}
+                                        </h1>
+                                        <p className="text-xs text-gray-500">Shaare Zedek Medical Center</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div className="flex items-center space-x-4">
+                                <div className="relative">
+                                    <input
+                                        type="text"
+                                        placeholder={language === 'he' ? "חיפוש..." : "Search..."}
+                                        value={searchQuery}
+                                        onChange={(e) => setSearchQuery(e.target.value)}
+                                        className="px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 focus:ring-2 focus:ring-blue-500"
+                                        style={{ direction: language === 'he' ? 'rtl' : 'ltr' }}
+                                    />
+                                </div>
+                                
+                                <div className="relative">
+                                    <button className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 relative">
+                                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} 
+                                                d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                                        </svg>
+                                        <span className="absolute top-0 right-0 h-2 w-2 bg-red-500 rounded-full pulse-dot"></span>
+                                    </button>
+                                </div>
+                                
+                                <button
+                                    onClick={() => setLanguage(language === 'he' ? 'en' : 'he')}
+                                    className="px-3 py-2 rounded-lg bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 hover:bg-blue-200 dark:hover:bg-blue-800 font-medium"
+                                >
+                                    {language === 'he' ? 'EN' : 'עב'}
+                                </button>
+                                
+                                <button
+                                    onClick={() => setDarkMode(!darkMode)}
+                                    className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700"
+                                >
+                                    {darkMode ? '☀️' : '🌙'}
+                                </button>
+                                
+                                <div className="flex items-center">
+                                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='50' fill='%23e0e0e0'/%3E%3Ctext x='50' y='50' text-anchor='middle' dy='.3em' fill='%23666' font-size='40'%3E👤%3C/text%3E%3C/svg%3E" 
+                                         alt="User" className="h-10 w-10 rounded-full" />
+                                    <div className="mr-2">
+                                        <p className="text-sm font-medium">Dr. Iyasas</p>
+                                        <p className="text-xs text-gray-500">{SHAARE_ZEDEK_DATA.credentials.email}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </header>
+            );
+
+            // Sidebar Component
+            const renderSidebar = () => {
+                const menuItems = [
+                    { id: 'dashboard', icon: '📊', label: language === 'he' ? 'לוח בקרה' : 'Dashboard' },
+                    { id: 'patients', icon: '👥', label: language === 'he' ? 'מטופלים' : 'Patients' },
+                    { id: 'clinical', icon: '🔬', label: language === 'he' ? 'ניתוח קליני' : 'Clinical Analysis' },
+                    { id: 'medications', icon: '💊', label: language === 'he' ? 'תרופות' : 'Medications' },
+                    { id: 'protocols', icon: '📋', label: language === 'he' ? 'פרוטוקולים' : 'Protocols' },
+                    { id: 'antibiotics', icon: '🦠', label: language === 'he' ? 'אנטיביוטיקה' : 'Antibiotics' },
+                    { id: 'contacts', icon: '📞', label: language === 'he' ? 'טלפונים' : 'Contacts' },
+                    { id: 'schedule', icon: '📅', label: language === 'he' ? 'לוח זמנים' : 'Schedule' },
+                    { id: 'tasks', icon: '✅', label: language === 'he' ? 'משימות' : 'Tasks' }
+                ];
+
+                return (
+                    <aside className={`${sidebarOpen ? 'w-64' : 'w-16'} transition-all duration-300 glass border-l border-gray-200 dark:border-gray-700`}>
+                        <nav className="p-4 space-y-2">
+                            {menuItems.map(item => (
+                                <button
+                                    key={item.id}
+                                    onClick={() => setActiveSection(item.id)}
+                                    className={`w-full flex items-center ${sidebarOpen ? 'justify-start' : 'justify-center'} px-3 py-2 rounded-lg transition-all sidebar-item ${
+                                        activeSection === item.id 
+                                            ? 'gradient-primary text-white' 
+                                            : 'hover:bg-gray-100 dark:hover:bg-gray-700'
+                                    }`}
+                                >
+                                    <span className="text-xl">{item.icon}</span>
+                                    {sidebarOpen && <span className="mr-3 font-medium">{item.label}</span>}
+                                </button>
+                            ))}
+                        </nav>
+                    </aside>
+                );
+            };
+
+            // Dashboard Component
+            const renderDashboard = () => (
+                <div className="p-6 space-y-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                        <div className="glass p-6 rounded-xl card-hover">
+                            <div className="flex items-center justify-between">
+                                <div>
+                                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                                        {language === 'he' ? 'מטופלים פעילים' : 'Active Patients'}
+                                    </p>
+                                    <p className="text-3xl font-bold gradient-primary bg-clip-text text-transparent">
+                                        {patients.length}
+                                    </p>
+                                </div>
+                                <div className="p-3 bg-blue-100 dark:bg-blue-900 rounded-lg">
+                                    <span className="text-2xl">👥</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div className="glass p-6 rounded-xl card-hover">
+                            <div className="flex items-center justify-between">
+                                <div>
+                                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                                        {language === 'he' ? 'משימות להיום' : 'Today\'s Tasks'}
+                                    </p>
+                                    <p className="text-3xl font-bold gradient-secondary bg-clip-text text-transparent">
+                                        {tasks.filter(t => t.status === 'pending').length}
+                                    </p>
+                                </div>
+                                <div className="p-3 bg-green-100 dark:bg-green-900 rounded-lg">
+                                    <span className="text-2xl">✅</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div className="glass p-6 rounded-xl card-hover">
+                            <div className="flex items-center justify-between">
+                                <div>
+                                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                                        {language === 'he' ? 'התראות Beers' : 'Beers Alerts'}
+                                    </p>
+                                    <p className="text-3xl font-bold text-orange-600">3</p>
+                                </div>
+                                <div className="p-3 bg-orange-100 dark:bg-orange-900 rounded-lg">
+                                    <span className="text-2xl">⚠️</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div className="glass p-6 rounded-xl card-hover">
+                            <div className="flex items-center justify-between">
+                                <div>
+                                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                                        {language === 'he' ? 'קונסולטציות' : 'Consultations'}
+                                    </p>
+                                    <p className="text-3xl font-bold text-purple-600">2</p>
+                                </div>
+                                <div className="p-3 bg-purple-100 dark:bg-purple-900 rounded-lg">
+                                    <span className="text-2xl">🏥</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    {/* Quick Actions */}
+                    <div className="glass p-6 rounded-xl">
+                        <h3 className="text-lg font-bold mb-4">
+                            {language === 'he' ? 'פעולות מהירות' : 'Quick Actions'}
+                        </h3>
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                            <button className="p-4 bg-gradient-to-br from-blue-500 to-blue-600 text-white rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all">
+                                <span className="text-2xl mb-2 block">🔬</span>
+                                {language === 'he' ? 'ניתוח הערה' : 'Analyze Note'}
+                            </button>
+                            <button className="p-4 bg-gradient-to-br from-green-500 to-green-600 text-white rounded-lg hover:from-green-600 hover:to-green-700 transition-all">
+                                <span className="text-2xl mb-2 block">💊</span>
+                                {language === 'he' ? 'בדיקת תרופות' : 'Check Meds'}
+                            </button>
+                            <button className="p-4 bg-gradient-to-br from-purple-500 to-purple-600 text-white rounded-lg hover:from-purple-600 hover:to-purple-700 transition-all">
+                                <span className="text-2xl mb-2 block">📋</span>
+                                {language === 'he' ? 'פרוטוקולים' : 'Protocols'}
+                            </button>
+                            <button className="p-4 bg-gradient-to-br from-orange-500 to-orange-600 text-white rounded-lg hover:from-orange-600 hover:to-orange-700 transition-all">
+                                <span className="text-2xl mb-2 block">📞</span>
+                                {language === 'he' ? 'טלפונים' : 'Contacts'}
+                            </button>
+                        </div>
+                    </div>
+                    
+                    {/* Notifications */}
+                    <div className="glass p-6 rounded-xl">
+                        <h3 className="text-lg font-bold mb-4">
+                            {language === 'he' ? 'התראות אחרונות' : 'Recent Notifications'}
+                        </h3>
+                        <div className="space-y-3">
+                            {notifications.map(notif => (
+                                <div key={notif.id} className={`p-3 rounded-lg flex items-center justify-between ${
+                                    notif.type === 'warning' ? 'bg-orange-50 dark:bg-orange-900/20' : 'bg-blue-50 dark:bg-blue-900/20'
+                                }`}>
+                                    <div className="flex items-center">
+                                        <span className="text-xl ml-3">
+                                            {notif.type === 'warning' ? '⚠️' : 'ℹ️'}
+                                        </span>
+                                        <span>{notif.message}</span>
+                                    </div>
+                                    <span className="text-sm text-gray-500">{notif.time}</span>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+            );
+
+            // Clinical Analysis Component
+            const renderClinicalAnalysis = () => (
+                <div className="p-6 space-y-6">
+                    <div className="glass p-6 rounded-xl">
+                        <h2 className="text-2xl font-bold mb-6 gradient-primary bg-clip-text text-transparent">
+                            {language === 'he' ? 'ניתוח הערה קלינית' : 'Clinical Note Analysis'}
+                        </h2>
+                        
+                        <div className="space-y-4">
+                            <textarea
+                                value={clinicalNote}
+                                onChange={(e) => setClinicalNote(e.target.value)}
+                                placeholder={language === 'he' ? 
+                                    "הדבק הערה קלינית כאן... (תומך בעברית ואנגלית)" : 
+                                    "Paste clinical note here... (supports Hebrew and English)"}
+                                className="w-full h-48 p-4 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 focus:ring-2 focus:ring-blue-500"
+                                style={{ direction: language === 'he' ? 'rtl' : 'ltr' }}
+                            />
+                            
+                            <button
+                                onClick={analyzeClinicalNote}
+                                className="px-6 py-3 gradient-primary text-white rounded-lg hover:shadow-lg transition-all"
+                            >
+                                {language === 'he' ? '🔬 נתח הערה' : '🔬 Analyze Note'}
+                            </button>
+                        </div>
+                        
+                        {analysisResults && (
+                            <div className="mt-6 space-y-4">
+                                {/* Detected Medications */}
+                                <div className="medication-card p-4 rounded-lg">
+                                    <h3 className="font-bold mb-3">
+                                        {language === 'he' ? `תרופות שזוהו (${analysisResults.medications.length})` : 
+                                         `Detected Medications (${analysisResults.medications.length})`}
+                                    </h3>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                        {analysisResults.medications.map((med, idx) => (
+                                            <div key={idx} className="glass p-3 rounded-lg flex items-center justify-between">
+                                                <div>
+                                                    <span className="font-medium">{med.hebrew || med.name}</span>
+                                                    {med.israeli && (
+                                                        <span className="text-sm text-gray-600 mr-2">({med.israeli})</span>
+                                                    )}
+                                                    <span className="block text-xs text-gray-500">{med.class}</span>
+                                                </div>
+                                                <div className="flex gap-2">
+                                                    {med.beers && (
+                                                        <span className="px-2 py-1 text-xs bg-red-100 text-red-700 rounded-full">
+                                                            Beers
+                                                        </span>
+                                                    )}
+                                                    {med.anticholinergic > 0 && (
+                                                        <span className="px-2 py-1 text-xs bg-orange-100 text-orange-700 rounded-full">
+                                                            ACB: {med.anticholinergic}
+                                                        </span>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                                
+                                {/* Drug Interactions */}
+                                {analysisResults.interactions.length > 0 && (
+                                    <div className="interaction-warning p-4 rounded-lg">
+                                        <h3 className="font-bold mb-3 text-orange-700">
+                                            ⚠️ {language === 'he' ? 
+                                                `אינטראקציות תרופתיות (${analysisResults.interactions.length})` : 
+                                                `Drug Interactions (${analysisResults.interactions.length})`}
+                                        </h3>
+                                        <div className="space-y-2">
+                                            {analysisResults.interactions.map((interaction, idx) => (
+                                                <div key={idx} className="p-2 bg-orange-50 dark:bg-orange-900/20 rounded">
+                                                    <span className="font-medium">{interaction.drug1Hebrew || interaction.drug1}</span>
+                                                    <span className="mx-2">↔️</span>
+                                                    <span className="font-medium">{interaction.drug2Hebrew || interaction.drug2}</span>
+                                                    <span className="mr-3 text-sm text-orange-700">({interaction.severity})</span>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
+                                
+                                {/* Beers Violations */}
+                                {analysisResults.beersViolations.length > 0 && (
+                                    <div className="beers-violation p-4 rounded-lg">
+                                        <h3 className="font-bold mb-3 text-red-700">
+                                            🚫 {language === 'he' ? 
+                                                `הפרות קריטריון Beers (${analysisResults.beersViolations.length})` : 
+                                                `Beers Criteria Violations (${analysisResults.beersViolations.length})`}
+                                        </h3>
+                                        <div className="flex flex-wrap gap-2">
+                                            {analysisResults.beersViolations.map((med, idx) => (
+                                                <span key={idx} className="px-3 py-1 bg-red-100 text-red-700 rounded-full">
+                                                    {med.hebrew || med.name}
+                                                </span>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
+                                
+                                {/* Anticholinergic Burden */}
+                                <div className="glass p-4 rounded-lg">
+                                    <h3 className="font-bold mb-3">
+                                        {language === 'he' ? 'עומס אנטיכולינרגי' : 'Anticholinergic Burden Score'}
+                                    </h3>
+                                    <div className="flex items-center space-x-4">
+                                        <div className={`text-4xl font-bold ${
+                                            analysisResults.anticholinergicBurden >= 3 ? 'text-red-600' :
+                                            analysisResults.anticholinergicBurden >= 1 ? 'text-orange-600' :
+                                            'text-green-600'
+                                        }`}>
+                                            {analysisResults.anticholinergicBurden}
+                                        </div>
+                                        <div className="text-sm">
+                                            {analysisResults.anticholinergicBurden >= 3 && (
+                                                <span className="text-red-600">
+                                                    {language === 'he' ? 'סיכון גבוה - שקול הפחתה' : 'High risk - Consider reduction'}
+                                                </span>
+                                            )}
+                                            {analysisResults.anticholinergicBurden >= 1 && analysisResults.anticholinergicBurden < 3 && (
+                                                <span className="text-orange-600">
+                                                    {language === 'he' ? 'סיכון בינוני - עקוב' : 'Moderate risk - Monitor'}
+                                                </span>
+                                            )}
+                                            {analysisResults.anticholinergicBurden === 0 && (
+                                                <span className="text-green-600">
+                                                    {language === 'he' ? 'סיכון נמוך' : 'Low risk'}
+                                                </span>
+                                            )}
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                {/* Recommendations */}
+                                {analysisResults.recommendations.length > 0 && (
+                                    <div className="success-message p-4 rounded-lg">
+                                        <h3 className="font-bold mb-3 text-green-700">
+                                            ✅ {language === 'he' ? 'המלצות קליניות' : 'Clinical Recommendations'}
+                                        </h3>
+                                        <ul className="space-y-2">
+                                            {analysisResults.recommendations.map((rec, idx) => (
+                                                <li key={idx} className="flex items-start">
+                                                    <span className="text-green-600 ml-2">•</span>
+                                                    <span>{rec}</span>
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    </div>
+                                )}
+                            </div>
+                        )}
+                    </div>
+                </div>
+            );
+
+            // Patients Component
+            const renderPatients = () => (
+                <div className="p-6 space-y-6">
+                    <div className="glass p-6 rounded-xl">
+                        <div className="flex justify-between items-center mb-6">
+                            <h2 className="text-2xl font-bold gradient-primary bg-clip-text text-transparent">
+                                {language === 'he' ? 'רשימת מטופלים' : 'Patient List'}
+                            </h2>
+                            <button className="px-4 py-2 gradient-primary text-white rounded-lg hover:shadow-lg transition-all">
+                                {language === 'he' ? '➕ הוסף מטופל' : '➕ Add Patient'}
+                            </button>
+                        </div>
+                        
+                        <div className="overflow-x-auto">
+                            <table className="w-full">
+                                <thead>
+                                    <tr className="border-b border-gray-200 dark:border-gray-700">
+                                        <th className="text-right py-3 px-4">{language === 'he' ? 'שם' : 'Name'}</th>
+                                        <th className="text-right py-3 px-4">{language === 'he' ? 'גיל' : 'Age'}</th>
+                                        <th className="text-right py-3 px-4">{language === 'he' ? 'מחלקה' : 'Ward'}</th>
+                                        <th className="text-right py-3 px-4">{language === 'he' ? 'מיטה' : 'Bed'}</th>
+                                        <th className="text-right py-3 px-4">{language === 'he' ? 'אבחנות' : 'Diagnoses'}</th>
+                                        <th className="text-right py-3 px-4">{language === 'he' ? 'תרופות' : 'Medications'}</th>
+                                        <th className="text-right py-3 px-4">{language === 'he' ? 'פעולות' : 'Actions'}</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {patients.map(patient => (
+                                        <tr key={patient.id} className="border-b border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800">
+                                            <td className="py-3 px-4 font-medium">{patient.name}</td>
+                                            <td className="py-3 px-4">{patient.age}</td>
+                                            <td className="py-3 px-4">{patient.ward}</td>
+                                            <td className="py-3 px-4">{patient.bed}</td>
+                                            <td className="py-3 px-4">
+                                                <div className="flex flex-wrap gap-1">
+                                                    {patient.conditions.map((cond, idx) => (
+                                                        <span key={idx} className="px-2 py-1 text-xs bg-blue-100 text-blue-700 rounded-full">
+                                                            {cond}
+                                                        </span>
+                                                    ))}
+                                                </div>
+                                            </td>
+                                            <td className="py-3 px-4">
+                                                <div className="flex flex-wrap gap-1">
+                                                    {patient.medications.map((med, idx) => {
+                                                        const medInfo = MEDICATION_DATABASE[med];
+                                                        return (
+                                                            <span key={idx} className={`px-2 py-1 text-xs rounded-full ${
+                                                                medInfo && medInfo.beers 
+                                                                    ? 'bg-red-100 text-red-700' 
+                                                                    : 'bg-green-100 text-green-700'
+                                                            }`}>
+                                                                {medInfo ? (medInfo.hebrew || med) : med}
+                                                            </span>
+                                                        );
+                                                    })}
+                                                </div>
+                                            </td>
+                                            <td className="py-3 px-4">
+                                                <button className="px-3 py-1 text-sm gradient-primary text-white rounded hover:shadow-lg transition-all">
+                                                    {language === 'he' ? 'פרטים' : 'Details'}
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            );
+
+            // Antibiotics Component
+            const renderAntibiotics = () => (
+                <div className="p-6 space-y-6">
+                    <div className="glass p-6 rounded-xl">
+                        <h2 className="text-2xl font-bold mb-6 gradient-primary bg-clip-text text-transparent">
+                            {language === 'he' ? 'פרוטוקול אנטיביוטיקה' : 'Antibiotic Protocol'}
+                        </h2>
+                        
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                            {Object.entries(SHAARE_ZEDEK_DATA.antibiotics).map(([name, data]) => (
+                                <div key={name} className="glass p-4 rounded-lg">
+                                    <h3 className="font-bold text-lg mb-3 gradient-secondary bg-clip-text text-transparent">
+                                        {name}
+                                    </h3>
+                                    {data.generic && (
+                                        <p className="text-sm text-gray-600 mb-2">({data.generic})</p>
+                                    )}
+                                    
+                                    <div className="space-y-2">
+                                        {data.normal && (
+                                            <div className="flex justify-between">
+                                                <span className="text-sm font-medium">מינון רגיל:</span>
+                                                <span className="text-sm ltr-only">{data.normal}</span>
+                                            </div>
+                                        )}
+                                        
+                                        {data.renalAdjustment && (
+                                            <div>
+                                                <p className="text-sm font-medium mb-1">התאמה לכליות:</p>
+                                                <div className="mr-4 space-y-1">
+                                                    {Object.entries(data.renalAdjustment).map(([gfr, dose]) => (
+                                                        <div key={gfr} className="flex justify-between text-xs">
+                                                            <span className="ltr-only">{gfr}:</span>
+                                                            <span className="ltr-only">{dose}</span>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        )}
+                                        
+                                        {data.hemodialysis && (
+                                            <div className="flex justify-between">
+                                                <span className="text-sm font-medium">המודיאליזה:</span>
+                                                <span className="text-sm">{data.hemodialysis}</span>
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+            );
+
+            // Contacts Component
+            const renderContacts = () => (
+                <div className="p-6 space-y-6">
+                    <div className="glass p-6 rounded-xl">
+                        <h2 className="text-2xl font-bold mb-6 gradient-primary bg-clip-text text-transparent">
+                            {language === 'he' ? 'מספרי טלפון - שערי צדק' : 'Shaare Zedek Phone Directory'}
+                        </h2>
+                        
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            {Object.entries(SHAARE_ZEDEK_DATA.extensions).map(([dept, ext]) => (
+                                <div key={dept} className="glass p-4 rounded-lg hover:shadow-lg transition-all card-hover">
+                                    <div className="flex items-center justify-between">
+                                        <div>
+                                            <h3 className="font-semibold">{dept}</h3>
+                                            <p className="text-2xl font-bold text-blue-600 ltr-only">{ext}</p>
+                                        </div>
+                                        <button className="p-2 bg-green-100 hover:bg-green-200 rounded-lg transition-all">
+                                            📞
+                                        </button>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                        
+                        <div className="mt-6 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+                            <h3 className="font-bold mb-2">פרטי התחברות למערכת:</h3>
+                            <p className="text-sm">Portal: <span className="ltr-only">{SHAARE_ZEDEK_DATA.credentials.portal}</span></p>
+                            <p className="text-sm">Username: <span className="ltr-only">{SHAARE_ZEDEK_DATA.credentials.username}</span></p>
+                            <p className="text-sm">Email: <span className="ltr-only">{SHAARE_ZEDEK_DATA.credentials.email}</span></p>
+                        </div>
+                    </div>
+                </div>
+            );
+
+            // Protocols Component
+            const renderProtocols = () => (
+                <div className="p-6 space-y-6">
+                    <div className="glass p-6 rounded-xl">
+                        <h2 className="text-2xl font-bold mb-6 gradient-primary bg-clip-text text-transparent">
+                            {language === 'he' ? 'פרוטוקולים קליניים' : 'Clinical Protocols'}
+                        </h2>
+                        
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                            {Object.entries(SHAARE_ZEDEK_DATA.protocols).map(([key, protocol]) => (
+                                <div key={key} className="glass p-5 rounded-lg">
+                                    <h3 className="text-xl font-bold mb-4 gradient-secondary bg-clip-text text-transparent">
+                                        {protocol.title}
+                                    </h3>
+                                    
+                                    {protocol.analgesia && (
+                                        <div className="mb-4">
+                                            <h4 className="font-semibold mb-2">משככי כאב:</h4>
+                                            <ul className="space-y-1 text-sm">
+                                                <li>• ראשון: {protocol.analgesia.first}</li>
+                                                <li>• שני: {protocol.analgesia.second}</li>
+                                                <li className="text-red-600">• להימנע: {protocol.analgesia.avoid}</li>
+                                                <li className="text-blue-600">• {protocol.analgesia.block}</li>
+                                            </ul>
+                                        </div>
+                                    )}
+                                    
+                                    {protocol.prevention && (
+                                        <div className="mb-4">
+                                            <h4 className="font-semibold mb-2">מניעה:</h4>
+                                            <ul className="space-y-1 text-sm">
+                                                {protocol.prevention.map((item, idx) => (
+                                                    <li key={idx}>• {item}</li>
+                                                ))}
+                                            </ul>
+                                        </div>
+                                    )}
+                                    
+                                    {protocol.treatment && (
+                                        <div className="mb-4">
+                                            <h4 className="font-semibold mb-2">טיפול:</h4>
+                                            <ul className="space-y-1 text-sm">
+                                                <li>• {protocol.treatment.nonPharm}</li>
+                                                <li className="text-orange-600">• {protocol.treatment.pharm}</li>
+                                            </ul>
+                                        </div>
+                                    )}
+                                    
+                                    {protocol.timing && (
+                                        <p className="text-sm font-medium text-green-600">⏰ {protocol.timing}</p>
+                                    )}
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+            );
+
+            // Schedule Component
+            const renderSchedule = () => {
+                const today = new Date().toLocaleDateString('en-US', { weekday: 'long' }).toLowerCase();
+                const todaySchedule = SHAARE_ZEDEK_DATA.schedule[today] || {};
+                
+                return (
+                    <div className="p-6 space-y-6">
+                        <div className="glass p-6 rounded-xl">
+                            <h2 className="text-2xl font-bold mb-6 gradient-primary bg-clip-text text-transparent">
+                                {language === 'he' ? 'לוח זמנים' : 'Schedule'}
+                            </h2>
+                            
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                                {Object.entries(SHAARE_ZEDEK_DATA.schedule).map(([day, schedule]) => (
+                                    <div key={day} className={`glass p-4 rounded-lg ${
+                                        day === today ? 'ring-2 ring-blue-500' : ''
+                                    }`}>
+                                        <h3 className="font-bold mb-3 capitalize">
+                                            {language === 'he' ? 
+                                                {sunday: 'ראשון', monday: 'שני', tuesday: 'שלישי', 
+                                                 wednesday: 'רביעי', thursday: 'חמישי'}[day] || day 
+                                                : day}
+                                        </h3>
+                                        <div className="space-y-2">
+                                            {Object.entries(schedule).map(([time, event]) => (
+                                                <div key={time} className="flex justify-between text-sm">
+                                                    <span className="font-medium ltr-only">{time}</span>
+                                                    <span>{event}</span>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                );
+            };
+
+            // Tasks Component
+            const renderTasks = () => (
+                <div className="p-6 space-y-6">
+                    <div className="glass p-6 rounded-xl">
+                        <h2 className="text-2xl font-bold mb-6 gradient-primary bg-clip-text text-transparent">
+                            {language === 'he' ? 'משימות יומיות' : 'Daily Tasks'}
+                        </h2>
+                        
+                        <div className="space-y-3">
+                            {tasks.map(task => (
+                                <div key={task.id} className={`glass p-4 rounded-lg flex items-center justify-between ${
+                                    task.priority === 'high' ? 'border-r-4 border-red-500' : 
+                                    task.priority === 'medium' ? 'border-r-4 border-yellow-500' : 
+                                    'border-r-4 border-green-500'
+                                }`}>
+                                    <div className="flex items-center">
+                                        <input
+                                            type="checkbox"
+                                            checked={task.status === 'completed'}
+                                            onChange={() => {
+                                                setTasks(tasks.map(t => 
+                                                    t.id === task.id 
+                                                        ? {...t, status: t.status === 'completed' ? 'pending' : 'completed'} 
+                                                        : t
+                                                ));
+                                            }}
+                                            className="ml-3 h-5 w-5 text-blue-600 rounded"
+                                        />
+                                        <div>
+                                            <p className={`font-medium ${task.status === 'completed' ? 'line-through opacity-60' : ''}`}>
+                                                {task.title}
+                                            </p>
+                                            <p className="text-sm text-gray-500">
+                                                {task.dueTime} • {task.type === 'medication' ? '💊' : '🏥'} 
+                                                {task.type === 'medication' ? ' תרופות' : ' קונסולטציה'}
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                                        task.priority === 'high' ? 'bg-red-100 text-red-700' :
+                                        task.priority === 'medium' ? 'bg-yellow-100 text-yellow-700' :
+                                        'bg-green-100 text-green-700'
+                                    }`}>
+                                        {task.priority === 'high' ? 'דחוף' : 
+                                         task.priority === 'medium' ? 'בינוני' : 'רגיל'}
+                                    </span>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+            );
+
+            // Main Render
+            return (
+                <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
+                    {renderHeader()}
+                    
+                    <div className="flex">
+                        {renderSidebar()}
+                        
+                        <main className="flex-1">
+                            {activeSection === 'dashboard' && renderDashboard()}
+                            {activeSection === 'patients' && renderPatients()}
+                            {activeSection === 'clinical' && renderClinicalAnalysis()}
+                            {activeSection === 'antibiotics' && renderAntibiotics()}
+                            {activeSection === 'contacts' && renderContacts()}
+                            {activeSection === 'protocols' && renderProtocols()}
+                            {activeSection === 'schedule' && renderSchedule()}
+                            {activeSection === 'tasks' && renderTasks()}
+                        </main>
+                    </div>
+                    
+                    {/* Floating Action Button */}
+                    <button className="fixed bottom-6 left-6 p-4 gradient-primary text-white rounded-full shadow-lg hover:shadow-xl transition-all floating">
+                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                        </svg>
+                    </button>
+                </div>
+            );
+        }
+
+        // Render the application
+        ReactDOM.createRoot(document.getElementById('root')).render(<ShaareZedekGeriatricsPlatform />);
+    </script>
+</body>
+</html>

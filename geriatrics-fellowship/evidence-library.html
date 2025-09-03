@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evidence Library - Landmark Trials & Guidelines</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .trial-card {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .trial-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <div class="container mx-auto p-6">
+        <!-- Header -->
+        <header class="flex justify-between items-center mb-6">
+            <div>
+                <h1 class="text-3xl font-bold text-gray-900">📊 Evidence Library</h1>
+                <p class="text-gray-600">Landmark Trials & Clinical Guidelines for Geriatrics</p>
+            </div>
+            <button onclick="window.location.href='index.html'" class="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600">
+                🏠 Home
+            </button>
+        </header>
+
+        <!-- Search and Filter -->
+        <div class="bg-white rounded-lg shadow p-4 mb-6">
+            <div class="flex gap-4">
+                <input type="text" id="searchInput" placeholder="Search trials or guidelines..." 
+                    class="flex-1 p-2 border border-gray-300 rounded-lg"
+                    onkeyup="filterTrials()">
+                <select id="categoryFilter" onchange="filterTrials()" class="p-2 border border-gray-300 rounded-lg">
+                    <option value="">All Categories</option>
+                    <option value="cardiovascular">Cardiovascular</option>
+                    <option value="cognitive">Cognitive/Dementia</option>
+                    <option value="falls">Falls Prevention</option>
+                    <option value="pharmacology">Pharmacology</option>
+                    <option value="frailty">Frailty</option>
+                </select>
+                <select id="yearFilter" onchange="filterTrials()" class="p-2 border border-gray-300 rounded-lg">
+                    <option value="">All Years</option>
+                    <option value="2020">2020+</option>
+                    <option value="2015">2015+</option>
+                    <option value="2010">2010+</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Landmark Trials Section -->
+        <div class="mb-8">
+            <h2 class="text-2xl font-bold mb-4 text-indigo-600">🏆 Landmark Geriatric Trials</h2>
+            <div id="trialsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <!-- Trials will be loaded here -->
+            </div>
+        </div>
+
+        <!-- Guidelines Section -->
+        <div class="mb-8">
+            <h2 class="text-2xl font-bold mb-4 text-green-600">📋 Clinical Guidelines</h2>
+            <div id="guidelinesGrid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <!-- Guidelines will be loaded here -->
+            </div>
+        </div>
+
+        <!-- Trial Detail Modal -->
+        <div id="trialModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+            <div class="relative top-20 mx-auto p-5 border w-11/12 md:w-3/4 lg:w-2/3 shadow-lg rounded-md bg-white">
+                <div class="mt-3">
+                    <div class="flex justify-between items-start mb-4">
+                        <h3 id="modalTitle" class="text-xl font-bold text-gray-900"></h3>
+                        <button onclick="closeModal()" class="text-gray-400 hover:text-gray-600 text-2xl">&times;</button>
+                    </div>
+                    <div id="modalContent" class="text-gray-700">
+                        <!-- Content will be loaded here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Landmark trials database
+        const trials = [
+            {
+                id: 1,
+                name: "SPRINT",
+                fullName: "Systolic Blood Pressure Intervention Trial",
+                year: 2015,
+                category: "cardiovascular",
+                population: "Adults ≥50 years with SBP ≥130 mmHg and increased CV risk",
+                intervention: "Intensive BP control (SBP <120) vs Standard (SBP <140)",
+                outcome: "25% reduction in primary composite outcome (MI, ACS, stroke, HF, CV death)",
+                keyFindings: "Intensive BP control significantly reduced CV events and mortality but increased AKI and hypotension",
+                clinicalPearls: "Consider intensive BP control in robust elderly, monitor closely for adverse effects",
+                pmid: "26551272"
+            },
+            {
+                id: 2,
+                name: "HYVET",
+                fullName: "Hypertension in the Very Elderly Trial",
+                year: 2008,
+                category: "cardiovascular",
+                population: "Adults ≥80 years with SBP ≥160 mmHg",
+                intervention: "Indapamide ± perindopril vs placebo",
+                outcome: "30% reduction in fatal or nonfatal stroke",
+                keyFindings: "Treatment of HTN in very elderly reduces stroke and mortality",
+                clinicalPearls: "Even very elderly benefit from HTN treatment",
+                pmid: "18378519"
+            },
+            {
+                id: 3,
+                name: "SPPB Validation",
+                fullName: "Short Physical Performance Battery",
+                year: 1994,
+                category: "frailty",
+                population: "Community-dwelling elderly ≥71 years",
+                intervention: "Physical performance assessment tool",
+                outcome: "Strong predictor of disability and mortality",
+                keyFindings: "SPPB score <10 predicts disability, institutionalization, and death",
+                clinicalPearls: "Use SPPB for objective frailty assessment in clinical practice",
+                pmid: "8126356"
+            },
+            {
+                id: 4,
+                name: "FINGER",
+                fullName: "Finnish Geriatric Intervention Study",
+                year: 2015,
+                category: "cognitive",
+                population: "Adults 60-77 years at risk for cognitive decline",
+                intervention: "Multidomain intervention (diet, exercise, cognitive training, vascular risk)",
+                outcome: "25% improvement in cognitive performance",
+                keyFindings: "Multidomain lifestyle intervention can improve or maintain cognitive functioning",
+                clinicalPearls: "Comprehensive lifestyle interventions may prevent cognitive decline",
+                pmid: "25771249"
+            },
+            {
+                id: 5,
+                name: "STRIDE",
+                fullName: "Strategies to Reduce Injuries and Develop Confidence in Elders",
+                year: 2020,
+                category: "falls",
+                population: "Community-dwelling adults ≥70 years at fall risk",
+                intervention: "Multifactorial fall prevention vs enhanced usual care",
+                outcome: "No significant reduction in serious fall injuries",
+                keyFindings: "Pragmatic multifactorial intervention did not reduce serious fall injuries",
+                clinicalPearls: "Focus on targeted interventions (exercise, vitamin D) with proven efficacy",
+                pmid: "32640131"
+            }
+        ];
+
+        const guidelines = [
+            {
+                id: 1,
+                title: "2019 AGS Beers Criteria",
+                organization: "American Geriatrics Society",
+                year: 2019,
+                category: "pharmacology",
+                description: "Potentially inappropriate medications in older adults",
+                keyPoints: [
+                    "Avoid benzodiazepines for insomnia, agitation, or delirium",
+                    "Avoid antipsychotics as first-line for behavioral problems in dementia",
+                    "Avoid NSAIDs in heart failure, CKD, or with high bleeding risk",
+                    "Start low and go slow with new medications"
+                ],
+                url: "https://geriatricscareonline.org/beers"
+            },
+            {
+                id: 2,
+                title: "Falls Prevention Guidelines",
+                organization: "USPSTF",
+                year: 2018,
+                category: "falls",
+                description: "Evidence-based recommendations for fall prevention",
+                keyPoints: [
+                    "Exercise interventions prevent falls (Grade B)",
+                    "Multifactorial interventions selectively for high risk (Grade C)",
+                    "Vitamin D supplementation if deficient",
+                    "Review and reduce psychoactive medications"
+                ],
+                url: "https://www.uspreventiveservicestaskforce.org"
+            },
+            {
+                id: 3,
+                title: "Dementia Management Guidelines",
+                organization: "AAN/APA",
+                year: 2020,
+                category: "cognitive",
+                description: "Diagnosis and management of dementia",
+                keyPoints: [
+                    "Cholinesterase inhibitors for mild-moderate Alzheimer's",
+                    "Memantine for moderate-severe dementia",
+                    "Non-pharmacological interventions first for behavioral symptoms",
+                    "Regular reassessment of cognitive and functional status"
+                ],
+                url: "https://www.aan.com"
+            },
+            {
+                id: 4,
+                title: "Frailty Consensus",
+                organization: "International Conference on Frailty",
+                year: 2013,
+                category: "frailty",
+                description: "Operational definition and assessment of frailty",
+                keyPoints: [
+                    "Screen all adults >70 years for frailty",
+                    "Use validated tools (Fried criteria, FRAIL scale, CFS)",
+                    "Comprehensive geriatric assessment for frail patients",
+                    "Multicomponent interventions including exercise and nutrition"
+                ],
+                url: "https://onlinelibrary.wiley.com"
+            }
+        ];
+
+        // Load trials and guidelines
+        function loadContent() {
+            loadTrials();
+            loadGuidelines();
+        }
+
+        function loadTrials() {
+            const grid = document.getElementById('trialsGrid');
+            grid.innerHTML = trials.map(trial => `
+                <div class="trial-card bg-white rounded-lg shadow p-4" onclick="showTrialDetail(${trial.id})">
+                    <div class="flex justify-between items-start mb-2">
+                        <h3 class="font-bold text-lg text-indigo-600">${trial.name}</h3>
+                        <span class="text-sm text-gray-500">${trial.year}</span>
+                    </div>
+                    <p class="text-sm text-gray-700 mb-2">${trial.fullName}</p>
+                    <p class="text-xs text-gray-600 mb-3">${trial.population}</p>
+                    <div class="flex justify-between items-center">
+                        <span class="px-2 py-1 bg-indigo-100 text-indigo-800 rounded-full text-xs">
+                            ${trial.category}
+                        </span>
+                        <button class="text-indigo-600 hover:text-indigo-800 text-sm font-medium">
+                            View Details →
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function loadGuidelines() {
+            const grid = document.getElementById('guidelinesGrid');
+            grid.innerHTML = guidelines.map(guideline => `
+                <div class="bg-white rounded-lg shadow p-4">
+                    <div class="flex justify-between items-start mb-2">
+                        <h3 class="font-bold text-lg text-green-600">${guideline.title}</h3>
+                        <span class="text-sm text-gray-500">${guideline.year}</span>
+                    </div>
+                    <p class="text-sm text-gray-700 mb-1">${guideline.organization}</p>
+                    <p class="text-xs text-gray-600 mb-3">${guideline.description}</p>
+                    <div class="mb-3">
+                        <h4 class="font-semibold text-sm mb-1">Key Points:</h4>
+                        <ul class="text-xs text-gray-600 space-y-1">
+                            ${guideline.keyPoints.slice(0, 2).map(point => 
+                                `<li>• ${point}</li>`
+                            ).join('')}
+                        </ul>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs">
+                            ${guideline.category}
+                        </span>
+                        <button onclick="showGuidelineDetail(${guideline.id})" 
+                            class="text-green-600 hover:text-green-800 text-sm font-medium">
+                            View Full →
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function showTrialDetail(trialId) {
+            const trial = trials.find(t => t.id === trialId);
+            if (!trial) return;
+
+            document.getElementById('modalTitle').textContent = `${trial.name} - ${trial.fullName}`;
+            document.getElementById('modalContent').innerHTML = `
+                <div class="space-y-4">
+                    <div>
+                        <h4 class="font-semibold text-gray-800">Year Published:</h4>
+                        <p class="text-gray-600">${trial.year}</p>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold text-gray-800">Population:</h4>
+                        <p class="text-gray-600">${trial.population}</p>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold text-gray-800">Intervention:</h4>
+                        <p class="text-gray-600">${trial.intervention}</p>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold text-gray-800">Primary Outcome:</h4>
+                        <p class="text-gray-600">${trial.outcome}</p>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold text-gray-800">Key Findings:</h4>
+                        <p class="text-gray-600">${trial.keyFindings}</p>
+                    </div>
+                    <div class="p-4 bg-blue-50 rounded-lg">
+                        <h4 class="font-semibold text-blue-900 mb-2">💡 Clinical Pearls:</h4>
+                        <p class="text-blue-800">${trial.clinicalPearls}</p>
+                    </div>
+                    <div>
+                        <a href="https://pubmed.ncbi.nlm.nih.gov/${trial.pmid}" target="_blank" 
+                           class="inline-block px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700">
+                            View on PubMed →
+                        </a>
+                    </div>
+                </div>
+            `;
+            document.getElementById('trialModal').classList.remove('hidden');
+        }
+
+        function showGuidelineDetail(guidelineId) {
+            const guideline = guidelines.find(g => g.id === guidelineId);
+            if (!guideline) return;
+
+            document.getElementById('modalTitle').textContent = guideline.title;
+            document.getElementById('modalContent').innerHTML = `
+                <div class="space-y-4">
+                    <div>
+                        <h4 class="font-semibold text-gray-800">Organization:</h4>
+                        <p class="text-gray-600">${guideline.organization} (${guideline.year})</p>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold text-gray-800">Description:</h4>
+                        <p class="text-gray-600">${guideline.description}</p>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold text-gray-800">Key Recommendations:</h4>
+                        <ul class="space-y-2 text-gray-600">
+                            ${guideline.keyPoints.map(point => 
+                                `<li class="flex items-start">
+                                    <span class="text-green-600 mr-2">✓</span>
+                                    <span>${point}</span>
+                                </li>`
+                            ).join('')}
+                        </ul>
+                    </div>
+                    ${guideline.url ? `
+                        <div>
+                            <a href="${guideline.url}" target="_blank" 
+                               class="inline-block px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700">
+                                View Full Guideline →
+                            </a>
+                        </div>
+                    ` : ''}
+                </div>
+            `;
+            document.getElementById('trialModal').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('trialModal').classList.add('hidden');
+        }
+
+        function filterTrials() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const categoryFilter = document.getElementById('categoryFilter').value;
+            const yearFilter = document.getElementById('yearFilter').value;
+
+            // Filter trials
+            const filteredTrials = trials.filter(trial => {
+                const matchesSearch = trial.name.toLowerCase().includes(searchTerm) || 
+                                     trial.fullName.toLowerCase().includes(searchTerm) ||
+                                     trial.population.toLowerCase().includes(searchTerm);
+                const matchesCategory = !categoryFilter || trial.category === categoryFilter;
+                const matchesYear = !yearFilter || trial.year >= parseInt(yearFilter);
+                return matchesSearch && matchesCategory && matchesYear;
+            });
+
+            // Filter guidelines
+            const filteredGuidelines = guidelines.filter(guideline => {
+                const matchesSearch = guideline.title.toLowerCase().includes(searchTerm) || 
+                                     guideline.description.toLowerCase().includes(searchTerm);
+                const matchesCategory = !categoryFilter || guideline.category === categoryFilter;
+                const matchesYear = !yearFilter || guideline.year >= parseInt(yearFilter);
+                return matchesSearch && matchesCategory && matchesYear;
+            });
+
+            // Update display
+            const trialsGrid = document.getElementById('trialsGrid');
+            if (filteredTrials.length === 0) {
+                trialsGrid.innerHTML = '<p class="text-gray-500 text-center col-span-full">No trials found matching filters</p>';
+            } else {
+                trialsGrid.innerHTML = filteredTrials.map(trial => `
+                    <div class="trial-card bg-white rounded-lg shadow p-4" onclick="showTrialDetail(${trial.id})">
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="font-bold text-lg text-indigo-600">${trial.name}</h3>
+                            <span class="text-sm text-gray-500">${trial.year}</span>
+                        </div>
+                        <p class="text-sm text-gray-700 mb-2">${trial.fullName}</p>
+                        <p class="text-xs text-gray-600 mb-3">${trial.population}</p>
+                        <div class="flex justify-between items-center">
+                            <span class="px-2 py-1 bg-indigo-100 text-indigo-800 rounded-full text-xs">
+                                ${trial.category}
+                            </span>
+                            <button class="text-indigo-600 hover:text-indigo-800 text-sm font-medium">
+                                View Details →
+                            </button>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            const guidelinesGrid = document.getElementById('guidelinesGrid');
+            if (filteredGuidelines.length === 0) {
+                guidelinesGrid.innerHTML = '<p class="text-gray-500 text-center col-span-full">No guidelines found matching filters</p>';
+            } else {
+                guidelinesGrid.innerHTML = filteredGuidelines.map(guideline => `
+                    <div class="bg-white rounded-lg shadow p-4">
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="font-bold text-lg text-green-600">${guideline.title}</h3>
+                            <span class="text-sm text-gray-500">${guideline.year}</span>
+                        </div>
+                        <p class="text-sm text-gray-700 mb-1">${guideline.organization}</p>
+                        <p class="text-xs text-gray-600 mb-3">${guideline.description}</p>
+                        <div class="mb-3">
+                            <h4 class="font-semibold text-sm mb-1">Key Points:</h4>
+                            <ul class="text-xs text-gray-600 space-y-1">
+                                ${guideline.keyPoints.slice(0, 2).map(point => 
+                                    `<li>• ${point}</li>`
+                                ).join('')}
+                            </ul>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs">
+                                ${guideline.category}
+                            </span>
+                            <button onclick="showGuidelineDetail(${guideline.id})" 
+                                class="text-green-600 hover:text-green-800 text-sm font-medium">
+                                View Full →
+                            </button>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        // Initialize on load
+        window.addEventListener('load', loadContent);
+    </script>
+</body>
+</html>
