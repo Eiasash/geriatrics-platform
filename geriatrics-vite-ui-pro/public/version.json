@@ -1,0 +1,11 @@
+{
+  "version": "2025-01-03",
+  "commit": "4f293a9",
+  "features": {
+    "patients": true,
+    "assessments": true,
+    "medications": true,
+    "supabase": true,
+    "ai": "pending"
+  }
+}

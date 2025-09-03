@@ -1,5 +1,7 @@
 // Service Worker for Geriatrics Platform Pro
-const CACHE_NAME = 'geriatrics-pro-v1';
+// Update this version on each release
+const CACHE_VERSION = 'v3-2025-01-03';
+const CACHE_NAME = `geriatrics-pro-${CACHE_VERSION}`;
 const urlsToCache = [
   '/',
   '/index.html',

@@ -2,21 +2,38 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/icon-192.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     
-    <!-- PWA Meta Tags -->
-    <meta name="theme-color" content="#2563eb" />
-    <meta name="description" content="Advanced geriatric care management platform" />
-    <link rel="manifest" href="/manifest.json" />
+    <!-- Icons -->
+    <link rel="icon" href="/icon-192.svg" sizes="192x192">
+    <link rel="apple-touch-icon" href="/icon-192.svg">
+    
+    <!-- Theme and Description -->
+    <meta name="theme-color" content="#4f46e5">
+    <meta name="description" content="Geriatrics Hub — calculators, patient dashboard, MMSE charts, handoff reports, EN/HE.">
+    
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="Geriatrics Hub">
+    <meta property="og:description" content="Clinical calculators, roster, dashboards, EN/HE, PWA.">
+    <meta property="og:url" content="https://geriatrics.me/">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="https://geriatrics.me/cover.png">
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Geriatrics Hub">
+    <meta name="twitter:description" content="Clinical calculators, roster, dashboards, EN/HE, PWA.">
+    <meta name="twitter:image" content="https://geriatrics.me/cover.png">
+    
+    <!-- PWA -->
+    <link rel="manifest" href="/manifest.webmanifest">
     
     <!-- iOS PWA Support -->
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-    <meta name="apple-mobile-web-app-title" content="GeriatricsPro" />
-    <link rel="apple-touch-icon" href="/icon-192.svg" />
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Geriatrics Hub">
     
-    <title>Geriatrics.me - Advanced Geriatric Care Platform</title>
+    <title>Geriatrics Hub - Clinical Calculators & Patient Management</title>
   </head>
   <body>
     <div id="root"></div>
@@ -34,6 +51,24 @@
               setInterval(() => {
                 registration.update();
               }, 60000); // Check every minute
+              
+              // Listen for waiting service worker
+              registration.addEventListener('updatefound', () => {
+                const newWorker = registration.installing;
+                newWorker.addEventListener('statechange', () => {
+                  if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                    // New update available
+                    const updateBanner = document.createElement('div');
+                    updateBanner.innerHTML = `
+                      <div style="position: fixed; bottom: 20px; right: 20px; background: #4f46e5; color: white; padding: 16px 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); z-index: 9999; display: flex; align-items: center; gap: 12px;">
+                        <span>Update available!</span>
+                        <button onclick="window.location.reload()" style="background: white; color: #4f46e5; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-weight: 500;">Refresh</button>
+                      </div>
+                    `;
+                    document.body.appendChild(updateBanner);
+                  }
+                });
+              });
             })
             .catch(err => {
               console.log('ServiceWorker registration failed: ', err);
