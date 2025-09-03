@@ -1,0 +1,442 @@
+{
+  "videoCategories": [
+    {
+      "id": "assessment-skills",
+      "name": "Assessment Skills",
+      "description": "Learn essential geriatric assessment techniques",
+      "color": "bg-blue-500",
+      "videos": [
+        {
+          "id": "mmse-training",
+          "title": "MMSE Administration and Scoring",
+          "description": "Complete guide to administering and scoring the Mini-Mental State Examination",
+          "duration": "18:30",
+          "difficulty": "Beginner",
+          "instructor": "Dr. Sarah Chen, Geriatrician",
+          "thumbnail": "/videos/thumbnails/mmse-demo.jpg",
+          "videoUrl": "/videos/mmse-complete-demo.mp4",
+          "topics": [
+            "Introduction to MMSE",
+            "Orientation testing",
+            "Registration and recall",
+            "Attention and calculation", 
+            "Language assessment",
+            "Scoring interpretation",
+            "Common administration errors"
+          ],
+          "learningObjectives": [
+            "Properly administer all MMSE components",
+            "Accurately score and interpret results",
+            "Identify when MMSE is appropriate to use",
+            "Avoid common scoring mistakes"
+          ],
+          "cmeCredits": 1.0,
+          "transcript": "Available in English, Spanish, Hebrew",
+          "handouts": [
+            "MMSE Score Sheet",
+            "Interpretation Guidelines",
+            "Quick Reference Card"
+          ]
+        },
+        {
+          "id": "morse-fall-scale",
+          "title": "Morse Fall Scale Assessment",
+          "description": "Master the gold standard fall risk assessment tool",
+          "duration": "12:45",
+          "difficulty": "Beginner",
+          "instructor": "Maria Rodriguez, MSN",
+          "thumbnail": "/videos/thumbnails/morse-scale.jpg",
+          "videoUrl": "/videos/morse-scale-training.mp4",
+          "topics": [
+            "Fall risk factors overview",
+            "Morse Scale components",
+            "Scoring methodology",
+            "Risk stratification",
+            "Intervention planning"
+          ],
+          "learningObjectives": [
+            "Identify key fall risk factors",
+            "Accurately complete Morse Fall Scale",
+            "Interpret risk scores correctly",
+            "Plan appropriate interventions"
+          ],
+          "cmeCredits": 0.5,
+          "transcript": "Available in English, Spanish",
+          "handouts": [
+            "Morse Fall Scale Form",
+            "Risk Interpretation Guide"
+          ]
+        },
+        {
+          "id": "tug-test-demo",
+          "title": "Timed Up and Go Test",
+          "description": "Learn proper TUG test administration for mobility assessment",
+          "duration": "8:20",
+          "difficulty": "Beginner",
+          "instructor": "Dr. Michael Thompson, PT",
+          "thumbnail": "/videos/thumbnails/tug-test.jpg",
+          "videoUrl": "/videos/tug-test-demo.mp4",
+          "topics": [
+            "Equipment setup",
+            "Patient instructions",
+            "Timing methodology",
+            "Safety considerations",
+            "Result interpretation"
+          ],
+          "learningObjectives": [
+            "Set up TUG test properly",
+            "Give clear patient instructions",
+            "Time and score accurately",
+            "Interpret results for fall risk"
+          ],
+          "cmeCredits": 0.25,
+          "transcript": "Available in English",
+          "handouts": [
+            "TUG Test Protocol",
+            "Scoring Sheet"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "medication-safety",
+      "name": "Medication Safety",
+      "description": "Safe prescribing and deprescribing in older adults",
+      "color": "bg-green-500",
+      "videos": [
+        {
+          "id": "beers-criteria-2023",
+          "title": "Beers Criteria 2023 Update",
+          "description": "Latest updates to potentially inappropriate medications in older adults",
+          "duration": "25:15",
+          "difficulty": "Intermediate",
+          "instructor": "Dr. Jennifer Park, PharmD",
+          "thumbnail": "/videos/thumbnails/beers-criteria.jpg",
+          "videoUrl": "/videos/beers-criteria-2023.mp4",
+          "topics": [
+            "New medications added to 2023 list",
+            "Drug-disease interactions",
+            "Drug-drug interactions",
+            "Kidney function considerations",
+            "Clinical decision-making"
+          ],
+          "learningObjectives": [
+            "Identify newly added potentially inappropriate medications",
+            "Apply Beers criteria in clinical practice",
+            "Balance risks and benefits appropriately",
+            "Make evidence-based prescribing decisions"
+          ],
+          "cmeCredits": 1.5,
+          "transcript": "Available in English",
+          "handouts": [
+            "Beers Criteria 2023 Summary",
+            "Decision Tree Flowchart"
+          ]
+        },
+        {
+          "id": "deprescribing-masterclass",
+          "title": "Deprescribing Masterclass",
+          "description": "Systematic approach to reducing polypharmacy in elderly patients",
+          "duration": "32:40",
+          "difficulty": "Advanced",
+          "instructor": "Dr. Lisa Chang, Geriatrician",
+          "thumbnail": "/videos/thumbnails/deprescribing.jpg",
+          "videoUrl": "/videos/deprescribing-masterclass.mp4",
+          "topics": [
+            "Principles of deprescribing",
+            "Patient and family communication",
+            "Systematic review process",
+            "Monitoring during discontinuation",
+            "Case studies and examples"
+          ],
+          "learningObjectives": [
+            "Apply systematic deprescribing approach",
+            "Communicate effectively about medication changes",
+            "Monitor patients safely during deprescribing",
+            "Handle common deprescribing challenges"
+          ],
+          "cmeCredits": 2.0,
+          "transcript": "Available in English, Spanish",
+          "handouts": [
+            "Deprescribing Checklist",
+            "Patient Communication Scripts",
+            "Monitoring Guidelines"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dementia-care",
+      "name": "Dementia Care",
+      "description": "Comprehensive dementia management strategies",
+      "color": "bg-purple-500",
+      "videos": [
+        {
+          "id": "dementia-diagnosis",
+          "title": "Dementia Diagnosis and Subtyping",
+          "description": "Differentiate between dementia types and establish accurate diagnoses",
+          "duration": "28:50",
+          "difficulty": "Intermediate",
+          "instructor": "Dr. Robert Kim, Neurologist",
+          "thumbnail": "/videos/thumbnails/dementia-diagnosis.jpg",
+          "videoUrl": "/videos/dementia-diagnosis.mp4",
+          "topics": [
+            "Alzheimer's disease presentation",
+            "Vascular dementia features",
+            "Lewy body dementia signs",
+            "Frontotemporal dementia",
+            "Diagnostic workup approach"
+          ],
+          "learningObjectives": [
+            "Differentiate major dementia types",
+            "Order appropriate diagnostic tests",
+            "Recognize atypical presentations",
+            "Provide accurate prognosis information"
+          ],
+          "cmeCredits": 1.5,
+          "transcript": "Available in English",
+          "handouts": [
+            "Dementia Comparison Chart",
+            "Diagnostic Workup Checklist"
+          ]
+        },
+        {
+          "id": "behavioral-management",
+          "title": "Managing Behavioral Symptoms in Dementia",
+          "description": "Non-pharmacological approaches to agitation, wandering, and other behaviors",
+          "duration": "35:20",
+          "difficulty": "Advanced",
+          "instructor": "Dr. Patricia Johnson, Geropsychiatrist",
+          "thumbnail": "/videos/thumbnails/behavior-management.jpg",
+          "videoUrl": "/videos/behavioral-management.mp4",
+          "topics": [
+            "Understanding behavior triggers",
+            "Environmental modifications",
+            "Communication techniques",
+            "Activity programming",
+            "When to consider medications"
+          ],
+          "learningObjectives": [
+            "Identify behavior triggers and patterns",
+            "Implement non-pharmacological interventions",
+            "Train caregivers in management techniques",
+            "Know when pharmacological intervention is needed"
+          ],
+          "cmeCredits": 2.0,
+          "transcript": "Available in English, Spanish",
+          "handouts": [
+            "Behavior Tracking Log",
+            "Environmental Modification Checklist",
+            "Caregiver Training Materials"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "palliative-care",
+      "name": "Palliative & End-of-Life Care",
+      "description": "Compassionate care for serious illness",
+      "color": "bg-red-500",
+      "videos": [
+        {
+          "id": "goals-of-care",
+          "title": "Goals of Care Conversations",
+          "description": "Navigate difficult discussions about prognosis and treatment preferences",
+          "duration": "22:30",
+          "difficulty": "Advanced",
+          "instructor": "Dr. Emily Watson, Palliative Care",
+          "thumbnail": "/videos/thumbnails/goals-of-care.jpg",
+          "videoUrl": "/videos/goals-of-care.mp4",
+          "topics": [
+            "Preparing for difficult conversations",
+            "SPIKES communication protocol",
+            "Exploring patient values",
+            "Discussing prognosis honestly",
+            "Supporting family members"
+          ],
+          "learningObjectives": [
+            "Use SPIKES protocol effectively",
+            "Explore patient values and preferences",
+            "Deliver prognostic information compassionately",
+            "Support families through difficult decisions"
+          ],
+          "cmeCredits": 1.5,
+          "transcript": "Available in English, Spanish",
+          "handouts": [
+            "SPIKES Protocol Guide",
+            "Values Clarification Worksheet",
+            "Family Meeting Checklist"
+          ]
+        },
+        {
+          "id": "symptom-management",
+          "title": "End-of-Life Symptom Management",
+          "description": "Manage pain, dyspnea, and other symptoms in final days",
+          "duration": "30:45",
+          "difficulty": "Advanced",
+          "instructor": "Dr. James Miller, Palliative Medicine",
+          "thumbnail": "/videos/thumbnails/symptom-management.jpg",
+          "videoUrl": "/videos/eol-symptoms.mp4",
+          "topics": [
+            "Pain assessment and management",
+            "Dyspnea relief strategies",
+            "Managing secretions",
+            "Delirium in dying patients",
+            "Family support and education"
+          ],
+          "learningObjectives": [
+            "Assess and treat end-of-life symptoms",
+            "Use appropriate medications and dosing",
+            "Provide family education and support",
+            "Recognize normal dying process"
+          ],
+          "cmeCredits": 2.0,
+          "transcript": "Available in English",
+          "handouts": [
+            "Symptom Assessment Tools",
+            "Medication Dosing Guide",
+            "Family Education Brochure"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "clinical-skills",
+      "name": "Clinical Skills",
+      "description": "Essential clinical procedures and techniques",
+      "color": "bg-yellow-500",
+      "videos": [
+        {
+          "id": "pressure-injury-prevention",
+          "title": "Pressure Injury Prevention Protocol",
+          "description": "Comprehensive approach to preventing and managing pressure injuries",
+          "duration": "20:15",
+          "difficulty": "Intermediate",
+          "instructor": "Jennifer Adams, WOCN",
+          "thumbnail": "/videos/thumbnails/pressure-injury.jpg",
+          "videoUrl": "/videos/pressure-injury-prevention.mp4",
+          "topics": [
+            "Risk assessment using Braden Scale",
+            "Positioning and repositioning",
+            "Support surface selection",
+            "Skin care protocols",
+            "Nutritional considerations"
+          ],
+          "learningObjectives": [
+            "Complete accurate Braden Scale assessment",
+            "Implement evidence-based prevention strategies",
+            "Select appropriate support surfaces",
+            "Educate patients and families"
+          ],
+          "cmeCredits": 1.0,
+          "transcript": "Available in English",
+          "handouts": [
+            "Braden Scale Form",
+            "Positioning Guide",
+            "Prevention Checklist"
+          ]
+        },
+        {
+          "id": "delirium-cam",
+          "title": "Delirium Assessment with CAM",
+          "description": "Master the Confusion Assessment Method for delirium detection",
+          "duration": "15:30",
+          "difficulty": "Intermediate",
+          "instructor": "Dr. Karen Lee, Geriatrician",
+          "thumbnail": "/videos/thumbnails/cam-assessment.jpg",
+          "videoUrl": "/videos/cam-delirium.mp4",
+          "topics": [
+            "Understanding delirium features",
+            "CAM diagnostic algorithm",
+            "Distinguishing delirium from dementia",
+            "Assessment challenges",
+            "Documentation requirements"
+          ],
+          "learningObjectives": [
+            "Recognize delirium features accurately",
+            "Apply CAM diagnostic criteria",
+            "Differentiate delirium from other conditions",
+            "Document findings appropriately"
+          ],
+          "cmeCredits": 0.75,
+          "transcript": "Available in English, Spanish",
+          "handouts": [
+            "CAM Assessment Form",
+            "Quick Reference Card"
+          ]
+        }
+      ]
+    }
+  ],
+  "featuredVideos": [
+    "mmse-training",
+    "beers-criteria-2023", 
+    "goals-of-care",
+    "deprescribing-masterclass"
+  ],
+  "learningPaths": [
+    {
+      "id": "geriatric-essentials",
+      "title": "Geriatric Care Essentials",
+      "description": "Fundamental skills for caring for older adults",
+      "duration": "6 hours",
+      "videos": [
+        "mmse-training",
+        "morse-fall-scale",
+        "beers-criteria-2023",
+        "pressure-injury-prevention"
+      ],
+      "badge": "Geriatric Care Certified"
+    },
+    {
+      "id": "dementia-specialist",
+      "title": "Dementia Care Specialist",
+      "description": "Comprehensive dementia care training",
+      "duration": "4 hours", 
+      "videos": [
+        "dementia-diagnosis",
+        "behavioral-management",
+        "mmse-training",
+        "goals-of-care"
+      ],
+      "badge": "Dementia Care Expert"
+    },
+    {
+      "id": "medication-expert",
+      "title": "Geriatric Medication Expert",
+      "description": "Advanced medication management skills",
+      "duration": "3 hours",
+      "videos": [
+        "beers-criteria-2023",
+        "deprescribing-masterclass"
+      ],
+      "badge": "Medication Safety Specialist"
+    }
+  ],
+  "instructors": [
+    {
+      "id": "dr-sarah-chen",
+      "name": "Dr. Sarah Chen",
+      "credentials": "MD, Geriatrician",
+      "bio": "Board-certified geriatrician with 15+ years experience. Expert in cognitive assessment and dementia care.",
+      "avatar": "/instructors/dr-chen.jpg",
+      "specialties": ["Cognitive Assessment", "Dementia Care", "Geriatric Medicine"]
+    },
+    {
+      "id": "maria-rodriguez",
+      "name": "Maria Rodriguez", 
+      "credentials": "MSN, RN",
+      "bio": "Geriatric nurse specialist with expertise in fall prevention and safety assessment.",
+      "avatar": "/instructors/maria-rodriguez.jpg",
+      "specialties": ["Fall Prevention", "Safety Assessment", "Geriatric Nursing"]
+    },
+    {
+      "id": "dr-jennifer-park",
+      "name": "Dr. Jennifer Park",
+      "credentials": "PharmD, BCGP", 
+      "bio": "Board-certified geriatric pharmacist specializing in medication optimization and deprescribing.",
+      "avatar": "/instructors/dr-park.jpg",
+      "specialties": ["Geriatric Pharmacy", "Medication Safety", "Deprescribing"]
+    }
+  ]
+}

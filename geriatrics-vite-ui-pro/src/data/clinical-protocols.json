@@ -1,0 +1,684 @@
+{
+  "protocols": [
+    {
+      "id": "falls-risk-protocol",
+      "title": "Falls Risk Assessment and Prevention Protocol",
+      "category": "Safety",
+      "lastUpdated": "2024-01-15",
+      "version": "2.1",
+      "steps": [
+        {
+          "step": 1,
+          "title": "Initial Screening",
+          "description": "Screen all patients ≥65 years on admission",
+          "actions": [
+            "Ask about falls in past 12 months",
+            "Assess fear of falling",
+            "Review medications for fall risk",
+            "Check for orthostatic hypotension"
+          ],
+          "tools": ["Morse Fall Scale", "STRATIFY"]
+        },
+        {
+          "step": 2,
+          "title": "Comprehensive Assessment",
+          "description": "For patients with positive screen or fall history",
+          "actions": [
+            "Gait and balance assessment (Timed Up and Go)",
+            "Vision screening",
+            "Cognitive assessment",
+            "Home hazard evaluation",
+            "Footwear assessment"
+          ],
+          "timeframe": "Within 24 hours of admission"
+        },
+        {
+          "step": 3,
+          "title": "Risk Stratification",
+          "description": "Categorize fall risk level",
+          "categories": {
+            "low": "Score <25: Standard precautions",
+            "moderate": "Score 25-44: Enhanced monitoring",
+            "high": "Score ≥45: Intensive interventions"
+          }
+        },
+        {
+          "step": 4,
+          "title": "Interventions",
+          "description": "Implement based on risk level",
+          "interventions": {
+            "universal": [
+              "Orient to environment",
+              "Call bell within reach",
+              "Adequate lighting",
+              "Non-slip footwear"
+            ],
+            "moderate": [
+              "Bed alarm",
+              "Frequent rounding (q2h)",
+              "Toileting schedule",
+              "Yellow fall risk bracelet"
+            ],
+            "high": [
+              "1:1 supervision or video monitoring",
+              "Low bed with mats",
+              "PT/OT consultation",
+              "Pharmacy review for medication adjustment",
+              "Red fall risk bracelet"
+            ]
+          }
+        },
+        {
+          "step": 5,
+          "title": "Documentation",
+          "description": "Record in patient chart",
+          "requirements": [
+            "Fall risk score",
+            "Interventions implemented",
+            "Patient/family education provided",
+            "Reassessment schedule"
+          ]
+        }
+      ],
+      "reassessment": "Daily for high risk, every 3 days for moderate, weekly for low risk",
+      "outcomes": [
+        "Fall rate per 1000 patient days",
+        "Falls with injury rate",
+        "Compliance with protocol"
+      ]
+    },
+    {
+      "id": "delirium-protocol",
+      "title": "Delirium Prevention and Management Protocol",
+      "category": "Cognitive",
+      "lastUpdated": "2024-02-01",
+      "version": "1.8",
+      "steps": [
+        {
+          "step": 1,
+          "title": "Risk Assessment",
+          "description": "Screen all patients ≥70 years or with risk factors",
+          "riskFactors": [
+            "Age ≥70",
+            "Cognitive impairment/dementia",
+            "Severe illness",
+            "Hip fracture",
+            "Sensory impairment",
+            "Dehydration",
+            "Multiple medications"
+          ],
+          "tool": "DEAR (Delirium Elderly At-Risk) tool"
+        },
+        {
+          "step": 2,
+          "title": "Screening",
+          "description": "Use CAM (Confusion Assessment Method)",
+          "frequency": "Every shift for high-risk patients",
+          "criteria": {
+            "feature1": "Acute onset and fluctuating course",
+            "feature2": "Inattention",
+            "feature3": "Disorganized thinking",
+            "feature4": "Altered level of consciousness"
+          },
+          "positive": "Feature 1 AND 2 AND (3 OR 4)"
+        },
+        {
+          "step": 3,
+          "title": "Prevention Bundle",
+          "description": "HELP protocol implementation",
+          "interventions": [
+            "Orientation: clock, calendar, familiar objects",
+            "Sleep protocol: reduce noise, dim lights 10pm-6am",
+            "Early mobilization: out of bed TID",
+            "Hydration: encourage PO fluids, IV if needed",
+            "Vision/hearing: glasses, hearing aids available",
+            "Avoid restraints and catheters when possible"
+          ]
+        },
+        {
+          "step": 4,
+          "title": "Treatment",
+          "description": "For confirmed delirium",
+          "actions": [
+            "Identify and treat underlying cause",
+            "Review medications - stop anticholinergics, benzodiazepines",
+            "Treat pain adequately",
+            "Correct metabolic abnormalities",
+            "Family presence encouraged",
+            "Consistent caregivers"
+          ],
+          "pharmacologic": {
+            "firstLine": "Non-pharmacologic interventions",
+            "severe": "Haloperidol 0.5-1mg PO/IM q4h PRN (max 3mg/day)",
+            "alternative": "Quetiapine 12.5-25mg PO BID"
+          }
+        },
+        {
+          "step": 5,
+          "title": "Monitoring",
+          "description": "Track delirium severity",
+          "tools": ["CAM-S (CAM-Severity)", "DRS-R-98"],
+          "documentation": [
+            "Delirium type (hyperactive/hypoactive/mixed)",
+            "Precipitating factors",
+            "Interventions used",
+            "Response to treatment"
+          ]
+        }
+      ],
+      "familyEducation": [
+        "Explain delirium vs dementia",
+        "Encourage family participation",
+        "Provide orientation cues",
+        "Report changes in mental status"
+      ]
+    },
+    {
+      "id": "pressure-injury-protocol",
+      "title": "Pressure Injury Prevention Protocol",
+      "category": "Skin Integrity",
+      "lastUpdated": "2024-01-20",
+      "version": "3.0",
+      "steps": [
+        {
+          "step": 1,
+          "title": "Risk Assessment",
+          "description": "Use Braden Scale within 8 hours of admission",
+          "categories": {
+            "highRisk": "Score ≤12",
+            "moderateRisk": "Score 13-14",
+            "lowRisk": "Score 15-18",
+            "noRisk": "Score 19-23"
+          },
+          "reassessment": "Daily for high risk, q3 days for moderate"
+        },
+        {
+          "step": 2,
+          "title": "Skin Assessment",
+          "description": "Complete head-to-toe skin inspection",
+          "frequency": "Every shift",
+          "focus": [
+            "Bony prominences",
+            "Under medical devices",
+            "Areas of moisture",
+            "Previous pressure injury sites"
+          ],
+          "staging": {
+            "stage1": "Non-blanchable erythema",
+            "stage2": "Partial thickness loss",
+            "stage3": "Full thickness loss",
+            "stage4": "Full thickness with exposed bone/tendon",
+            "unstageable": "Full thickness, base obscured",
+            "DTPI": "Deep tissue pressure injury"
+          }
+        },
+        {
+          "step": 3,
+          "title": "Prevention Interventions",
+          "description": "Based on risk level",
+          "universal": [
+            "Moisturize dry skin daily",
+            "Manage incontinence promptly",
+            "Optimize nutrition and hydration",
+            "Minimize friction and shear"
+          ],
+          "highRisk": [
+            "Pressure redistribution surface",
+            "Turn and reposition q2h",
+            "Heel offloading devices",
+            "Prophylactic foam dressings to bony prominences",
+            "Nutrition consultation"
+          ]
+        },
+        {
+          "step": 4,
+          "title": "Repositioning Schedule",
+          "description": "Systematic position changes",
+          "schedule": {
+            "bedbound": "q2h alternating: supine, 30° right, supine, 30° left",
+            "chairbound": "q1h weight shifts, limit sitting to 2 hours"
+          },
+          "documentation": "Use turn clock at bedside"
+        },
+        {
+          "step": 5,
+          "title": "Nutrition Protocol",
+          "description": "For patients at risk",
+          "assessment": "Mini Nutritional Assessment (MNA)",
+          "interventions": [
+            "Protein 1.2-1.5 g/kg/day",
+            "Calories 30-35 kcal/kg/day",
+            "Supplement if intake <75%",
+            "Consider arginine and zinc supplementation"
+          ]
+        }
+      ],
+      "qualityIndicators": [
+        "Pressure injury incidence rate",
+        "Hospital-acquired pressure injury rate",
+        "Stage 3-4 pressure injury rate"
+      ]
+    },
+    {
+      "id": "medication-reconciliation",
+      "title": "Medication Reconciliation Protocol",
+      "category": "Medication Safety",
+      "lastUpdated": "2024-02-10",
+      "version": "2.5",
+      "steps": [
+        {
+          "step": 1,
+          "title": "Obtain Best Possible Medication History (BPMH)",
+          "description": "Within 24 hours of admission",
+          "sources": [
+            "Patient/family interview",
+            "Community pharmacy",
+            "Previous discharge summaries",
+            "Primary care provider",
+            "Medication bottles/list"
+          ],
+          "information": [
+            "Drug name, dose, route, frequency",
+            "Last dose taken",
+            "Adherence issues",
+            "OTC and supplements",
+            "Allergies and reactions"
+          ]
+        },
+        {
+          "step": 2,
+          "title": "Compare and Identify Discrepancies",
+          "description": "Compare BPMH with admission orders",
+          "discrepancyTypes": [
+            "Omission",
+            "Commission (added)",
+            "Dose/frequency change",
+            "Route change",
+            "Therapeutic substitution"
+          ],
+          "action": "Document and clarify with prescriber"
+        },
+        {
+          "step": 3,
+          "title": "Geriatric Medication Review",
+          "description": "Screen for inappropriate medications",
+          "tools": [
+            "Beers Criteria",
+            "STOPP/START criteria",
+            "Anticholinergic burden scale"
+          ],
+          "considerations": [
+            "Renal dose adjustments",
+            "Drug-drug interactions",
+            "Fall risk medications",
+            "Cognitive impact"
+          ]
+        },
+        {
+          "step": 4,
+          "title": "Transfer Reconciliation",
+          "description": "At each transition of care",
+          "transitions": [
+            "ED to floor",
+            "ICU to floor",
+            "Floor to floor",
+            "Hospital to SNF/home"
+          ],
+          "process": "Review, reconcile, communicate changes"
+        },
+        {
+          "step": 5,
+          "title": "Discharge Reconciliation",
+          "description": "Prepare discharge medication list",
+          "include": [
+            "Medications to continue",
+            "New medications started",
+            "Medications stopped",
+            "Dose changes",
+            "Reason for changes"
+          ],
+          "education": [
+            "Purpose of each medication",
+            "How to take",
+            "Side effects to watch for",
+            "Follow-up needed"
+          ]
+        }
+      ],
+      "documentation": "Update medication list in EHR at each step",
+      "qualityMetrics": [
+        "Reconciliation completion rate",
+        "Time to reconciliation",
+        "Medication error rate"
+      ]
+    },
+    {
+      "id": "dysphagia-protocol",
+      "title": "Dysphagia Screening and Management Protocol",
+      "category": "Nutrition/Safety",
+      "lastUpdated": "2024-01-25",
+      "version": "1.6",
+      "steps": [
+        {
+          "step": 1,
+          "title": "Initial Screening",
+          "description": "All patients with risk factors",
+          "riskFactors": [
+            "Stroke/TIA",
+            "Dementia",
+            "Parkinson's disease",
+            "Head/neck cancer",
+            "Prolonged intubation",
+            "GERD",
+            "Recurrent pneumonia"
+          ],
+          "tool": "3-oz water swallow test"
+        },
+        {
+          "step": 2,
+          "title": "Failed Screen Protocol",
+          "description": "If screening positive",
+          "immediateActions": [
+            "NPO status",
+            "Speech therapy consult",
+            "Aspiration precautions sign",
+            "HOB elevated 30-45°"
+          ],
+          "assessment": "Bedside swallow evaluation within 24 hours"
+        },
+        {
+          "step": 3,
+          "title": "Comprehensive Assessment",
+          "description": "By Speech-Language Pathologist",
+          "components": [
+            "Oral motor examination",
+            "Cranial nerve assessment",
+            "Trial swallows with different consistencies",
+            "Cervical auscultation"
+          ],
+          "advanced": "Modified barium swallow or FEES if indicated"
+        },
+        {
+          "step": 4,
+          "title": "Diet Modification",
+          "description": "Based on assessment results",
+          "IDDSI_levels": {
+            "level7": "Regular",
+            "level6": "Soft & bite-sized",
+            "level5": "Minced & moist",
+            "level4": "Pureed",
+            "level3": "Liquidised",
+            "liquids": {
+              "thin": "Level 0",
+              "slightly_thick": "Level 1",
+              "mildly_thick": "Level 2",
+              "moderately_thick": "Level 3",
+              "extremely_thick": "Level 4"
+            }
+          }
+        },
+        {
+          "step": 5,
+          "title": "Compensatory Strategies",
+          "description": "Implement as recommended",
+          "strategies": [
+            "Chin tuck",
+            "Head turn",
+            "Multiple swallows",
+            "Liquid wash",
+            "Alternating liquids and solids",
+            "Small bolus size",
+            "Slow rate of intake"
+          ],
+          "environment": [
+            "Minimize distractions",
+            "Adequate time for meals",
+            "Proper positioning",
+            "Supervision as needed"
+          ]
+        },
+        {
+          "step": 6,
+          "title": "Monitoring",
+          "description": "Ongoing assessment",
+          "monitor": [
+            "Intake and output",
+            "Weight weekly",
+            "Signs of aspiration",
+            "Lung sounds",
+            "Temperature spikes",
+            "O2 saturation with meals"
+          ],
+          "reassessment": "Weekly or with status change"
+        }
+      ],
+      "familyEducation": [
+        "Safe feeding techniques",
+        "Signs of aspiration",
+        "Diet consistency requirements",
+        "Importance of oral hygiene"
+      ]
+    },
+    {
+      "id": "restraint-reduction",
+      "title": "Restraint Reduction Protocol",
+      "category": "Safety/Rights",
+      "lastUpdated": "2024-02-05",
+      "version": "2.2",
+      "philosophy": "Restraint-free environment is the goal",
+      "steps": [
+        {
+          "step": 1,
+          "title": "Assessment Before Restraint",
+          "description": "Identify underlying cause of behavior",
+          "assess": [
+            "Pain or discomfort",
+            "Toileting needs",
+            "Hunger/thirst",
+            "Environmental stressors",
+            "Medication side effects",
+            "Delirium or confusion",
+            "Fear or anxiety"
+          ]
+        },
+        {
+          "step": 2,
+          "title": "Alternative Interventions",
+          "description": "Try least restrictive measures first",
+          "alternatives": {
+            "environmental": [
+              "Lower bed to lowest position",
+              "Bed/chair alarms",
+              "Increased supervision",
+              "Move closer to nursing station",
+              "Remove unnecessary tubes/lines"
+            ],
+            "behavioral": [
+              "Redirection and distraction",
+              "Therapeutic activities",
+              "Music therapy",
+              "Family presence",
+              "Consistent caregivers"
+            ],
+            "comfort": [
+              "Pain management",
+              "Positioning aids",
+              "Toileting schedule",
+              "Comfort items from home"
+            ]
+          }
+        },
+        {
+          "step": 3,
+          "title": "If Restraint Necessary",
+          "description": "Last resort only",
+          "requirements": [
+            "Physician order within 1 hour",
+            "Specify type and duration",
+            "Document alternatives tried",
+            "Obtain consent if possible"
+          ],
+          "types": {
+            "physical": "Wrist, vest, mitt, belt",
+            "chemical": "Medications for behavior control"
+          }
+        },
+        {
+          "step": 4,
+          "title": "Monitoring During Restraint",
+          "description": "Ensure safety",
+          "frequency": {
+            "visualCheck": "Every 15 minutes",
+            "circulation": "Every 2 hours",
+            "toileting": "Every 2 hours",
+            "nutrition": "Meals and snacks on schedule",
+            "skinIntegrity": "Every 2 hours"
+          },
+          "documentation": [
+            "Behavior necessitating restraint",
+            "Type of restraint",
+            "Time applied/released",
+            "Patient response",
+            "Circulation checks"
+          ]
+        },
+        {
+          "step": 5,
+          "title": "Release Trial",
+          "description": "Attempt discontinuation",
+          "process": [
+            "Trial release every shift",
+            "Document response",
+            "Gradually increase restraint-free time",
+            "Implement alternatives during release"
+          ],
+          "renewal": "New order required every 24 hours"
+        }
+      ],
+      "education": [
+        "Restraint risks: injury, agitation, decline",
+        "Family involvement in alternatives",
+        "Patient rights"
+      ],
+      "qualityMetrics": [
+        "Restraint use rate",
+        "Duration of restraint",
+        "Restraint-related injuries"
+      ]
+    },
+    {
+      "id": "pain-assessment-protocol",
+      "title": "Geriatric Pain Assessment and Management Protocol",
+      "category": "Pain Management",
+      "lastUpdated": "2024-02-15",
+      "version": "1.9",
+      "steps": [
+        {
+          "step": 1,
+          "title": "Pain Screening",
+          "description": "All patients on admission and regularly",
+          "frequency": {
+            "acute": "Every 4 hours",
+            "chronic": "Every shift",
+            "postProcedure": "Every 1-2 hours x 24 hours"
+          },
+          "question": "Are you experiencing any pain or discomfort?"
+        },
+        {
+          "step": 2,
+          "title": "Pain Assessment Tools",
+          "description": "Use appropriate tool for cognitive level",
+          "cognitivelyIntact": {
+            "tool": "Numeric Rating Scale (0-10)",
+            "alternative": "Verbal Descriptor Scale"
+          },
+          "mildModerateImpairment": {
+            "tool": "Faces Pain Scale",
+            "alternative": "Iowa Pain Thermometer"
+          },
+          "severeImpairment": {
+            "tool": "PAINAD Scale",
+            "indicators": [
+              "Breathing pattern",
+              "Negative vocalization",
+              "Facial expression",
+              "Body language",
+              "Consolability"
+            ]
+          }
+        },
+        {
+          "step": 3,
+          "title": "Comprehensive Pain Assessment",
+          "description": "For all positive screens",
+          "components": {
+            "location": "Body diagram",
+            "intensity": "Current, worst, best, average",
+            "quality": "Sharp, dull, burning, aching",
+            "timing": "Onset, duration, pattern",
+            "aggravating": "Movement, position, activities",
+            "alleviating": "Rest, heat, cold, medications",
+            "impact": "Sleep, mood, function, QOL"
+          }
+        },
+        {
+          "step": 4,
+          "title": "Multimodal Management",
+          "description": "Combine approaches",
+          "nonPharmacologic": [
+            "Heat/cold therapy",
+            "Positioning",
+            "Massage",
+            "Relaxation techniques",
+            "Distraction/music",
+            "Physical therapy",
+            "TENS unit"
+          ],
+          "pharmacologic": {
+            "mild": "Acetaminophen 650-1000mg q6h (max 3g/day)",
+            "moderate": "Add tramadol 25-50mg q6h",
+            "severe": "Opioids - start low dose, short-acting",
+            "neuropathic": "Gabapentin, duloxetine",
+            "topical": "Lidocaine patch, capsaicin, diclofenac gel"
+          }
+        },
+        {
+          "step": 5,
+          "title": "Reassessment",
+          "description": "Evaluate effectiveness",
+          "timing": {
+            "oralMeds": "1 hour after",
+            "IVMeds": "30 minutes after",
+            "nonPharm": "30-60 minutes after"
+          },
+          "document": [
+            "Pain score change",
+            "Functional improvement",
+            "Side effects",
+            "Patient satisfaction"
+          ]
+        }
+      ],
+      "specialConsiderations": [
+        "Start low, go slow with medications",
+        "Monitor for sedation, confusion",
+        "Assess renal function for dosing",
+        "Consider bowel regimen with opioids",
+        "Regular vs PRN scheduling"
+      ]
+    }
+  ],
+  "implementation": {
+    "training": "All staff must complete protocol training annually",
+    "compliance": "Monthly audits with feedback",
+    "updates": "Protocols reviewed quarterly by interdisciplinary team",
+    "documentation": "Use standardized forms in EHR"
+  },
+  "references": [
+    "CMS Conditions of Participation",
+    "The Joint Commission Standards",
+    "AGS Clinical Practice Guidelines",
+    "CDC Guidelines",
+    "AHRQ Safety Protocols"
+  ]
+}

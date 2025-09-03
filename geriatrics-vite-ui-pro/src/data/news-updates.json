@@ -1,0 +1,181 @@
+{
+  "newsArticles": [
+    {
+      "id": "news-001",
+      "title": "New FDA Approval: Lecanemab (Leqembi) for Early Alzheimer's Disease",
+      "category": "FDA Approvals",
+      "date": "2024-01-15",
+      "author": "Dr. Michael Rodriguez",
+      "readTime": "3 min read",
+      "image": "/news/lecanemab-approval.jpg",
+      "summary": "The FDA has granted accelerated approval for lecanemab, a new monoclonal antibody treatment for early-stage Alzheimer's disease, marking a significant advancement in dementia care.",
+      "content": "The Food and Drug Administration has approved lecanemab (Leqembi) for the treatment of early Alzheimer's disease, including mild cognitive impairment and mild dementia stage. This approval represents a major breakthrough in Alzheimer's treatment, as it's the first drug to demonstrate meaningful clinical benefits in slowing cognitive decline.\n\nKey points for geriatric practitioners:\n\n**Clinical Benefits:**\n- 27% reduction in cognitive decline over 18 months\n- Slows progression from MCI to dementia\n- Benefits most pronounced in early-stage disease\n\n**Administration:**\n- Intravenous infusion every two weeks\n- Treatment requires specialized infusion centers\n- Regular MRI monitoring for brain swelling (ARIA)\n\n**Patient Selection:**\n- Confirmed amyloid pathology required\n- Best suited for patients with mild symptoms\n- Careful consideration of risks vs benefits\n\n**Cost and Access:**\n- Annual cost approximately $26,500\n- Medicare coverage approved with conditions\n- Patient assistance programs available\n\nThis approval opens new possibilities for early intervention in Alzheimer's disease, though careful patient selection and monitoring remain crucial.",
+      "tags": ["Alzheimer's", "FDA Approval", "Lecanemab", "Dementia Treatment"],
+      "featured": true,
+      "cmeCredits": 0.5
+    },
+    {
+      "id": "news-002", 
+      "title": "Updated Beers Criteria 2023: New Medications Added to Avoid List",
+      "category": "Clinical Guidelines",
+      "date": "2023-12-20",
+      "author": "Dr. Patricia Chen, PharmD",
+      "readTime": "4 min read",
+      "image": "/news/beers-criteria-2023.jpg",
+      "summary": "The American Geriatrics Society has released updated Beers Criteria with new potentially inappropriate medications and refined guidance for safer prescribing in older adults.",
+      "content": "The 2023 update to the Beers Criteria introduces several important changes that impact geriatric prescribing practices. These evidence-based recommendations help clinicians identify potentially inappropriate medications for adults ≥65 years.\n\n**Key Updates:**\n\n**Newly Added Medications to Avoid:**\n- Gabapentin and pregabalin for routine pain management\n- Tramadol in patients with history of falls\n- High-dose proton pump inhibitors (>standard dose)\n- Certain sleep aids including suvorexant\n\n**Refined Recommendations:**\n- Clarified guidance on antipsychotic use in dementia\n- Updated drug-disease interaction warnings\n- New considerations for patients with kidney disease\n- Enhanced guidance on deprescribing timelines\n\n**Clinical Impact:**\nThese updates reflect growing evidence about medication safety in older adults. Key areas of focus include:\n- Fall risk reduction through medication review\n- Cognitive preservation by avoiding anticholinergic burden\n- Cardiovascular safety considerations\n- Kidney function protection\n\n**Implementation Strategies:**\n1. Regular medication reconciliation using updated criteria\n2. Systematic review of patients on newly flagged medications\n3. Patient and family education about medication changes\n4. Documentation of rationale when continuing flagged medications\n\n**Practice Resources:**\n- Updated mobile app with new criteria\n- Continuing education modules available\n- Patient counseling materials provided\n\nThe updated criteria emphasize individualized care while providing clearer guidance on medication safety in geriatric populations.",
+      "tags": ["Beers Criteria", "Medication Safety", "Polypharmacy", "Guidelines"],
+      "featured": true,
+      "cmeCredits": 1.0
+    },
+    {
+      "id": "news-003",
+      "title": "CMS Updates Medicare Coverage for Cognitive Assessment Tools", 
+      "category": "Policy & Reimbursement",
+      "date": "2024-01-08",
+      "author": "Healthcare Policy Team",
+      "readTime": "2 min read",
+      "image": "/news/cms-coverage-update.jpg",
+      "summary": "Centers for Medicare & Medicaid Services expands coverage for comprehensive cognitive assessment tools, improving access to early dementia detection.",
+      "content": "The Centers for Medicare & Medicaid Services (CMS) has announced expanded coverage for cognitive assessment tools as part of routine Medicare Annual Wellness Visits, effective January 2024.\n\n**Coverage Changes:**\n\n**Newly Covered Assessments:**\n- Montreal Cognitive Assessment (MoCA)\n- Clock Drawing Test with standardized scoring\n- Functional Assessment Staging Tool (FAST)\n- Comprehensive cognitive evaluation by qualified practitioners\n\n**Billing and Documentation:**\n- New CPT codes for cognitive assessment\n- Required documentation includes:\n  - Baseline cognitive testing results\n  - Risk factor assessment\n  - Family history documentation\n  - Follow-up recommendations\n\n**Quality Measures:**\n- Annual cognitive screening for patients ≥65\n- Timely referral for abnormal results\n- Care coordination with specialists\n- Patient and family counseling documentation\n\n**Practice Implications:**\n1. **Workflow Integration**: Incorporate cognitive screening into routine visits\n2. **Staff Training**: Ensure proper administration and scoring\n3. **Technology Updates**: Update EHR templates for new codes\n4. **Referral Pathways**: Establish connections with memory care specialists\n\n**Patient Benefits:**\n- Earlier detection of cognitive changes\n- Improved access to diagnostic testing\n- Better care coordination\n- Enhanced family support services\n\nThis policy change reflects growing recognition of the importance of early cognitive assessment in preventing and managing dementia-related conditions.",
+      "tags": ["CMS", "Medicare", "Cognitive Assessment", "Reimbursement"],
+      "featured": false,
+      "cmeCredits": 0.25
+    },
+    {
+      "id": "news-004",
+      "title": "Breakthrough Research: Exercise Programs Reduce Fall Risk by 42%",
+      "category": "Research",
+      "date": "2024-01-02",
+      "author": "Dr. Lisa Park, PT, PhD",
+      "readTime": "5 min read", 
+      "image": "/news/exercise-falls-research.jpg",
+      "summary": "Large-scale meta-analysis demonstrates that structured exercise programs significantly reduce fall risk in community-dwelling older adults, with specific protocols showing greatest benefit.",
+      "content": "A comprehensive meta-analysis of 54 randomized controlled trials involving over 15,000 older adults has demonstrated that structured exercise programs can reduce fall risk by up to 42% in community-dwelling seniors.\n\n**Study Highlights:**\n\n**Most Effective Interventions:**\n1. **Balance Training** (38% risk reduction)\n   - Tai Chi programs: 3x weekly for 12+ weeks\n   - Standing balance exercises with progression\n   - Dynamic balance challenges\n\n2. **Strength Training** (34% risk reduction)\n   - Progressive resistance training\n   - Focus on lower extremity strength\n   - Functional movement patterns\n\n3. **Combined Programs** (42% risk reduction)\n   - Balance + strength + flexibility\n   - Group-based delivery most effective\n   - Home exercise component included\n\n**Key Findings:**\n- Programs lasting >12 weeks showed sustained benefits\n- Group settings improved adherence (78% vs 52%)\n- Supervised sessions crucial for first 6 weeks\n- Cost-effective compared to fall-related healthcare costs\n\n**Clinical Applications:**\n\n**Program Components for Maximum Benefit:**\n- 3 sessions per week minimum\n- Progressive difficulty levels\n- Balance challenges on various surfaces\n- Functional strength exercises\n- Flexibility and mobility work\n\n**Patient Selection:**\n- All community-dwelling adults ≥65 years\n- Particularly beneficial for those with:\n  - Previous fall history\n  - Mobility limitations\n  - Fear of falling\n  - Multiple chronic conditions\n\n**Implementation Strategies:**\n1. **Assessment**: Use validated tools (Berg Balance Scale, TUG)\n2. **Prescription**: Individualized program based on abilities\n3. **Monitoring**: Regular progress evaluation and adjustment\n4. **Sustainability**: Transition to community programs\n\n**Practice Integration:**\n- Standardized exercise prescriptions\n- Partnership with local fitness centers\n- Group programs in clinical settings\n- Telehealth monitoring options\n\nThis evidence strongly supports exercise prescription as a primary fall prevention strategy in geriatric care.",
+      "tags": ["Falls Prevention", "Exercise", "Research", "Community Health"],
+      "featured": true,
+      "cmeCredits": 1.0
+    },
+    {
+      "id": "news-005",
+      "title": "Digital Health Innovation: AI-Powered Medication Interaction Checker",
+      "category": "Technology",
+      "date": "2023-12-28",
+      "author": "Tech Innovation Team",
+      "readTime": "3 min read",
+      "image": "/news/ai-medication-checker.jpg",
+      "summary": "New artificial intelligence system demonstrates 95% accuracy in identifying potentially harmful drug interactions in complex polypharmacy cases.",
+      "content": "A groundbreaking AI-powered medication interaction system has shown remarkable accuracy in identifying dangerous drug combinations, particularly in older adults with complex medication regimens.\n\n**System Capabilities:**\n\n**Advanced Detection:**\n- Identifies drug-drug interactions with 95% accuracy\n- Considers patient-specific factors (age, kidney function, weight)\n- Includes food-drug and supplement interactions\n- Provides severity rankings and clinical recommendations\n\n**Geriatric-Specific Features:**\n- Beers Criteria integration\n- Age-related metabolism considerations\n- Kidney function adjustments\n- Fall risk medication flagging\n- Cognitive impact assessments\n\n**Clinical Integration:**\n- EHR system compatibility\n- Real-time prescribing alerts\n- Patient medication list scanning\n- Pharmacist consultation recommendations\n\n**Validation Results:**\n- Tested on 10,000+ medication profiles\n- Reduced adverse drug events by 35%\n- Improved prescriber confidence in complex cases\n- Decreased time to identify interactions by 78%\n\n**Key Benefits:**\n\n**For Practitioners:**\n- Real-time clinical decision support\n- Reduced liability from missed interactions\n- Improved patient safety outcomes\n- Streamlined medication reconciliation\n\n**For Patients:**\n- Safer medication management\n- Reduced risk of adverse events\n- Better understanding of medication risks\n- Improved quality of life\n\n**Implementation Considerations:**\n1. **Training Requirements**: 2-hour certification program\n2. **Integration Timeline**: 4-6 weeks for EHR setup\n3. **Cost Structure**: Subscription-based pricing\n4. **Support Services**: 24/7 technical assistance\n\n**Future Developments:**\n- Patient-facing mobile application\n- Predictive modeling for future interactions\n- Integration with wearable device data\n- Expansion to include genetic factors\n\nThis technology represents a significant advancement in medication safety for older adults with complex health conditions.",
+      "tags": ["AI", "Technology", "Medication Safety", "Innovation"],
+      "featured": false,
+      "cmeCredits": 0.5
+    },
+    {
+      "id": "news-006",
+      "title": "Joint Commission Updates Patient Safety Goals for 2024",
+      "category": "Quality & Safety",
+      "date": "2023-12-15",
+      "author": "Quality Improvement Team", 
+      "readTime": "4 min read",
+      "image": "/news/joint-commission-2024.jpg",
+      "summary": "The Joint Commission announces new National Patient Safety Goals with enhanced focus on geriatric-specific safety measures and quality indicators.",
+      "content": "The Joint Commission has released updated National Patient Safety Goals for 2024, with significant emphasis on geriatric care quality and safety measures.\n\n**New Geriatric-Specific Requirements:**\n\n**Goal 1: Medication Safety Enhancement**\n- Mandatory pharmacist review for patients on ≥10 medications\n- Standardized medication reconciliation at transitions\n- Required deprescribing protocols for inappropriate medications\n- Enhanced monitoring for high-risk medication combinations\n\n**Goal 2: Fall Prevention Excellence**\n- Universal fall risk screening within 4 hours of admission\n- Validated assessment tools (Morse Fall Scale required)\n- Multidisciplinary fall prevention teams\n- Post-fall analysis and intervention adjustment\n\n**Goal 3: Cognitive Assessment Standards**\n- Routine delirium screening using CAM or similar tool\n- Staff education on delirium recognition and management\n- Non-pharmacological intervention protocols\n- Family education and involvement requirements\n\n**Goal 4: Pressure Injury Prevention**\n- Braden Scale assessment within 8 hours\n- Documentation of prevention interventions\n- Regular reassessment and care plan updates\n- Staff competency validation requirements\n\n**Implementation Timeline:**\n- Phase 1 (Q1 2024): Policy development and staff training\n- Phase 2 (Q2 2024): Process implementation and monitoring\n- Phase 3 (Q3 2024): Full compliance and outcome measurement\n- Phase 4 (Q4 2024): Continuous improvement and refinement\n\n**Quality Indicators:**\n\n**Required Metrics:**\n- Hospital-acquired pressure injury rates\n- Fall rates per 1,000 patient days\n- Medication error rates in geriatric patients\n- Delirium incidence and duration\n- Patient satisfaction scores for geriatric care\n\n**Reporting Requirements:**\n- Monthly quality dashboards\n- Quarterly trend analysis\n- Annual outcome reports\n- Root cause analysis for adverse events\n\n**Compliance Support:**\n\n**Available Resources:**\n- Implementation toolkits and checklists\n- Staff training modules and materials\n- Benchmarking data and best practices\n- Expert consultation services\n\n**Key Changes from Previous Goals:**\n- More specific geriatric focus\n- Enhanced measurement requirements\n- Stricter compliance timelines\n- Increased emphasis on multidisciplinary care\n\nThese updated goals reflect the growing recognition of specialized needs in geriatric care and the importance of targeted safety interventions.",
+      "tags": ["Joint Commission", "Patient Safety", "Quality Improvement", "Healthcare Standards"],
+      "featured": false,
+      "cmeCredits": 0.75
+    }
+  ],
+  "categories": [
+    {
+      "id": "fda-approvals",
+      "name": "FDA Approvals",
+      "description": "Latest drug approvals and medical device clearances",
+      "color": "bg-blue-500"
+    },
+    {
+      "id": "clinical-guidelines",
+      "name": "Clinical Guidelines", 
+      "description": "Updates to clinical practice guidelines and recommendations",
+      "color": "bg-green-500"
+    },
+    {
+      "id": "research",
+      "name": "Research",
+      "description": "Breakthrough research findings and clinical studies",
+      "color": "bg-purple-500"
+    },
+    {
+      "id": "policy-reimbursement",
+      "name": "Policy & Reimbursement",
+      "description": "Healthcare policy changes and reimbursement updates",
+      "color": "bg-yellow-500"
+    },
+    {
+      "id": "technology",
+      "name": "Technology",
+      "description": "Healthcare technology innovations and digital health advances",
+      "color": "bg-red-500"
+    },
+    {
+      "id": "quality-safety",
+      "name": "Quality & Safety",
+      "description": "Patient safety initiatives and quality improvement measures",
+      "color": "bg-indigo-500"
+    }
+  ],
+  "upcomingEvents": [
+    {
+      "id": "event-001",
+      "title": "Annual Geriatrics Conference 2024",
+      "date": "2024-03-15",
+      "endDate": "2024-03-17",
+      "location": "Chicago, IL",
+      "type": "Conference",
+      "description": "The premier geriatric medicine conference featuring latest research, clinical updates, and networking opportunities.",
+      "cmeCredits": 20,
+      "registrationUrl": "https://example.com/geriatrics-conf-2024"
+    },
+    {
+      "id": "event-002",
+      "title": "Dementia Care Webinar Series",
+      "date": "2024-02-20",
+      "location": "Virtual",
+      "type": "Webinar", 
+      "description": "Four-part webinar series covering behavioral management, family support, and latest treatment options.",
+      "cmeCredits": 4,
+      "registrationUrl": "https://example.com/dementia-webinar"
+    },
+    {
+      "id": "event-003",
+      "title": "Fall Prevention Workshop",
+      "date": "2024-02-28",
+      "location": "Boston, MA",
+      "type": "Workshop",
+      "description": "Hands-on workshop covering assessment tools, exercise programs, and environmental modifications.",
+      "cmeCredits": 6,
+      "registrationUrl": "https://example.com/fall-prevention-workshop"
+    }
+  ],
+  "alerts": [
+    {
+      "id": "alert-001",
+      "type": "FDA Safety Alert",
+      "severity": "High",
+      "title": "Increased Mortality Risk with Antipsychotics in Dementia",
+      "message": "The FDA reinforces black box warning regarding increased mortality risk when using antipsychotic medications in elderly patients with dementia-related psychosis.",
+      "actionRequired": "Review all patients on antipsychotic medications for continued necessity and consider non-pharmacological alternatives.",
+      "date": "2024-01-10",
+      "expiryDate": "2024-04-10"
+    },
+    {
+      "id": "alert-002", 
+      "type": "Drug Shortage",
+      "severity": "Medium",
+      "title": "Donepezil Supply Shortage Expected",
+      "message": "Anticipated shortage of donepezil tablets (5mg and 10mg) due to manufacturing delays. Expected duration: 6-8 weeks.",
+      "actionRequired": "Consider alternative cholinesterase inhibitors (rivastigmine, galantamine) for new patients. Existing patients should not discontinue therapy abruptly.",
+      "date": "2024-01-05",
+      "expiryDate": "2024-02-28"
+    }
+  ]
+}

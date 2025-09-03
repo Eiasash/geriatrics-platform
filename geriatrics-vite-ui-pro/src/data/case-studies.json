@@ -1,0 +1,732 @@
+{
+  "caseStudies": [
+    {
+      "id": "case-001",
+      "title": "Complex Dementia with Behavioral Disturbances",
+      "category": "Dementia Care",
+      "difficulty": "Advanced",
+      "duration": "45 minutes",
+      "learningObjectives": [
+        "Differentiate between types of dementia based on clinical presentation",
+        "Develop non-pharmacological interventions for behavioral symptoms",
+        "Apply appropriate medication management strategies",
+        "Understand caregiver support needs"
+      ],
+      "patient": {
+        "name": "Margaret Thompson",
+        "age": 78,
+        "gender": "Female",
+        "presentation": "Brought by daughter for increasing confusion, agitation, and sleep disturbances over past 6 months"
+      },
+      "history": {
+        "chiefComplaint": "Progressive memory loss with recent behavioral changes including nighttime wandering, verbal aggression, and resistance to personal care",
+        "historyOfPresentIllness": "Mrs. Thompson was functioning independently until 18 months ago when family noticed mild forgetfulness. Over the past 6 months, symptoms have rapidly progressed. She now requires assistance with medications, has gotten lost in familiar places, and shows significant personality changes. Recent behaviors include accusing family of stealing, refusing to bathe, and attempting to leave the house at night.",
+        "pastMedicalHistory": [
+          "Hypertension (well-controlled)",
+          "Osteoarthritis",
+          "Cataract surgery 2 years ago"
+        ],
+        "medications": [
+          "Lisinopril 10mg daily",
+          "Acetaminophen 650mg TID PRN pain"
+        ],
+        "socialHistory": "Widowed 5 years ago, lives with adult daughter, former elementary school teacher, no tobacco or alcohol use",
+        "familyHistory": "Mother had 'senility' in her 80s, father died of heart attack at 65"
+      },
+      "physicalExam": {
+        "vitalSigns": {
+          "bp": "142/78",
+          "hr": "88",
+          "temp": "98.2°F",
+          "rr": "16",
+          "weight": "132 lbs (down 8 lbs from 6 months ago)"
+        },
+        "general": "Alert but appears anxious and suspicious, well-groomed (daughter assists with ADLs)",
+        "neurologic": "Cranial nerves intact, normal strength and reflexes, mild tremor in hands, gait steady but cautious",
+        "cardiovascular": "Regular rate and rhythm, no murmurs",
+        "other": "No focal neurological deficits, no signs of infection"
+      },
+      "diagnostics": {
+        "mmse": "18/30 (significant deficits in orientation, recall, and attention)",
+        "labResults": {
+          "cbc": "Normal",
+          "bmp": "Normal",
+          "tsh": "2.1 (normal)",
+          "b12": "289 (low-normal)",
+          "folate": "Normal"
+        },
+        "imaging": "CT head: Moderate cortical atrophy, no acute findings",
+        "other": "Clock draw test: Significant impairment"
+      },
+      "questions": [
+        {
+          "id": "q1",
+          "type": "multiple_choice",
+          "question": "Based on the presentation, which type of dementia is most likely?",
+          "options": [
+            "Alzheimer's disease",
+            "Vascular dementia", 
+            "Lewy body dementia",
+            "Frontotemporal dementia"
+          ],
+          "correct": 0,
+          "explanation": "The gradual onset, prominent memory loss, and pattern of cognitive decline are most consistent with Alzheimer's disease. The behavioral symptoms (agitation, paranoia) are common in moderate-stage Alzheimer's."
+        },
+        {
+          "id": "q2",
+          "type": "multiple_choice",
+          "question": "What is the most appropriate first-line treatment for the behavioral symptoms?",
+          "options": [
+            "Start haloperidol 0.5mg BID",
+            "Implement non-pharmacological interventions",
+            "Increase social isolation to reduce stimulation",
+            "Begin benzodiazepines for agitation"
+          ],
+          "correct": 1,
+          "explanation": "Non-pharmacological interventions should always be tried first for behavioral symptoms. These include environmental modifications, structured routines, and addressing underlying needs."
+        },
+        {
+          "id": "q3",
+          "type": "multiple_choice", 
+          "question": "Which medication would be most appropriate to start for cognitive symptoms?",
+          "options": [
+            "Memantine",
+            "Donepezil",
+            "Galantamine",
+            "Rivastigmine"
+          ],
+          "correct": 1,
+          "explanation": "Donepezil is typically first-line for mild to moderate Alzheimer's disease. It's well-tolerated and has the most evidence for efficacy in this population."
+        }
+      ],
+      "discussionPoints": [
+        "Non-pharmacological interventions: music therapy, structured activities, consistent routines",
+        "Environmental modifications: removing mirrors (reduce paranoia), improved lighting, secure environment",
+        "Caregiver support: respite care, support groups, education about disease progression",
+        "Safety considerations: wandering prevention, medication management, driving assessment",
+        "Advanced directives: discuss while patient has some capacity"
+      ],
+      "outcome": "Started on donepezil with gradual titration. Implemented environmental modifications and referred daughter to Alzheimer's Association for support. Behavioral symptoms improved with consistent routines and activities. Patient maintained at home with increased supervision and day program enrollment.",
+      "keyTakeaways": [
+        "Behavioral symptoms in dementia often reflect unmet needs",
+        "Non-pharmacological interventions should be first-line for behavioral symptoms",
+        "Caregiver support is crucial for successful management",
+        "Early safety planning prevents crises"
+      ]
+    },
+    {
+      "id": "case-002", 
+      "title": "Recurrent Falls in Frail Elderly Patient",
+      "category": "Falls Prevention",
+      "difficulty": "Intermediate",
+      "duration": "30 minutes",
+      "learningObjectives": [
+        "Conduct comprehensive fall risk assessment",
+        "Identify modifiable fall risk factors",
+        "Develop multifactorial intervention plan",
+        "Understand medication-related fall risks"
+      ],
+      "patient": {
+        "name": "Robert Chen",
+        "age": 83,
+        "gender": "Male",
+        "presentation": "Third fall in 2 months, family concerned about safety"
+      },
+      "history": {
+        "chiefComplaint": "Patient fell again this morning while going to bathroom, no injury but family very worried",
+        "historyOfPresentIllness": "Mr. Chen has fallen 3 times in past 2 months. First fall was in garden, second while getting up at night, today's fall was en route to bathroom. No loss of consciousness with any falls. Uses walker intermittently but often 'forgets' to use it. Reports some dizziness when standing quickly.",
+        "pastMedicalHistory": [
+          "Parkinson's disease (diagnosed 3 years ago)",
+          "Benign prostatic hyperplasia",
+          "Depression",
+          "Hypertension",
+          "Osteoporosis"
+        ],
+        "medications": [
+          "Carbidopa-levodopa 25/100 TID",
+          "Tamsulosin 0.4mg daily",
+          "Sertraline 50mg daily", 
+          "Amlodipine 5mg daily",
+          "Alendronate 70mg weekly"
+        ],
+        "socialHistory": "Lives with wife in two-story home, retired engineer, walks dog daily (with wife's supervision)",
+        "functionalStatus": "Independent in most ADLs but needs help with medications and transportation"
+      },
+      "physicalExam": {
+        "vitalSigns": {
+          "bp": "Standing: 105/65, Sitting: 135/80 (significant orthostatic hypotension)",
+          "hr": "78 regular",
+          "weight": "145 lbs"
+        },
+        "neurologic": "Mild cogwheel rigidity, bradykinesia, postural instability on pull test, mild tremor at rest",
+        "musculoskeletal": "Decreased muscle mass, kyphosis, limited hip flexion",
+        "feet": "Poor fitting shoes, long toenails, calluses"
+      },
+      "assessments": {
+        "morseScore": "85 (high risk)",
+        "tugTest": "22 seconds (high fall risk)",
+        "strengthTesting": "Hip flexors 3/5, ankle dorsiflexors 4/5",
+        "vision": "Needs new prescription, cataracts developing"
+      },
+      "questions": [
+        {
+          "id": "q1",
+          "type": "multiple_choice",
+          "question": "Which is the most significant modifiable risk factor for this patient?",
+          "options": [
+            "Parkinson's disease",
+            "Orthostatic hypotension",
+            "Age",
+            "Male gender"
+          ],
+          "correct": 1,
+          "explanation": "While Parkinson's disease increases fall risk, the significant orthostatic hypotension (30mmHg drop) is modifiable through medication adjustment and non-pharmacological interventions."
+        },
+        {
+          "id": "q2",
+          "type": "multiple_choice",
+          "question": "Which medication is most likely contributing to falls?",
+          "options": [
+            "Carbidopa-levodopa",
+            "Amlodipine",
+            "Alendronate", 
+            "Tamsulosin"
+          ],
+          "correct": 1,
+          "explanation": "Amlodipine can cause orthostatic hypotension and dizziness. The significant BP drop suggests medication-induced orthostatic hypotension."
+        },
+        {
+          "id": "q3",
+          "type": "multiple_choice",
+          "question": "What is the most appropriate immediate intervention?",
+          "options": [
+            "Recommend nursing home placement",
+            "Prescribe hip protectors",
+            "Comprehensive multifactorial intervention",
+            "Install grab bars only"
+          ],
+          "correct": 2,
+          "explanation": "Evidence shows that multifactorial interventions addressing multiple risk factors simultaneously are most effective for fall prevention in high-risk patients."
+        }
+      ],
+      "interventions": [
+        {
+          "category": "Medication Management",
+          "actions": [
+            "Reduce amlodipine dose or switch to different antihypertensive",
+            "Review timing of Parkinson's medications",
+            "Consider tamsulosin timing (avoid bedtime dosing)"
+          ]
+        },
+        {
+          "category": "Environmental Modifications", 
+          "actions": [
+            "Install grab bars in bathroom",
+            "Improve lighting, especially pathways to bathroom",
+            "Remove throw rugs and clutter",
+            "Bedside commode for nighttime use"
+          ]
+        },
+        {
+          "category": "Physical Interventions",
+          "actions": [
+            "Physical therapy for balance and strength training",
+            "Proper walker training and compliance",
+            "Foot care and proper footwear",
+            "Vision evaluation and new glasses"
+          ]
+        },
+        {
+          "category": "Behavioral/Educational",
+          "actions": [
+            "Education on fall risk factors",
+            "Orthostatic precautions training",
+            "Regular exercise program",
+            "Family education on supervision needs"
+          ]
+        }
+      ],
+      "outcome": "Reduced amlodipine dose, added PT referral, environmental modifications completed. No falls in following 3 months. Improved TUG test time to 16 seconds. Patient more compliant with walker use.",
+      "keyTakeaways": [
+        "Multifactorial interventions are most effective for fall prevention",
+        "Medication review is crucial - polypharmacy increases fall risk", 
+        "Environmental modifications provide immediate risk reduction",
+        "Patient and family education improves compliance with interventions"
+      ]
+    },
+    {
+      "id": "case-003",
+      "title": "Polypharmacy and Adverse Drug Events", 
+      "category": "Medication Safety",
+      "difficulty": "Advanced",
+      "duration": "40 minutes",
+      "learningObjectives": [
+        "Apply deprescribing principles in complex polypharmacy",
+        "Identify potentially inappropriate medications using Beers Criteria",
+        "Recognize drug-drug interactions in elderly patients",
+        "Develop systematic approach to medication reconciliation"
+      ],
+      "patient": {
+        "name": "Dorothy Martinez",
+        "age": 81,
+        "gender": "Female", 
+        "presentation": "Increasing confusion, weakness, and multiple recent falls"
+      },
+      "history": {
+        "chiefComplaint": "Family reports patient has become increasingly confused and weak over past month, with 2 falls in past week",
+        "medications": [
+          "Metformin 1000mg BID (diabetes)",
+          "Glipizide 10mg BID (diabetes)", 
+          "Lisinopril 20mg daily (hypertension)",
+          "Hydrochlorothiazide 25mg daily (hypertension)",
+          "Simvastatin 40mg daily (hyperlipidemia)",
+          "Omeprazole 40mg daily (GERD)",
+          "Diphenhydramine 25mg QHS (sleep)",
+          "Lorazepam 0.5mg BID PRN anxiety",
+          "Tramadol 50mg QID PRN pain",
+          "Calcium carbonate 500mg BID",
+          "Multivitamin daily",
+          "Aspirin 81mg daily"
+        ],
+        "recentChanges": "Started tramadol 2 months ago for back pain, increased omeprazole dose 3 weeks ago"
+      },
+      "physicalExam": {
+        "vitalSigns": {
+          "bp": "95/55 (orthostatic to 85/50)",
+          "hr": "58",
+          "weight": "108 lbs (down 12 lbs in 3 months)"
+        },
+        "neurologic": "Mild confusion, slower responses, mild tremor",
+        "other": "Appears dehydrated, reports chronic constipation"
+      },
+      "labResults": {
+        "glucose": "78 mg/dL",
+        "creatinine": "1.8 mg/dL (baseline 1.2)",
+        "sodium": "128 mEq/L",
+        "potassium": "5.2 mEq/L",
+        "hba1c": "6.8%"
+      },
+      "questions": [
+        {
+          "id": "q1",
+          "type": "multiple_choice",
+          "question": "Which medication combination is most likely causing the hyponatremia?",
+          "options": [
+            "Metformin and glipizide",
+            "Lisinopril and hydrochlorothiazide", 
+            "Tramadol and omeprazole",
+            "Diphenhydramine and lorazepam"
+          ],
+          "correct": 1,
+          "explanation": "ACE inhibitors and thiazide diuretics can both cause hyponatremia, especially in elderly patients. The combination increases this risk."
+        },
+        {
+          "id": "q2",
+          "type": "multiple_choice",
+          "question": "According to Beers Criteria, which medications should be avoided or used with caution?",
+          "options": [
+            "Diphenhydramine and lorazepam only",
+            "Tramadol and glipizide only",
+            "Diphenhydramine, lorazepam, and tramadol",
+            "All medications are appropriate"
+          ],
+          "correct": 2,
+          "explanation": "Diphenhydramine (anticholinergic), lorazepam (benzodiazepine), and tramadol (in elderly) are all on the Beers Criteria as potentially inappropriate."
+        },
+        {
+          "id": "q3",
+          "type": "multiple_choice",
+          "question": "What is the most appropriate first step in management?",
+          "options": [
+            "Stop all medications immediately",
+            "Add medications to treat symptoms",
+            "Systematic medication review and deprescribing",
+            "Continue current regimen but monitor closely"
+          ],
+          "correct": 2,
+          "explanation": "A systematic approach to identify potentially inappropriate medications and deprescribe when benefits no longer outweigh risks is the best approach."
+        }
+      ],
+      "deprescribingPlan": [
+        {
+          "medication": "Diphenhydramine",
+          "action": "Discontinue immediately",
+          "rationale": "Strongly anticholinergic, contributing to confusion and falls. Use sleep hygiene instead."
+        },
+        {
+          "medication": "Lorazepam",
+          "action": "Taper gradually over 2 weeks",
+          "rationale": "Benzodiazepine in elderly increases fall and confusion risk. Taper to avoid withdrawal."
+        },
+        {
+          "medication": "Tramadol", 
+          "action": "Replace with acetaminophen",
+          "rationale": "Tramadol has anticholinergic and serotonergic effects, increases fall risk. Acetaminophen safer for elderly."
+        },
+        {
+          "medication": "Glipizide",
+          "action": "Reduce dose or discontinue",
+          "rationale": "HbA1c 6.8% suggests possible overtreatment. Hypoglycemia risk with weight loss and decreased appetite."
+        },
+        {
+          "medication": "Hydrochlorothiazide",
+          "action": "Hold temporarily",
+          "rationale": "Contributing to hyponatremia and orthostatic hypotension. Reassess need after electrolyte correction."
+        },
+        {
+          "medication": "Omeprazole",
+          "action": "Reduce to 20mg daily",
+          "rationale": "High dose may not be necessary. Long-term PPI use has risks (B12 deficiency, osteoporosis)."
+        }
+      ],
+      "followUp": [
+        "Labs in 1 week (electrolytes, glucose, creatinine)",
+        "Blood pressure monitoring",
+        "Assessment of pain management with acetaminophen",
+        "Sleep hygiene counseling",
+        "Fall risk reassessment in 2 weeks"
+      ],
+      "outcome": "After medication changes, patient's confusion improved significantly. Sodium normalized, no further falls. HbA1c remained stable at 7.1% on reduced diabetes medications. Family reported return to baseline function.",
+      "keyTakeaways": [
+        "Polypharmacy significantly increases risk of adverse drug events in elderly",
+        "Beers Criteria helps identify potentially inappropriate medications",
+        "Deprescribing requires systematic approach and careful monitoring",
+        "Less is often more in geriatric prescribing - focus on quality of life goals"
+      ]
+    },
+    {
+      "id": "case-004",
+      "title": "End-of-Life Care and Advance Directives",
+      "category": "Palliative Care", 
+      "difficulty": "Advanced",
+      "duration": "50 minutes",
+      "learningObjectives": [
+        "Navigate complex end-of-life discussions with patients and families",
+        "Understand legal and ethical aspects of advance directives",
+        "Apply principles of comfort care and symptom management",
+        "Coordinate interdisciplinary palliative care team"
+      ],
+      "patient": {
+        "name": "Eleanor Washington",
+        "age": 89,
+        "gender": "Female",
+        "presentation": "Advanced dementia with recent decline and recurrent infections"
+      },
+      "history": {
+        "chiefComplaint": "Family meeting requested to discuss goals of care for patient with end-stage dementia",
+        "currentCondition": "Patient has severe dementia (MMSE 3/30), bedridden for 6 months, dependent for all ADLs, has had 4 hospitalizations in past year for pneumonia and UTIs. Recent weight loss of 25 lbs, difficulty swallowing, minimal verbal communication.",
+        "pastMedicalHistory": [
+          "Alzheimer's dementia (diagnosed 8 years ago)",
+          "Type 2 diabetes",
+          "Hypertension",
+          "Osteoporosis with compression fractures"
+        ],
+        "advanceDirectives": "Has healthcare proxy (daughter) but no specific instructions about feeding tubes or aggressive care",
+        "socialHistory": "Widowed 15 years ago, has 3 adult children who are involved but have different opinions about care"
+      },
+      "familyDynamics": {
+        "daughter1": "Healthcare proxy, wants 'everything done' including feeding tube",
+        "daughter2": "Believes mother wouldn't want prolonged suffering, supports comfort care",
+        "son": "Lives far away, defers to sisters but wants to be included in decisions"
+      },
+      "currentSymptoms": [
+        "Pain: Appears uncomfortable with positioning, grimaces during care",
+        "Respiratory: Occasional congestion, periods of irregular breathing",
+        "Feeding: Minimal oral intake, coughs with thin liquids",
+        "Behavioral: Restless at times, minimal interaction with environment"
+      ],
+      "questions": [
+        {
+          "id": "q1",
+          "type": "multiple_choice",
+          "question": "What is the most appropriate first step in this family meeting?",
+          "options": [
+            "Recommend immediate feeding tube placement",
+            "Explore the patient's previously expressed values and wishes",
+            "Explain that nothing more can be done",
+            "Ask family to reach consensus before proceeding"
+          ],
+          "correct": 1,
+          "explanation": "Understanding the patient's previously expressed values, beliefs, and preferences for care is essential for making decisions that honor her autonomy, even when she lacks capacity."
+        },
+        {
+          "id": "q2",
+          "type": "multiple_choice", 
+          "question": "Regarding feeding tube placement in advanced dementia, what does the evidence show?",
+          "options": [
+            "Significantly improves survival and quality of life",
+            "Prevents aspiration pneumonia reliably",
+            "Does not improve survival or prevent infections",
+            "Is always indicated for nutritional support"
+          ],
+          "correct": 2,
+          "explanation": "Research shows that feeding tubes in advanced dementia do not improve survival, prevent aspiration pneumonia, or improve quality of life. They may actually increase discomfort and complications."
+        },
+        {
+          "id": "q3",
+          "type": "multiple_choice",
+          "question": "What is the most appropriate approach to pain management in this patient?",
+          "options": [
+            "Avoid opioids due to risk of respiratory depression",
+            "Use only non-pharmacological interventions",
+            "Provide adequate pain control prioritizing comfort over other concerns",
+            "Wait for family consensus before treating pain"
+          ],
+          "correct": 2,
+          "explanation": "In end-of-life care, comfort is the priority. Pain should be adequately treated even if it may hasten death (principle of double effect)."
+        }
+      ],
+      "familyMeeting": {
+        "approach": [
+          "Create comfortable, private environment for discussion",
+          "Begin by asking what family understands about patient's condition",
+          "Explore patient's previously expressed values and wishes",
+          "Provide clear, honest information about prognosis",
+          "Discuss goals of care: cure, function, or comfort",
+          "Address each family member's concerns and emotions",
+          "Provide time for questions and processing"
+        ],
+        "keyPoints": [
+          "Patient is in end-stage dementia with limited life expectancy",
+          "Focus should shift from curative to comfort measures",
+          "Artificial nutrition does not improve outcomes in advanced dementia",
+          "Comfort feeding allows for dignity and family involvement",
+          "Pain and suffering can be effectively managed"
+        ]
+      },
+      "comfortCarePlan": [
+        {
+          "domain": "Physical Comfort",
+          "interventions": [
+            "Morphine 2-5mg sublingual q4h PRN pain/dyspnea",
+            "Scopolamine patch for secretions",
+            "Positioning for comfort, frequent turning",
+            "Mouth care with oral swabs",
+            "Music therapy and aromatherapy"
+          ]
+        },
+        {
+          "domain": "Nutritional Support", 
+          "interventions": [
+            "Small amounts of favorite foods as tolerated",
+            "Ice chips or popsicles for comfort",
+            "Family encouraged to participate in feeding",
+            "No force feeding or pressure to eat"
+          ]
+        },
+        {
+          "domain": "Psychosocial Support",
+          "interventions": [
+            "Chaplain consultation if desired",
+            "Social work support for family",
+            "Encourage family presence and participation",
+            "Memory sharing and life review"
+          ]
+        }
+      ],
+      "outcome": "After extensive discussion and education, family agreed on comfort care approach. Patient remained at nursing home with hospice support. Pain and symptoms well-controlled. Patient died peacefully 6 weeks later surrounded by family.",
+      "keyTakeaways": [
+        "Advance care planning discussions should occur before crisis situations",
+        "Family meetings require skill, patience, and cultural sensitivity", 
+        "Evidence-based information helps guide appropriate decisions",
+        "Comfort care is active, comprehensive care focused on quality of life",
+        "Supporting families through grief is part of end-of-life care"
+      ]
+    },
+    {
+      "id": "case-005",
+      "title": "Delirium in Post-Operative Elderly Patient",
+      "category": "Acute Care",
+      "difficulty": "Intermediate",
+      "duration": "35 minutes",
+      "learningObjectives": [
+        "Recognize different presentations of delirium in elderly patients",
+        "Apply systematic approach to delirium evaluation and management",
+        "Implement evidence-based prevention and treatment strategies",
+        "Understand long-term outcomes and prevention of recurrence"
+      ],
+      "patient": {
+        "name": "Frank Rodriguez",
+        "age": 76,
+        "gender": "Male",
+        "presentation": "Post-operative hip fracture repair with acute confusion"
+      },
+      "history": {
+        "chiefComplaint": "Nursing staff report patient became confused and agitated overnight after hip surgery",
+        "surgicalHistory": "Right hip fracture repair 2 days ago after fall at home. Surgery went well without complications.",
+        "preOperativeStatus": "Independent, living alone, cognitively intact per family, driving, managing finances",
+        "postOperativeChanges": "Day 1 post-op was alert and oriented. Day 2 morning became confused about location, tried to get out of bed multiple times, pulled at IV, not recognizing family members"
+      },
+      "currentPresentation": {
+        "cognitive": "Disoriented to place and time, thinks he's at home, doesn't remember surgery",
+        "attention": "Difficulty maintaining focus during examination, easily distracted",
+        "behavior": "Restless, trying to get up frequently, suspicious of staff",
+        "sleep": "Minimal sleep last night, kept calling for his wife (deceased 10 years ago)",
+        "fluctuation": "Symptoms worse at night, slightly better in morning"
+      },
+      "riskFactors": [
+        "Age > 75",
+        "Major surgery (hip fracture repair)",
+        "Anesthesia exposure",
+        "Pain medications (opioids)",
+        "Hospital environment",
+        "Urinary catheter",
+        "Sleep disruption"
+      ],
+      "assessment": {
+        "camScore": "Positive for delirium (acute onset, inattention, altered consciousness, disorganized thinking)",
+        "deliriumType": "Mixed (hyperactive during day, hypoactive at night)",
+        "richmond": "RASS +2 (agitated)"
+      },
+      "questions": [
+        {
+          "id": "q1",
+          "type": "multiple_choice",
+          "question": "Which tool is most appropriate for diagnosing delirium?",
+          "options": [
+            "Mini-Mental State Exam (MMSE)",
+            "Confusion Assessment Method (CAM)",
+            "Geriatric Depression Scale",
+            "Clock Drawing Test"
+          ],
+          "correct": 1,
+          "explanation": "The CAM is the gold standard for delirium diagnosis, specifically designed to identify the key features: acute onset/fluctuation, inattention, altered consciousness, and disorganized thinking."
+        },
+        {
+          "id": "q2",
+          "type": "multiple_choice",
+          "question": "What is the most likely precipitating factor for this patient's delirium?",
+          "options": [
+            "Undiagnosed dementia",
+            "Surgical stress and anesthesia",
+            "Urinary tract infection",
+            "Medication withdrawal"
+          ],
+          "correct": 1,
+          "explanation": "While multiple factors may contribute, the temporal relationship to major surgery and anesthesia makes this the most likely precipitant in a previously healthy elderly patient."
+        },
+        {
+          "id": "q3",
+          "type": "multiple_choice",
+          "question": "Which intervention should be implemented first?",
+          "options": [
+            "Start haloperidol for agitation",
+            "Apply restraints for safety",
+            "Remove urinary catheter and optimize environment",
+            "Increase pain medication"
+          ],
+          "correct": 2,
+          "explanation": "Non-pharmacological interventions should be first-line. Removing unnecessary devices and environmental optimization often improve delirium without medications."
+        }
+      ],
+      "workup": [
+        {
+          "category": "Laboratory Studies",
+          "tests": [
+            "CBC with differential",
+            "Comprehensive metabolic panel",
+            "Urinalysis and culture",
+            "Arterial blood gas if hypoxia suspected",
+            "Medication levels if applicable"
+          ]
+        },
+        {
+          "category": "Imaging",
+          "tests": [
+            "Chest X-ray (rule out pneumonia)",
+            "Head CT if focal neurological findings"
+          ]
+        },
+        {
+          "category": "Other",
+          "tests": [
+            "ECG (arrhythmias)",
+            "Review all medications and timing"
+          ]
+        }
+      ],
+      "management": {
+        "nonPharmacological": [
+          "Remove urinary catheter if possible",
+          "Ensure adequate lighting during day, minimize at night",
+          "Consistent caregivers when possible",
+          "Family presence and familiar objects",
+          "Early mobilization as tolerated",
+          "Hearing aids and glasses if used",
+          "Adequate pain control without oversedation",
+          "Sleep hygiene (quiet environment, minimal interruptions)"
+        ],
+        "pharmacological": [
+          "Avoid sedatives when possible",
+          "If severe agitation poses safety risk: haloperidol 0.5-1mg PO/IV",
+          "Optimize pain management (multimodal approach)",
+          "Consider melatonin 3mg at bedtime for sleep"
+        ],
+        "monitoring": [
+          "CAM assessment every shift",
+          "Richmond Agitation-Sedation Scale",
+          "Vital signs and oxygen saturation",
+          "Input/output and hydration status",
+          "Safety measures without restraints"
+        ]
+      },
+      "complications": [
+        "Prolonged hospital stay",
+        "Increased risk of falls and injury", 
+        "Functional decline",
+        "Increased risk of nursing home placement",
+        "Persistent cognitive impairment",
+        "Increased mortality"
+      ],
+      "prevention": [
+        "Preoperative optimization",
+        "Regional anesthesia when possible",
+        "Minimize perioperative medications",
+        "Early mobilization protocols",
+        "Avoid unnecessary devices (catheters, restraints)",
+        "Maintain sleep-wake cycle",
+        "Adequate nutrition and hydration"
+      ],
+      "outcome": "With consistent non-pharmacological interventions and minimal medication use, patient's delirium resolved over 4 days. Returned to baseline cognitive function. Discharged to rehabilitation facility and eventually returned home independently.",
+      "keyTakeaways": [
+        "Delirium is common but often preventable in hospitalized elderly",
+        "Non-pharmacological interventions are first-line treatment",
+        "Early recognition and treatment improves outcomes",
+        "Delirium can have lasting effects on cognitive function",
+        "Prevention strategies should be implemented for all high-risk patients"
+      ]
+    }
+  ],
+  "categories": [
+    {
+      "id": "dementia-care",
+      "name": "Dementia Care",
+      "description": "Complex cases involving various types of dementia and behavioral management",
+      "color": "bg-purple-500"
+    },
+    {
+      "id": "falls-prevention", 
+      "name": "Falls Prevention",
+      "description": "Multifactorial approach to fall risk assessment and intervention",
+      "color": "bg-red-500"
+    },
+    {
+      "id": "medication-safety",
+      "name": "Medication Safety", 
+      "description": "Polypharmacy management and deprescribing strategies",
+      "color": "bg-blue-500"
+    },
+    {
+      "id": "palliative-care",
+      "name": "Palliative Care",
+      "description": "End-of-life care, advance directives, and comfort measures",
+      "color": "bg-green-500"
+    },
+    {
+      "id": "acute-care",
+      "name": "Acute Care",
+      "description": "Hospital-based geriatric syndromes and complications",
+      "color": "bg-yellow-500"
+    }
+  ]
+}

@@ -1,0 +1,348 @@
+{
+  "patients": [
+    {
+      "id": "pt001",
+      "name": "Sarah Cohen",
+      "age": 82,
+      "gender": "Female",
+      "ward": "Geriatrics A",
+      "bed": "A-101",
+      "room": "101",
+      "admissionDate": "2024-12-15",
+      "primaryPhysician": "Dr. Rachel Green",
+      "diagnoses": [
+        "Alzheimer's Disease - Moderate Stage",
+        "Type 2 Diabetes Mellitus",
+        "Hypertension",
+        "Osteoarthritis"
+      ],
+      "medications": [
+        "Donepezil 10mg daily",
+        "Metformin 1000mg twice daily",
+        "Amlodipine 5mg daily",
+        "Paracetamol 500mg as needed"
+      ],
+      "allergies": ["Penicillin", "Sulfa drugs"],
+      "mmse": [
+        {"date": "2024-12-15", "score": 18},
+        {"date": "2025-01-15", "score": 17},
+        {"date": "2025-02-15", "score": 16}
+      ],
+      "fallRisk": 65,
+      "acuity": "moderate",
+      "socialHistory": "Lives with daughter, formerly a teacher",
+      "codeStatus": "Full Code",
+      "lastUpdated": "2025-03-01T10:30:00Z"
+    },
+    {
+      "id": "pt002",
+      "name": "David Goldberg",
+      "age": 78,
+      "gender": "Male",
+      "ward": "Geriatrics A",
+      "bed": "A-102",
+      "room": "102",
+      "admissionDate": "2025-01-20",
+      "primaryPhysician": "Dr. Michael Ross",
+      "diagnoses": [
+        "Parkinson's Disease",
+        "Depression",
+        "Benign Prostatic Hyperplasia",
+        "Chronic Kidney Disease Stage 3"
+      ],
+      "medications": [
+        "Levodopa-Carbidopa 25/100mg three times daily",
+        "Sertraline 50mg daily",
+        "Tamsulosin 0.4mg daily",
+        "Furosemide 20mg daily"
+      ],
+      "allergies": ["None known"],
+      "mmse": [
+        {"date": "2025-01-20", "score": 24},
+        {"date": "2025-02-20", "score": 23}
+      ],
+      "fallRisk": 85,
+      "acuity": "critical",
+      "socialHistory": "Widower, retired engineer, two sons visit weekly",
+      "codeStatus": "DNR",
+      "lastUpdated": "2025-03-01T11:00:00Z"
+    },
+    {
+      "id": "pt003",
+      "name": "Ruth Shapiro",
+      "age": 91,
+      "gender": "Female",
+      "ward": "Geriatrics B",
+      "bed": "B-201",
+      "room": "201",
+      "admissionDate": "2024-11-10",
+      "primaryPhysician": "Dr. Rachel Green",
+      "diagnoses": [
+        "Congestive Heart Failure",
+        "Atrial Fibrillation",
+        "Vascular Dementia",
+        "Iron Deficiency Anemia"
+      ],
+      "medications": [
+        "Digoxin 0.125mg daily",
+        "Warfarin 3mg daily",
+        "Furosemide 40mg twice daily",
+        "Ferrous Sulfate 325mg daily",
+        "Memantine 10mg twice daily"
+      ],
+      "allergies": ["Aspirin", "NSAIDs"],
+      "mmse": [
+        {"date": "2024-11-10", "score": 20},
+        {"date": "2024-12-10", "score": 19},
+        {"date": "2025-01-10", "score": 19},
+        {"date": "2025-02-10", "score": 18}
+      ],
+      "fallRisk": 55,
+      "acuity": "critical",
+      "socialHistory": "Holocaust survivor, lives in assisted living",
+      "codeStatus": "Limited Code - No intubation",
+      "lastUpdated": "2025-03-01T09:15:00Z"
+    },
+    {
+      "id": "pt004",
+      "name": "Abraham Levy",
+      "age": 85,
+      "gender": "Male",
+      "ward": "Geriatrics A",
+      "bed": "A-103",
+      "room": "103",
+      "admissionDate": "2025-02-01",
+      "primaryPhysician": "Dr. Michael Ross",
+      "diagnoses": [
+        "COPD - Gold Stage 3",
+        "Diabetes Type 2",
+        "Peripheral Neuropathy",
+        "Depression"
+      ],
+      "medications": [
+        "Tiotropium 18mcg inhaled daily",
+        "Salbutamol inhaler as needed",
+        "Insulin Glargine 20 units at bedtime",
+        "Gabapentin 300mg three times daily",
+        "Citalopram 20mg daily"
+      ],
+      "allergies": ["Codeine"],
+      "mmse": [
+        {"date": "2025-02-01", "score": 26},
+        {"date": "2025-03-01", "score": 26}
+      ],
+      "fallRisk": 45,
+      "acuity": "moderate",
+      "socialHistory": "Former rabbi, married for 60 years",
+      "codeStatus": "Full Code",
+      "lastUpdated": "2025-03-01T14:20:00Z"
+    },
+    {
+      "id": "pt005",
+      "name": "Miriam Rosenberg",
+      "age": 88,
+      "gender": "Female",
+      "ward": "Geriatrics B",
+      "bed": "B-202",
+      "room": "202",
+      "admissionDate": "2025-01-05",
+      "primaryPhysician": "Dr. Sarah Miller",
+      "diagnoses": [
+        "Rheumatoid Arthritis",
+        "Osteoporosis with compression fractures",
+        "Hypothyroidism",
+        "Mild Cognitive Impairment"
+      ],
+      "medications": [
+        "Methotrexate 15mg weekly",
+        "Prednisone 5mg daily",
+        "Alendronate 70mg weekly",
+        "Levothyroxine 100mcg daily",
+        "Calcium Carbonate 1000mg daily",
+        "Vitamin D3 2000IU daily"
+      ],
+      "allergies": ["Shellfish", "Latex"],
+      "mmse": [
+        {"date": "2025-01-05", "score": 25},
+        {"date": "2025-02-05", "score": 24},
+        {"date": "2025-03-01", "score": 24}
+      ],
+      "fallRisk": 70,
+      "acuity": "moderate",
+      "socialHistory": "Former pianist, has 3 children and 8 grandchildren",
+      "codeStatus": "Full Code",
+      "lastUpdated": "2025-03-01T16:45:00Z"
+    },
+    {
+      "id": "pt006",
+      "name": "Joseph Klein",
+      "age": 76,
+      "gender": "Male",
+      "ward": "Geriatrics A",
+      "bed": "A-104",
+      "room": "104",
+      "admissionDate": "2025-02-20",
+      "primaryPhysician": "Dr. Michael Ross",
+      "diagnoses": [
+        "Stroke - Left MCA territory",
+        "Expressive Aphasia",
+        "Hypertension",
+        "Dyslipidemia"
+      ],
+      "medications": [
+        "Aspirin 81mg daily",
+        "Clopidogrel 75mg daily",
+        "Atorvastatin 40mg daily",
+        "Lisinopril 10mg daily",
+        "Metoprolol 50mg twice daily"
+      ],
+      "allergies": ["None known"],
+      "mmse": [
+        {"date": "2025-02-20", "score": 22},
+        {"date": "2025-03-01", "score": 23}
+      ],
+      "fallRisk": 60,
+      "acuity": "moderate",
+      "socialHistory": "Retired businessman, stroke occurred 2 weeks ago",
+      "codeStatus": "Full Code",
+      "lastUpdated": "2025-03-01T08:30:00Z"
+    },
+    {
+      "id": "pt007",
+      "name": "Esther Friedman",
+      "age": 93,
+      "gender": "Female",
+      "ward": "Geriatrics B",
+      "bed": "B-203",
+      "room": "203",
+      "admissionDate": "2024-12-01",
+      "primaryPhysician": "Dr. Sarah Miller",
+      "diagnoses": [
+        "Advanced Alzheimer's Disease",
+        "Dysphagia",
+        "Recurrent UTIs",
+        "Pressure Ulcer Stage 2"
+      ],
+      "medications": [
+        "Memantine 10mg twice daily",
+        "Nitrofurantoin 50mg daily prophylaxis",
+        "Ensure supplements three times daily",
+        "Morphine 2.5mg as needed for pain"
+      ],
+      "allergies": ["Quinolones"],
+      "mmse": [
+        {"date": "2024-12-01", "score": 12},
+        {"date": "2025-01-01", "score": 10},
+        {"date": "2025-02-01", "score": 9},
+        {"date": "2025-03-01", "score": 8}
+      ],
+      "fallRisk": 95,
+      "acuity": "critical",
+      "socialHistory": "Former nurse, family considering hospice care",
+      "codeStatus": "DNR/DNI",
+      "lastUpdated": "2025-03-01T13:00:00Z"
+    },
+    {
+      "id": "pt008",
+      "name": "Nathan Kaplan",
+      "age": 80,
+      "gender": "Male",
+      "ward": "Geriatrics A",
+      "bed": "A-105",
+      "room": "105",
+      "admissionDate": "2025-02-25",
+      "primaryPhysician": "Dr. Michael Ross",
+      "diagnoses": [
+        "Lewy Body Dementia",
+        "REM Sleep Behavior Disorder",
+        "Orthostatic Hypotension",
+        "Visual Hallucinations"
+      ],
+      "medications": [
+        "Rivastigmine patch 9.5mg daily",
+        "Clonazepam 0.5mg at bedtime",
+        "Fludrocortisone 0.1mg daily",
+        "Quetiapine 25mg at bedtime"
+      ],
+      "allergies": ["Haloperidol"],
+      "mmse": [
+        {"date": "2025-02-25", "score": 21},
+        {"date": "2025-03-01", "score": 20}
+      ],
+      "fallRisk": 80,
+      "acuity": "critical",
+      "socialHistory": "Former accountant, experiences vivid hallucinations",
+      "codeStatus": "Full Code",
+      "lastUpdated": "2025-03-01T17:30:00Z"
+    },
+    {
+      "id": "pt009",
+      "name": "Hannah Silver",
+      "age": 84,
+      "gender": "Female",
+      "ward": "Geriatrics B",
+      "bed": "B-204",
+      "room": "204",
+      "admissionDate": "2025-01-15",
+      "primaryPhysician": "Dr. Sarah Miller",
+      "diagnoses": [
+        "Multiple Myeloma",
+        "Chronic Pain Syndrome",
+        "Depression",
+        "Osteoporosis"
+      ],
+      "medications": [
+        "Lenalidomide 10mg daily",
+        "Dexamethasone 20mg weekly",
+        "Oxycodone 5mg every 6 hours",
+        "Duloxetine 60mg daily",
+        "Zoledronic Acid 4mg monthly IV"
+      ],
+      "allergies": ["Morphine"],
+      "mmse": [
+        {"date": "2025-01-15", "score": 27},
+        {"date": "2025-02-15", "score": 27},
+        {"date": "2025-03-01", "score": 26}
+      ],
+      "fallRisk": 50,
+      "acuity": "moderate",
+      "socialHistory": "Retired librarian, avid reader despite vision problems",
+      "codeStatus": "Full Code",
+      "lastUpdated": "2025-03-01T10:00:00Z"
+    },
+    {
+      "id": "pt010",
+      "name": "Isaac Bernstein",
+      "age": 87,
+      "gender": "Male",
+      "ward": "Geriatrics A",
+      "bed": "A-106",
+      "room": "106",
+      "admissionDate": "2025-02-10",
+      "primaryPhysician": "Dr. Michael Ross",
+      "diagnoses": [
+        "Frontotemporal Dementia",
+        "Behavioral Variant",
+        "Type 2 Diabetes",
+        "Chronic Constipation"
+      ],
+      "medications": [
+        "Trazodone 50mg at bedtime",
+        "Metformin 500mg twice daily",
+        "Insulin Aspart sliding scale",
+        "Polyethylene Glycol daily",
+        "Risperidone 0.5mg twice daily"
+      ],
+      "allergies": ["None known"],
+      "mmse": [
+        {"date": "2025-02-10", "score": 19},
+        {"date": "2025-03-01", "score": 18}
+      ],
+      "fallRisk": 65,
+      "acuity": "moderate",
+      "socialHistory": "Former physics professor, exhibits disinhibited behavior",
+      "codeStatus": "Full Code",
+      "lastUpdated": "2025-03-01T15:15:00Z"
+    }
+  ]
+}

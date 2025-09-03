@@ -1,0 +1,655 @@
+{
+  "medications": [
+    {
+      "id": "med-001",
+      "name": "Donepezil",
+      "genericName": "Donepezil Hydrochloride",
+      "brandNames": ["Aricept", "Adlarity"],
+      "category": "Cholinesterase Inhibitor",
+      "class": "Dementia Treatment",
+      "indication": "Alzheimer's Disease (mild to moderate)",
+      "dosing": {
+        "starting": "5mg once daily at bedtime",
+        "maintenance": "10mg once daily after 4-6 weeks",
+        "maximum": "23mg once daily for severe AD",
+        "renalAdjustment": "No adjustment needed for CrCl >10 mL/min",
+        "hepaticAdjustment": "Use with caution in severe hepatic impairment"
+      },
+      "contraindications": [
+        "Known hypersensitivity to donepezil",
+        "Severe bradycardia or heart block"
+      ],
+      "warnings": [
+        "May cause bradycardia and heart block",
+        "Increased risk of GI bleeding with NSAIDs",
+        "May exacerbate asthma or COPD",
+        "Can cause muscle cramps and fatigue"
+      ],
+      "sideEffects": {
+        "common": ["Nausea", "Diarrhea", "Insomnia", "Fatigue", "Muscle cramps", "Loss of appetite"],
+        "serious": ["Bradycardia", "Heart block", "Seizures", "GI bleeding", "Syncope"]
+      },
+      "interactions": [
+        {
+          "drug": "Anticholinergics",
+          "severity": "Major",
+          "description": "May reduce effectiveness of donepezil"
+        },
+        {
+          "drug": "NSAIDs",
+          "severity": "Moderate", 
+          "description": "Increased risk of GI bleeding"
+        },
+        {
+          "drug": "Beta-blockers",
+          "severity": "Moderate",
+          "description": "Additive bradycardia risk"
+        }
+      ],
+      "monitoring": [
+        "Heart rate and rhythm",
+        "Cognitive function (MMSE, MoCA)",
+        "GI symptoms",
+        "Sleep patterns",
+        "Weight and appetite"
+      ],
+      "beersCategory": "Not listed",
+      "renalDosing": "No adjustment required",
+      "geriatricConsiderations": [
+        "Start with 5mg and assess tolerance",
+        "Monitor for cardiac effects",
+        "Evening dosing may help with sleep side effects",
+        "Discontinue if no benefit after 6 months"
+      ],
+      "cost": "$$$ (expensive)",
+      "availability": "Tablet, ODT"
+    },
+    {
+      "id": "med-002",
+      "name": "Memantine",
+      "genericName": "Memantine Hydrochloride",
+      "brandNames": ["Namenda", "Namenda XR"],
+      "category": "NMDA Receptor Antagonist",
+      "class": "Dementia Treatment",
+      "indication": "Moderate to severe Alzheimer's Disease",
+      "dosing": {
+        "starting": "5mg once daily",
+        "titration": "Increase by 5mg weekly to target dose",
+        "maintenance": "10mg twice daily or 28mg XR once daily",
+        "maximum": "20mg daily (10mg BID)",
+        "renalAdjustment": "Reduce dose if CrCl <30 mL/min",
+        "hepaticAdjustment": "No adjustment for mild-moderate impairment"
+      },
+      "contraindications": [
+        "Known hypersensitivity to memantine",
+        "Severe renal impairment (CrCl <5 mL/min)"
+      ],
+      "warnings": [
+        "May worsen seizure disorders",
+        "Use caution in alkaline urine conditions",
+        "Monitor for increased confusion initially"
+      ],
+      "sideEffects": {
+        "common": ["Dizziness", "Headache", "Confusion", "Constipation", "Hypertension"],
+        "serious": ["Falls", "Cerebrovascular events", "Severe confusion"]
+      },
+      "interactions": [
+        {
+          "drug": "Carbonic anhydrase inhibitors",
+          "severity": "Moderate",
+          "description": "May increase memantine levels"
+        },
+        {
+          "drug": "Sodium bicarbonate",
+          "severity": "Moderate",
+          "description": "Alkalinizes urine, increases drug levels"
+        }
+      ],
+      "monitoring": [
+        "Cognitive function",
+        "Behavioral symptoms",
+        "Renal function",
+        "Blood pressure",
+        "Falls assessment"
+      ],
+      "beersCategory": "Not listed",
+      "renalDosing": "Reduce dose by 50% if CrCl 5-29 mL/min",
+      "geriatricConsiderations": [
+        "Slower titration may be needed",
+        "Can be combined with cholinesterase inhibitors",
+        "Monitor for increased confusion during initiation",
+        "May help with agitation and behavioral symptoms"
+      ],
+      "cost": "$$ (moderate)",
+      "availability": "Tablet, Solution, XR"
+    },
+    {
+      "id": "med-003",
+      "name": "Haloperidol",
+      "genericName": "Haloperidol",
+      "brandNames": ["Haldol"],
+      "category": "Antipsychotic",
+      "class": "Typical Antipsychotic",
+      "indication": "Severe agitation in dementia (last resort)",
+      "dosing": {
+        "starting": "0.25-0.5mg daily",
+        "maintenance": "0.5-2mg daily",
+        "maximum": "5mg daily in elderly",
+        "renalAdjustment": "No adjustment needed",
+        "hepaticAdjustment": "Use with extreme caution"
+      },
+      "contraindications": [
+        "Parkinson's disease",
+        "Lewy body dementia", 
+        "Severe CNS depression",
+        "Coma"
+      ],
+      "warnings": [
+        "BLACK BOX WARNING: Increased mortality in dementia",
+        "High risk of extrapyramidal symptoms",
+        "QT prolongation risk",
+        "Neuroleptic malignant syndrome"
+      ],
+      "sideEffects": {
+        "common": ["Sedation", "Extrapyramidal symptoms", "Tardive dyskinesia", "Orthostatic hypotension"],
+        "serious": ["Neuroleptic malignant syndrome", "QT prolongation", "Sudden death", "Stroke"]
+      },
+      "interactions": [
+        {
+          "drug": "QT-prolonging drugs",
+          "severity": "Major",
+          "description": "Additive QT prolongation risk"
+        },
+        {
+          "drug": "Anticholinergics",
+          "severity": "Major",
+          "description": "Increased anticholinergic effects"
+        }
+      ],
+      "monitoring": [
+        "ECG (QT interval)",
+        "Extrapyramidal symptoms (AIMS)",
+        "Blood pressure",
+        "Metabolic parameters",
+        "Mental status"
+      ],
+      "beersCategory": "AVOID in dementia unless safer alternatives failed",
+      "renalDosing": "No adjustment",
+      "geriatricConsiderations": [
+        "Use lowest effective dose for shortest duration",
+        "High risk of falls and fractures",
+        "Monitor closely for EPS",
+        "Consider atypical antipsychotics first",
+        "Non-pharmacological interventions preferred"
+      ],
+      "cost": "$ (inexpensive)",
+      "availability": "Tablet, Solution, Injection"
+    },
+    {
+      "id": "med-004", 
+      "name": "Quetiapine",
+      "genericName": "Quetiapine Fumarate",
+      "brandNames": ["Seroquel", "Seroquel XR"],
+      "category": "Antipsychotic",
+      "class": "Atypical Antipsychotic",
+      "indication": "Behavioral symptoms in dementia (off-label)",
+      "dosing": {
+        "starting": "12.5-25mg daily at bedtime",
+        "maintenance": "25-100mg daily",
+        "maximum": "300mg daily in elderly",
+        "renalAdjustment": "No adjustment needed",
+        "hepaticAdjustment": "Reduce dose in hepatic impairment"
+      },
+      "contraindications": [
+        "Known hypersensitivity",
+        "Coma",
+        "Severe CNS depression"
+      ],
+      "warnings": [
+        "BLACK BOX WARNING: Increased mortality in dementia",
+        "Metabolic syndrome risk",
+        "Orthostatic hypotension",
+        "Falls risk"
+      ],
+      "sideEffects": {
+        "common": ["Sedation", "Dizziness", "Dry mouth", "Weight gain", "Constipation"],
+        "serious": ["Hyperglycemia", "Hyperlipidemia", "QT prolongation", "Tardive dyskinesia"]
+      },
+      "interactions": [
+        {
+          "drug": "CYP3A4 inhibitors",
+          "severity": "Major",
+          "description": "Increased quetiapine levels"
+        },
+        {
+          "drug": "CNS depressants",
+          "severity": "Moderate",
+          "description": "Additive sedation"
+        }
+      ],
+      "monitoring": [
+        "Metabolic parameters (glucose, lipids, weight)",
+        "Blood pressure",
+        "ECG if risk factors",
+        "Movement disorders",
+        "Sedation level"
+      ],
+      "beersCategory": "AVOID in dementia unless safer alternatives failed",
+      "renalDosing": "No adjustment",
+      "geriatricConsiderations": [
+        "Lower starting doses essential",
+        "Monitor for metabolic effects",
+        "High fall risk due to sedation",
+        "Preferred over typical antipsychotics",
+        "Regular reassessment for continued need"
+      ],
+      "cost": "$$$ (expensive for brand)",
+      "availability": "Tablet, XR tablet"
+    },
+    {
+      "id": "med-005",
+      "name": "Diphenhydramine",
+      "genericName": "Diphenhydramine Hydrochloride", 
+      "brandNames": ["Benadryl", "Unisom"],
+      "category": "Antihistamine",
+      "class": "First-generation Antihistamine",
+      "indication": "Allergic reactions, sleep aid",
+      "dosing": {
+        "starting": "12.5-25mg",
+        "maintenance": "25-50mg every 6-8 hours",
+        "maximum": "300mg daily",
+        "renalAdjustment": "Extend dosing interval",
+        "hepaticAdjustment": "Use with caution"
+      },
+      "contraindications": [
+        "Narrow-angle glaucoma",
+        "BPH with urinary retention",
+        "Severe asthma or COPD"
+      ],
+      "warnings": [
+        "Strong anticholinergic effects",
+        "High risk of delirium in elderly",
+        "Paradoxical excitement possible",
+        "Photosensitivity"
+      ],
+      "sideEffects": {
+        "common": ["Sedation", "Dry mouth", "Constipation", "Blurred vision", "Urinary retention"],
+        "serious": ["Delirium", "Falls", "Cardiac arrhythmias", "Seizures"]
+      },
+      "interactions": [
+        {
+          "drug": "Other anticholinergics",
+          "severity": "Major",
+          "description": "Additive anticholinergic effects"
+        },
+        {
+          "drug": "CNS depressants",
+          "severity": "Moderate", 
+          "description": "Increased sedation"
+        }
+      ],
+      "monitoring": [
+        "Mental status",
+        "Urinary retention",
+        "Constipation",
+        "Fall risk",
+        "Dry mouth/eyes"
+      ],
+      "beersCategory": "AVOID - Highly anticholinergic",
+      "renalDosing": "Extend interval to every 12-18 hours if CrCl <50",
+      "geriatricConsiderations": [
+        "AVOID in elderly patients",
+        "High risk of cognitive impairment",
+        "Increases fall risk significantly",
+        "Use safer alternatives for sleep/allergies",
+        "If must use, lowest dose for shortest duration"
+      ],
+      "cost": "$ (inexpensive)",
+      "availability": "Tablet, Capsule, Liquid, Topical"
+    },
+    {
+      "id": "med-006",
+      "name": "Lorazepam",
+      "genericName": "Lorazepam",
+      "brandNames": ["Ativan"],
+      "category": "Benzodiazepine",
+      "class": "Anxiolytic",
+      "indication": "Anxiety, alcohol withdrawal, status epilepticus",
+      "dosing": {
+        "starting": "0.25-0.5mg BID-TID",
+        "maintenance": "0.5-2mg daily divided",
+        "maximum": "6mg daily (lower in elderly)",
+        "renalAdjustment": "No adjustment needed",
+        "hepaticAdjustment": "Reduce dose"
+      },
+      "contraindications": [
+        "Acute narrow-angle glaucoma",
+        "Severe respiratory insufficiency",
+        "Sleep apnea syndrome"
+      ],
+      "warnings": [
+        "Physical dependence and withdrawal",
+        "Increased fall risk",
+        "Cognitive impairment",
+        "Respiratory depression with other CNS depressants"
+      ],
+      "sideEffects": {
+        "common": ["Sedation", "Dizziness", "Weakness", "Unsteadiness", "Memory impairment"],
+        "serious": ["Falls", "Fractures", "Respiratory depression", "Delirium", "Dependence"]
+      },
+      "interactions": [
+        {
+          "drug": "Opioids",
+          "severity": "Major", 
+          "description": "Increased risk of respiratory depression"
+        },
+        {
+          "drug": "Alcohol",
+          "severity": "Major",
+          "description": "Additive CNS depression"
+        }
+      ],
+      "monitoring": [
+        "Sedation level",
+        "Fall risk",
+        "Cognitive function",
+        "Signs of dependence",
+        "Respiratory status"
+      ],
+      "beersCategory": "AVOID - High risk of cognitive impairment and falls",
+      "renalDosing": "No adjustment (not renally eliminated)",
+      "geriatricConsiderations": [
+        "AVOID in elderly if possible",
+        "If used, lowest dose for shortest duration",
+        "Taper slowly to prevent withdrawal",
+        "High risk of falls and cognitive decline",
+        "Consider non-pharmacologic alternatives"
+      ],
+      "cost": "$ (inexpensive)",
+      "availability": "Tablet, Solution, Injection"
+    },
+    {
+      "id": "med-007",
+      "name": "Tramadol",
+      "genericName": "Tramadol Hydrochloride",
+      "brandNames": ["Ultram", "ConZip"],
+      "category": "Opioid",
+      "class": "Atypical Opioid",
+      "indication": "Moderate pain",
+      "dosing": {
+        "starting": "25mg daily (elderly)",
+        "maintenance": "50-100mg every 6 hours",
+        "maximum": "300mg daily in elderly",
+        "renalAdjustment": "Extend interval if CrCl <30",
+        "hepaticAdjustment": "Reduce dose in severe impairment"
+      },
+      "contraindications": [
+        "Significant respiratory depression",
+        "Acute or severe bronchial asthma",
+        "Known or suspected GI obstruction"
+      ],
+      "warnings": [
+        "Seizure risk",
+        "Serotonin syndrome",
+        "Respiratory depression",
+        "Falls risk in elderly"
+      ],
+      "sideEffects": {
+        "common": ["Nausea", "Dizziness", "Constipation", "Headache", "Sedation"],
+        "serious": ["Seizures", "Serotonin syndrome", "Respiratory depression", "Falls"]
+      },
+      "interactions": [
+        {
+          "drug": "SSRIs/SNRIs",
+          "severity": "Major",
+          "description": "Increased serotonin syndrome risk"
+        },
+        {
+          "drug": "MAOIs",
+          "severity": "Major",
+          "description": "Serotonin syndrome risk"
+        }
+      ],
+      "monitoring": [
+        "Pain relief",
+        "Respiratory status", 
+        "Neurological symptoms",
+        "Bowel function",
+        "Falls assessment"
+      ],
+      "beersCategory": "Use with CAUTION - Increased risk of falls",
+      "renalDosing": "Extend to every 12 hours if CrCl <30",
+      "geriatricConsiderations": [
+        "Start with lower doses",
+        "High fall risk due to dizziness",
+        "Monitor for serotonin syndrome",
+        "Consider acetaminophen first",
+        "Avoid in patients on antidepressants if possible"
+      ],
+      "cost": "$$ (moderate)",
+      "availability": "Tablet, ER tablet"
+    },
+    {
+      "id": "med-008",
+      "name": "Hydrochlorothiazide",
+      "genericName": "Hydrochlorothiazide",
+      "brandNames": ["Microzide"],
+      "category": "Diuretic",
+      "class": "Thiazide Diuretic",
+      "indication": "Hypertension, edema",
+      "dosing": {
+        "starting": "12.5-25mg daily",
+        "maintenance": "12.5-50mg daily",
+        "maximum": "50mg daily",
+        "renalAdjustment": "Ineffective if CrCl <30",
+        "hepaticAdjustment": "Use with caution"
+      },
+      "contraindications": [
+        "Anuria",
+        "Hypersensitivity to thiazides",
+        "Severe renal impairment"
+      ],
+      "warnings": [
+        "Electrolyte imbalances",
+        "Hyperuricemia",
+        "Hyperglycemia",
+        "Photosensitivity"
+      ],
+      "sideEffects": {
+        "common": ["Hyponatremia", "Hypokalemia", "Hyperuricemia", "Dizziness", "Headache"],
+        "serious": ["Severe electrolyte abnormalities", "Acute angle-closure glaucoma", "Acute pancreatitis"]
+      },
+      "interactions": [
+        {
+          "drug": "ACE inhibitors",
+          "severity": "Moderate",
+          "description": "Additive hypotension, hyperkalemia risk with ACEi"
+        },
+        {
+          "drug": "NSAIDs",
+          "severity": "Moderate",
+          "description": "Reduced antihypertensive effect"
+        }
+      ],
+      "monitoring": [
+        "Electrolytes (Na, K, Mg)",
+        "Renal function",
+        "Blood pressure",
+        "Glucose",
+        "Uric acid"
+      ],
+      "beersCategory": "Not listed",
+      "renalDosing": "Avoid if CrCl <30 mL/min",
+      "geriatricConsiderations": [
+        "Monitor electrolytes closely",
+        "Start with 12.5mg daily",
+        "High risk of hyponatremia",
+        "May worsen incontinence",
+        "Monitor for orthostatic hypotension"
+      ],
+      "cost": "$ (inexpensive)",
+      "availability": "Tablet, Capsule"
+    },
+    {
+      "id": "med-009",
+      "name": "Omeprazole", 
+      "genericName": "Omeprazole",
+      "brandNames": ["Prilosec"],
+      "category": "Proton Pump Inhibitor",
+      "class": "PPI",
+      "indication": "GERD, peptic ulcer disease",
+      "dosing": {
+        "starting": "20mg daily",
+        "maintenance": "20-40mg daily",
+        "maximum": "80mg daily",
+        "renalAdjustment": "No adjustment needed",
+        "hepaticAdjustment": "Reduce dose in severe impairment"
+      },
+      "contraindications": [
+        "Hypersensitivity to omeprazole",
+        "Concurrent use with rilpivirine"
+      ],
+      "warnings": [
+        "Increased infection risk (C. diff)",
+        "Bone fracture risk",
+        "Hypomagnesemia with long-term use",
+        "Vitamin B12 deficiency"
+      ],
+      "sideEffects": {
+        "common": ["Headache", "Nausea", "Diarrhea", "Abdominal pain", "Constipation"],
+        "serious": ["C. diff infection", "Hip fractures", "Severe hypomagnesemia", "Acute interstitial nephritis"]
+      },
+      "interactions": [
+        {
+          "drug": "Clopidogrel",
+          "severity": "Major",
+          "description": "Reduced antiplatelet effect"
+        },
+        {
+          "drug": "Warfarin",
+          "severity": "Moderate",
+          "description": "Increased warfarin levels"
+        }
+      ],
+      "monitoring": [
+        "Symptom improvement",
+        "Magnesium levels (long-term)",
+        "Vitamin B12 (long-term)",
+        "Bone density (long-term)"
+      ],
+      "beersCategory": "Use with CAUTION - Long-term use >8 weeks",
+      "renalDosing": "No adjustment",
+      "geriatricConsiderations": [
+        "Use lowest effective dose",
+        "Limit duration when possible",
+        "Monitor for drug interactions",
+        "Consider H2 blocker alternatives",
+        "Assess continued need regularly"
+      ],
+      "cost": "$ (inexpensive generic)",
+      "availability": "Capsule, Tablet"
+    },
+    {
+      "id": "med-010",
+      "name": "Metformin",
+      "genericName": "Metformin Hydrochloride", 
+      "brandNames": ["Glucophage", "Fortamet"],
+      "category": "Antidiabetic",
+      "class": "Biguanide",
+      "indication": "Type 2 diabetes mellitus",
+      "dosing": {
+        "starting": "500mg daily or BID with meals",
+        "maintenance": "1000-2000mg daily divided",
+        "maximum": "2550mg daily",
+        "renalAdjustment": "Contraindicated if eGFR <30",
+        "hepaticAdjustment": "Avoid in severe impairment"
+      },
+      "contraindications": [
+        "eGFR <30 mL/min/1.73m²",
+        "Metabolic acidosis",
+        "Diabetic ketoacidosis",
+        "Severe heart failure"
+      ],
+      "warnings": [
+        "Lactic acidosis (rare but serious)",
+        "Vitamin B12 deficiency",
+        "Hold before contrast procedures",
+        "GI intolerance common initially"
+      ],
+      "sideEffects": {
+        "common": ["Nausea", "Diarrhea", "Abdominal discomfort", "Metallic taste", "Loss of appetite"],
+        "serious": ["Lactic acidosis", "Severe hypoglycemia (with other agents)"]
+      },
+      "interactions": [
+        {
+          "drug": "Contrast agents",
+          "severity": "Major", 
+          "description": "Hold metformin to prevent lactic acidosis"
+        },
+        {
+          "drug": "Alcohol",
+          "severity": "Moderate",
+          "description": "Increased lactic acidosis risk"
+        }
+      ],
+      "monitoring": [
+        "HbA1c",
+        "Renal function (eGFR)",
+        "Vitamin B12 levels",
+        "Lactate if clinically indicated"
+      ],
+      "beersCategory": "Not listed",
+      "renalDosing": "Avoid if eGFR <30; reduce dose if eGFR 30-45",
+      "geriatricConsiderations": [
+        "Monitor renal function closely",
+        "Start with lower doses",
+        "Hold during acute illness",
+        "First-line diabetes medication",
+        "Assess eGFR every 3-6 months"
+      ],
+      "cost": "$ (inexpensive)",
+      "availability": "Tablet, ER tablet, Solution"
+    }
+  ],
+  "drugInteractionChecker": {
+    "majorInteractions": [
+      {
+        "drug1": "Warfarin",
+        "drug2": "Omeprazole", 
+        "severity": "Major",
+        "mechanism": "CYP2C19 inhibition increases warfarin levels",
+        "management": "Monitor INR closely, consider dose reduction",
+        "clinicalSignificance": "Increased bleeding risk"
+      },
+      {
+        "drug1": "Tramadol",
+        "drug2": "Sertraline",
+        "severity": "Major",
+        "mechanism": "Both increase serotonin levels",
+        "management": "Avoid combination or monitor closely for serotonin syndrome",
+        "clinicalSignificance": "Serotonin syndrome risk"
+      }
+    ]
+  },
+  "beersCategories": [
+    {
+      "category": "AVOID",
+      "description": "These medications should generally be avoided in adults ≥65 years",
+      "examples": ["Diphenhydramine", "Lorazepam", "Haloperidol (for dementia)"]
+    },
+    {
+      "category": "USE WITH CAUTION",
+      "description": "Use with caution due to increased risk in older adults",
+      "examples": ["Tramadol", "Omeprazole (>8 weeks)"]
+    }
+  ],
+  "geriatricPrinciples": [
+    "Start low, go slow",
+    "Consider non-pharmacological alternatives first",
+    "Regular medication reviews and deprescribing",
+    "Monitor for adverse drug events closely",
+    "Consider drug-drug interactions",
+    "Adjust for renal and hepatic function",
+    "Consider goals of care and life expectancy"
+  ]
+}

@@ -1,0 +1,373 @@
+{
+  "categories": [
+    {
+      "id": "geriatric-syndromes",
+      "title": "Geriatric Syndromes",
+      "description": "Common clinical conditions in older adults that don't fit into discrete disease categories",
+      "topics": [
+        {
+          "id": "falls-prevention",
+          "title": "Falls and Fall Prevention",
+          "content": "Falls are the leading cause of injury-related deaths in adults aged 65+. Risk factors include muscle weakness, vitamin D deficiency, vision problems, medications (especially psychotropics), and environmental hazards.",
+          "keyPoints": [
+            "Conduct comprehensive fall risk assessments using tools like Morse Fall Scale",
+            "Implement multifactorial interventions: exercise, medication review, vision correction",
+            "Home safety modifications: grab bars, adequate lighting, removing trip hazards",
+            "Vitamin D supplementation (800-1000 IU daily) reduces fall risk by 19%",
+            "Tai Chi and balance training reduce falls by 20-30%"
+          ],
+          "guidelines": "AGS/BGS Clinical Practice Guideline 2022",
+          "cmeCredits": 1.5
+        },
+        {
+          "id": "delirium-management",
+          "title": "Delirium Recognition and Management",
+          "content": "Delirium affects up to 50% of hospitalized older adults. It's associated with increased mortality, prolonged hospitalization, and cognitive decline.",
+          "keyPoints": [
+            "Use CAM (Confusion Assessment Method) for screening",
+            "Identify and treat underlying causes: infections, medications, metabolic disturbances",
+            "Non-pharmacological interventions first: reorientation, sleep hygiene, early mobilization",
+            "Avoid benzodiazepines except for alcohol withdrawal",
+            "Low-dose antipsychotics only for severe agitation posing safety risk"
+          ],
+          "guidelines": "NICE Guideline CG103",
+          "cmeCredits": 2.0
+        },
+        {
+          "id": "polypharmacy",
+          "title": "Polypharmacy and Deprescribing",
+          "content": "Polypharmacy (≥5 medications) affects 40% of older adults and increases risk of adverse drug events, falls, and hospitalizations.",
+          "keyPoints": [
+            "Regular medication reconciliation at every visit",
+            "Use STOPP/START criteria for inappropriate prescribing",
+            "Consider deprescribing when benefits no longer outweigh risks",
+            "Beers Criteria for potentially inappropriate medications",
+            "Patient-centered approach: align medications with goals of care"
+          ],
+          "guidelines": "AGS Beers Criteria 2023",
+          "cmeCredits": 1.5
+        },
+        {
+          "id": "frailty-assessment",
+          "title": "Frailty Assessment and Interventions",
+          "content": "Frailty affects 10-15% of community-dwelling older adults and up to 50% in nursing homes. It's characterized by decreased physiologic reserve.",
+          "keyPoints": [
+            "Fried Frailty Phenotype: weight loss, exhaustion, low activity, slowness, weakness",
+            "Clinical Frailty Scale for rapid assessment",
+            "Comprehensive Geriatric Assessment for frail patients",
+            "Multicomponent interventions: nutrition, exercise, social support",
+            "Frailty is potentially reversible with early intervention"
+          ],
+          "guidelines": "International Conference on Frailty and Sarcopenia Research",
+          "cmeCredits": 2.0
+        }
+      ]
+    },
+    {
+      "id": "cognitive-disorders",
+      "title": "Cognitive Disorders",
+      "description": "Diagnosis and management of dementia and cognitive impairment",
+      "topics": [
+        {
+          "id": "alzheimers-disease",
+          "title": "Alzheimer's Disease: Current Management",
+          "content": "Alzheimer's disease accounts for 60-80% of dementia cases. Early diagnosis and comprehensive management improve quality of life.",
+          "keyPoints": [
+            "Cholinesterase inhibitors (donepezil, rivastigmine, galantamine) for mild-moderate stages",
+            "Memantine for moderate-severe stages, can combine with ChEIs",
+            "New drugs: Aducanumab and Lecanemab - controversial efficacy",
+            "Non-pharmacological interventions: cognitive stimulation, exercise, music therapy",
+            "Caregiver support and education crucial for outcomes"
+          ],
+          "guidelines": "AAN Practice Parameter Update 2023",
+          "cmeCredits": 2.5
+        },
+        {
+          "id": "vascular-dementia",
+          "title": "Vascular Dementia Prevention and Management",
+          "content": "Second most common dementia type, often coexists with Alzheimer's. Focus on vascular risk factor modification.",
+          "keyPoints": [
+            "Aggressive blood pressure control (<130/80 mmHg)",
+            "Antiplatelet therapy for stroke prevention",
+            "Statin therapy for dyslipidemia",
+            "Diabetes management with HbA1c <7%",
+            "No specific medications approved; manage symptoms"
+          ],
+          "guidelines": "AHA/ASA Scientific Statement 2021",
+          "cmeCredits": 1.5
+        },
+        {
+          "id": "lewy-body-dementia",
+          "title": "Lewy Body Dementia: Recognition and Treatment",
+          "content": "Third most common dementia, characterized by fluctuating cognition, visual hallucinations, and parkinsonism.",
+          "keyPoints": [
+            "Core features: fluctuating cognition, visual hallucinations, REM sleep behavior disorder, parkinsonism",
+            "Severe neuroleptic sensitivity - avoid typical antipsychotics",
+            "Rivastigmine may help cognition and hallucinations",
+            "Quetiapine or clozapine for psychosis if needed",
+            "Melatonin for REM sleep behavior disorder"
+          ],
+          "guidelines": "DLB Consortium Fourth Report 2023",
+          "cmeCredits": 2.0
+        }
+      ]
+    },
+    {
+      "id": "medication-management",
+      "title": "Geriatric Pharmacology",
+      "description": "Safe prescribing practices for older adults",
+      "topics": [
+        {
+          "id": "pharmacokinetics-aging",
+          "title": "Age-Related Pharmacokinetic Changes",
+          "content": "Aging affects drug absorption, distribution, metabolism, and excretion, requiring dose adjustments.",
+          "keyPoints": [
+            "Decreased renal function: use Cockcroft-Gault or CKD-EPI for dosing",
+            "Reduced hepatic metabolism: lower doses of hepatically cleared drugs",
+            "Increased fat:lean ratio affects drug distribution",
+            "Decreased albumin increases free drug levels",
+            "Start low, go slow principle for dose titration"
+          ],
+          "guidelines": "FDA Guidance for Industry 2020",
+          "cmeCredits": 1.5
+        },
+        {
+          "id": "pain-management",
+          "title": "Pain Management in Older Adults",
+          "content": "Chronic pain affects 50% of community-dwelling and 80% of nursing home residents.",
+          "keyPoints": [
+            "Acetaminophen first-line, max 3g/day (2g if liver disease)",
+            "Avoid NSAIDs if possible; use shortest duration, lowest dose",
+            "Topical agents for localized pain (capsaicin, lidocaine, diclofenac)",
+            "Opioids: start with short-acting, avoid meperidine and propoxyphene",
+            "Multimodal approach: physical therapy, CBT, acupuncture"
+          ],
+          "guidelines": "AGS Guidelines on Persistent Pain 2023",
+          "cmeCredits": 2.0
+        },
+        {
+          "id": "anticoagulation",
+          "title": "Anticoagulation in the Elderly",
+          "content": "Balancing stroke prevention with bleeding risk in atrial fibrillation and VTE.",
+          "keyPoints": [
+            "DOACs preferred over warfarin for most indications",
+            "Dose adjustments based on renal function, weight, age",
+            "Fall risk alone not contraindication if CHA2DS2-VASc ≥3",
+            "Regular reassessment of risks vs benefits",
+            "Reversal agents: idarucizumab (dabigatran), andexanet alfa (Xa inhibitors)"
+          ],
+          "guidelines": "ACC/AHA/HRS Guideline 2023",
+          "cmeCredits": 1.5
+        }
+      ]
+    },
+    {
+      "id": "preventive-care",
+      "title": "Preventive Care and Screening",
+      "description": "Evidence-based screening and prevention for older adults",
+      "topics": [
+        {
+          "id": "cancer-screening",
+          "title": "Cancer Screening in Older Adults",
+          "content": "Individualized approach based on life expectancy, functional status, and patient preferences.",
+          "keyPoints": [
+            "Breast cancer: mammography to age 74, then individualized",
+            "Colorectal: screen to age 75, selective 76-85, stop after 85",
+            "Cervical: stop at 65 if adequate prior screening",
+            "Prostate: shared decision-making, consider stopping at 70",
+            "Lung: annual CT for smokers 50-80 with 20 pack-year history"
+          ],
+          "guidelines": "USPSTF Recommendations 2023",
+          "cmeCredits": 1.5
+        },
+        {
+          "id": "immunizations",
+          "title": "Immunizations for Older Adults",
+          "content": "Vaccines are crucial for preventing morbidity and mortality in older adults.",
+          "keyPoints": [
+            "Influenza: high-dose or adjuvanted vaccine annually",
+            "Pneumococcal: PCV20 or PCV15 followed by PPSV23",
+            "Herpes zoster: Shingrix (2 doses) for all ≥50 years",
+            "COVID-19: stay up-to-date with boosters",
+            "Tdap: once, then Td every 10 years"
+          ],
+          "guidelines": "ACIP Recommendations 2024",
+          "cmeCredits": 1.0
+        },
+        {
+          "id": "bone-health",
+          "title": "Osteoporosis Screening and Treatment",
+          "content": "Osteoporosis affects 25% of women and 5% of men over 65, leading to fractures.",
+          "keyPoints": [
+            "DEXA screening: women ≥65, men ≥70, younger if risk factors",
+            "FRAX tool for 10-year fracture risk assessment",
+            "Calcium 1200mg and Vitamin D 800-1000 IU daily",
+            "Bisphosphonates first-line, consider drug holiday after 5 years",
+            "Denosumab, teriparatide for severe osteoporosis"
+          ],
+          "guidelines": "AACE/ACE Guidelines 2023",
+          "cmeCredits": 1.5
+        }
+      ]
+    },
+    {
+      "id": "end-of-life",
+      "title": "Palliative and End-of-Life Care",
+      "description": "Compassionate care for serious illness and end of life",
+      "topics": [
+        {
+          "id": "advance-care-planning",
+          "title": "Advance Care Planning Conversations",
+          "content": "Early discussions about goals, values, and preferences improve end-of-life care quality.",
+          "keyPoints": [
+            "Start conversations early when cognitive capacity intact",
+            "Use SPIKES protocol for difficult conversations",
+            "Document in advance directives: living will, healthcare proxy",
+            "POLST/MOLST for seriously ill patients",
+            "Regular reassessment as health status changes"
+          ],
+          "guidelines": "National POLST Paradigm 2023",
+          "cmeCredits": 2.0
+        },
+        {
+          "id": "symptom-management",
+          "title": "Symptom Management at End of Life",
+          "content": "Addressing pain, dyspnea, anxiety, and other symptoms in final days.",
+          "keyPoints": [
+            "Pain: morphine gold standard, use breakthrough doses",
+            "Dyspnea: opioids effective, oxygen only if hypoxemic",
+            "Delirium: haloperidol for hyperactive, supportive care",
+            "Secretions: repositioning, glycopyrrolate, avoid suctioning",
+            "Anxiety: lorazepam sublingual or subcutaneous"
+          ],
+          "guidelines": "NCCN Palliative Care Guidelines 2023",
+          "cmeCredits": 2.0
+        },
+        {
+          "id": "hospice-referral",
+          "title": "Hospice Referral and Eligibility",
+          "content": "Hospice improves quality of life and may extend survival in some conditions.",
+          "keyPoints": [
+            "Prognosis ≤6 months if disease follows expected course",
+            "Disease-specific criteria: cancer, dementia, heart failure, COPD",
+            "General indicators: functional decline, weight loss, infections",
+            "Can continue disease-modifying therapy if comfort-focused",
+            "Family satisfaction higher with earlier referral"
+          ],
+          "guidelines": "Medicare Hospice Conditions of Participation",
+          "cmeCredits": 1.5
+        }
+      ]
+    },
+    {
+      "id": "functional-assessment",
+      "title": "Functional and Social Assessment",
+      "description": "Comprehensive evaluation of function and social determinants",
+      "topics": [
+        {
+          "id": "adl-iadl-assessment",
+          "title": "ADL and IADL Assessment Tools",
+          "content": "Functional assessment predicts outcomes and guides care planning.",
+          "keyPoints": [
+            "Katz ADL: bathing, dressing, toileting, transferring, continence, feeding",
+            "Lawton IADL: shopping, housework, finances, medications, phone, transport",
+            "Performance-based: Timed Up and Go, gait speed, grip strength",
+            "Functional decline often first sign of illness",
+            "Regular reassessment to track changes"
+          ],
+          "guidelines": "CMS Annual Wellness Visit Requirements",
+          "cmeCredits": 1.0
+        },
+        {
+          "id": "social-isolation",
+          "title": "Social Isolation and Loneliness",
+          "content": "Social isolation increases mortality risk equivalent to smoking 15 cigarettes daily.",
+          "keyPoints": [
+            "Screen with UCLA Loneliness Scale or single question",
+            "Risk factors: living alone, mobility limitations, sensory impairment",
+            "Health impacts: depression, cognitive decline, cardiovascular disease",
+            "Interventions: social prescribing, technology training, group activities",
+            "Community resources: senior centers, volunteer programs"
+          ],
+          "guidelines": "National Academies Report 2020",
+          "cmeCredits": 1.5
+        },
+        {
+          "id": "caregiver-assessment",
+          "title": "Caregiver Burden and Support",
+          "content": "Family caregivers provide 80% of long-term care but often experience burnout.",
+          "keyPoints": [
+            "Zarit Burden Interview for assessment",
+            "Signs: depression, anxiety, physical health decline",
+            "Respite care crucial for caregiver wellbeing",
+            "Education about disease process and resources",
+            "Support groups and counseling services"
+          ],
+          "guidelines": "National Alliance for Caregiving 2023",
+          "cmeCredits": 1.5
+        }
+      ]
+    }
+  ],
+  "certifications": [
+    {
+      "id": "cert-geriatrics",
+      "title": "Certificate in Geriatric Medicine",
+      "provider": "American Geriatrics Society",
+      "duration": "6 months",
+      "credits": 50,
+      "modules": [
+        "Comprehensive Geriatric Assessment",
+        "Geriatric Syndromes",
+        "Dementia Care",
+        "Palliative Care",
+        "Geriatric Pharmacology"
+      ]
+    },
+    {
+      "id": "cert-dementia",
+      "title": "Dementia Care Specialist",
+      "provider": "Alzheimer's Association",
+      "duration": "3 months",
+      "credits": 25,
+      "modules": [
+        "Dementia Diagnosis",
+        "Behavioral Management",
+        "Communication Strategies",
+        "Care Planning",
+        "Family Support"
+      ]
+    }
+  ],
+  "resources": {
+    "guidelines": [
+      {
+        "title": "AGS Beers Criteria 2023",
+        "url": "https://www.americangeriatrics.org/beers-criteria",
+        "type": "PDF"
+      },
+      {
+        "title": "STOPP/START Criteria Version 2",
+        "url": "https://www.eugms.org/stopp-start",
+        "type": "PDF"
+      },
+      {
+        "title": "CDC STEADI Fall Prevention",
+        "url": "https://www.cdc.gov/steadi",
+        "type": "Toolkit"
+      }
+    ],
+    "journals": [
+      "Journal of the American Geriatrics Society",
+      "The Gerontologist",
+      "Age and Ageing",
+      "Clinical Interventions in Aging"
+    ],
+    "organizations": [
+      "American Geriatrics Society (AGS)",
+      "Gerontological Society of America (GSA)",
+      "International Association of Gerontology and Geriatrics (IAGG)",
+      "National Institute on Aging (NIA)"
+    ]
+  }
+}
