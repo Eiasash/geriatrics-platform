@@ -1,0 +1,7 @@
+# Redirect to the main app if serving static files
+/geriatrics-hebrew-ultimate.html /  301
+/index-old.html                  /  301
+/comprehensive-geriatrics-platform.html / 301
+
+# Serve the Hebrew standalone as a separate route
+/hebrew-standalone  /geriatrics-hebrew-ultimate.html  200!

@@ -1,0 +1,972 @@
+<!DOCTYPE html>
+<html lang="he" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shaare Zedek Geriatrics - Ultimate Platform</title>
+    
+    <!-- Vue 3 -->
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Heebo:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        [v-cloak] { display: none; }
+        
+        .rtl { direction: rtl; text-align: right; }
+        .ltr { direction: ltr; text-align: left; }
+        .hebrew-font { font-family: 'Heebo', -apple-system, 'Segoe UI', sans-serif; }
+        .english-font { font-family: 'Inter', -apple-system, 'Segoe UI', sans-serif; }
+        
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 50;
+            padding: 1rem;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 1rem;
+            padding: 2rem;
+            max-width: 900px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        .chart-container {
+            position: relative;
+            height: 400px;
+            width: 100%;
+            background: white;
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        
+        .patient-card {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .patient-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
+        }
+        
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            transition: all 0.2s;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+        
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        .slide-in {
+            animation: slideIn 0.3s ease;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <div id="app" v-cloak>
+        <!-- Header -->
+        <header class="bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-lg">
+            <div class="container mx-auto px-4 py-4">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center space-x-4" :class="{ 'flex-row-reverse space-x-reverse': isHebrew }">
+                        <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                        </svg>
+                        <div :class="{ 'rtl hebrew-font': isHebrew }">
+                            <h1 class="text-2xl font-bold">
+                                {{ isHebrew ? 'מערכת גריאטריה - שערי צדק' : 'Shaare Zedek Geriatrics Platform' }}
+                            </h1>
+                            <p class="text-sm opacity-90">
+                                {{ isHebrew ? 'כלים מקיפים לטיפול גריאטרי מתקדם' : 'Comprehensive Tools for Advanced Geriatric Care' }}
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-center space-x-4">
+                        <button @click="toggleLanguage" class="btn bg-white/20 text-white hover:bg-white/30">
+                            {{ isHebrew ? 'English' : 'עברית' }}
+                        </button>
+                        <div class="text-right" :class="{ 'rtl hebrew-font': isHebrew }">
+                            <p class="text-sm">{{ currentUser }}</p>
+                            <p class="text-xs opacity-75">{{ currentDateTime }}</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Navigation -->
+                <nav class="mt-4 flex space-x-1 overflow-x-auto" :class="{ 'flex-row-reverse space-x-reverse': isHebrew }">
+                    <button v-for="section in sections" :key="section.id"
+                            @click="activeSection = section.id"
+                            class="px-4 py-2 rounded-t-lg transition-all whitespace-nowrap"
+                            :class="[
+                                activeSection === section.id 
+                                    ? 'bg-white text-purple-600 font-semibold' 
+                                    : 'bg-white/10 text-white hover:bg-white/20',
+                                isHebrew ? 'hebrew-font' : 'english-font'
+                            ]">
+                        {{ isHebrew ? section.nameHe : section.name }}
+                    </button>
+                </nav>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="container mx-auto px-4 py-8">
+            <!-- Dashboard Section -->
+            <div v-if="activeSection === 'dashboard'" class="grid grid-cols-1 lg:grid-cols-3 gap-6 slide-in">
+                <!-- Quick Stats -->
+                <div class="lg:col-span-2">
+                    <h2 class="text-2xl font-bold mb-4" :class="{ 'rtl hebrew-font': isHebrew }">
+                        {{ isHebrew ? 'סטטיסטיקה יומית' : 'Daily Statistics' }}
+                    </h2>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                        <div v-for="stat in stats" :key="stat.label" 
+                             class="bg-white rounded-lg p-4 shadow-md">
+                            <div class="text-3xl font-bold" :style="{ color: stat.color }">
+                                {{ stat.value }}
+                            </div>
+                            <div class="text-sm text-gray-600" :class="{ 'rtl hebrew-font': isHebrew }">
+                                {{ isHebrew ? stat.labelHe : stat.label }}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Chart -->
+                    <div class="chart-container">
+                        <canvas id="admissionsChart"></canvas>
+                    </div>
+                </div>
+                
+                <!-- Recent Activities -->
+                <div>
+                    <h2 class="text-2xl font-bold mb-4" :class="{ 'rtl hebrew-font': isHebrew }">
+                        {{ isHebrew ? 'פעילויות אחרונות' : 'Recent Activities' }}
+                    </h2>
+                    <div class="bg-white rounded-lg shadow-md p-4 space-y-3">
+                        <div v-for="activity in recentActivities" :key="activity.id"
+                             class="border-l-4 border-blue-500 pl-4 py-2"
+                             :class="{ 'border-r-4 border-l-0 pr-4 pl-0 rtl hebrew-font': isHebrew }">
+                            <div class="font-semibold">{{ activity.title }}</div>
+                            <div class="text-sm text-gray-600">{{ activity.time }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Patients Section -->
+            <div v-if="activeSection === 'patients'" class="slide-in">
+                <div class="flex justify-between items-center mb-6" 
+                     :class="{ 'flex-row-reverse': isHebrew }">
+                    <h2 class="text-2xl font-bold" :class="{ 'rtl hebrew-font': isHebrew }">
+                        {{ isHebrew ? 'ניהול מטופלים' : 'Patient Management' }}
+                    </h2>
+                    <button @click="showAddPatientModal = true" class="btn btn-primary">
+                        {{ isHebrew ? '+ הוסף מטופל' : '+ Add Patient' }}
+                    </button>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <div v-for="patient in filteredPatients" :key="patient.id"
+                         @click="selectPatient(patient)"
+                         class="patient-card bg-white rounded-lg shadow-md p-4">
+                        <div class="flex justify-between items-start mb-2"
+                             :class="{ 'flex-row-reverse': isHebrew }">
+                            <div :class="{ 'rtl hebrew-font text-right': isHebrew }">
+                                <h3 class="font-bold text-lg">{{ patient.name }}</h3>
+                                <p class="text-sm text-gray-600">{{ patient.id }}</p>
+                            </div>
+                            <span class="status-badge"
+                                  :class="patient.status === 'stable' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'">
+                                {{ patient.status }}
+                            </span>
+                        </div>
+                        <div class="space-y-1 text-sm" :class="{ 'rtl hebrew-font text-right': isHebrew }">
+                            <p>{{ isHebrew ? 'גיל:' : 'Age:' }} {{ patient.age }}</p>
+                            <p>{{ isHebrew ? 'חדר:' : 'Room:' }} {{ patient.room }}</p>
+                            <p>{{ isHebrew ? 'אבחנה:' : 'Diagnosis:' }} {{ patient.diagnosis }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Clinical Analysis Section -->
+            <div v-if="activeSection === 'analysis'" class="slide-in">
+                <h2 class="text-2xl font-bold mb-6" :class="{ 'rtl hebrew-font': isHebrew }">
+                    {{ isHebrew ? 'כלי ניתוח קליני' : 'Clinical Analysis Tools' }}
+                </h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- CGA Calculator -->
+                    <div class="bg-white rounded-lg shadow-md p-6">
+                        <h3 class="text-xl font-bold mb-4" :class="{ 'rtl hebrew-font': isHebrew }">
+                            {{ isHebrew ? 'מחשבון CGA' : 'CGA Calculator' }}
+                        </h3>
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium mb-2" :class="{ 'rtl hebrew-font': isHebrew }">
+                                    {{ isHebrew ? 'ADL Score (0-6):' : 'ADL Score (0-6):' }}
+                                </label>
+                                <input v-model.number="cgaScores.adl" type="number" min="0" max="6" class="form-input">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-2" :class="{ 'rtl hebrew-font': isHebrew }">
+                                    {{ isHebrew ? 'IADL Score (0-8):' : 'IADL Score (0-8):' }}
+                                </label>
+                                <input v-model.number="cgaScores.iadl" type="number" min="0" max="8" class="form-input">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-2" :class="{ 'rtl hebrew-font': isHebrew }">
+                                    {{ isHebrew ? 'MMSE Score (0-30):' : 'MMSE Score (0-30):' }}
+                                </label>
+                                <input v-model.number="cgaScores.mmse" type="number" min="0" max="30" class="form-input">
+                            </div>
+                            <button @click="calculateCGA" class="btn btn-primary w-full">
+                                {{ isHebrew ? 'חשב' : 'Calculate' }}
+                            </button>
+                            <div v-if="cgaResult" class="mt-4 p-4 bg-blue-50 rounded-lg"
+                                 :class="{ 'rtl hebrew-font': isHebrew }">
+                                <h4 class="font-bold mb-2">{{ isHebrew ? 'תוצאה:' : 'Result:' }}</h4>
+                                <p>{{ cgaResult }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Risk Assessment -->
+                    <div class="bg-white rounded-lg shadow-md p-6">
+                        <h3 class="text-xl font-bold mb-4" :class="{ 'rtl hebrew-font': isHebrew }">
+                            {{ isHebrew ? 'הערכת סיכון' : 'Risk Assessment' }}
+                        </h3>
+                        <div class="space-y-4">
+                            <div v-for="risk in riskFactors" :key="risk.name" class="flex items-center justify-between"
+                                 :class="{ 'flex-row-reverse': isHebrew }">
+                                <label class="flex items-center" :class="{ 'flex-row-reverse': isHebrew }">
+                                    <input type="checkbox" v-model="risk.checked" class="mr-2">
+                                    <span :class="{ 'hebrew-font': isHebrew }">
+                                        {{ isHebrew ? risk.nameHe : risk.name }}
+                                    </span>
+                                </label>
+                                <span class="text-sm font-medium" :style="{ color: getRiskColor(risk.weight) }">
+                                    +{{ risk.weight }}
+                                </span>
+                            </div>
+                            <div class="pt-4 border-t">
+                                <div class="flex justify-between items-center"
+                                     :class="{ 'flex-row-reverse': isHebrew }">
+                                    <span class="font-bold" :class="{ 'hebrew-font': isHebrew }">
+                                        {{ isHebrew ? 'ציון סיכון כולל:' : 'Total Risk Score:' }}
+                                    </span>
+                                    <span class="text-2xl font-bold" :style="{ color: getTotalRiskColor() }">
+                                        {{ totalRiskScore }}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Antibiotics Section -->
+            <div v-if="activeSection === 'antibiotics'" class="slide-in">
+                <h2 class="text-2xl font-bold mb-6" :class="{ 'rtl hebrew-font': isHebrew }">
+                    {{ isHebrew ? 'מדריך אנטיביוטיקה' : 'Antibiotics Guide' }}
+                </h2>
+                
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <div class="mb-4">
+                        <input v-model="antibioticSearch" 
+                               :placeholder="isHebrew ? 'חפש אנטיביוטיקה או אינדיקציה...' : 'Search antibiotic or indication...'"
+                               class="form-input"
+                               :class="{ 'rtl hebrew-font': isHebrew }">
+                    </div>
+                    
+                    <div class="overflow-x-auto">
+                        <table class="w-full">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-4 py-3 text-left" :class="{ 'text-right hebrew-font': isHebrew }">
+                                        {{ isHebrew ? 'אינדיקציה' : 'Indication' }}
+                                    </th>
+                                    <th class="px-4 py-3 text-left" :class="{ 'text-right hebrew-font': isHebrew }">
+                                        {{ isHebrew ? 'קו ראשון' : 'First Line' }}
+                                    </th>
+                                    <th class="px-4 py-3 text-left" :class="{ 'text-right hebrew-font': isHebrew }">
+                                        {{ isHebrew ? 'מינון' : 'Dosing' }}
+                                    </th>
+                                    <th class="px-4 py-3 text-left" :class="{ 'text-right hebrew-font': isHebrew }">
+                                        {{ isHebrew ? 'משך טיפול' : 'Duration' }}
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-200">
+                                <tr v-for="item in filteredAntibiotics" :key="item.indication">
+                                    <td class="px-4 py-3" :class="{ 'rtl hebrew-font': isHebrew }">
+                                        {{ isHebrew ? item.indicationHe : item.indication }}
+                                    </td>
+                                    <td class="px-4 py-3 font-medium text-blue-600">{{ item.firstLine }}</td>
+                                    <td class="px-4 py-3">{{ item.dosing }}</td>
+                                    <td class="px-4 py-3">{{ item.duration }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Education Section -->
+            <div v-if="activeSection === 'education'" class="slide-in">
+                <h2 class="text-2xl font-bold mb-6" :class="{ 'rtl hebrew-font': isHebrew }">
+                    {{ isHebrew ? 'למידה והכשרה' : 'Education & Training' }}
+                </h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div v-for="topic in educationTopics" :key="topic.id"
+                         @click="selectTopic(topic)"
+                         class="bg-white rounded-lg shadow-md p-6 cursor-pointer hover:shadow-lg transition-all">
+                        <div class="text-4xl mb-4">{{ topic.icon }}</div>
+                        <h3 class="text-xl font-bold mb-2" :class="{ 'rtl hebrew-font': isHebrew }">
+                            {{ isHebrew ? topic.titleHe : topic.title }}
+                        </h3>
+                        <p class="text-gray-600 mb-4" :class="{ 'rtl hebrew-font': isHebrew }">
+                            {{ isHebrew ? topic.descriptionHe : topic.description }}
+                        </p>
+                        <div class="flex justify-between text-sm text-gray-500"
+                             :class="{ 'flex-row-reverse hebrew-font': isHebrew }">
+                            <span>{{ topic.questions }} {{ isHebrew ? 'שאלות' : 'Questions' }}</span>
+                            <span>{{ topic.completed }}% {{ isHebrew ? 'הושלם' : 'Complete' }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- References Section -->
+            <div v-if="activeSection === 'references'" class="slide-in">
+                <h2 class="text-2xl font-bold mb-6" :class="{ 'rtl hebrew-font': isHebrew }">
+                    {{ isHebrew ? 'מקורות והנחיות' : 'References & Guidelines' }}
+                </h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Guidelines -->
+                    <div class="bg-white rounded-lg shadow-md p-6">
+                        <h3 class="text-xl font-bold mb-4" :class="{ 'rtl hebrew-font': isHebrew }">
+                            {{ isHebrew ? 'הנחיות קליניות' : 'Clinical Guidelines' }}
+                        </h3>
+                        <div class="space-y-3">
+                            <a v-for="guideline in guidelines" :key="guideline.id"
+                               :href="guideline.url" target="_blank"
+                               class="block p-3 border rounded-lg hover:bg-gray-50 transition">
+                                <div class="font-medium text-blue-600" :class="{ 'rtl hebrew-font': isHebrew }">
+                                    {{ isHebrew ? guideline.titleHe : guideline.title }}
+                                </div>
+                                <div class="text-sm text-gray-600">{{ guideline.year }} - {{ guideline.source }}</div>
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <!-- Calculators -->
+                    <div class="bg-white rounded-lg shadow-md p-6">
+                        <h3 class="text-xl font-bold mb-4" :class="{ 'rtl hebrew-font': isHebrew }">
+                            {{ isHebrew ? 'מחשבונים קליניים' : 'Clinical Calculators' }}
+                        </h3>
+                        <div class="space-y-3">
+                            <button v-for="calc in calculators" :key="calc.id"
+                                    @click="openCalculator(calc)"
+                                    class="w-full text-left p-3 border rounded-lg hover:bg-gray-50 transition"
+                                    :class="{ 'text-right': isHebrew }">
+                                <div class="font-medium" :class="{ 'rtl hebrew-font': isHebrew }">
+                                    {{ isHebrew ? calc.titleHe : calc.title }}
+                                </div>
+                                <div class="text-sm text-gray-600" :class="{ 'rtl hebrew-font': isHebrew }">
+                                    {{ isHebrew ? calc.descriptionHe : calc.description }}
+                                </div>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Modals -->
+        <!-- Add Patient Modal -->
+        <div v-if="showAddPatientModal" class="modal-overlay" @click.self="showAddPatientModal = false">
+            <div class="modal-content" :class="{ 'rtl hebrew-font': isHebrew }">
+                <h3 class="text-2xl font-bold mb-4">
+                    {{ isHebrew ? 'הוסף מטופל חדש' : 'Add New Patient' }}
+                </h3>
+                <form @submit.prevent="addPatient" class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium mb-2">
+                            {{ isHebrew ? 'שם מלא' : 'Full Name' }}
+                        </label>
+                        <input v-model="newPatient.name" required class="form-input">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-2">
+                            {{ isHebrew ? 'תעודת זהות' : 'ID Number' }}
+                        </label>
+                        <input v-model="newPatient.id" required class="form-input">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-2">
+                            {{ isHebrew ? 'גיל' : 'Age' }}
+                        </label>
+                        <input v-model.number="newPatient.age" type="number" required class="form-input">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-2">
+                            {{ isHebrew ? 'אבחנה' : 'Diagnosis' }}
+                        </label>
+                        <textarea v-model="newPatient.diagnosis" rows="3" class="form-input"></textarea>
+                    </div>
+                    <div class="flex justify-end space-x-3" :class="{ 'flex-row-reverse space-x-reverse': isHebrew }">
+                        <button type="button" @click="showAddPatientModal = false" 
+                                class="btn bg-gray-200 hover:bg-gray-300">
+                            {{ isHebrew ? 'ביטול' : 'Cancel' }}
+                        </button>
+                        <button type="submit" class="btn btn-primary">
+                            {{ isHebrew ? 'הוסף' : 'Add' }}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Topic Detail Modal -->
+        <div v-if="selectedTopic" class="modal-overlay" @click.self="selectedTopic = null">
+            <div class="modal-content" :class="{ 'rtl hebrew-font': isHebrew }">
+                <h3 class="text-2xl font-bold mb-4">
+                    {{ isHebrew ? selectedTopic.titleHe : selectedTopic.title }}
+                </h3>
+                
+                <!-- Quiz Mode -->
+                <div v-if="quizMode" class="space-y-6">
+                    <div class="flex justify-between items-center"
+                         :class="{ 'flex-row-reverse': isHebrew }">
+                        <span class="text-lg">
+                            {{ isHebrew ? 'שאלה' : 'Question' }} {{ currentQuestionIndex + 1 }} / {{ selectedTopic.quiz.length }}
+                        </span>
+                        <span class="text-lg font-bold">
+                            {{ isHebrew ? 'ניקוד:' : 'Score:' }} {{ quizScore }}
+                        </span>
+                    </div>
+                    
+                    <div v-if="selectedTopic.quiz[currentQuestionIndex]">
+                        <p class="text-lg mb-4">
+                            {{ selectedTopic.quiz[currentQuestionIndex].question }}
+                        </p>
+                        <div class="space-y-3">
+                            <button v-for="(option, index) in selectedTopic.quiz[currentQuestionIndex].options"
+                                    :key="index"
+                                    @click="answerQuestion(index)"
+                                    :disabled="answered"
+                                    class="w-full text-left p-4 border rounded-lg transition"
+                                    :class="[
+                                        { 'text-right': isHebrew },
+                                        getAnswerClass(index)
+                                    ]">
+                                {{ option }}
+                            </button>
+                        </div>
+                        
+                        <div v-if="answered && feedback" class="mt-4 p-4 rounded-lg"
+                             :class="feedbackClass">
+                            <p>{{ feedback }}</p>
+                            <p class="mt-2 text-sm">
+                                {{ selectedTopic.quiz[currentQuestionIndex].explanation }}
+                            </p>
+                        </div>
+                        
+                        <button v-if="answered" @click="nextQuestion"
+                                class="btn btn-primary mt-4">
+                            {{ currentQuestionIndex < selectedTopic.quiz.length - 1 
+                                ? (isHebrew ? 'שאלה הבאה' : 'Next Question')
+                                : (isHebrew ? 'סיים' : 'Finish') }}
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Topic Content -->
+                <div v-else class="space-y-4">
+                    <p class="text-gray-600">
+                        {{ isHebrew ? selectedTopic.descriptionHe : selectedTopic.description }}
+                    </p>
+                    
+                    <div class="grid grid-cols-2 gap-4">
+                        <button @click="startQuiz" class="btn btn-primary">
+                            {{ isHebrew ? 'התחל חידון' : 'Start Quiz' }}
+                        </button>
+                        <button @click="viewFlashcards" class="btn bg-green-500 text-white hover:bg-green-600">
+                            {{ isHebrew ? 'כרטיסיות' : 'Flashcards' }}
+                        </button>
+                    </div>
+                    
+                    <button @click="selectedTopic = null" class="btn bg-gray-200 hover:bg-gray-300 w-full">
+                        {{ isHebrew ? 'סגור' : 'Close' }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const { createApp } = Vue;
+
+        createApp({
+            data() {
+                return {
+                    isHebrew: false,
+                    activeSection: 'dashboard',
+                    currentUser: 'Dr. Sarah Cohen',
+                    currentDateTime: '',
+                    showAddPatientModal: false,
+                    selectedTopic: null,
+                    quizMode: false,
+                    currentQuestionIndex: 0,
+                    quizScore: 0,
+                    answered: false,
+                    feedback: '',
+                    feedbackClass: '',
+                    selectedAnswer: null,
+                    
+                    sections: [
+                        { id: 'dashboard', name: 'Dashboard', nameHe: 'לוח בקרה' },
+                        { id: 'patients', name: 'Patients', nameHe: 'מטופלים' },
+                        { id: 'analysis', name: 'Clinical Analysis', nameHe: 'ניתוח קליני' },
+                        { id: 'antibiotics', name: 'Antibiotics', nameHe: 'אנטיביוטיקה' },
+                        { id: 'education', name: 'Education', nameHe: 'למידה' },
+                        { id: 'references', name: 'References', nameHe: 'מקורות' }
+                    ],
+                    
+                    stats: [
+                        { label: 'Total Patients', labelHe: 'סה"כ מטופלים', value: 42, color: '#3B82F6' },
+                        { label: 'New Admissions', labelHe: 'קבלות חדשות', value: 5, color: '#10B981' },
+                        { label: 'Discharges', labelHe: 'שחרורים', value: 3, color: '#F59E0B' },
+                        { label: 'Critical', labelHe: 'קריטי', value: 2, color: '#EF4444' }
+                    ],
+                    
+                    patients: [
+                        { id: '123456789', name: 'Moshe Cohen', age: 78, room: '201', diagnosis: 'Pneumonia', status: 'stable' },
+                        { id: '234567890', name: 'Sarah Levy', age: 82, room: '203', diagnosis: 'CHF Exacerbation', status: 'critical' },
+                        { id: '345678901', name: 'David Goldberg', age: 75, room: '205', diagnosis: 'Fall, Hip Fracture', status: 'stable' }
+                    ],
+                    
+                    recentActivities: [
+                        { id: 1, title: 'New admission - Room 201', time: '10:30 AM' },
+                        { id: 2, title: 'Medication review completed', time: '09:45 AM' },
+                        { id: 3, title: 'Fall risk assessment updated', time: '09:00 AM' }
+                    ],
+                    
+                    educationTopics: [
+                        { 
+                            id: 1, 
+                            title: 'Falls Prevention', 
+                            titleHe: 'מניעת נפילות',
+                            description: 'Strategies and assessments for fall prevention',
+                            descriptionHe: 'אסטרטגיות והערכות למניעת נפילות',
+                            icon: '🚶',
+                            questions: 10,
+                            completed: 60,
+                            quiz: [
+                                {
+                                    question: 'What is the most significant risk factor for falls?',
+                                    options: ['Previous falls', 'Age > 65', 'Female gender', 'Living alone'],
+                                    correct: 0,
+                                    explanation: 'History of previous falls is the strongest predictor of future falls.'
+                                }
+                            ]
+                        },
+                        { 
+                            id: 2, 
+                            title: 'Delirium Management', 
+                            titleHe: 'ניהול דליריום',
+                            description: 'Recognition and treatment protocols',
+                            descriptionHe: 'פרוטוקולי זיהוי וטיפול',
+                            icon: '🧠',
+                            questions: 8,
+                            completed: 40,
+                            quiz: [
+                                {
+                                    question: 'Which tool is recommended for delirium screening?',
+                                    options: ['MMSE', 'CAM', 'GDS', 'MoCA'],
+                                    correct: 1,
+                                    explanation: 'The Confusion Assessment Method (CAM) is the gold standard for delirium screening.'
+                                }
+                            ]
+                        },
+                        { 
+                            id: 3, 
+                            title: 'Polypharmacy', 
+                            titleHe: 'פוליפרמקיה',
+                            description: 'Medication optimization in elderly',
+                            descriptionHe: 'אופטימיזציה תרופתית בקשישים',
+                            icon: '💊',
+                            questions: 12,
+                            completed: 75,
+                            quiz: [
+                                {
+                                    question: 'How many medications define polypharmacy?',
+                                    options: ['3 or more', '5 or more', '7 or more', '10 or more'],
+                                    correct: 1,
+                                    explanation: 'Polypharmacy is typically defined as the use of 5 or more medications.'
+                                }
+                            ]
+                        }
+                    ],
+                    
+                    antibiotics: [
+                        { 
+                            indication: 'UTI (uncomplicated)', 
+                            indicationHe: 'דלקת בדרכי שתן (פשוטה)',
+                            firstLine: 'Nitrofurantoin', 
+                            dosing: '100mg BID', 
+                            duration: '5 days' 
+                        },
+                        { 
+                            indication: 'Pneumonia (CAP)', 
+                            indicationHe: 'דלקת ריאות קהילתית',
+                            firstLine: 'Amoxicillin-Clavulanate', 
+                            dosing: '875mg BID', 
+                            duration: '5-7 days' 
+                        },
+                        { 
+                            indication: 'Cellulitis', 
+                            indicationHe: 'צלוליטיס',
+                            firstLine: 'Cephalexin', 
+                            dosing: '500mg QID', 
+                            duration: '5-10 days' 
+                        }
+                    ],
+                    
+                    guidelines: [
+                        { 
+                            id: 1, 
+                            title: 'AGS Beers Criteria', 
+                            titleHe: 'קריטריוני Beers של AGS',
+                            year: 2023, 
+                            source: 'AGS', 
+                            url: '#' 
+                        },
+                        { 
+                            id: 2, 
+                            title: 'Fall Prevention Guidelines', 
+                            titleHe: 'הנחיות למניעת נפילות',
+                            year: 2022, 
+                            source: 'NICE', 
+                            url: '#' 
+                        }
+                    ],
+                    
+                    calculators: [
+                        { 
+                            id: 1, 
+                            title: 'CHA2DS2-VASc Score', 
+                            titleHe: 'ציון CHA2DS2-VASc',
+                            description: 'Stroke risk in AF',
+                            descriptionHe: 'סיכון לשבץ בפרפור עליות'
+                        },
+                        { 
+                            id: 2, 
+                            title: 'FRAX Score', 
+                            titleHe: 'ציון FRAX',
+                            description: 'Fracture risk assessment',
+                            descriptionHe: 'הערכת סיכון לשברים'
+                        }
+                    ],
+                    
+                    cgaScores: { adl: null, iadl: null, mmse: null },
+                    cgaResult: '',
+                    
+                    riskFactors: [
+                        { name: 'Previous Falls', nameHe: 'נפילות קודמות', weight: 3, checked: false },
+                        { name: 'Polypharmacy (>5 meds)', nameHe: 'פוליפרמקיה (>5 תרופות)', weight: 2, checked: false },
+                        { name: 'Cognitive Impairment', nameHe: 'ליקוי קוגניטיבי', weight: 2, checked: false },
+                        { name: 'Mobility Issues', nameHe: 'בעיות ניידות', weight: 2, checked: false },
+                        { name: 'Visual Impairment', nameHe: 'ליקוי ראייה', weight: 1, checked: false }
+                    ],
+                    
+                    antibioticSearch: '',
+                    newPatient: { name: '', id: '', age: null, diagnosis: '' },
+                    
+                    chartInstance: null
+                };
+            },
+            
+            computed: {
+                filteredPatients() {
+                    return this.patients;
+                },
+                
+                filteredAntibiotics() {
+                    if (!this.antibioticSearch) return this.antibiotics;
+                    
+                    const search = this.antibioticSearch.toLowerCase();
+                    return this.antibiotics.filter(item => 
+                        item.indication.toLowerCase().includes(search) ||
+                        item.indicationHe.includes(search) ||
+                        item.firstLine.toLowerCase().includes(search)
+                    );
+                },
+                
+                totalRiskScore() {
+                    return this.riskFactors
+                        .filter(r => r.checked)
+                        .reduce((sum, r) => sum + r.weight, 0);
+                }
+            },
+            
+            methods: {
+                toggleLanguage() {
+                    this.isHebrew = !this.isHebrew;
+                },
+                
+                updateDateTime() {
+                    const now = new Date();
+                    this.currentDateTime = now.toLocaleString(this.isHebrew ? 'he-IL' : 'en-US');
+                },
+                
+                addPatient() {
+                    this.patients.push({
+                        ...this.newPatient,
+                        room: Math.floor(Math.random() * 100 + 200).toString(),
+                        status: 'stable'
+                    });
+                    this.showAddPatientModal = false;
+                    this.newPatient = { name: '', id: '', age: null, diagnosis: '' };
+                },
+                
+                selectPatient(patient) {
+                    console.log('Selected patient:', patient);
+                },
+                
+                selectTopic(topic) {
+                    this.selectedTopic = topic;
+                    this.quizMode = false;
+                },
+                
+                startQuiz() {
+                    this.quizMode = true;
+                    this.currentQuestionIndex = 0;
+                    this.quizScore = 0;
+                    this.answered = false;
+                    this.feedback = '';
+                },
+                
+                answerQuestion(index) {
+                    if (this.answered) return;
+                    
+                    this.answered = true;
+                    this.selectedAnswer = index;
+                    
+                    if (index === this.selectedTopic.quiz[this.currentQuestionIndex].correct) {
+                        this.quizScore++;
+                        this.feedback = this.isHebrew ? 'נכון!' : 'Correct!';
+                        this.feedbackClass = 'bg-green-100 text-green-800';
+                    } else {
+                        this.feedback = this.isHebrew ? 'לא נכון' : 'Incorrect';
+                        this.feedbackClass = 'bg-red-100 text-red-800';
+                    }
+                },
+                
+                getAnswerClass(index) {
+                    if (!this.answered) return 'hover:bg-gray-50';
+                    
+                    const isCorrect = index === this.selectedTopic.quiz[this.currentQuestionIndex].correct;
+                    const isSelected = index === this.selectedAnswer;
+                    
+                    if (isCorrect) return 'bg-green-100 border-green-500';
+                    if (isSelected) return 'bg-red-100 border-red-500';
+                    return 'opacity-50';
+                },
+                
+                nextQuestion() {
+                    if (this.currentQuestionIndex < this.selectedTopic.quiz.length - 1) {
+                        this.currentQuestionIndex++;
+                        this.answered = false;
+                        this.feedback = '';
+                        this.selectedAnswer = null;
+                    } else {
+                        this.quizMode = false;
+                        alert(`Quiz completed! Score: ${this.quizScore}/${this.selectedTopic.quiz.length}`);
+                    }
+                },
+                
+                viewFlashcards() {
+                    console.log('View flashcards for', this.selectedTopic.title);
+                },
+                
+                calculateCGA() {
+                    const { adl, iadl, mmse } = this.cgaScores;
+                    
+                    if (adl === null || iadl === null || mmse === null) {
+                        this.cgaResult = this.isHebrew ? 'אנא מלא את כל השדות' : 'Please fill all fields';
+                        return;
+                    }
+                    
+                    let result = [];
+                    
+                    if (adl <= 2) result.push(this.isHebrew ? 'תלות גבוהה ב-ADL' : 'Severe ADL dependency');
+                    else if (adl <= 4) result.push(this.isHebrew ? 'תלות בינונית ב-ADL' : 'Moderate ADL dependency');
+                    
+                    if (iadl <= 3) result.push(this.isHebrew ? 'תלות גבוהה ב-IADL' : 'Severe IADL dependency');
+                    else if (iadl <= 5) result.push(this.isHebrew ? 'תלות בינונית ב-IADL' : 'Moderate IADL dependency');
+                    
+                    if (mmse < 24) result.push(this.isHebrew ? 'ליקוי קוגניטיבי אפשרי' : 'Possible cognitive impairment');
+                    
+                    this.cgaResult = result.length ? result.join(', ') : 
+                        (this.isHebrew ? 'תפקוד תקין' : 'Normal functioning');
+                },
+                
+                getRiskColor(weight) {
+                    if (weight >= 3) return '#EF4444';
+                    if (weight >= 2) return '#F59E0B';
+                    return '#10B981';
+                },
+                
+                getTotalRiskColor() {
+                    const score = this.totalRiskScore;
+                    if (score >= 7) return '#EF4444';
+                    if (score >= 4) return '#F59E0B';
+                    return '#10B981';
+                },
+                
+                openCalculator(calc) {
+                    console.log('Opening calculator:', calc.title);
+                },
+                
+                initChart() {
+                    const ctx = document.getElementById('admissionsChart');
+                    if (!ctx) return;
+                    
+                    if (this.chartInstance) {
+                        this.chartInstance.destroy();
+                    }
+                    
+                    this.chartInstance = new Chart(ctx, {
+                        type: 'line',
+                        data: {
+                            labels: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+                            datasets: [{
+                                label: 'Admissions',
+                                data: [3, 5, 4, 6, 8, 5, 4],
+                                borderColor: '#3B82F6',
+                                backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                                tension: 0.4,
+                                fill: true
+                            }, {
+                                label: 'Discharges',
+                                data: [2, 3, 5, 4, 3, 6, 3],
+                                borderColor: '#10B981',
+                                backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                                tension: 0.4,
+                                fill: true
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: {
+                                    position: 'top',
+                                },
+                                title: {
+                                    display: true,
+                                    text: 'Weekly Patient Flow'
+                                }
+                            },
+                            scales: {
+                                y: {
+                                    beginAtZero: true
+                                }
+                            }
+                        }
+                    });
+                }
+            },
+            
+            mounted() {
+                this.updateDateTime();
+                setInterval(this.updateDateTime, 60000);
+                
+                // Initialize chart after a small delay to ensure DOM is ready
+                setTimeout(() => {
+                    this.initChart();
+                }, 100);
+            },
+            
+            watch: {
+                activeSection(newVal) {
+                    if (newVal === 'dashboard') {
+                        this.$nextTick(() => {
+                            this.initChart();
+                        });
+                    }
+                }
+            }
+        }).mount('#app');
+    </script>
+</body>
+</html>
