@@ -1,0 +1,49 @@
+{
+  "title": "Falls Prevention Quiz",
+  "type": "H5P.QuestionSet",
+  "questions": [
+    {
+      "type": "H5P.MultiChoice",
+      "question": "Which of the following is the most effective single intervention for fall prevention in elderly patients?",
+      "answers": [
+        {"text": "Vitamin D supplementation", "correct": false},
+        {"text": "Exercise programs focusing on balance and strength", "correct": true},
+        {"text": "Home safety assessment", "correct": false},
+        {"text": "Medication review", "correct": false}
+      ],
+      "feedback": "Multi-component exercise programs have the strongest evidence for reducing fall risk (30-40% reduction)."
+    },
+    {
+      "type": "H5P.MultiChoice", 
+      "question": "What is the recommended daily vitamin D dose for fall prevention in elderly patients?",
+      "answers": [
+        {"text": "400 IU", "correct": false},
+        {"text": "800-1000 IU", "correct": true},
+        {"text": "2000 IU", "correct": false},
+        {"text": "5000 IU", "correct": false}
+      ],
+      "feedback": "800-1000 IU daily is recommended for fall prevention in elderly patients with vitamin D deficiency."
+    },
+    {
+      "type": "H5P.MultiChoice",
+      "question": "Which medication class is most associated with increased fall risk?",
+      "answers": [
+        {"text": "ACE inhibitors", "correct": false},
+        {"text": "Benzodiazepines", "correct": true},
+        {"text": "Statins", "correct": false},
+        {"text": "PPIs", "correct": false}
+      ],
+      "feedback": "Benzodiazepines increase fall risk by 40-60% due to sedation and impaired balance."
+    }
+  ],
+  "flashcards": [
+    {"front": "Timed Up and Go Test", "back": ">12 seconds indicates increased fall risk"},
+    {"front": "Orthostatic hypotension definition", "back": "Drop of ≥20 mmHg systolic or ≥10 mmHg diastolic within 3 minutes of standing"}
+  ],
+  "metadata": {
+    "license": "CC BY-SA",
+    "authors": ["Geriatrics Platform"],
+    "language": "en",
+    "target": "Geriatrics Fellowship Training"
+  }
+}
