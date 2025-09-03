@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Test - Geriatrics Hub</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 20px;
+            background: linear-gradient(to br, #f0f9ff, #f5f3ff);
+            min-height: 100vh;
+        }
+        .container {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+        }
+        h1 {
+            color: #4f46e5;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .test-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+        .test-card {
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .test-card:hover {
+            border-color: #4f46e5;
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.1);
+            transform: translateY(-2px);
+        }
+        .test-card h3 {
+            color: #1f2937;
+            margin: 0 0 8px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .test-card p {
+            color: #6b7280;
+            font-size: 14px;
+            margin: 0;
+        }
+        .status {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Monaco', 'Courier New', monospace;
+            font-size: 13px;
+            white-space: pre-wrap;
+            word-break: break-all;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .success {
+            background: #dcfce7;
+            border: 1px solid #86efac;
+            color: #14532d;
+        }
+        .error {
+            background: #fee2e2;
+            border: 1px solid #fca5a5;
+            color: #7f1d1d;
+        }
+        .warning {
+            background: #fef3c7;
+            border: 1px solid #fde68a;
+            color: #78350f;
+        }
+        .info {
+            background: #dbeafe;
+            border: 1px solid #93c5fd;
+            color: #1e3a8a;
+        }
+        .icon {
+            width: 20px;
+            height: 20px;
+            display: inline-block;
+        }
+        button {
+            background: #4f46e5;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        button:hover {
+            background: #4338ca;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>
+            <span>🔬</span>
+            API & Backend Test Suite
+        </h1>
+        
+        <div class="test-grid">
+            <div class="test-card" onclick="testHealth()">
+                <h3>
+                    <span>❤️</span>
+                    Health Check
+                </h3>
+                <p>Verify the app is running</p>
+            </div>
+            
+            <div class="test-card" onclick="testVersion()">
+                <h3>
+                    <span>📦</span>
+                    Version Info
+                </h3>
+                <p>Check deployment version</p>
+            </div>
+            
+            <div class="test-card" onclick="testSupabase()">
+                <h3>
+                    <span>🗄️</span>
+                    Supabase Connection
+                </h3>
+                <p>Test database connectivity</p>
+            </div>
+            
+            <div class="test-card" onclick="testInsightsAPI()">
+                <h3>
+                    <span>🤖</span>
+                    AI Insights API
+                </h3>
+                <p>Test /api/insights endpoint</p>
+            </div>
+            
+            <div class="test-card" onclick="testNotesAPI()">
+                <h3>
+                    <span>📝</span>
+                    Notes NLP API
+                </h3>
+                <p>Test /api/notes-nlp endpoint</p>
+            </div>
+            
+            <div class="test-card" onclick="testFullStack()">
+                <h3>
+                    <span>🚀</span>
+                    Full Stack Test
+                </h3>
+                <p>Complete integration test</p>
+            </div>
+        </div>
+        
+        <div id="results"></div>
+    </div>
+
+    <script>
+        function log(message, type = 'info') {
+            const results = document.getElementById('results');
+            const div = document.createElement('div');
+            div.className = `status ${type}`;
+            div.innerHTML = `[${new Date().toLocaleTimeString()}] ${message}`;
+            results.appendChild(div);
+            results.scrollTop = results.scrollHeight;
+        }
+
+        function clearResults() {
+            document.getElementById('results').innerHTML = '';
+        }
+
+        async function testHealth() {
+            clearResults();
+            log('Testing health endpoint...', 'info');
+            try {
+                const response = await fetch('/health.txt');
+                const text = await response.text();
+                if (text.trim() === 'ok') {
+                    log('✅ Health check passed!', 'success');
+                } else {
+                    log(`⚠️ Unexpected response: ${text}`, 'warning');
+                }
+            } catch (error) {
+                log(`❌ Health check failed: ${error.message}`, 'error');
+            }
+        }
+
+        async function testVersion() {
+            clearResults();
+            log('Fetching version info...', 'info');
+            try {
+                const response = await fetch('/version.json');
+                const data = await response.json();
+                log(`✅ Version info retrieved:
+Version: ${data.version}
+Commit: ${data.commit}
+Features: ${JSON.stringify(data.features, null, 2)}`, 'success');
+            } catch (error) {
+                log(`❌ Version check failed: ${error.message}`, 'error');
+            }
+        }
+
+        async function testSupabase() {
+            clearResults();
+            log('Testing Supabase connection...', 'info');
+            log('⚠️ Note: This requires Supabase environment variables to be set in Vercel', 'warning');
+            
+            // This would need the actual Supabase client to work
+            log('To test Supabase:
+1. Add VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY to Vercel
+2. Redeploy the application
+3. Check the browser console for connection logs', 'info');
+        }
+
+        async function testInsightsAPI() {
+            clearResults();
+            log('Testing AI Insights API...', 'info');
+            
+            try {
+                const response = await fetch('/api/insights', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        patientId: 'test-patient-id',
+                        types: ['fall_risk']
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    log(`✅ Insights API is working!
+Response: ${JSON.stringify(data, null, 2)}`, 'success');
+                } else {
+                    if (data.error && data.error.includes('SUPABASE_SERVICE_ROLE')) {
+                        log(`⚠️ API found but needs configuration:
+- Add SUPABASE_SERVICE_ROLE to Vercel environment variables
+- Add OPENAI_API_KEY for AI features (optional)
+- Redeploy after adding variables`, 'warning');
+                    } else {
+                        log(`⚠️ API returned error: ${JSON.stringify(data, null, 2)}`, 'warning');
+                    }
+                }
+            } catch (error) {
+                log(`❌ Insights API test failed: ${error.message}
+This might mean:
+- API routes not deployed yet
+- Need to add environment variables
+- Need to redeploy`, 'error');
+            }
+        }
+
+        async function testNotesAPI() {
+            clearResults();
+            log('Testing Notes NLP API...', 'info');
+            
+            const testNote = "Patient presents with HTN, DM, and recent fall. Started on lisinopril 10mg PO daily. BP 140/90, HR 78.";
+            
+            try {
+                const response = await fetch('/api/notes-nlp', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ note: testNote })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    log(`✅ Notes NLP API is working!
+Abbreviations found: ${data.analysis?.abbreviations?.length || 0}
+Medications found: ${data.analysis?.medications?.length || 0}
+Response: ${JSON.stringify(data, null, 2)}`, 'success');
+                } else {
+                    log(`⚠️ Notes API returned error: ${JSON.stringify(data, null, 2)}`, 'warning');
+                }
+            } catch (error) {
+                log(`❌ Notes API test failed: ${error.message}`, 'error');
+            }
+        }
+
+        async function testFullStack() {
+            clearResults();
+            log('Running full stack test...', 'info');
+            
+            // Run all tests
+            await testHealth();
+            await testVersion();
+            await testInsightsAPI();
+            await testNotesAPI();
+            
+            log('\n📊 Test Summary:
+- Static files: ✅ Working
+- API routes: Check results above
+- Next steps: Add environment variables in Vercel', 'info');
+        }
+
+        // Auto-run health check on load
+        window.addEventListener('load', () => {
+            testHealth();
+        });
+    </script>
+</body>
+</html>

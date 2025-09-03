@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Supabase Connection Test</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            border-bottom: 2px solid #4f46e5;
+            padding-bottom: 10px;
+        }
+        .input-group {
+            margin: 20px 0;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #666;
+            font-weight: 500;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        button {
+            background: #4f46e5;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 10px 10px 10px 0;
+        }
+        button:hover {
+            background: #4338ca;
+        }
+        button:disabled {
+            background: #9ca3af;
+            cursor: not-allowed;
+        }
+        .status {
+            margin: 20px 0;
+            padding: 15px;
+            border-radius: 6px;
+            font-family: monospace;
+            white-space: pre-wrap;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .success {
+            background: #dcfce7;
+            border: 1px solid #86efac;
+            color: #166534;
+        }
+        .error {
+            background: #fee2e2;
+            border: 1px solid #fca5a5;
+            color: #991b1b;
+        }
+        .info {
+            background: #dbeafe;
+            border: 1px solid #93c5fd;
+            color: #1e40af;
+        }
+        .warning {
+            background: #fef3c7;
+            border: 1px solid #fde68a;
+            color: #92400e;
+        }
+        .test-section {
+            margin: 30px 0;
+            padding: 20px;
+            background: #f9fafb;
+            border-radius: 6px;
+        }
+        h2 {
+            color: #4f46e5;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔧 Supabase Connection Test</h1>
+        
+        <div class="input-group">
+            <label for="url">Supabase URL:</label>
+            <input type="text" id="url" placeholder="https://your-project.supabase.co">
+        </div>
+        
+        <div class="input-group">
+            <label for="anon">Anon Key (Public):</label>
+            <input type="text" id="anon" placeholder="eyJhbGc...">
+        </div>
+        
+        <button onclick="testConnection()">Test Connection</button>
+        <button onclick="testTables()">Check Tables</button>
+        <button onclick="insertTestData()">Insert Test Data</button>
+        <button onclick="queryData()">Query Patients</button>
+        <button onclick="clearStatus()">Clear</button>
+        
+        <div id="status"></div>
+
+        <div class="test-section">
+            <h2>Quick Setup Instructions:</h2>
+            <ol>
+                <li>Get your Supabase URL and Anon Key from:
+                    <br><code>Settings → API → Project URL & anon key</code>
+                </li>
+                <li>Paste them in the fields above</li>
+                <li>Click "Test Connection" to verify</li>
+                <li>Click "Check Tables" to see if schema is installed</li>
+                <li>Click "Insert Test Data" to add sample patients</li>
+            </ol>
+        </div>
+    </div>
+
+    <script>
+        let supabase = null;
+
+        function log(message, type = 'info') {
+            const status = document.getElementById('status');
+            const div = document.createElement('div');
+            div.className = `status ${type}`;
+            div.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+            status.appendChild(div);
+            status.scrollTop = status.scrollHeight;
+        }
+
+        function clearStatus() {
+            document.getElementById('status').innerHTML = '';
+        }
+
+        async function testConnection() {
+            try {
+                const url = document.getElementById('url').value;
+                const anonKey = document.getElementById('anon').value;
+                
+                if (!url || !anonKey) {
+                    log('Please enter both URL and Anon Key', 'error');
+                    return;
+                }
+                
+                log('Testing connection...', 'info');
+                
+                // Initialize Supabase client
+                supabase = window.supabase.createClient(url, anonKey);
+                
+                // Test with a simple query
+                const { data, error } = await supabase
+                    .from('patients')
+                    .select('count', { count: 'exact', head: true });
+                
+                if (error) {
+                    if (error.message.includes('relation "public.patients" does not exist')) {
+                        log('✓ Connected to Supabase!', 'success');
+                        log('⚠ Tables not found. Run the schema SQL first.', 'warning');
+                        log('Go to SQL Editor and run: supabase-schema-enhanced.sql', 'info');
+                    } else {
+                        log(`Connection error: ${error.message}`, 'error');
+                    }
+                } else {
+                    log('✓ Successfully connected to Supabase!', 'success');
+                    log(`✓ Patients table exists`, 'success');
+                }
+                
+                // Save to localStorage for convenience
+                localStorage.setItem('supabase_url', url);
+                localStorage.setItem('supabase_anon', anonKey);
+                
+            } catch (err) {
+                log(`Error: ${err.message}`, 'error');
+            }
+        }
+
+        async function testTables() {
+            if (!supabase) {
+                log('Connect first!', 'error');
+                return;
+            }
+            
+            const tables = [
+                'patients', 'mmse_scores', 'meds', 'patient_meds',
+                'assessments', 'tasks', 'vital_signs', 'lab_results',
+                'clinical_notes', 'shift_handoffs', 'alerts', 
+                'insights_cache', 'audit_logs'
+            ];
+            
+            log('Checking tables...', 'info');
+            
+            for (const table of tables) {
+                try {
+                    const { count, error } = await supabase
+                        .from(table)
+                        .select('*', { count: 'exact', head: true });
+                    
+                    if (error) {
+                        log(`✗ ${table}: Not found`, 'error');
+                    } else {
+                        log(`✓ ${table}: Ready (${count || 0} rows)`, 'success');
+                    }
+                } catch (err) {
+                    log(`✗ ${table}: ${err.message}`, 'error');
+                }
+            }
+        }
+
+        async function insertTestData() {
+            if (!supabase) {
+                log('Connect first!', 'error');
+                return;
+            }
+            
+            try {
+                log('Inserting test patient...', 'info');
+                
+                // Insert a test patient
+                const { data: patient, error: patientError } = await supabase
+                    .from('patients')
+                    .insert({
+                        mrn: `TEST-${Date.now()}`,
+                        first_name: 'Test',
+                        last_name: 'Patient',
+                        sex: 'F',
+                        dob: '1945-01-15',
+                        admission_date: new Date().toISOString().split('T')[0],
+                        room_number: '101A',
+                        primary_diagnosis: 'Test Diagnosis'
+                    })
+                    .select()
+                    .single();
+                
+                if (patientError) {
+                    log(`Error inserting patient: ${patientError.message}`, 'error');
+                    return;
+                }
+                
+                log(`✓ Created patient: ${patient.first_name} ${patient.last_name} (ID: ${patient.id})`, 'success');
+                
+                // Insert MMSE score
+                const { error: mmseError } = await supabase
+                    .from('mmse_scores')
+                    .insert({
+                        patient_id: patient.id,
+                        score: 24,
+                        assessed_by: 'Test User',
+                        notes: 'Test assessment'
+                    });
+                
+                if (mmseError) {
+                    log(`Error inserting MMSE: ${mmseError.message}`, 'error');
+                } else {
+                    log('✓ Added MMSE score', 'success');
+                }
+                
+                // Insert assessment
+                const { error: assessmentError } = await supabase
+                    .from('assessments')
+                    .insert({
+                        patient_id: patient.id,
+                        type: 'morse_fall',
+                        score: 45,
+                        risk_level: 'moderate',
+                        assessed_by: 'Test User'
+                    });
+                
+                if (assessmentError) {
+                    log(`Error inserting assessment: ${assessmentError.message}`, 'error');
+                } else {
+                    log('✓ Added fall risk assessment', 'success');
+                }
+                
+                log('✓ Test data inserted successfully!', 'success');
+                
+            } catch (err) {
+                log(`Error: ${err.message}`, 'error');
+            }
+        }
+
+        async function queryData() {
+            if (!supabase) {
+                log('Connect first!', 'error');
+                return;
+            }
+            
+            try {
+                log('Querying patients...', 'info');
+                
+                const { data: patients, error } = await supabase
+                    .from('patients')
+                    .select(`
+                        *,
+                        mmse_scores (score, assessed_at),
+                        assessments (type, risk_level)
+                    `)
+                    .limit(5);
+                
+                if (error) {
+                    log(`Query error: ${error.message}`, 'error');
+                    return;
+                }
+                
+                if (patients && patients.length > 0) {
+                    log(`Found ${patients.length} patients:`, 'success');
+                    patients.forEach(p => {
+                        log(`• ${p.first_name} ${p.last_name} (MRN: ${p.mrn})`, 'info');
+                    });
+                    log('\nFull data:\n' + JSON.stringify(patients, null, 2), 'info');
+                } else {
+                    log('No patients found. Insert test data first.', 'warning');
+                }
+                
+            } catch (err) {
+                log(`Error: ${err.message}`, 'error');
+            }
+        }
+
+        // Load saved credentials
+        window.onload = () => {
+            const savedUrl = localStorage.getItem('supabase_url');
+            const savedAnon = localStorage.getItem('supabase_anon');
+            
+            if (savedUrl) document.getElementById('url').value = savedUrl;
+            if (savedAnon) document.getElementById('anon').value = savedAnon;
+            
+            if (savedUrl && savedAnon) {
+                log('Loaded saved credentials from localStorage', 'info');
+            }
+        };
+    </script>
+</body>
+</html>
