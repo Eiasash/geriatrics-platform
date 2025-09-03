@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { BarChart, Users, HeartPulse, Stethoscope, Pill, BookOpen, Calendar, CheckSquare, Phone } from 'lucide-react';
+import { BarChart, Users, HeartPulse, Stethoscope, Pill, BookOpen, Calendar, CheckSquare, Phone, GraduationCap } from 'lucide-react';
+import Education from './components/Education';
 
 // Main Application Component - Consolidated Dashboard
 export default function App() {
@@ -445,6 +446,7 @@ export default function App() {
                     <NavItem icon={<Calendar size={20} />} label="Schedule" section="schedule" isActive={activeSection === 'schedule'} />
                     <NavItem icon={<CheckSquare size={20} />} label="Tasks" section="tasks" isActive={activeSection === 'tasks'} />
                     <NavItem icon={<Phone size={20} />} label="Contacts" section="contacts" isActive={activeSection === 'contacts'} />
+                    <NavItem icon={<GraduationCap size={20} />} label="Education" section="education" isActive={activeSection === 'education'} />
                 </nav>
             </aside>
 
@@ -458,6 +460,7 @@ export default function App() {
                 {activeSection === 'schedule' && renderSchedule()}
                 {activeSection === 'tasks' && renderTasks()}
                 {activeSection === 'contacts' && renderContacts()}
+                {activeSection === 'education' && <Education />}
             </main>
         </div>
     );

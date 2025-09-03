@@ -1,0 +1,338 @@
+[
+  {
+    "topic": "Falls Prevention",
+    "mcqs": [
+      {
+        "q": "Which of the following is the most effective single intervention for fall prevention in elderly patients?",
+        "options": [
+          "Vitamin D supplementation",
+          "Exercise programs focusing on balance and strength",
+          "Home safety assessment",
+          "Medication review"
+        ],
+        "correct": "Exercise programs focusing on balance and strength",
+        "explanation": "Multi-component exercise programs have the strongest evidence for reducing fall risk (30-40% reduction)."
+      },
+      {
+        "q": "What is the recommended daily vitamin D dose for fall prevention in elderly patients?",
+        "options": [
+          "400 IU",
+          "800-1000 IU",
+          "2000 IU",
+          "5000 IU"
+        ],
+        "correct": "800-1000 IU",
+        "explanation": "800-1000 IU daily is recommended for fall prevention in elderly patients with vitamin D deficiency."
+      },
+      {
+        "q": "Which medication class is most associated with increased fall risk?",
+        "options": [
+          "ACE inhibitors",
+          "Benzodiazepines",
+          "Statins",
+          "PPIs"
+        ],
+        "correct": "Benzodiazepines",
+        "explanation": "Benzodiazepines increase fall risk by 40-60% due to sedation and impaired balance."
+      }
+    ],
+    "flashcards": [
+      { "front": "Timed Up and Go Test", "back": ">12 seconds indicates increased fall risk" },
+      { "front": "Orthostatic hypotension definition", "back": "Drop of ≥20 mmHg systolic or ≥10 mmHg diastolic within 3 minutes of standing" }
+    ]
+  },
+  {
+    "topic": "Delirium Management",
+    "mcqs": [
+      {
+        "q": "Which tool is most validated for delirium screening in hospitalized elderly?",
+        "options": [
+          "MMSE",
+          "CAM (Confusion Assessment Method)",
+          "MoCA",
+          "GDS"
+        ],
+        "correct": "CAM (Confusion Assessment Method)",
+        "explanation": "CAM has 94% sensitivity and 89% specificity for delirium detection."
+      },
+      {
+        "q": "What percentage of delirium cases are preventable with multicomponent interventions?",
+        "options": [
+          "10-15%",
+          "30-40%",
+          "50-60%",
+          "70-80%"
+        ],
+        "correct": "30-40%",
+        "explanation": "Studies show 30-40% of delirium cases are preventable with targeted interventions."
+      },
+      {
+        "q": "Which is NOT a component of the HELP (Hospital Elder Life Program)?",
+        "options": [
+          "Daily visitor program",
+          "Therapeutic activities",
+          "Pharmacological prophylaxis",
+          "Sleep protocol"
+        ],
+        "correct": "Pharmacological prophylaxis",
+        "explanation": "HELP focuses on non-pharmacological interventions only."
+      }
+    ],
+    "flashcards": [
+      { "front": "CAM criteria", "back": "1. Acute onset 2. Inattention 3. Disorganized thinking 4. Altered consciousness" },
+      { "front": "Delirium risk factors", "back": "Age >70, dementia, severe illness, vision/hearing impairment, dehydration" }
+    ]
+  },
+  {
+    "topic": "Polypharmacy",
+    "mcqs": [
+      {
+        "q": "What defines polypharmacy in geriatrics?",
+        "options": [
+          "≥3 medications",
+          "≥5 medications",
+          "≥8 medications",
+          "≥10 medications"
+        ],
+        "correct": "≥5 medications",
+        "explanation": "Polypharmacy is commonly defined as regular use of ≥5 medications."
+      },
+      {
+        "q": "Which tool is specifically designed for inappropriate medication screening in elderly?",
+        "options": [
+          "Beers Criteria",
+          "CAGE questionnaire",
+          "Charlson Index",
+          "FRAX score"
+        ],
+        "correct": "Beers Criteria",
+        "explanation": "Beers Criteria lists potentially inappropriate medications for older adults."
+      },
+      {
+        "q": "What is the first step in deprescribing?",
+        "options": [
+          "Stop all non-essential medications",
+          "Review all current medications",
+          "Reduce doses by half",
+          "Switch to generic alternatives"
+        ],
+        "correct": "Review all current medications",
+        "explanation": "Comprehensive medication reconciliation is the essential first step."
+      }
+    ],
+    "flashcards": [
+      { "front": "STOPP criteria", "back": "Screening Tool of Older Persons' Prescriptions - identifies inappropriate prescribing" },
+      { "front": "Anticholinergic burden", "back": "Cumulative effect of medications with anticholinergic properties" }
+    ]
+  },
+  {
+    "topic": "Frailty Assessment",
+    "mcqs": [
+      {
+        "q": "How many criteria define frailty in the Fried phenotype?",
+        "options": [
+          "3 criteria",
+          "5 criteria",
+          "7 criteria",
+          "9 criteria"
+        ],
+        "correct": "5 criteria",
+        "explanation": "Fried's 5 criteria: weight loss, exhaustion, low activity, slowness, weakness."
+      },
+      {
+        "q": "What grip strength indicates weakness in elderly women?",
+        "options": [
+          "<15 kg",
+          "<18 kg",
+          "<20 kg",
+          "<25 kg"
+        ],
+        "correct": "<18 kg",
+        "explanation": "Grip strength <18 kg in women (BMI adjusted) indicates weakness."
+      },
+      {
+        "q": "Which frailty assessment tool uses a deficit accumulation approach?",
+        "options": [
+          "Fried phenotype",
+          "Clinical Frailty Scale",
+          "Frailty Index",
+          "PRISMA-7"
+        ],
+        "correct": "Frailty Index",
+        "explanation": "Frailty Index counts health deficits (typically 30+ items) to calculate frailty."
+      }
+    ],
+    "flashcards": [
+      { "front": "Pre-frail definition", "back": "Presence of 1-2 Fried criteria" },
+      { "front": "Frailty prevalence", "back": "10-15% of community-dwelling elderly >65 years" }
+    ]
+  },
+  {
+    "topic": "Dementia Care",
+    "mcqs": [
+      {
+        "q": "Which is the most common cause of dementia?",
+        "options": [
+          "Vascular dementia",
+          "Alzheimer's disease",
+          "Lewy body dementia",
+          "Frontotemporal dementia"
+        ],
+        "correct": "Alzheimer's disease",
+        "explanation": "Alzheimer's accounts for 60-70% of dementia cases."
+      },
+      {
+        "q": "What MMSE score suggests moderate cognitive impairment?",
+        "options": [
+          "24-27",
+          "19-23",
+          "10-18",
+          "<10"
+        ],
+        "correct": "10-18",
+        "explanation": "MMSE 10-18 indicates moderate cognitive impairment."
+      },
+      {
+        "q": "Which medication class is first-line for Alzheimer's disease?",
+        "options": [
+          "Benzodiazepines",
+          "Antipsychotics",
+          "Cholinesterase inhibitors",
+          "SSRIs"
+        ],
+        "correct": "Cholinesterase inhibitors",
+        "explanation": "Cholinesterase inhibitors (donepezil, rivastigmine, galantamine) are first-line."
+      }
+    ],
+    "flashcards": [
+      { "front": "MoCA cutoff", "back": "<26 suggests cognitive impairment" },
+      { "front": "Behavioral symptoms", "back": "BPSD - Behavioral and Psychological Symptoms of Dementia" }
+    ]
+  },
+  {
+    "topic": "Pressure Ulcers",
+    "mcqs": [
+      {
+        "q": "Which scale is most commonly used for pressure ulcer risk assessment?",
+        "options": [
+          "Norton Scale",
+          "Braden Scale",
+          "Waterlow Scale",
+          "PUSH Tool"
+        ],
+        "correct": "Braden Scale",
+        "explanation": "Braden Scale is most widely validated with 6 subscales."
+      },
+      {
+        "q": "What Braden score indicates high risk for pressure ulcers?",
+        "options": [
+          "≤23",
+          "≤18",
+          "≤15",
+          "≤12"
+        ],
+        "correct": "≤18",
+        "explanation": "Braden score ≤18 indicates risk, ≤12 is high risk."
+      },
+      {
+        "q": "How often should repositioning occur for high-risk patients?",
+        "options": [
+          "Every hour",
+          "Every 2 hours",
+          "Every 4 hours",
+          "Every 6 hours"
+        ],
+        "correct": "Every 2 hours",
+        "explanation": "Q2H repositioning is standard for pressure ulcer prevention."
+      }
+    ],
+    "flashcards": [
+      { "front": "Stage 2 ulcer", "back": "Partial thickness loss of dermis, shallow open ulcer" },
+      { "front": "Unstageable ulcer", "back": "Full thickness loss with base covered by slough/eschar" }
+    ]
+  },
+  {
+    "topic": "Nutrition in Elderly",
+    "mcqs": [
+      {
+        "q": "Which screening tool is validated for malnutrition in elderly?",
+        "options": [
+          "MNA (Mini Nutritional Assessment)",
+          "MUST score",
+          "SGA",
+          "NRS-2002"
+        ],
+        "correct": "MNA (Mini Nutritional Assessment)",
+        "explanation": "MNA is specifically designed and validated for elderly patients."
+      },
+      {
+        "q": "What BMI range is associated with lowest mortality in elderly?",
+        "options": [
+          "18.5-22",
+          "22-25",
+          "25-27",
+          "27-30"
+        ],
+        "correct": "25-27",
+        "explanation": "BMI 25-27 ('overweight') has lowest mortality in elderly - obesity paradox."
+      },
+      {
+        "q": "What percentage weight loss in 6 months indicates severe malnutrition?",
+        "options": [
+          ">5%",
+          ">7.5%",
+          ">10%",
+          ">15%"
+        ],
+        "correct": ">10%",
+        "explanation": ">10% weight loss in 6 months or >5% in 1 month indicates severe malnutrition."
+      }
+    ],
+    "flashcards": [
+      { "front": "Protein requirements elderly", "back": "1.0-1.2 g/kg/day (higher than younger adults)" },
+      { "front": "Sarcopenia definition", "back": "Loss of muscle mass + strength or performance" }
+    ]
+  },
+  {
+    "topic": "Urinary Incontinence",
+    "mcqs": [
+      {
+        "q": "What is the most common type of incontinence in elderly women?",
+        "options": [
+          "Stress incontinence",
+          "Urge incontinence",
+          "Mixed incontinence",
+          "Overflow incontinence"
+        ],
+        "correct": "Mixed incontinence",
+        "explanation": "Mixed (stress + urge) is most common in elderly women."
+      },
+      {
+        "q": "Which medication is first-line for urge incontinence?",
+        "options": [
+          "Oxybutynin",
+          "Tolterodine",
+          "Mirabegron",
+          "Solifenacin"
+        ],
+        "correct": "Mirabegron",
+        "explanation": "Mirabegron (β3-agonist) has fewer anticholinergic effects, preferred in elderly."
+      },
+      {
+        "q": "What post-void residual volume suggests overflow incontinence?",
+        "options": [
+          ">50 mL",
+          ">100 mL",
+          ">200 mL",
+          ">400 mL"
+        ],
+        "correct": ">200 mL",
+        "explanation": "PVR >200 mL suggests incomplete emptying and overflow risk."
+      }
+    ],
+    "flashcards": [
+      { "front": "DIAPPERS mnemonic", "back": "Delirium, Infection, Atrophic vaginitis, Pharma, Psych, Excess output, Restricted mobility, Stool impaction" },
+      { "front": "Bladder diary", "back": "3-day record of voiding times, volumes, and incontinence episodes" }
+    ]
+  }
+]
