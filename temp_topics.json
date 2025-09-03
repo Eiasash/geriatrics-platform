@@ -1,0 +1,1094 @@
+<!DOCTYPE html>
+<html lang="he" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shaare Zedek Geriatrics - Ultimate Platform</title>
+    
+    <!-- Vue 3 -->
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Heebo:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        [v-cloak] { display: none; }
+        
+        .rtl { direction: rtl; text-align: right; }
+        .ltr { direction: ltr; text-align: left; }
+        .hebrew-font { font-family: 'Heebo', -apple-system, 'Segoe UI', sans-serif; }
+        .english-font { font-family: 'Inter', -apple-system, 'Segoe UI', sans-serif; }
+        
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 50;
+            padding: 1rem;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 1rem;
+            padding: 2rem;
+            max-width: 900px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb { background: #888; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #555; }
+        
+        .fade-enter-active, .fade-leave-active { transition: opacity 0.3s ease; }
+        .fade-enter-from, .fade-leave-to { opacity: 0; }
+        
+        .slide-enter-active, .slide-leave-active { transition: transform 0.3s ease; }
+        .slide-enter-from { transform: translateY(-20px); }
+        .slide-leave-to { transform: translateY(20px); }
+        
+        @media print {
+            body * { visibility: hidden; }
+            .print-content, .print-content * { visibility: visible; }
+            .print-content { position: absolute; left: 0; top: 0; }
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen">
+    <div id="app" v-cloak :class="[isHebrew ? 'hebrew-font rtl' : 'english-font ltr']">
+        <div class="container mx-auto px-4 py-6 max-w-7xl">
+            
+            <!-- Enhanced Header -->
+            <header class="bg-white rounded-2xl shadow-xl p-6 mb-6">
+                <div class="flex justify-between items-start" :class="isHebrew ? 'flex-row-reverse' : ''">
+                    <div :class="isHebrew ? 'text-right' : 'text-left'">
+                        <h1 class="text-3xl font-bold text-gray-800 mb-2">
+                            🏥 {{ t('title') }}
+                        </h1>
+                        <p class="text-gray-600">{{ t('subtitle') }}</p>
+                    </div>
+                    <div class="flex flex-col items-end gap-2" :class="isHebrew ? 'items-start' : 'items-end'">
+                        <div class="flex gap-2">
+                            <button @click="toggleLanguage" 
+                                    class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700">
+                                {{ isHebrew ? 'English' : 'עברית' }}
+                            </button>
+                        </div>
+                        <p class="text-sm text-gray-500">{{ currentDateTime }}</p>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Navigation -->
+            <div class="bg-white rounded-xl shadow-lg p-2 mb-6 flex flex-wrap gap-2" :class="isHebrew ? 'flex-row-reverse' : ''">
+                <button v-for="tab in tabs" :key="tab.id"
+                        @click="activeTab = tab.id"
+                        :class="[
+                            'px-3 py-2 rounded-lg font-medium transition-all text-sm',
+                            activeTab === tab.id 
+                                ? 'bg-indigo-600 text-white shadow-md transform scale-105' 
+                                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                        ]">
+                    {{ tab.icon }} {{ tab.name }}
+                </button>
+            </div>
+
+            <!-- Main Content -->
+            <transition name="fade" mode="out-in">
+                <div class="bg-white rounded-2xl shadow-xl p-6">
+                    
+                    <!-- Calculators Tab -->
+                    <div v-if="activeTab === 'calculators'" key="calculators">
+                        <h2 class="text-2xl font-bold mb-6 text-gray-800">{{ t('clinicalCalculators') }}</h2>
+                        
+                        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+                            <button v-for="calc in allCalculators" :key="calc.id"
+                                    @click="openCalculator(calc)"
+                                    :class="[
+                                        'p-4 rounded-lg text-white font-medium hover:shadow-lg transform hover:scale-105 transition-all',
+                                        calc.category === 'cognitive' ? 'bg-gradient-to-r from-purple-500 to-pink-500' :
+                                        calc.category === 'cardiac' ? 'bg-gradient-to-r from-red-500 to-orange-500' :
+                                        calc.category === 'functional' ? 'bg-gradient-to-r from-green-500 to-teal-500' :
+                                        calc.category === 'fall' ? 'bg-gradient-to-r from-yellow-500 to-amber-500' :
+                                        calc.category === 'bleeding' ? 'bg-gradient-to-r from-rose-500 to-red-500' :
+                                        calc.category === 'renal' ? 'bg-gradient-to-r from-blue-500 to-cyan-500' :
+                                        calc.category === 'nutrition' ? 'bg-gradient-to-r from-emerald-500 to-green-500' :
+                                        'bg-gradient-to-r from-indigo-500 to-purple-600'
+                                    ]">
+                                <div class="text-lg font-bold">{{ calc.name }}</div>
+                                <div class="text-xs opacity-90 mt-1">{{ calc.description }}</div>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Guidelines Tab -->
+                    <div v-else-if="activeTab === 'guidelines'" key="guidelines">
+                        <h2 class="text-2xl font-bold mb-6 text-gray-800">{{ t('clinicalGuidelines') }}</h2>
+                        
+                        <div class="mb-4">
+                            <input v-model="guidelineSearch" 
+                                   type="text" 
+                                   :placeholder="t('searchGuidelines')"
+                                   class="px-4 py-2 border-2 border-gray-200 rounded-lg w-full">
+                        </div>
+                        
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div v-for="guideline in filteredGuidelines" :key="guideline.id"
+                                 @click="openGuideline(guideline)"
+                                 class="p-4 border-2 border-gray-200 rounded-lg hover:border-indigo-500 cursor-pointer">
+                                <div class="flex justify-between items-start">
+                                    <h3 class="font-semibold text-lg">{{ guideline.title }}</h3>
+                                    <span class="px-2 py-1 bg-indigo-100 text-indigo-700 text-xs rounded">
+                                        {{ guideline.year }}
+                                    </span>
+                                </div>
+                                <p class="text-sm text-gray-600 mt-1">{{ guideline.source }}</p>
+                                <div class="mt-2 flex flex-wrap gap-1">
+                                    <span v-for="tag in guideline.tags" :key="tag"
+                                          class="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded">
+                                        {{ tag }}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Medications Tab -->
+                    <div v-else-if="activeTab === 'medications'" key="medications">
+                        <h2 class="text-2xl font-bold mb-6 text-gray-800">{{ t('medicationDatabase') }}</h2>
+                        
+                        <div class="mb-6 grid md:grid-cols-3 gap-4">
+                            <input v-model="medSearch" 
+                                   type="text" 
+                                   :placeholder="t('searchMedications')"
+                                   class="px-4 py-2 border-2 border-gray-200 rounded-lg">
+                            <select v-model="medCategory" 
+                                    class="px-4 py-2 border-2 border-gray-200 rounded-lg">
+                                <option value="">{{ t('allCategories') }}</option>
+                                <option value="cardiovascular">Cardiovascular</option>
+                                <option value="neurological">Neurological</option>
+                                <option value="psychiatric">Psychiatric</option>
+                                <option value="anticoagulant">Anticoagulant</option>
+                                <option value="diabetes">Diabetes</option>
+                                <option value="pain">Pain Management</option>
+                                <option value="gi">Gastrointestinal</option>
+                            </select>
+                            <button @click="checkDrugInteraction" 
+                                    class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700">
+                                {{ t('checkInteractions') }}
+                            </button>
+                        </div>
+                        
+                        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            <div v-for="med in filteredMedications" :key="med.id"
+                                 class="p-4 border-2 border-gray-200 rounded-lg hover:border-indigo-500">
+                                <h3 class="font-semibold">{{ med.name }}</h3>
+                                <p class="text-sm text-gray-600">{{ med.generic }}</p>
+                                <div class="mt-2 space-y-1">
+                                    <p class="text-xs text-gray-500">{{ med.dosing }}</p>
+                                    <div class="flex gap-2">
+                                        <span class="px-2 py-1 bg-indigo-100 text-indigo-700 text-xs rounded">
+                                            {{ med.category }}
+                                        </span>
+                                        <span v-if="med.beers" class="px-2 py-1 bg-red-100 text-red-700 text-xs rounded">
+                                            Beers
+                                        </span>
+                                        <span v-if="med.salCovered" class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded">
+                                            Sal ✓
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </transition>
+
+            <!-- Calculator Modal -->
+            <transition name="fade">
+                <div v-if="calculatorModal.show" class="modal-overlay" @click.self="closeCalculator">
+                    <div class="modal-content">
+                        <div class="flex justify-between items-center mb-4">
+                            <h2 class="text-2xl font-bold">{{ calculatorModal.title }}</h2>
+                            <button @click="closeCalculator" class="text-gray-500 hover:text-gray-700 text-3xl">×</button>
+                        </div>
+                        
+                        <!-- MoCA Calculator -->
+                        <div v-if="calculatorModal.type === 'moca'">
+                            <p class="mb-4 text-gray-600">Montreal Cognitive Assessment - Total possible: 30 points</p>
+                            <div class="space-y-3">
+                                <div v-for="item in mocaItems" :key="item.id" class="p-3 bg-gray-50 rounded">
+                                    <div class="flex justify-between items-center">
+                                        <span class="font-medium">{{ item.name }}</span>
+                                        <div class="flex items-center gap-2">
+                                            <button @click="decrementScore(item)" 
+                                                    class="px-2 py-1 bg-red-500 text-white rounded">-</button>
+                                            <span class="px-3 py-1 bg-white border rounded">{{ item.score }}/{{ item.max }}</span>
+                                            <button @click="incrementScore(item)" 
+                                                    class="px-2 py-1 bg-green-500 text-white rounded">+</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mt-6 p-4 bg-indigo-50 rounded">
+                                <p class="text-2xl font-bold">Total Score: {{ mocaTotal }}/30</p>
+                                <p class="mt-2">
+                                    <span class="font-semibold">Interpretation:</span>
+                                    {{ mocaTotal >= 26 ? 'Normal cognition' : 
+                                       mocaTotal >= 18 ? 'Mild cognitive impairment' : 
+                                       mocaTotal >= 10 ? 'Moderate cognitive impairment' :
+                                       'Severe cognitive impairment' }}
+                                </p>
+                                <p class="text-sm text-gray-600 mt-2">
+                                    Note: Add 1 point if ≤12 years of education. Score <26 suggests cognitive impairment.
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <!-- MMSE Calculator -->
+                        <div v-if="calculatorModal.type === 'mmse'">
+                            <p class="mb-4 text-gray-600">Mini-Mental State Examination - Total possible: 30 points</p>
+                            <div class="space-y-3">
+                                <div v-for="item in mmseItems" :key="item.id" class="p-3 bg-gray-50 rounded">
+                                    <div class="flex justify-between items-center">
+                                        <div>
+                                            <span class="font-medium">{{ item.name }}</span>
+                                            <p class="text-xs text-gray-500">{{ item.description }}</p>
+                                        </div>
+                                        <div class="flex items-center gap-2">
+                                            <button @click="decrementScore(item)" 
+                                                    class="px-2 py-1 bg-red-500 text-white rounded">-</button>
+                                            <span class="px-3 py-1 bg-white border rounded">{{ item.score }}/{{ item.max }}</span>
+                                            <button @click="incrementScore(item)" 
+                                                    class="px-2 py-1 bg-green-500 text-white rounded">+</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mt-6 p-4 bg-indigo-50 rounded">
+                                <p class="text-2xl font-bold">Total Score: {{ mmseTotal }}/30</p>
+                                <p class="mt-2">
+                                    <span class="font-semibold">Interpretation:</span>
+                                    {{ mmseTotal >= 24 ? 'Normal cognition' : 
+                                       mmseTotal >= 19 ? 'Mild cognitive impairment' : 
+                                       mmseTotal >= 10 ? 'Moderate cognitive impairment' :
+                                       'Severe cognitive impairment' }}
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <!-- CHA2DS2-VASc Calculator -->
+                        <div v-if="calculatorModal.type === 'cha2ds2'">
+                            <p class="mb-4 text-gray-600">Stroke Risk Assessment in Atrial Fibrillation</p>
+                            <div class="space-y-2">
+                                <label v-for="item in cha2ds2Items" :key="item.id" 
+                                       class="flex items-center p-3 bg-gray-50 rounded cursor-pointer hover:bg-gray-100">
+                                    <input v-model="item.checked" type="checkbox" class="mr-3">
+                                    <span class="flex-grow">{{ item.name }}</span>
+                                    <span class="text-sm text-gray-500">{{ item.points }} point{{ item.points > 1 ? 's' : '' }}</span>
+                                </label>
+                            </div>
+                            <div class="mt-6 p-4 bg-indigo-50 rounded">
+                                <p class="text-2xl font-bold">CHA₂DS₂-VASc Score: {{ cha2ds2Total }}</p>
+                                <p class="mt-2">
+                                    <span class="font-semibold">Annual Stroke Risk:</span> {{ getStrokeRisk(cha2ds2Total) }}%
+                                </p>
+                                <p class="mt-2">
+                                    <span class="font-semibold">Recommendation:</span>
+                                    {{ cha2ds2Total === 0 ? 'No anticoagulation needed' :
+                                       cha2ds2Total === 1 ? 'Consider anticoagulation' :
+                                       'Anticoagulation recommended' }}
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <!-- HAS-BLED Calculator -->
+                        <div v-if="calculatorModal.type === 'hasbled'">
+                            <p class="mb-4 text-gray-600">Bleeding Risk Assessment for Anticoagulation</p>
+                            <div class="space-y-2">
+                                <label v-for="item in hasbledItems" :key="item.id" 
+                                       class="flex items-center p-3 bg-gray-50 rounded cursor-pointer hover:bg-gray-100">
+                                    <input v-model="item.checked" type="checkbox" class="mr-3">
+                                    <span class="flex-grow">
+                                        <span class="font-medium">{{ item.name }}</span>
+                                        <span class="text-xs text-gray-500 block">{{ item.description }}</span>
+                                    </span>
+                                    <span class="text-sm text-gray-500">1 point</span>
+                                </label>
+                            </div>
+                            <div class="mt-6 p-4 bg-indigo-50 rounded">
+                                <p class="text-2xl font-bold">HAS-BLED Score: {{ hasbledTotal }}</p>
+                                <p class="mt-2">
+                                    <span class="font-semibold">Annual Major Bleeding Risk:</span>
+                                    {{ hasbledTotal <= 1 ? '1.0-1.5%' :
+                                       hasbledTotal === 2 ? '1.9%' :
+                                       hasbledTotal === 3 ? '3.7%' :
+                                       hasbledTotal === 4 ? '8.7%' :
+                                       '>12%' }}
+                                </p>
+                                <p class="mt-2 text-sm">
+                                    Score ≥3 indicates high bleeding risk - use caution with anticoagulation
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <!-- FRAIL Scale -->
+                        <div v-if="calculatorModal.type === 'frail'">
+                            <p class="mb-4 text-gray-600">FRAIL Scale - Frailty Screening Tool</p>
+                            <div class="space-y-2">
+                                <label v-for="item in frailItems" :key="item.id" 
+                                       class="flex items-center p-3 bg-gray-50 rounded cursor-pointer hover:bg-gray-100">
+                                    <input v-model="item.checked" type="checkbox" class="mr-3">
+                                    <span class="flex-grow">{{ item.name }}</span>
+                                </label>
+                            </div>
+                            <div class="mt-6 p-4 bg-indigo-50 rounded">
+                                <p class="text-2xl font-bold">FRAIL Score: {{ frailTotal }}/5</p>
+                                <p class="mt-2">
+                                    <span class="font-semibold">Frailty Status:</span>
+                                    {{ frailTotal === 0 ? 'Robust' :
+                                       frailTotal <= 2 ? 'Pre-frail' :
+                                       'Frail' }}
+                                </p>
+                                <p class="text-sm text-gray-600 mt-2">
+                                    {{ frailTotal >= 3 ? 'Consider comprehensive geriatric assessment' : 
+                                       frailTotal >= 1 ? 'Monitor for progression, consider preventive interventions' :
+                                       'Continue routine care' }}
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <!-- Clinical Frailty Scale -->
+                        <div v-if="calculatorModal.type === 'cfs'">
+                            <p class="mb-4 text-gray-600">Clinical Frailty Scale (Rockwood)</p>
+                            <div class="space-y-2">
+                                <label v-for="level in cfsLevels" :key="level.score" 
+                                       class="flex items-start p-3 bg-gray-50 rounded cursor-pointer hover:bg-gray-100">
+                                    <input v-model="cfsScore" :value="level.score" type="radio" class="mr-3 mt-1">
+                                    <div>
+                                        <span class="font-medium">{{ level.score }}. {{ level.title }}</span>
+                                        <p class="text-sm text-gray-600">{{ level.description }}</p>
+                                    </div>
+                                </label>
+                            </div>
+                            <div class="mt-6 p-4 bg-indigo-50 rounded">
+                                <p class="text-2xl font-bold">CFS Score: {{ cfsScore }}</p>
+                                <p class="mt-2">
+                                    <span class="font-semibold">Category:</span>
+                                    {{ cfsScore <= 3 ? 'Not Frail' :
+                                       cfsScore <= 4 ? 'Vulnerable' :
+                                       cfsScore <= 6 ? 'Mildly to Moderately Frail' :
+                                       cfsScore <= 8 ? 'Severely Frail' :
+                                       'Terminally Ill' }}
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <!-- Morse Fall Scale -->
+                        <div v-if="calculatorModal.type === 'morse'">
+                            <p class="mb-4 text-gray-600">Morse Fall Scale - Fall Risk Assessment</p>
+                            <div class="space-y-3">
+                                <div v-for="item in morseItems" :key="item.id" class="p-3 bg-gray-50 rounded">
+                                    <p class="font-medium mb-2">{{ item.name }}</p>
+                                    <select v-model="item.score" class="w-full px-3 py-2 border rounded">
+                                        <option v-for="option in item.options" :key="option.value" :value="option.value">
+                                            {{ option.label }} ({{ option.value }} points)
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="mt-6 p-4 bg-indigo-50 rounded">
+                                <p class="text-2xl font-bold">Morse Fall Score: {{ morseTotal }}</p>
+                                <p class="mt-2">
+                                    <span class="font-semibold">Fall Risk:</span>
+                                    <span :class="[
+                                        'px-2 py-1 rounded text-white',
+                                        morseTotal < 25 ? 'bg-green-500' :
+                                        morseTotal < 45 ? 'bg-yellow-500' :
+                                        'bg-red-500'
+                                    ]">
+                                        {{ morseTotal < 25 ? 'Low Risk' :
+                                           morseTotal < 45 ? 'Medium Risk' :
+                                           'High Risk' }}
+                                    </span>
+                                </p>
+                                <p class="text-sm text-gray-600 mt-2">
+                                    {{ morseTotal < 25 ? 'Continue basic fall prevention' :
+                                       morseTotal < 45 ? 'Implement standard fall prevention interventions' :
+                                       'Implement high-risk fall prevention protocol' }}
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <!-- Katz ADL -->
+                        <div v-if="calculatorModal.type === 'katz'">
+                            <p class="mb-4 text-gray-600">Katz Index of Independence in Activities of Daily Living</p>
+                            <div class="space-y-2">
+                                <label v-for="item in katzItems" :key="item.id" 
+                                       class="flex items-center p-3 bg-gray-50 rounded cursor-pointer hover:bg-gray-100">
+                                    <input v-model="item.independent" type="checkbox" class="mr-3">
+                                    <span class="flex-grow">{{ item.name }}</span>
+                                    <span class="text-sm text-gray-500">{{ item.independent ? 'Independent' : 'Dependent' }}</span>
+                                </label>
+                            </div>
+                            <div class="mt-6 p-4 bg-indigo-50 rounded">
+                                <p class="text-2xl font-bold">Katz ADL Score: {{ katzTotal }}/6</p>
+                                <p class="mt-2">
+                                    <span class="font-semibold">Functional Status:</span>
+                                    {{ katzTotal === 6 ? 'Fully Independent' :
+                                       katzTotal >= 4 ? 'Moderately Independent' :
+                                       katzTotal >= 2 ? 'Severely Dependent' :
+                                       'Very Severely Dependent' }}
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <!-- eGFR Calculator -->
+                        <div v-if="calculatorModal.type === 'egfr'">
+                            <p class="mb-4 text-gray-600">Estimated Glomerular Filtration Rate (CKD-EPI 2021)</p>
+                            <div class="space-y-3">
+                                <div>
+                                    <label class="block text-sm font-medium mb-1">Serum Creatinine (mg/dL)</label>
+                                    <input v-model.number="egfrData.creatinine" type="number" step="0.1" 
+                                           class="w-full px-3 py-2 border rounded">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium mb-1">Age (years)</label>
+                                    <input v-model.number="egfrData.age" type="number" 
+                                           class="w-full px-3 py-2 border rounded">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium mb-1">Sex</label>
+                                    <select v-model="egfrData.sex" class="w-full px-3 py-2 border rounded">
+                                        <option value="male">Male</option>
+                                        <option value="female">Female</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium mb-1">Race</label>
+                                    <select v-model="egfrData.race" class="w-full px-3 py-2 border rounded">
+                                        <option value="other">Non-Black</option>
+                                        <option value="black">Black</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="mt-6 p-4 bg-indigo-50 rounded">
+                                <p class="text-2xl font-bold">eGFR: {{ calculateEGFR() }} mL/min/1.73m²</p>
+                                <p class="mt-2">
+                                    <span class="font-semibold">CKD Stage:</span> {{ getCKDStage(calculateEGFR()) }}
+                                </p>
+                                <div class="mt-3 text-sm">
+                                    <p class="font-semibold">Medication Adjustments:</p>
+                                    <ul class="list-disc list-inside text-gray-600">
+                                        <li v-if="calculateEGFR() < 30">Avoid NSAIDs, Metformin</li>
+                                        <li v-if="calculateEGFR() < 50">Adjust dosing for renally-cleared medications</li>
+                                        <li v-if="calculateEGFR() < 60">Monitor potassium with ACE-I/ARBs</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- GDS-15 Depression Scale -->
+                        <div v-if="calculatorModal.type === 'gds'">
+                            <p class="mb-4 text-gray-600">Geriatric Depression Scale (15-item)</p>
+                            <div class="space-y-2">
+                                <div v-for="item in gdsItems" :key="item.id" class="p-3 bg-gray-50 rounded">
+                                    <p class="mb-2">{{ item.question }}</p>
+                                    <div class="flex gap-4">
+                                        <label class="flex items-center">
+                                            <input v-model="item.answer" value="yes" type="radio" class="mr-2">
+                                            Yes
+                                        </label>
+                                        <label class="flex items-center">
+                                            <input v-model="item.answer" value="no" type="radio" class="mr-2">
+                                            No
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mt-6 p-4 bg-indigo-50 rounded">
+                                <p class="text-2xl font-bold">GDS-15 Score: {{ gdsTotal }}/15</p>
+                                <p class="mt-2">
+                                    <span class="font-semibold">Depression Assessment:</span>
+                                    {{ gdsTotal <= 4 ? 'Normal' :
+                                       gdsTotal <= 8 ? 'Mild Depression' :
+                                       gdsTotal <= 11 ? 'Moderate Depression' :
+                                       'Severe Depression' }}
+                                </p>
+                                <p class="text-sm text-gray-600 mt-2">
+                                    {{ gdsTotal > 4 ? 'Consider further evaluation and treatment' : 'No depression indicated' }}
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <!-- Timed Up and Go -->
+                        <div v-if="calculatorModal.type === 'tug'">
+                            <p class="mb-4 text-gray-600">Timed Up and Go Test - Mobility Assessment</p>
+                            <div class="space-y-3">
+                                <div>
+                                    <label class="block text-sm font-medium mb-1">Time to complete (seconds)</label>
+                                    <input v-model.number="tugTime" type="number" step="0.1" 
+                                           class="w-full px-3 py-2 border rounded">
+                                </div>
+                                <div>
+                                    <label class="flex items-center">
+                                        <input v-model="tugAssistiveDevice" type="checkbox" class="mr-2">
+                                        Uses assistive device
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="mt-6 p-4 bg-indigo-50 rounded">
+                                <p class="text-2xl font-bold">TUG Time: {{ tugTime }} seconds</p>
+                                <p class="mt-2">
+                                    <span class="font-semibold">Fall Risk:</span>
+                                    <span :class="[
+                                        'px-2 py-1 rounded text-white',
+                                        tugTime < 10 ? 'bg-green-500' :
+                                        tugTime < 14 ? 'bg-yellow-500' :
+                                        tugTime < 20 ? 'bg-orange-500' :
+                                        'bg-red-500'
+                                    ]">
+                                        {{ tugTime < 10 ? 'Normal - Low Risk' :
+                                           tugTime < 14 ? 'Normal for Frail Elderly' :
+                                           tugTime < 20 ? 'Increased Fall Risk' :
+                                           'High Fall Risk' }}
+                                    </span>
+                                </p>
+                                <p class="text-sm text-gray-600 mt-2">
+                                    {{ tugTime >= 14 ? 'Recommend PT evaluation and fall prevention interventions' : 
+                                       'Continue routine mobility monitoring' }}
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <button @click="closeCalculator" 
+                                class="mt-6 w-full px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700">
+                            Close Calculator
+                        </button>
+                    </div>
+                </div>
+            </transition>
+        </div>
+    </div>
+
+    <script>
+        const { createApp, ref, computed, onMounted } = Vue;
+
+        createApp({
+            setup() {
+                // Language
+                const isHebrew = ref(false);
+                const currentDateTime = ref('');
+                
+                // Translations
+                const translations = {
+                    en: {
+                        title: 'Shaare Zedek Geriatrics Platform',
+                        subtitle: 'Comprehensive Clinical Tools & Guidelines',
+                        clinicalCalculators: 'Clinical Calculators',
+                        clinicalGuidelines: 'Clinical Guidelines',
+                        medicationDatabase: 'Medication Database',
+                        searchGuidelines: 'Search guidelines...',
+                        searchMedications: 'Search medications...',
+                        allCategories: 'All Categories',
+                        checkInteractions: 'Check Interactions'
+                    },
+                    he: {
+                        title: 'פלטפורמת גריאטריה שערי צדק',
+                        subtitle: 'כלים קליניים והנחיות מקיפות',
+                        clinicalCalculators: 'מחשבונים קליניים',
+                        clinicalGuidelines: 'הנחיות קליניות',
+                        medicationDatabase: 'מאגר תרופות',
+                        searchGuidelines: 'חיפוש הנחיות...',
+                        searchMedications: 'חיפוש תרופות...',
+                        allCategories: 'כל הקטגוריות',
+                        checkInteractions: 'בדוק אינטראקציות'
+                    }
+                };
+                
+                const t = (key) => translations[isHebrew.value ? 'he' : 'en'][key] || key;
+                
+                // Navigation
+                const activeTab = ref('calculators');
+                const tabs = computed(() => [
+                    { id: 'calculators', name: t('clinicalCalculators'), icon: '🧮' },
+                    { id: 'guidelines', name: t('clinicalGuidelines'), icon: '📋' },
+                    { id: 'medications', name: t('medicationDatabase'), icon: '💊' }
+                ]);
+                
+                // All Calculators
+                const allCalculators = ref([
+                    { id: 'moca', name: 'MoCA', description: 'Montreal Cognitive Assessment', category: 'cognitive' },
+                    { id: 'mmse', name: 'MMSE', description: 'Mini-Mental State Exam', category: 'cognitive' },
+                    { id: 'cha2ds2', name: 'CHA₂DS₂-VASc', description: 'Stroke Risk in AFib', category: 'cardiac' },
+                    { id: 'hasbled', name: 'HAS-BLED', description: 'Bleeding Risk', category: 'bleeding' },
+                    { id: 'frail', name: 'FRAIL Scale', description: 'Frailty Screening', category: 'functional' },
+                    { id: 'cfs', name: 'Clinical Frailty', description: 'Rockwood Scale', category: 'functional' },
+                    { id: 'morse', name: 'Morse Fall', description: 'Fall Risk Assessment', category: 'fall' },
+                    { id: 'katz', name: 'Katz ADL', description: 'Daily Living Activities', category: 'functional' },
+                    { id: 'egfr', name: 'eGFR', description: 'Kidney Function', category: 'renal' },
+                    { id: 'gds', name: 'GDS-15', description: 'Depression Scale', category: 'cognitive' },
+                    { id: 'tug', name: 'TUG Test', description: 'Timed Up & Go', category: 'fall' }
+                ]);
+                
+                // Calculator Modal
+                const calculatorModal = ref({ show: false, type: '', title: '' });
+                
+                // MoCA Items
+                const mocaItems = ref([
+                    { id: 1, name: 'Visuospatial/Executive', score: 0, max: 5 },
+                    { id: 2, name: 'Naming', score: 0, max: 3 },
+                    { id: 3, name: 'Memory (No points)', score: 0, max: 0 },
+                    { id: 4, name: 'Attention', score: 0, max: 6 },
+                    { id: 5, name: 'Language', score: 0, max: 3 },
+                    { id: 6, name: 'Abstraction', score: 0, max: 2 },
+                    { id: 7, name: 'Delayed Recall', score: 0, max: 5 },
+                    { id: 8, name: 'Orientation', score: 0, max: 6 }
+                ]);
+                
+                const mocaTotal = computed(() => mocaItems.value.reduce((sum, item) => sum + item.score, 0));
+                
+                // MMSE Items
+                const mmseItems = ref([
+                    { id: 1, name: 'Orientation to Time', description: 'Year, season, date, day, month', score: 0, max: 5 },
+                    { id: 2, name: 'Orientation to Place', description: 'State, county, town, hospital, floor', score: 0, max: 5 },
+                    { id: 3, name: 'Registration', description: 'Name 3 objects', score: 0, max: 3 },
+                    { id: 4, name: 'Attention & Calculation', description: 'Serial 7s or WORLD backwards', score: 0, max: 5 },
+                    { id: 5, name: 'Recall', description: 'Recall 3 objects', score: 0, max: 3 },
+                    { id: 6, name: 'Language', description: 'Naming, repetition, 3-stage command, reading, writing', score: 0, max: 8 },
+                    { id: 7, name: 'Visual Construction', description: 'Copy intersecting pentagons', score: 0, max: 1 }
+                ]);
+                
+                const mmseTotal = computed(() => mmseItems.value.reduce((sum, item) => sum + item.score, 0));
+                
+                // CHA2DS2-VASc Items
+                const cha2ds2Items = ref([
+                    { id: 1, name: 'Congestive Heart Failure', points: 1, checked: false },
+                    { id: 2, name: 'Hypertension', points: 1, checked: false },
+                    { id: 3, name: 'Age ≥75 years', points: 2, checked: false },
+                    { id: 4, name: 'Diabetes Mellitus', points: 1, checked: false },
+                    { id: 5, name: 'Stroke/TIA/Thromboembolism', points: 2, checked: false },
+                    { id: 6, name: 'Vascular Disease', points: 1, checked: false },
+                    { id: 7, name: 'Age 65-74 years', points: 1, checked: false },
+                    { id: 8, name: 'Female Sex', points: 1, checked: false }
+                ]);
+                
+                const cha2ds2Total = computed(() => 
+                    cha2ds2Items.value.reduce((sum, item) => sum + (item.checked ? item.points : 0), 0)
+                );
+                
+                // HAS-BLED Items
+                const hasbledItems = ref([
+                    { id: 1, name: 'Hypertension', description: 'SBP >160 mmHg', checked: false },
+                    { id: 2, name: 'Abnormal renal/liver function', description: '1 point each, max 2', checked: false },
+                    { id: 3, name: 'Stroke', description: 'Previous stroke', checked: false },
+                    { id: 4, name: 'Bleeding', description: 'Previous bleeding or predisposition', checked: false },
+                    { id: 5, name: 'Labile INR', description: 'TTR <60%', checked: false },
+                    { id: 6, name: 'Elderly', description: 'Age >65', checked: false },
+                    { id: 7, name: 'Drugs/Alcohol', description: '1 point each, max 2', checked: false }
+                ]);
+                
+                const hasbledTotal = computed(() => 
+                    hasbledItems.value.filter(item => item.checked).length
+                );
+                
+                // FRAIL Items
+                const frailItems = ref([
+                    { id: 1, name: 'Fatigue - Are you fatigued?', checked: false },
+                    { id: 2, name: 'Resistance - Cannot walk up 1 flight of stairs?', checked: false },
+                    { id: 3, name: 'Ambulation - Cannot walk 1 block?', checked: false },
+                    { id: 4, name: 'Illnesses - Do you have more than 5 illnesses?', checked: false },
+                    { id: 5, name: 'Loss of weight - Lost more than 5% in 6 months?', checked: false }
+                ]);
+                
+                const frailTotal = computed(() => 
+                    frailItems.value.filter(item => item.checked).length
+                );
+                
+                // Clinical Frailty Scale
+                const cfsScore = ref(1);
+                const cfsLevels = [
+                    { score: 1, title: 'Very Fit', description: 'Robust, active, energetic, motivated' },
+                    { score: 2, title: 'Well', description: 'No active disease, less fit than category 1' },
+                    { score: 3, title: 'Managing Well', description: 'Medical problems well controlled' },
+                    { score: 4, title: 'Vulnerable', description: 'Not dependent but symptoms limit activities' },
+                    { score: 5, title: 'Mildly Frail', description: 'Need help with IADLs' },
+                    { score: 6, title: 'Moderately Frail', description: 'Need help with all outside activities and housekeeping' },
+                    { score: 7, title: 'Severely Frail', description: 'Completely dependent for personal care' },
+                    { score: 8, title: 'Very Severely Frail', description: 'Approaching end of life' },
+                    { score: 9, title: 'Terminally Ill', description: 'Life expectancy <6 months' }
+                ];
+                
+                // Morse Fall Scale
+                const morseItems = ref([
+                    { 
+                        id: 1, 
+                        name: 'History of falling', 
+                        score: 0,
+                        options: [
+                            { label: 'No', value: 0 },
+                            { label: 'Yes', value: 25 }
+                        ]
+                    },
+                    { 
+                        id: 2, 
+                        name: 'Secondary diagnosis', 
+                        score: 0,
+                        options: [
+                            { label: 'No', value: 0 },
+                            { label: 'Yes', value: 15 }
+                        ]
+                    },
+                    { 
+                        id: 3, 
+                        name: 'Ambulatory aid', 
+                        score: 0,
+                        options: [
+                            { label: 'None/Bed rest/Nurse assist', value: 0 },
+                            { label: 'Crutches/Cane/Walker', value: 15 },
+                            { label: 'Furniture', value: 30 }
+                        ]
+                    },
+                    { 
+                        id: 4, 
+                        name: 'IV/Heparin Lock', 
+                        score: 0,
+                        options: [
+                            { label: 'No', value: 0 },
+                            { label: 'Yes', value: 20 }
+                        ]
+                    },
+                    { 
+                        id: 5, 
+                        name: 'Gait/Transferring', 
+                        score: 0,
+                        options: [
+                            { label: 'Normal/Bed rest/Immobile', value: 0 },
+                            { label: 'Weak', value: 10 },
+                            { label: 'Impaired', value: 20 }
+                        ]
+                    },
+                    { 
+                        id: 6, 
+                        name: 'Mental status', 
+                        score: 0,
+                        options: [
+                            { label: 'Oriented to own ability', value: 0 },
+                            { label: 'Forgets limitations', value: 15 }
+                        ]
+                    }
+                ]);
+                
+                const morseTotal = computed(() => 
+                    morseItems.value.reduce((sum, item) => sum + item.score, 0)
+                );
+                
+                // Katz ADL
+                const katzItems = ref([
+                    { id: 1, name: 'Bathing', independent: false },
+                    { id: 2, name: 'Dressing', independent: false },
+                    { id: 3, name: 'Toileting', independent: false },
+                    { id: 4, name: 'Transferring', independent: false },
+                    { id: 5, name: 'Continence', independent: false },
+                    { id: 6, name: 'Feeding', independent: false }
+                ]);
+                
+                const katzTotal = computed(() => 
+                    katzItems.value.filter(item => item.independent).length
+                );
+                
+                // eGFR Data
+                const egfrData = ref({
+                    creatinine: 1.0,
+                    age: 75,
+                    sex: 'male',
+                    race: 'other'
+                });
+                
+                const calculateEGFR = () => {
+                    const cr = egfrData.value.creatinine;
+                    const age = egfrData.value.age;
+                    const isFemale = egfrData.value.sex === 'female';
+                    const isBlack = egfrData.value.race === 'black';
+                    
+                    if (!cr || !age) return 0;
+                    
+                    // CKD-EPI 2021 equation (race-free)
+                    let a = isFemale ? -0.241 : -0.302;
+                    let b = isFemale ? 0.7 : 0.9;
+                    let c = isFemale ? 1.012 : 1.0;
+                    
+                    let egfr = 142 * Math.pow(Math.min(cr/b, 1), a) * 
+                               Math.pow(Math.max(cr/b, 1), -1.200) * 
+                               Math.pow(0.9938, age) * c;
+                    
+                    return Math.round(egfr);
+                };
+                
+                const getCKDStage = (egfr) => {
+                    if (egfr >= 90) return 'Stage 1 - Normal/High';
+                    if (egfr >= 60) return 'Stage 2 - Mild Decrease';
+                    if (egfr >= 45) return 'Stage 3a - Mild-Moderate';
+                    if (egfr >= 30) return 'Stage 3b - Moderate-Severe';
+                    if (egfr >= 15) return 'Stage 4 - Severe';
+                    return 'Stage 5 - Kidney Failure';
+                };
+                
+                // GDS-15 Items
+                const gdsItems = ref([
+                    { id: 1, question: 'Are you basically satisfied with your life?', answer: '', positive: false },
+                    { id: 2, question: 'Have you dropped many of your activities and interests?', answer: '', positive: true },
+                    { id: 3, question: 'Do you feel that your life is empty?', answer: '', positive: true },
+                    { id: 4, question: 'Do you often get bored?', answer: '', positive: true },
+                    { id: 5, question: 'Are you in good spirits most of the time?', answer: '', positive: false }
+                ]);
+                
+                const gdsTotal = computed(() => {
+                    return gdsItems.value.filter(item => 
+                        (item.positive && item.answer === 'yes') || 
+                        (!item.positive && item.answer === 'no')
+                    ).length;
+                });
+                
+                // TUG Test
+                const tugTime = ref(10);
+                const tugAssistiveDevice = ref(false);
+                
+                // Guidelines
+                const guidelines = ref([
+                    {
+                        id: 1,
+                        title: 'Management of Delirium in Hospitalized Older Adults',
+                        source: 'American Geriatrics Society',
+                        year: '2024',
+                        tags: ['delirium', 'hospital', 'cognitive']
+                    },
+                    {
+                        id: 2,
+                        title: 'STOPP/START Criteria Version 3',
+                        source: 'European Geriatric Medicine Society',
+                        year: '2023',
+                        tags: ['medications', 'polypharmacy', 'prescribing']
+                    },
+                    {
+                        id: 3,
+                        title: 'Fall Prevention Guidelines',
+                        source: 'USPSTF & AGS',
+                        year: '2024',
+                        tags: ['falls', 'prevention', 'exercise']
+                    },
+                    {
+                        id: 4,
+                        title: 'Beers Criteria for Potentially Inappropriate Medications',
+                        source: 'American Geriatrics Society',
+                        year: '2023',
+                        tags: ['medications', 'safety', 'Beers']
+                    },
+                    {
+                        id: 5,
+                        title: 'Management of Frailty: Clinical Practice Guideline',
+                        source: 'Asia-Pacific Clinical Practice Guidelines',
+                        year: '2024',
+                        tags: ['frailty', 'assessment', 'intervention']
+                    },
+                    {
+                        id: 6,
+                        title: 'Diagnosis and Treatment of Dementia',
+                        source: 'Alzheimer\'s Association & AAN',
+                        year: '2024',
+                        tags: ['dementia', 'cognitive', 'treatment']
+                    },
+                    {
+                        id: 7,
+                        title: 'Anticoagulation in Elderly with Atrial Fibrillation',
+                        source: 'ESC/EHRA Guidelines',
+                        year: '2024',
+                        tags: ['anticoagulation', 'AFib', 'DOACs']
+                    },
+                    {
+                        id: 8,
+                        title: 'Comprehensive Geriatric Assessment',
+                        source: 'British Geriatrics Society',
+                        year: '2023',
+                        tags: ['CGA', 'assessment', 'multidisciplinary']
+                    },
+                    {
+                        id: 9,
+                        title: 'Management of Chronic Pain in Older Adults',
+                        source: 'AGS Panel on Persistent Pain',
+                        year: '2024',
+                        tags: ['pain', 'opioids', 'non-pharmacologic']
+                    },
+                    {
+                        id: 10,
+                        title: 'Nutrition Guidelines for Older Adults',
+                        source: 'ESPEN Guidelines',
+                        year: '2024',
+                        tags: ['nutrition', 'malnutrition', 'screening']
+                    }
+                ]);
+                
+                const guidelineSearch = ref('');
+                const filteredGuidelines = computed(() => {
+                    if (!guidelineSearch.value) return guidelines.value;
+                    const search = guidelineSearch.value.toLowerCase();
+                    return guidelines.value.filter(g => 
+                        g.title.toLowerCase().includes(search) ||
+                        g.source.toLowerCase().includes(search) ||
+                        g.tags.some(t => t.toLowerCase().includes(search))
+                    );
+                });
+                
+                // Medications
+                const medications = ref([
+                    { id: 1, name: 'Apixaban', generic: 'Apixaban', category: 'anticoagulant', dosing: '5mg BID (2.5mg if ≥2: age≥80, weight≤60, Cr≥1.5)', beers: false, salCovered: true },
+                    { id: 2, name: 'Donepezil', generic: 'Donepezil HCl', category: 'neurological', dosing: '5mg QD x4wk, then 10mg QD', beers: false, salCovered: true },
+                    { id: 3, name: 'Quetiapine', generic: 'Quetiapine', category: 'psychiatric', dosing: 'Start 12.5-25mg QHS', beers: true, salCovered: true },
+                    { id: 4, name: 'Metformin', generic: 'Metformin HCl', category: 'diabetes', dosing: '500mg BID, max 2g/day (avoid if eGFR<30)', beers: false, salCovered: true },
+                    { id: 5, name: 'Furosemide', generic: 'Furosemide', category: 'cardiovascular', dosing: '20-40mg daily', beers: false, salCovered: true },
+                    { id: 6, name: 'Omeprazole', generic: 'Omeprazole', category: 'gi', dosing: '20mg daily', beers: false, salCovered: true }
+                ]);
+                
+                const medSearch = ref('');
+                const medCategory = ref('');
+                
+                const filteredMedications = computed(() => {
+                    let result = medications.value;
+                    if (medSearch.value) {
+                        const search = medSearch.value.toLowerCase();
+                        result = result.filter(m => 
+                            m.name.toLowerCase().includes(search) ||
+                            m.generic.toLowerCase().includes(search)
+                        );
+                    }
+                    if (medCategory.value) {
+                        result = result.filter(m => m.category === medCategory.value);
+                    }
+                    return result;
+                });
+                
+                // Calculator Functions
+                const openCalculator = (calc) => {
+                    calculatorModal.value = {
+                        show: true,
+                        type: calc.id,
+                        title: calc.name
+                    };
+                };
+                
+                const closeCalculator = () => {
+                    calculatorModal.value.show = false;
+                };
+                
+                const incrementScore = (item) => {
+                    if (item.score < item.max) item.score++;
+                };
+                
+                const decrementScore = (item) => {
+                    if (item.score > 0) item.score--;
+                };
+                
+                const getStrokeRisk = (score) => {
+                    const risks = [0.2, 1.3, 2.2, 3.2, 4.0, 6.7, 9.8, 9.6, 12.5, 15.2];
+                    return risks[Math.min(score, 9)];
+                };
+                
+                // Other Functions
+                const toggleLanguage = () => {
+                    isHebrew.value = !isHebrew.value;
+                };
+                
+                const openGuideline = (guideline) => {
+                    console.log('Opening guideline:', guideline.title);
+                };
+                
+                const checkDrugInteraction = () => {
+                    console.log('Checking drug interactions...');
+                };
+                
+                const updateDateTime = () => {
+                    currentDateTime.value = new Date().toLocaleString(isHebrew.value ? 'he-IL' : 'en-US');
+                };
+                
+                onMounted(() => {
+                    updateDateTime();
+                    setInterval(updateDateTime, 60000);
+                });
+                
+                return {
+                    // Language
+                    isHebrew,
+                    t,
+                    toggleLanguage,
+                    currentDateTime,
+                    
+                    // Navigation
+                    activeTab,
+                    tabs,
+                    
+                    // Calculators
+                    allCalculators,
+                    calculatorModal,
+                    openCalculator,
+                    closeCalculator,
+                    incrementScore,
+                    decrementScore,
+                    
+                    // Calculator Data
+                    mocaItems,
+                    mocaTotal,
+                    mmseItems,
+                    mmseTotal,
+                    cha2ds2Items,
+                    cha2ds2Total,
+                    hasbledItems,
+                    hasbledTotal,
+                    frailItems,
+                    frailTotal,
+                    cfsScore,
+                    cfsLevels,
+                    morseItems,
+                    morseTotal,
+                    katzItems,
+                    katzTotal,
+                    egfrData,
+                    calculateEGFR,
+                    getCKDStage,
+                    gdsItems,
+                    gdsTotal,
+                    tugTime,
+                    tugAssistiveDevice,
+                    getStrokeRisk,
+                    
+                    // Guidelines
+                    guidelines,
+                    guidelineSearch,
+                    filteredGuidelines,
+                    openGuideline,
+                    
+                    // Medications
+                    medications,
+                    medSearch,
+                    medCategory,
+                    filteredMedications,
+                    checkDrugInteraction
+                };
+            }
+        }).mount('#app');
+    </script>
+<script async src="https://scripts.simpleanalyticscdn.com/latest.js" ></script><script async src="https://scripts.simpleanalyticscdn.com/auto-events.js" ></script></body>
+</html>

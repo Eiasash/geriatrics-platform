@@ -9,19 +9,73 @@
 [build.environment]
   NODE_VERSION = "18"
   NPM_FLAGS = "--legacy-peer-deps"
+  VITE_LAUNCHDARKLY_SDK_KEY = "sdk-f6415221-dcbf-4dec-8bb3-952842505ca3"
 
 # Production context
 [context.production.environment]
   NODE_ENV = "production"
 
-# Headers for security
+# Security Headers - Enhanced for production
 [[headers]]
   for = "/*"
   [headers.values]
+    Strict-Transport-Security = "max-age=31536000; includeSubDomains; preload"
+    X-Content-Type-Options = "nosniff"
     X-Frame-Options = "DENY"
     X-XSS-Protection = "1; mode=block"
-    X-Content-Type-Options = "nosniff"
-    Referrer-Policy = "strict-origin-when-cross-origin"
+    Referrer-Policy = "no-referrer"
+    Permissions-Policy = "interest-cohort=()"
+    # CSP allows CDN resources for Chart.js, Vue, Tailwind, fonts, and LaunchDarkly
+    Content-Security-Policy = "default-src 'self'; img-src 'self' data: https:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.tailwindcss.com; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://unpkg.com https://cdn.jsdelivr.net https://cdn.tailwindcss.com; connect-src 'self' https://*.launchdarkly.com https://geriatrics-study.netlify.app https://geriatrics.netlify.app; font-src 'self' https://fonts.gstatic.com data:; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'"
+
+# Cache Control Headers - HTML files should not be cached
+[[headers]]
+  for = "/index.html"
+  [headers.values]
+    Cache-Control = "no-store"
+
+[[headers]]
+  for = "/*.html"
+  [headers.values]
+    Cache-Control = "no-store"
+
+# JSON data files - short cache with revalidation
+[[headers]]
+  for = "/public/data/*.json"
+  [headers.values]
+    Cache-Control = "max-age=300, must-revalidate"
+
+[[headers]]
+  for = "/data/*.json"
+  [headers.values]
+    Cache-Control = "max-age=300, must-revalidate"
+
+# H5P educational packages - long cache
+[[headers]]
+  for = "/public/h5p/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/h5p/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# JavaScript and CSS bundles - long cache (hashed filenames)
+[[headers]]
+  for = "/assets/*.js"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/assets/*.css"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
 
 # SPA redirect for client-side routing
 [[redirects]]
@@ -29,11 +83,11 @@
   to = "/index.html"
   status = 200
 
-# Cache static assets
-[[headers]]
-  for = "/assets/*"
-  [headers.values]
-    Cache-Control = "public, max-age=31536000, immutable"
+# Redirect old Hebrew HTML file to main app
+[[redirects]]
+  from = "/geriatrics-hebrew-ultimate.html"
+  to = "/"
+  status = 301
 
 # Dev server settings
 [dev]
@@ -41,3 +95,18 @@
   port = 5173
   autoLaunch = true
   framework = "#custom"
+
+# Deploy notifications
+[build.processing]
+  skip_processing = false
+
+[build.processing.css]
+  bundle = true
+  minify = true
+
+[build.processing.js]
+  bundle = true
+  minify = true
+
+[build.processing.images]
+  compress = true

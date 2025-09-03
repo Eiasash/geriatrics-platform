@@ -452,15 +452,32 @@ export default function App() {
 
             {/* Main Content Area */}
             <main className="flex-1 overflow-y-auto">
-                {activeSection === 'dashboard' && renderDashboard()}
-                {activeSection === 'patients' && renderPatients()}
-                {activeSection === 'clinical' && renderClinicalAnalysis()}
-                {activeSection === 'antibiotics' && renderAntibiotics()}
-                {activeSection === 'protocols' && renderProtocols()}
-                {activeSection === 'schedule' && renderSchedule()}
-                {activeSection === 'tasks' && renderTasks()}
-                {activeSection === 'contacts' && renderContacts()}
-                {activeSection === 'education' && <Education />}
+                <div className="min-h-full">
+                    {activeSection === 'dashboard' && renderDashboard()}
+                    {activeSection === 'patients' && renderPatients()}
+                    {activeSection === 'clinical' && renderClinicalAnalysis()}
+                    {activeSection === 'antibiotics' && renderAntibiotics()}
+                    {activeSection === 'protocols' && renderProtocols()}
+                    {activeSection === 'schedule' && renderSchedule()}
+                    {activeSection === 'tasks' && renderTasks()}
+                    {activeSection === 'contacts' && renderContacts()}
+                    {activeSection === 'education' && <Education />}
+                </div>
+                
+                {/* Medical Disclaimer Footer */}
+                <footer className="bg-gray-800 text-white p-4 mt-8">
+                    <div className="max-w-7xl mx-auto text-center">
+                        <p className="text-sm mb-2">
+                            <span className="font-semibold">Medical Disclaimer:</span> For educational use only. This platform does not constitute medical advice.
+                        </p>
+                        <p className="text-sm mb-2" dir="rtl">
+                            <span className="font-semibold">כתב ויתור רפואי:</span> לשימוש חינוכי בלבד. אינו מהווה ייעוץ רפואי. אין להזין או לאחסן מידע מזהה מטופל.
+                        </p>
+                        <p className="text-xs text-gray-400">
+                            © 2024 Shaare Zedek Medical Center - Geriatrics Department | Version 1.0-hebrew
+                        </p>
+                    </div>
+                </footer>
             </main>
         </div>
     );
