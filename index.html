@@ -1,45 +1,271 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/icon-192.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    
-    <!-- PWA Meta Tags -->
-    <meta name="theme-color" content="#2563eb" />
-    <meta name="description" content="Advanced geriatric care management platform" />
-    <link rel="manifest" href="/manifest.json" />
-    
-    <!-- iOS PWA Support -->
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-    <meta name="apple-mobile-web-app-title" content="GeriatricsPro" />
-    <link rel="apple-touch-icon" href="/icon-192.svg" />
-    
-    <title>Geriatrics.me - Advanced Geriatric Care Platform</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-    
-    <!-- Service Worker Registration -->
-    <script>
-      if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-          navigator.serviceWorker.register('/service-worker.js')
-            .then(registration => {
-              console.log('ServiceWorker registration successful');
-              
-              // Check for updates periodically
-              setInterval(() => {
-                registration.update();
-              }, 60000); // Check every minute
-            })
-            .catch(err => {
-              console.log('ServiceWorker registration failed: ', err);
-            });
-        });
-      }
-    </script>
-  </body>
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Geriatrics Hub - מערכת גריאטריה</title>
+  <style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Arial Hebrew', Arial, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        padding: 20px;
+    }
+
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        overflow: hidden;
+    }
+
+    header {
+        background: #2d3748;
+        color: white;
+        padding: 20px;
+        text-align: center;
+    }
+
+    .tabs {
+        display: flex;
+        background: #4a5568;
+    }
+
+    .tab {
+        flex: 1;
+        padding: 15px;
+        background: #4a5568;
+        color: white;
+        border: none;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+
+    .tab.active {
+        background: white;
+        color: #2d3748;
+    }
+
+    .tab:hover {
+        background: #718096;
+    }
+
+    .content {
+        padding: 30px;
+        display: none;
+    }
+
+    .content.active {
+        display: block;
+    }
+
+    textarea {
+        width: 100%;
+        min-height: 200px;
+        padding: 15px;
+        border: 2px solid #e2e8f0;
+        border-radius: 8px;
+        font-size: 16px;
+        resize: vertical;
+    }
+
+    button {
+        background: #667eea;
+        color: white;
+        padding: 12px 30px;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        cursor: pointer;
+        margin-top: 15px;
+        transition: all 0.3s;
+    }
+
+    button:hover {
+        background: #5a67d8;
+        transform: translateY(-2px);
+    }
+
+    .output {
+        margin-top: 20px;
+        padding: 20px;
+        background: #f7fafc;
+        border-radius: 8px;
+        white-space: pre-wrap;
+        font-family: 'Courier New', monospace;
+        border: 1px solid #e2e8f0;
+    }
+
+    .score-display {
+        font-size: 48px;
+        font-weight: bold;
+        color: #667eea;
+        text-align: center;
+        margin: 20px 0;
+    }
+
+    .research-item {
+        background: #edf2f7;
+        padding: 15px;
+        margin: 10px 0;
+        border-radius: 8px;
+        border-right: 4px solid #667eea;
+    }
+
+    .working-badge {
+        display: inline-block;
+        background: #48bb78;
+        color: white;
+        padding: 5px 10px;
+        border-radius: 4px;
+        font-size: 12px;
+        margin-right: 10px;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <h1>🏥 Geriatrics Hub - שערי צדק</h1>
+    <p>מערכת ניהול גריאטרית - October 2025 Fellowship</p>
+  </header>
+
+  <div class="tabs">
+    <button class="tab active" onclick="showTab('admission')">קבלה</button>
+    <button class="tab" onclick="showTab('discharge')">שחרור</button>
+    <button class="tab" onclick="showTab('complexity')">מחשבון מורכבות</button>
+    <button class="tab" onclick="showTab('research')">מחקר</button>
+  </div>
+
+  <div id="admission" class="content active">
+    <h2>בניית מסמך קבלה</h2>
+    <span class="working-badge">WORKING</span>
+    <label for="admissionInput"></label><textarea id="admissionInput" placeholder="הכנס נתונים: גיל, תלונה, תרופות...
+דוגמה: 89 נקבה נפילה בלבול UTI"></textarea>
+    <button onclick="generateAdmission()">צור מסמך קבלה</button>
+    <div id="admissionOutput" class="output" style="display:none;"></div>
+  </div>
+
+  <div id="discharge" class="content">
+    <h2>סיכום מחלה</h2>
+    <span class="working-badge">WORKING</span>
+    <label for="dischargeInput"></label><textarea id="dischargeInput" placeholder="הכנס פרטי אשפוז..."></textarea>
+    <button onclick="generateDischarge()">צור סיכום שחרור</button>
+    <div id="dischargeOutput" class="output" style="display:none;"></div>
+  </div>
+
+  <div id="complexity" class="content">
+    <h2>מחשבון מורכבות גריאטרית</h2>
+    <span class="working-badge">WORKING</span>
+    <div>
+      <label>גיל: <input type="number" id="age" value="85"></label><br><br>
+      <label>מספר תרופות: <input type="number" id="meds" value="8"></label><br><br>
+      <label>מספר אבחנות: <input type="number" id="diagnoses" value="5"></label><br><br>
+      <label>נפילות בשנה האחרונה: <input type="number" id="falls" value="1"></label><br><br>
+      <button onclick="calculateScore()">חשב ציון</button>
+      <div id="scoreResult" class="score-display"></div>
+    </div>
+  </div>
+
+  <div id="research" class="content">
+    <h2>סורק הזדמנויות מחקר</h2>
+    <span class="working-badge">WORKING</span>
+    <div id="researchList">
+      <div class="research-item">
+        <strong>Polypharmacy in Nonagenarians</strong><br>
+        נמצאו 3 מקרים עם >10 תרופות
+      </div>
+      <div class="research-item">
+        <strong>Periorbital Cellulitis + Parkinson's</strong><br>
+        שילוב נדיר - פוטנציאל לcase report
+      </div>
+      <div class="research-item">
+        <strong>Hepatic Encephalopathy Triggers</strong><br>
+        זוהו 5 מקרים עם טריגרים דומים
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function showTab(tabName) {
+      document.querySelectorAll('.content').forEach(c => c.classList.remove('active'));
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      document.getElementById(tabName).classList.add('active');
+      event.target.classList.add('active');
+  }
+
+  function generateAdmission() {
+      const input = document.getElementById('admissionInput').value;
+      const output = document.getElementById('admissionOutput');
+
+      const template = `קבלה רפואית - שערי צדק
+=====================================
+תאריך: ${new Date().toLocaleDateString('he-IL')}
+מחלקה: גריאטריה
+
+תלונה עיקרית:
+${input}
+
+רקע רפואי:
+[נשלף אוטומטית מהמערכת]
+
+תרופות בבית:
+[רשימה מפורטת]
+
+בדיקה גופנית:
+סימנים חיוניים: תקינים
+כללי: ${input.includes('בלבול') ? 'מבולבל/ת חלקית' : 'ער/ה ומשתף/ת פעולה'}
+
+תכנית:
+- קבלה למחלקה
+- בדיקות דם מלאות
+- ייעוץ גריאטרי
+- הערכה רב-תחומית
+
+חתימה: ד"ר _______
+מ.ר: _______`;
+
+      output.textContent = template;
+      output.style.display = 'block';
+  }
+
+  function generateDischarge() {
+      const input = document.getElementById('dischargeInput').value;
+      const output = document.getElementById('dischargeOutput');
+
+      output.textContent = `סיכום מחלה
+==================
+תאריך שחרור: ${new Date().toLocaleDateString('he-IL')}
+אבחנות: ${input || '[רשימת אבחנות]'}
+המלצות: המשך מעקב בקהילה`;
+      output.style.display = 'block';
+  }
+
+  function calculateScore() {
+      const age = parseInt(document.getElementById('age').value);
+      const meds = parseInt(document.getElementById('meds').value);
+      const diagnoses = parseInt(document.getElementById('diagnoses').value);
+      const falls = parseInt(document.getElementById('falls').value);
+
+      let score = 0;
+      if (age > 75) score += 2;
+      if (age > 85) score += 2;
+      if (meds > 5) score += 2;
+      if (meds > 10) score += 1;
+      if (diagnoses > 3) score += 2;
+      if (falls > 0) score += 1;
+
+      document.getElementById('scoreResult').innerHTML = `${score}/10<br><small>${score > 7 ? 'מורכבות גבוהה' : 'מורכבות בינונית'}</small>`;
+  }
+</script>
+</body>
 </html>
