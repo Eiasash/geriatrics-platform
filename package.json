@@ -62,7 +62,7 @@
     "lighthouse": "lighthouse https://geriatrics-study.netlify.app --output json --output-path ./lighthouse-report.json",
     "analyze": "webpack-bundle-analyzer dist/stats.json",
     "clean": "rm -rf dist coverage .lighthouseci",
-    "prepare": "husky install"
+    "prepare": "node -e \"if (process.env.NODE_ENV !== 'production' && !process.env.CI) { require('child_process').execSync('husky install', {stdio: 'inherit'}) }\""
   },
   "repository": {
     "type": "git",

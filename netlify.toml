@@ -3,7 +3,8 @@
 
 [build]
   # Build command for Vite React app
-  command = "npm install --legacy-peer-deps && npm run build"
+  # Skip husky install in CI/production builds
+  command = "npm ci --legacy-peer-deps --omit=dev && npm run build"
   publish = "dist"
 
 [build.environment]
