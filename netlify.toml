@@ -4,9 +4,11 @@
 [build]
   command = "npm install --legacy-peer-deps && npm run build"
   publish = "dist"
+  ignore = "git diff --quiet $CACHED_COMMIT_REF $COMMIT_REF ."
 
 [build.environment]
   NODE_VERSION = "20"
+  NETLIFY_SKIP_SUBMODULE_UPDATE = "true"
 
 # Production context
 [context.production.environment]
