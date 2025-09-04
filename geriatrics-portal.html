@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clinical Geriatrics Portal - geriatrics.me</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            padding: 40px 0;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .tool-card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tool-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.2);
+        }
+
+        .tool-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+        }
+
+        .tool-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .tool-icon {
+            font-size: 2.5rem;
+            margin-right: 20px;
+            width: 60px;
+            height: 60px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .tool-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #2d3748;
+        }
+
+        .tool-description {
+            color: #718096;
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+        }
+
+        .btn {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+
+        .quick-links {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .quick-link {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+
+        .quick-link:hover {
+            background: #e9ecef;
+            border-color: #667eea;
+        }
+
+        .quick-link i {
+            font-size: 1.5rem;
+            color: #667eea;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 1000;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 95%;
+            width: 1200px;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: slideIn 0.3s ease;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #f1f3f4;
+            padding-bottom: 15px;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #666;
+        }
+
+        .iframe-container {
+            width: 100%;
+            height: 600px;
+            border: none;
+            border-radius: 10px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .status-bar {
+            background: linear-gradient(45deg, #48bb78, #38a169);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .emergency-bar {
+            background: linear-gradient(45deg, #e53e3e, #c53030);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+        }
+
+        .emergency-contact {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            padding: 5px 15px;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+
+        .emergency-contact:hover {
+            background: rgba(255,255,255,0.1);
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .tools-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .tool-card {
+                padding: 20px;
+            }
+
+            .emergency-bar {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>geriatrics.me</h1>
+            <p>Clinical Geriatrics Portal - Integrated Workflow Solutions</p>
+        </div>
+
+        <div class="status-bar">
+            <i class="fas fa-check-circle"></i> Live Integration: geriatrics.netlify.app | Real-time SZMC Tools | Hebrew Documentation
+        </div>
+
+        <div class="emergency-bar">
+            <div class="emergency-contact" onclick="quickCall('911')">
+                <i class="fas fa-ambulance"></i>
+                <span>Emergency: 911</span>
+            </div>
+            <div class="emergency-contact" onclick="quickCall('02-6555111')">
+                <i class="fas fa-hospital"></i>
+                <span>SZMC: 02-6555111</span>
+            </div>
+            <div class="emergency-contact" onclick="quickCall('68236')">
+                <i class="fas fa-procedures"></i>
+                <span>ICU: 68236</span>
+            </div>
+            <div class="emergency-contact" onclick="quickCall('66523')">
+                <i class="fas fa-user-md"></i>
+                <span>On-call: 66523</span>
+            </div>
+        </div>
+
+        <div class="tools-grid">
+            <!-- SZMC Consultation System -->
+            <div class="tool-card">
+                <div class="tool-header">
+                    <div class="tool-icon">
+                        <i class="fas fa-phone-alt"></i>
+                    </div>
+                    <div>
+                        <div class="tool-title">SZMC Consultation System</div>
+                    </div>
+                </div>
+                <div class="tool-description">
+                    Automated consultation requests with real department extensions from Shaare Tzedek. Generate systems-based consultation notes and call departments directly.
+                </div>
+                <button class="btn" onclick="openMainPlatform('consultation')">
+                    <i class="fas fa-external-link-alt"></i> Launch SZMC Tools
+                </button>
+                <div class="quick-links">
+                    <div class="quick-link" onclick="quickCall('66623')">
+                        <i class="fas fa-bone"></i>
+                        Orthopedics<br>66623
+                    </div>
+                    <div class="quick-link" onclick="quickCall('66523')">
+                        <i class="fas fa-brain"></i>
+                        Neurology<br>66523
+                    </div>
+                    <div class="quick-link" onclick="quickCall('68704')">
+                        <i class="fas fa-heart"></i>
+                        Cardiology<br>68704
+                    </div>
+                    <div class="quick-link" onclick="quickCall('68236')">
+                        <i class="fas fa-hospital"></i>
+                        ICU<br>68236
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hebrew Documentation System -->
+            <div class="tool-card">
+                <div class="tool-header">
+                    <div class="tool-icon">
+                        <i class="fas fa-file-medical-alt"></i>
+                    </div>
+                    <div>
+                        <div class="tool-title">Hebrew Documentation Portal</div>
+                    </div>
+                </div>
+                <div class="tool-description">
+                    Complete bilingual medical documentation system with admission templates, progress notes, and discharge planning tools for Israeli healthcare.
+                </div>
+                <button class="btn" onclick="openMainPlatform('hebrew-docs')">
+                    <i class="fas fa-language"></i> Open Hebrew Tools
+                </button>
+                <div class="quick-links">
+                    <div class="quick-link" onclick="openTemplate('admission')">
+                        <i class="fas fa-clipboard-list"></i>
+                        Admission<br>קבלה
+                    </div>
+                    <div class="quick-link" onclick="openTemplate('progress')">
+                        <i class="fas fa-notes-medical"></i>
+                        Progress<br>התקדמות
+                    </div>
+                    <div class="quick-link" onclick="openTemplate('discharge')">
+                        <i class="fas fa-home"></i>
+                        Discharge<br>שחרור
+                    </div>
+                    <div class="quick-link" onclick="openTemplate('consultation')">
+                        <i class="fas fa-user-md"></i>
+                        Consult<br>יעוץ
+                    </div>
+                </div>
+            </div>
+
+            <!-- Clinical Calculators Integration -->
+            <div class="tool-card">
+                <div class="tool-header">
+                    <div class="tool-icon">
+                        <i class="fas fa-calculator"></i>
+                    </div>
+                    <div>
+                        <div class="tool-title">Geriatric Calculators Suite</div>
+                    </div>
+                </div>
+                <div class="tool-description">
+                    Complete geriatric assessment tools including MMSE, MoCA, Frailty Scales, Fall Risk Assessment, and medication dosing calculators.
+                </div>
+                <button class="btn" onclick="openMainPlatform()">
+                    <i class="fas fa-external-link-alt"></i> Access Full Platform
+                </button>
+                <div class="quick-links">
+                    <div class="quick-link" onclick="openCalculator('mmse')">
+                        <i class="fas fa-brain"></i>
+                        MMSE<br>Calculator
+                    </div>
+                    <div class="quick-link" onclick="openCalculator('frailty')">
+                        <i class="fas fa-user-check"></i>
+                        Frailty<br>Assessment
+                    </div>
+                    <div class="quick-link" onclick="openCalculator('falls')">
+                        <i class="fas fa-balance-scale"></i>
+                        Fall Risk<br>Analysis
+                    </div>
+                    <div class="quick-link" onclick="openCalculator('moca')">
+                        <i class="fas fa-puzzle-piece"></i>
+                        MoCA<br>Test
+                    </div>
+                </div>
+            </div>
+
+            <!-- Study & Quiz Integration -->
+            <div class="tool-card">
+                <div class="tool-header">
+                    <div class="tool-icon">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <div>
+                        <div class="tool-title">Fellowship Study Portal</div>
+                    </div>
+                </div>
+                <div class="tool-description">
+                    Integrated study platform with adaptive quizzes, clinical cases, and board preparation materials for geriatrics fellowship training.
+                </div>
+                <button class="btn" onclick="openMainPlatform()">
+                    <i class="fas fa-book-open"></i> Study Platform
+                </button>
+                <div class="quick-links">
+                    <div class="quick-link" onclick="startQuiz('adaptive')">
+                        <i class="fas fa-question-circle"></i>
+                        Adaptive<br>Quiz
+                    </div>
+                    <div class="quick-link" onclick="openCases()">
+                        <i class="fas fa-user-md"></i>
+                        Clinical<br>Cases
+                    </div>
+                    <div class="quick-link" onclick="openResearch()">
+                        <i class="fas fa-microscope"></i>
+                        Research<br>Papers
+                    </div>
+                    <div class="quick-link" onclick="openGuidelines()">
+                        <i class="fas fa-book"></i>
+                        Clinical<br>Guidelines
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Access Dashboard -->
+            <div class="tool-card">
+                <div class="tool-header">
+                    <div class="tool-icon">
+                        <i class="fas fa-tachometer-alt"></i>
+                    </div>
+                    <div>
+                        <div class="tool-title">Quick Access Dashboard</div>
+                    </div>
+                </div>
+                <div class="tool-description">
+                    Unified dashboard with direct access to all clinical tools, templates, emergency contacts, and workflow management.
+                </div>
+                <button class="btn" onclick="openDashboard()">
+                    <i class="fas fa-th-large"></i> Open Dashboard
+                </button>
+                <div class="quick-links">
+                    <div class="quick-link" onclick="emailDirect()">
+                        <i class="fas fa-envelope"></i>
+                        Direct Email<br>Templates
+                    </div>
+                    <div class="quick-link" onclick="openProtocols()">
+                        <i class="fas fa-clipboard-check"></i>
+                        Clinical<br>Protocols
+                    </div>
+                    <div class="quick-link" onclick="openSettings()">
+                        <i class="fas fa-cog"></i>
+                        Settings &<br>Preferences
+                    </div>
+                    <div class="quick-link" onclick="openHelp()">
+                        <i class="fas fa-question"></i>
+                        Help &<br>Support
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mobile Tools -->
+            <div class="tool-card">
+                <div class="tool-header">
+                    <div class="tool-icon">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <div>
+                        <div class="tool-title">Mobile Clinical Tools</div>
+                    </div>
+                </div>
+                <div class="tool-description">
+                    Optimized mobile interface for bedside consultations, quick documentation, and on-the-go clinical decision support.
+                </div>
+                <button class="btn" onclick="openMobileTools()">
+                    <i class="fas fa-mobile-alt"></i> Launch Mobile App
+                </button>
+                <div class="quick-links">
+                    <div class="quick-link" onclick="quickTemplate('routine')">
+                        <i class="fas fa-clipboard"></i>
+                        Routine<br>Follow-up
+                    </div>
+                    <div class="quick-link" onclick="quickTemplate('urgent')">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        Urgent<br>Consult
+                    </div>
+                    <div class="quick-link" onclick="quickTemplate('fall')">
+                        <i class="fas fa-user-injured"></i>
+                        Fall<br>Assessment
+                    </div>
+                    <div class="quick-link" onclick="quickTemplate('delirium')">
+                        <i class="fas fa-dizzy"></i>
+                        Delirium<br>Workup
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for embedded tools -->
+    <div class="modal" id="toolModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTitle">Clinical Tool</h3>
+                <button class="modal-close" onclick="closeModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div id="modalBody">
+                <iframe id="toolFrame" class="iframe-container"></iframe>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Main platform URL
+        const MAIN_PLATFORM_URL = 'https://geriatrics.netlify.app';
+        
+        function openMainPlatform(section) {
+            const url = section ? `${MAIN_PLATFORM_URL}#${section}` : MAIN_PLATFORM_URL;
+            window.open(url, '_blank');
+        }
+
+        function openTool(toolUrl, title) {
+            document.getElementById('modalTitle').textContent = title;
+            document.getElementById('toolFrame').src = toolUrl;
+            document.getElementById('toolModal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('toolModal').classList.remove('active');
+            document.getElementById('toolFrame').src = '';
+        }
+
+        function quickCall(extension) {
+            if (confirm(`Call ${extension}?`)) {
+                window.location.href = `tel:${extension}`;
+            }
+        }
+
+        function quickTemplate(type) {
+            alert(`Opening ${type} template...`);
+            openMainPlatform('templates');
+        }
+
+        function openCalculator(calc) {
+            window.open(`${MAIN_PLATFORM_URL}#calculator-${calc}`, '_blank');
+        }
+
+        function openTemplate(template) {
+            window.open(`${MAIN_PLATFORM_URL}#template-${template}`, '_blank');
+        }
+
+        function startQuiz(type) {
+            window.open(`${MAIN_PLATFORM_URL}#quiz-${type}`, '_blank');
+        }
+
+        function openCases() {
+            window.open(`${MAIN_PLATFORM_URL}#clinical-cases`, '_blank');
+        }
+
+        function openResearch() {
+            window.open(`${MAIN_PLATFORM_URL}#research`, '_blank');
+        }
+
+        function openGuidelines() {
+            window.open(`${MAIN_PLATFORM_URL}#guidelines`, '_blank');
+        }
+
+        function openDashboard() {
+            window.open(`${MAIN_PLATFORM_URL}#dashboard`, '_blank');
+        }
+
+        function openMobileTools() {
+            window.open(`${MAIN_PLATFORM_URL}#mobile`, '_blank');
+        }
+
+        function openProtocols() {
+            window.open(`${MAIN_PLATFORM_URL}#protocols`, '_blank');
+        }
+
+        function emailDirect() {
+            window.location.href = 'mailto:iyasas@szmc.org.il?subject=Clinical Consultation&body=Generated from geriatrics.me portal';
+        }
+
+        function openSettings() {
+            alert('Settings panel - customize templates, shortcuts, and preferences');
+            window.open(`${MAIN_PLATFORM_URL}#settings`, '_blank');
+        }
+
+        function openHelp() {
+            window.open(`${MAIN_PLATFORM_URL}#help`, '_blank');
+        }
+
+        // Close modal when clicking outside
+        document.getElementById('toolModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeModal();
+            }
+            // Quick shortcuts
+            if (e.ctrlKey || e.metaKey) {
+                switch(e.key) {
+                    case 'q':
+                        e.preventDefault();
+                        startQuiz('adaptive');
+                        break;
+                    case 'c':
+                        e.preventDefault();
+                        openCalculator('mmse');
+                        break;
+                    case 'd':
+                        e.preventDefault();
+                        openDashboard();
+                        break;
+                    case 'h':
+                        e.preventDefault();
+                        openTemplate('hebrew-docs');
+                        break;
+                }
+            }
+        });
+
+        // Service Worker for offline functionality (optional)
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js').catch(() => {
+                    // Service worker registration failed, app still works online
+                });
+            });
+        }
+
+        // Show keyboard shortcuts on hover
+        document.addEventListener('DOMContentLoaded', () => {
+            const cards = document.querySelectorAll('.tool-card');
+            cards.forEach(card => {
+                card.title = 'Click to open tool';
+            });
+        });
+    </script>
+</body>
+</html>

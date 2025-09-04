@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { BarChart, Users, HeartPulse, Stethoscope, Pill, BookOpen, Calendar, CheckSquare, Phone, GraduationCap } from 'lucide-react';
+import { BarChart, Users, HeartPulse, Stethoscope, Pill, BookOpen, Calendar, CheckSquare, Phone, GraduationCap, FileText, Languages } from 'lucide-react';
 import Education from './components/Education';
+import SZMCConsultationSystem from './components/SZMCConsultationSystem';
+import HebrewDocumentationSystem from './components/HebrewDocumentationSystem';
 
 // Main Application Component - Consolidated Dashboard
 export default function App() {
@@ -441,11 +443,13 @@ export default function App() {
                     <NavItem icon={<BarChart size={20} />} label="Dashboard" section="dashboard" isActive={activeSection === 'dashboard'} />
                     <NavItem icon={<Users size={20} />} label="Patients" section="patients" isActive={activeSection === 'patients'} />
                     <NavItem icon={<HeartPulse size={20} />} label="Clinical Analysis" section="clinical" isActive={activeSection === 'clinical'} />
+                    <NavItem icon={<Phone size={20} />} label="SZMC Consults" section="consultation" isActive={activeSection === 'consultation'} />
+                    <NavItem icon={<Languages size={20} />} label="Hebrew Docs" section="hebrew-docs" isActive={activeSection === 'hebrew-docs'} />
                     <NavItem icon={<Pill size={20} />} label="Antibiotics" section="antibiotics" isActive={activeSection === 'antibiotics'} />
                     <NavItem icon={<BookOpen size={20} />} label="Protocols" section="protocols" isActive={activeSection === 'protocols'} />
                     <NavItem icon={<Calendar size={20} />} label="Schedule" section="schedule" isActive={activeSection === 'schedule'} />
                     <NavItem icon={<CheckSquare size={20} />} label="Tasks" section="tasks" isActive={activeSection === 'tasks'} />
-                    <NavItem icon={<Phone size={20} />} label="Contacts" section="contacts" isActive={activeSection === 'contacts'} />
+                    <NavItem icon={<FileText size={20} />} label="Contacts" section="contacts" isActive={activeSection === 'contacts'} />
                     <NavItem icon={<GraduationCap size={20} />} label="Education" section="education" isActive={activeSection === 'education'} />
                 </nav>
             </aside>
@@ -456,6 +460,18 @@ export default function App() {
                     {activeSection === 'dashboard' && renderDashboard()}
                     {activeSection === 'patients' && renderPatients()}
                     {activeSection === 'clinical' && renderClinicalAnalysis()}
+                    {activeSection === 'consultation' && (
+                        <div className="p-6">
+                            <h1 className="text-3xl font-bold mb-6 text-gray-800">SZMC Consultation System</h1>
+                            <SZMCConsultationSystem />
+                        </div>
+                    )}
+                    {activeSection === 'hebrew-docs' && (
+                        <div className="p-6">
+                            <h1 className="text-3xl font-bold mb-6 text-gray-800">Hebrew Documentation System</h1>
+                            <HebrewDocumentationSystem />
+                        </div>
+                    )}
                     {activeSection === 'antibiotics' && renderAntibiotics()}
                     {activeSection === 'protocols' && renderProtocols()}
                     {activeSection === 'schedule' && renderSchedule()}
