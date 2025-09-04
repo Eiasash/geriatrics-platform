@@ -2,15 +2,11 @@
 # https://docs.netlify.com/configure-builds/file-based-configuration/
 
 [build]
-  # Build command for Vite React app
-  # Skip husky install in CI/production builds
-  command = "npm ci --legacy-peer-deps --omit=dev && npm run build"
+  command = "npm ci --legacy-peer-deps && npm run build"
   publish = "dist"
 
 [build.environment]
-  NODE_VERSION = "20.11.1"
-  NPM_FLAGS = "--legacy-peer-deps"
-  VITE_LAUNCHDARKLY_SDK_KEY = "sdk-f6415221-dcbf-4dec-8bb3-952842505ca3"
+  NODE_VERSION = "20"
 
 # Production context
 [context.production.environment]
