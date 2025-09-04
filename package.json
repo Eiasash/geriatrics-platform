@@ -9,7 +9,7 @@
     "chart.js": "^4.4.1",
     "firebase": "^10.4.0",
     "launchdarkly-js-client-sdk": "^3.8.1",
-    "lucide-react": "^0.263.1",
+    "lucide-react": "^0.542.0",
     "node-fetch": "^3.3.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
