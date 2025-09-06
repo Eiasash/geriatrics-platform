@@ -1,0 +1,4 @@
+[dotenv@17.2.2] injecting env (0) from .env -- tip: 🔐 prevent committing .env to code: https://dotenvx.com/precommit
+🎉 Geriatrics Platform v2.0 running on http://localhost:3000
+📊 Health check: http://localhost:3000/api/health
+🏥 Ready to serve patients and families!
