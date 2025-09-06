@@ -1,0 +1,14 @@
+{
+  "buildCommand": "npm run build && cp roster.html dist/",
+  "outputDirectory": "dist",
+  "rewrites": [
+    {
+      "source": "/roster.html",
+      "destination": "/roster.html"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
+}
