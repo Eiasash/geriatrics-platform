@@ -4,6 +4,7 @@
   "description": "Geriatric assessment platform for Shaare Zedek Medical Center",
   "private": true,
   "dependencies": {
+    "dotenv": "^17.2.2",
     "firebase": "^10.4.0",
     "lucide-react": "^0.263.1",
     "node-fetch": "^3.3.2",
