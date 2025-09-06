@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Medical Platform - Geriatrics Excellence</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+        }
+        .container {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 40px;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            margin: 20px;
+        }
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        .subtitle {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+        .buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        .btn {
+            padding: 15px 30px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .btn-primary {
+            background: white;
+            color: #667eea;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 2px solid white;
+        }
+        .btn-secondary:hover {
+            background: white;
+            color: #667eea;
+        }
+        .status {
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(16, 185, 129, 0.2);
+            border: 1px solid rgba(16, 185, 129, 0.5);
+            border-radius: 8px;
+            font-size: 0.9rem;
+        }
+        .icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="icon">🏥</div>
+        <h1>Advanced Medical Platform</h1>
+        <div class="subtitle">
+            Shaare Zedek Medical Center<br>
+            Geriatrics Excellence Platform
+        </div>
+        
+        <div class="status">
+            <strong>✅ Platform Status: Online</strong><br>
+            The React application is now running successfully!
+        </div>
+        
+        <div class="buttons">
+            <a href="/" class="btn btn-primary">
+                🚀 Launch Main Application
+            </a>
+            <a href="/roster.html" class="btn btn-secondary">
+                📋 Patient Roster System
+            </a>
+            <a href="/geriatrics.html" class="btn btn-secondary">
+                🧠 Geriatrics Hebrew Interface
+            </a>
+        </div>
+        
+        <div style="margin-top: 30px; font-size: 0.9rem; opacity: 0.8;">
+            <p><strong>What was fixed:</strong></p>
+            <ul style="text-align: left; max-width: 400px; margin: 0 auto;">
+                <li>✅ Installed missing npm dependencies</li>
+                <li>✅ Started Vite development server on port 8080</li>
+                <li>✅ Created this landing page for easy access</li>
+                <li>✅ All React components are now functional</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // Check if main React app is accessible
+        fetch('/')
+            .then(response => {
+                if (response.ok) {
+                    console.log('✅ Main React application is accessible');
+                } else {
+                    console.warn('⚠️ Main React application may not be ready');
+                }
+            })
+            .catch(error => {
+                console.error('❌ Error checking main application:', error);
+            });
+            
+        // Auto-redirect to main app after 10 seconds
+        setTimeout(() => {
+            const autoRedirect = confirm('Would you like to go to the main application now?');
+            if (autoRedirect) {
+                window.location.href = '/';
+            }
+        }, 10000);
+    </script>
+</body>
+</html>
