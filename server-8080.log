@@ -1,0 +1,4 @@
+[dotenv@17.2.2] injecting env (0) from .env -- tip: ⚙️  enable debug logging with { debug: true }
+🎉 Geriatrics Platform v2.0 running on http://0.0.0.0:8080
+📊 Health check: http://0.0.0.0:8080/api/health
+🏥 Ready to serve patients and families!
