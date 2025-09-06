@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>רשימת מטופלים ופרוטוקולים — גריאטריה</title>
+<style>
+  :root{--bg:#f6f7fb;--card:#fff;--ink:#1f2937;--muted:#6b7280;--brand:#4f46e5;--ok:#059669;--warn:#d97706;--bad:#b91c1c;--line:#e5e7eb}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Arial Hebrew",Arial,sans-serif}
+  header{padding:16px 20px;background:#111827;color:#fff;position:sticky;top:0;z-index:3}
+  header h1{margin:0;font-size:20px}
+  .container{max-width:1000px;margin:16px auto;padding:0 12px}
+  section{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px;margin-bottom:14px}
+  h2{margin:0 0 10px 0;font-size:18px}
+  .grid{display:grid;grid-template-columns:repeat(12,1fr);gap:10px}
+  .col-6{grid-column:span 6}.col-4{grid-column:span 4}.col-3{grid-column:span 3}.col-12{grid-column:span 12}
+  @media(max-width:720px){.col-6,.col-4,.col-3{grid-column:span 12}}
+  label{display:block;font-size:13px;color:var(--muted);margin-bottom:4px}
+  input,select,textarea{width:100%;padding:10px;border:1px solid var(--line);border-radius:8px;font-size:15px;background:#fff}
+  textarea{min-height:110px}
+  .btn{display:inline-block;background:var(--brand);color:#fff;border:none;border-radius:10px;padding:10px 16px;cursor:pointer;font-size:14px}
+  .btn.ghost{background:transparent;color:var(--brand);border:1px solid var(--brand)}
+  .btn.muted{background:#6b7280}
+  .btnbar{display:flex;gap:8px;flex-wrap:wrap}
+  table{width:100%;border-collapse:collapse}
+  th,td{border-bottom:1px solid var(--line);padding:8px;text-align:right;font-size:14px}
+  tr:hover{background:#fafafa}
+  .badge{display:inline-block;padding:2px 8px;border-radius:999px;font-size:12px}
+  .ok{background:#ecfdf5;color:#059669;border:1px solid #a7f3d0}
+  .warn{background:#fffbeb;color:#d97706;border:1px solid #fde68a}
+  .bad{background:#fef2f2;color:#b91c1c;border:1px solid #fecaca}
+  .muted{color:#6b7280}
+  pre{white-space:pre-wrap;background:#f8fafc;border:1px solid var(--line);padding:12px;border-radius:8px}
+  footer{color:var(--muted);font-size:12px;text-align:center;padding:24px 0}
+</style>
+</head>
+<body>
+<header><h1>🏥 רשימת מטופלים ופרוטוקולים — גריאטריה</h1></header>
+<div class="container">
+
+  <section>
+    <h2>רשימת מטופלים</h2>
+    <div class="grid">
+      <div class="col-3"><label>חיפוש</label><input id="search" placeholder="שם / חדר / אבחנה…"></div>
+      <div class="col-9 btnbar" style="align-items:end;justify-content:flex-start">
+        <button class="btn" id="btn-add">הוספת מטופל</button>
+        <button class="btn ghost" id="btn-clear">ניקוי הכל (מקומי)</button>
+        <span class="muted">הנתונים נשמרים בדפדפן בלבד (localStorage). אין להזין מזהה אמיתי.</span>
+      </div>
+    </div>
+    <div id="form-wrap" style="display:none;margin-top:10px"></div>
+    <div style="overflow:auto;margin-top:10px">
+      <table><thead><tr>
+        <th>שם</th><th>גיל</th><th>מין</th><th>חדר/מיטה</th><th>תאריך קבלה</th><th>אבחנה</th><th>סטטוס</th><th>פעולות</th>
+      </tr></thead><tbody id="tbody"></tbody></table>
+    </div>
+  </section>
+
+  <section>
+    <h2>קבלה — יצירת מסמך</h2>
+    <div class="muted">בחרו "בחר" בטבלה למעלה כדי למלא אוטומטית.</div>
+    <div class="grid" id="adm-grid"></div>
+    <div class="btnbar" style="margin-top:8px">
+      <button class="btn" id="adm-generate">צור מסמך קבלה</button>
+      <button class="btn ghost" id="adm-clear">ניקוי</button>
+    </div>
+    <pre id="adm-out" style="margin-top:10px"></pre>
+  </section>
+
+  <section>
+    <h2>פרוטוקולים — 4AT / Morse / Fried</h2>
+    <div class="grid">
+      <div class="col-12"><strong>4AT (דליריום)</strong></div>
+      <div class="col-4"><label>Alertness (0/4)</label><select id="a_alert"><option value="0">0 — תקין</option><option value="4">4 — חריג</option></select></div>
+      <div class="col-4"><label>AMT4 (0/1)</label><select id="a_amt4"><option value="0">0 — תקין</option><option value="1">1 — חריג</option></select></div>
+      <div class="col-4"><label>Attention (0/1)</label><select id="a_attn"><option value="0">0 — תקין</option><option value="1">1 — חריג</option></select></div>
+      <div class="col-4"><label>Acute change (0/4)</label><select id="a_change"><option value="0">0 — לא</option><option value="4">4 — כן</option></select></div>
+      <div class="col-8" style="display:flex;align-items:end;gap:8px"><button class="btn" id="a_calc">חשב 4AT</button><span id="a_badge" class="badge">ציון: 0</span></div>
+
+      <div class="col-12" style="margin-top:8px"><strong>Morse (סיכון לנפילות)</strong></div>
+      <div class="col-3"><label>היסטוריית נפילות</label><select id="m_history"><option value="0">לא</option><option value="25">כן (25)</option></select></div>
+      <div class="col-3"><label>אבחנה משנית</label><select id="m_dx"><option value="0">לא</option><option value="15">כן (15)</option></select></div>
+      <div class="col-3"><label>עזרים</label><select id="m_aid"><option value="0">ללא</option><option value="15">מקל/הליכון (15)</option><option value="30">רהיטים (30)</option></select></div>
+      <div class="col-3"><label>עירוי</label><select id="m_iv"><option value="0">לא</option><option value="20">כן (20)</option></select></div>
+      <div class="col-3"><label>הליכה/יציבה</label><select id="m_gait"><option value="0">תקין</option><option value="10">חלש (10)</option><option value="20">פגום (20)</option></select></div>
+      <div class="col-3"><label>שיפוט</label><select id="m_mental"><option value="0">תקין</option><option value="15">פחות מודע (15)</option></select></div>
+      <div class="col-6" style="display:flex;align-items:end;gap:8px"><button class="btn" id="m_calc">חשב Morse</button><span id="m_badge" class="badge">ציון: 0</span></div>
+
+      <div class="col-12" style="margin-top:8px"><strong>Fried (שבריריות)</strong></div>
+      <div class="col-3"><label>ירידה במשקל</label><select id="f_w"><option value="0">לא</option><option value="1">כן</option></select></div>
+      <div class="col-3"><label>תשישות</label><select id="f_e"><option value="0">לא</option><option value="1">כן</option></select></div>
+      <div class="col-3"><label>פעילות גופנית נמוכה</label><select id="f_a"><option value="0">לא</option><option value="1">כן</option></select></div>
+      <div class="col-3"><label>אחיזת יד חלשה</label><select id="f_g"><option value="0">לא</option><option value="1">כן</option></select></div>
+      <div class="col-3"><label>הליכה איטית</label><select id="f_wk"><option value="0">לא</option><option value="1">כן</option></select></div>
+      <div class="col-9" style="display:flex;align-items:end;gap:8px"><button class="btn" id="f_calc">חשב Fried</button><span id="f_badge" class="badge">ציון: 0</span></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>תבנית ייעוץ — גריאטרי</h2>
+    <div class="grid">
+      <div class="col-6"><label>מחלקה</label><input id="c_dept" placeholder="לדוג׳ פנימית ב׳"></div>
+      <div class="col-6"><label>טלפון/שלוחה</label><input id="c_phone" placeholder="02-655-5xxx"></div>
+      <div class="col-12"><label>פרטי הפניה</label><textarea id="c_body" placeholder="סיבת ייעוץ, שאלות ספציפיות…"></textarea></div>
+    </div>
+    <div class="btnbar" style="margin-top:8px">
+      <button class="btn" id="c_make">צור בקשת ייעוץ</button>
+      <button class="btn ghost" id="c_clear">ניקוי</button>
+    </div>
+    <pre id="c_out" style="margin-top:10px"></pre>
+  </section>
+
+  <section>
+    <h2>ייצוא והדפסה</h2>
+    <div class="btnbar">
+      <button class="btn" id="btn-print">הדפסה</button>
+      <button class="btn muted" id="btn-json">ייצוא JSON</button>
+    </div>
+    <div class="muted" style="margin-top:8px">
+      <strong>אזהרה:</strong> אין להזין/לאחסן מידע מזהה אמיתי של מטופלים. הדפדפן שומר נתונים מקומיים בלבד (localStorage).
+    </div>
+  </section>
+
+  <footer>לשימוש לימודי בלבד — אין להזין מזהים אישיים • © Shaare Zedek</footer>
+</div>
+
+<script>
+const $=s=>document.querySelector(s), $$=s=>Array.from(document.querySelectorAll(s)), fmt=v=>(v??'')===''?'—':v;
+const LS='szmc_roster_v1'; let roster=[], selected=null;
+const fields=[{id:'adm_name',label:'שם המטופל'},{id:'adm_id',label:'מזהה פנימי (מקומי)'},{id:'adm_age',label:'גיל'},{id:'adm_sex',label:'מין'},{id:'adm_date',label:'תאריך קבלה'},{id:'adm_reason',label:'סיבת קבלה'},{id:'adm_dept',label:'מחלקה'},{id:'adm_bp',label:'BP'},{id:'adm_hr',label:'HR'},{id:'adm_rr',label:'RR'},{id:'adm_temp',label:'Temp'},{id:'adm_spo2',label:'SpO2'},{id:'adm_all',label:'אלרגיות'},{id:'adm_meds',label:'תרופות'},{id:'adm_social',label:'רקע סוציאלי'}];
+$('#adm-grid').innerHTML=fields.map(f=>`<div class="col-6"><label>${f.label}</label><input id="${f.id}"></div>`).join('');
+function load(){try{roster=JSON.parse(localStorage.getItem(LS)||'[]')}catch{roster=[]}}
+function save(){localStorage.setItem(LS,JSON.stringify(roster))}
+function render(){
+  const q=$('#search').value.trim().toLowerCase();
+  $('#tbody').innerHTML=roster.filter(p=>[p.name,p.age,p.sex,p.room,p.admDate,p.dx,p.status].join(' ').toLowerCase().includes(q))
+  .map(p=>`<tr><td>${fmt(p.name)}</td><td>${fmt(p.age)}</td><td>${fmt(p.sex)}</td><td>${fmt(p.room)}</td><td>${fmt(p.admDate)}</td><td>${fmt(p.dx)}</td><td>${fmt(p.status)}</td>
+  <td><button class="btn ghost" data-act="sel" data-id="${p.id}">בחר</button> <button class="btn" data-act="edit" data-id="${p.id}">עריכה</button> <button class="btn muted" data-act="del" data-id="${p.id}">מחיקה</button></td></tr>`).join('')||`<tr><td colspan="8" class="muted">אין נתונים</td></tr>`;
+}
+function openForm(p=null){
+  const w=$('#form-wrap'); w.style.display='block';
+  const d=p||{name:'',age:'',sex:'',room:'',admDate:'',dx:'',status:'פעיל'};
+  w.innerHTML=`<div class="grid">
+    <div class="col-4"><label>שם</label><input id="f_name" value="${d.name||''}"></div>
+    <div class="col-2"><label>גיל</label><input id="f_age" type="number" value="${d.age||''}"></div>
+    <div class="col-2"><label>מין</label><select id="f_sex"><option ${d.sex==='ז'?'selected':''}> ז</option><option ${d.sex==='נ'?'selected':''}> נ</option><option ${(!d.sex||d.sex==='אחר')?'selected':''}> אחר</option></select></div>
+    <div class="col-4"><label>חדר/מיטה</label><input id="f_room" value="${d.room||''}"></div>
+    <div class="col-4"><label>תאריך קבלה</label><input id="f_adm" type="date" value="${d.admDate||''}"></div>
+    <div class="col-5"><label>אבחנה</label><input id="f_dx" value="${d.dx||''}"></div>
+    <div class="col-3"><label>סטטוס</label><select id="f_status"><option ${d.status==='פעיל'?'selected':''}> פעיל</option><option ${d.status==='שוחרר'?'selected':''}> שוחרר</option></select></div>
+    <div class="col-12 btnbar"><button class="btn" id="f_save">${p?'עדכון':'הוספה'}</button><button class="btn ghost" id="f_cancel">ביטול</button></div>
+  </div>`;
+  $('#f_cancel').onclick=()=>w.style.display='none';
+  $('#f_save').onclick=()=>{
+    const obj={id:p?.id||String(Date.now()),name:$('#f_name').value.trim(),age:$('#f_age').value.trim(),sex:$('#f_sex').value.trim(),room:$('#f_room').value.trim(),admDate:$('#f_adm').value.trim(),dx:$('#f_dx').value.trim(),status:$('#f_status').value.trim()};
+    if(p){roster=roster.map(x=>x.id===p.id?obj:x)} else {roster.push(obj)}
+    save(); render(); w.style.display='none';
+  };
+}
+$('#btn-add').onclick=()=>openForm();
+$('#btn-clear').onclick=()=>{ if(confirm('למחוק את כל הרשימה המקומית?')){roster=[]; save(); render();}};
+$('#search').oninput=render;
+$('#tbody').addEventListener('click',e=>{
+  const b=e.target.closest('button'); if(!b) return; const id=b.dataset.id, act=b.dataset.act; const p=roster.find(x=>x.id===id);
+  if(act==='sel'){selected=p; alert('נבחר: '+(p?.name||'')); prefill();}
+  if(act==='edit'){openForm(p)}
+  if(act==='del'){if(confirm('מחיקה?')){roster=roster.filter(x=>x.id!==id); save(); render();}}
+});
+function prefill(){
+  if(!selected) return;
+  $('#adm_name').value=selected.name||''; $('#adm_age').value=selected.age||''; $('#adm_sex').value=selected.sex||'';
+  $('#adm_date').value=selected.admDate||''; $('#adm_reason').value=selected.dx||'';
+}
+const badges={};
+function riskBadge(el,score,low,midTh,mid,hiTh,hi){
+  el.textContent=`ציון: ${score} — `+(score>=hiTh?hi:score>=midTh?mid:low);
+  el.className='badge '+(score>=hiTh?'bad':score>=midTh?'warn':'ok');
+}
+$('#a_calc').onclick=()=>{const s=+$('#a_alert').value+ +$('#a_amt4').value+ +$('#a_attn').value+ +$('#a_change').value; riskBadge($('#a_badge'),s,'נמוך',1,'חשד',4,'דליריום סביר');};
+$('#m_calc').onclick=()=>{const s=+$('#m_history').value+ +$('#m_dx').value+ +$('#m_aid').value+ +$('#m_iv').value+ +$('#m_gait').value+ +$('#m_mental').value; riskBadge($('#m_badge'),s,'נמוך',25,'בינוני',46,'גבוה');};
+$('#f_calc').onclick=()=>{const s=+$('#f_w').value+ +$('#f_e').value+ +$('#f_a').value+ +$('#f_g').value+ +$('#f_wk').value; riskBadge($('#f_badge'),s,'חסון',1,'טרום-שברירי',3,'שברירי');};
+$('#adm-clear').onclick=()=>{fields.forEach(f=>$('#'+f.id).value=''); $('#adm-out').textContent='';};
+$('#adm-generate').onclick=()=>{
+  const v=Object.fromEntries(fields.map(f=>[f.id,$('#'+f.id).value.trim()])); const txt=`קבלה רפואית — שערי צדק
+=====================================
+תאריך: ${new Date().toLocaleDateString('he-IL')}
+שם: ${fmt(v.adm_name)}   גיל/מין: ${fmt(v.adm_age)} / ${fmt(v.adm_sex)}
+חדר: ${fmt(selected?.room)}   מזהה מקומי: ${fmt(v.adm_id)}
+
+סיבת קבלה:
+${fmt(v.adm_reason)}
+
+ויטלס:
+BP ${fmt(v.adm_bp)} | HR ${fmt(v.adm_hr)} | RR ${fmt(v.adm_rr)} | Temp ${fmt(v.adm_temp)} | SpO2 ${fmt(v.adm_spo2)}
+
+אלרגיות: ${fmt(v.adm_all)}
+תרופות: ${fmt(v.adm_meds)}
+רקע סוציאלי: ${fmt(v.adm_social)}
+
+תכנית:
+- קבלה למחלקה: ${fmt(v.adm_dept)||'[לקבוע]'}
+- בדיקות בסיס: דם/כימיה/שתן
+- הערכה גריאטרית רב-תחומית
+- ניטור סיכונים (דליריום/נפילות/שבריריות)
+`; $('#adm-out').textContent=txt;};
+$('#c_make').onclick=()=>{$('#c_out').textContent=`בקשת ייעוץ גריאטרי
+========================
+מחלקה: ${fmt($('#c_dept').value)}
+טלפון: ${fmt($('#c_phone').value)}
+
+פרטי הפניה:
+${fmt($('#c_body').value)}
+
+שאלות ספציפיות:
+[ציין כאן]
+`;};
+$('#c_clear').onclick=()=>{['c_dept','c_phone','c_body'].forEach(id=>$('#'+id).value=''); $('#c_out').textContent='';};
+$('#btn-print').onclick=()=>window.print();
+$('#btn-json').onclick=()=>{
+  const data={roster,selectedId:selected?.id||null,admission:Object.fromEntries(fields.map(f=>[f.id,$('#'+f.id).value.trim()])),
+    protocols:{fourAT:{alert:+$('#a_alert').value,amt4:+$('#a_amt4').value,attention:+$('#a_attn').value,change:+$('#a_change').value},
+    morse:{history:+$('#m_history').value,dx:+$('#m_dx').value,aid:+$('#m_aid').value,iv:+$('#m_iv').value,gait:+$('#m_gait').value,mental:+$('#m_mental').value},
+    fried:{w:+$('#f_w').value,e:+$('#f_e').value,a:+$('#f_a').value,g:+$('#f_g').value,wk:+$('#f_wk').value}}};
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}); const url=URL.createObjectURL(blob);
+  const a=document.createElement('a'); a.href=url; a.download='geriatrics_local_data.json'; a.click(); setTimeout(()=>URL.revokeObjectURL(url),500);
+};
+/* init */
+(function(){ try{roster=JSON.parse(localStorage.getItem(LS)||'[]')}catch{roster=[]} render(); })();
+</script>
+</body>
+</html>
