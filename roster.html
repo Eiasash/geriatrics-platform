@@ -134,26 +134,95 @@ function load(){try{roster=JSON.parse(localStorage.getItem(LS)||'[]')}catch{rost
 function save(){localStorage.setItem(LS,JSON.stringify(roster))}
 function render(){
   const q=$('#search').value.trim().toLowerCase();
-  $('#tbody').innerHTML=roster.filter(p=>[p.name,p.age,p.sex,p.room,p.admDate,p.dx,p.status].join(' ').toLowerCase().includes(q))
-  .map(p=>`<tr><td>${fmt(p.name)}</td><td>${fmt(p.age)}</td><td>${fmt(p.sex)}</td><td>${fmt(p.room)}</td><td>${fmt(p.admDate)}</td><td>${fmt(p.dx)}</td><td>${fmt(p.status)}</td>
-  <td><button class="btn ghost" data-act="sel" data-id="${p.id}">בחר</button> <button class="btn" data-act="edit" data-id="${p.id}">עריכה</button> <button class="btn muted" data-act="del" data-id="${p.id}">מחיקה</button></td></tr>`).join('')||`<tr><td colspan="8" class="muted">אין נתונים</td></tr>`;
+  const tbody = $('#tbody');
+  tbody.innerHTML = ''; // Clear existing content
+  
+  const filteredRoster = roster.filter(p=>[p.name,p.age,p.sex,p.room,p.admDate,p.dx,p.status].join(' ').toLowerCase().includes(q));
+  
+  if (filteredRoster.length === 0) {
+    const emptyRow = document.createElement('tr');
+    const emptyCell = document.createElement('td');
+    emptyCell.setAttribute('colspan', '8');
+    emptyCell.className = 'muted';
+    emptyCell.textContent = 'אין נתונים';
+    emptyRow.appendChild(emptyCell);
+    tbody.appendChild(emptyRow);
+    return;
+  }
+  
+  filteredRoster.forEach(p => {
+    const row = document.createElement('tr');
+    
+    // Create data cells
+    [p.name, p.age, p.sex, p.room, p.admDate, p.dx, p.status].forEach(value => {
+      const cell = document.createElement('td');
+      cell.textContent = fmt(value);
+      row.appendChild(cell);
+    });
+    
+    // Create action buttons cell
+    const actionsCell = document.createElement('td');
+    
+    const selectBtn = document.createElement('button');
+    selectBtn.className = 'btn ghost';
+    selectBtn.setAttribute('data-act', 'sel');
+    selectBtn.setAttribute('data-id', p.id);
+    selectBtn.textContent = 'בחר';
+    
+    const editBtn = document.createElement('button');
+    editBtn.className = 'btn';
+    editBtn.setAttribute('data-act', 'edit');
+    editBtn.setAttribute('data-id', p.id);
+    editBtn.textContent = 'עריכה';
+    
+    const deleteBtn = document.createElement('button');
+    deleteBtn.className = 'btn muted';
+    deleteBtn.setAttribute('data-act', 'del');
+    deleteBtn.setAttribute('data-id', p.id);
+    deleteBtn.textContent = 'מחיקה';
+    
+    actionsCell.appendChild(selectBtn);
+    actionsCell.appendChild(document.createTextNode(' '));
+    actionsCell.appendChild(editBtn);
+    actionsCell.appendChild(document.createTextNode(' '));
+    actionsCell.appendChild(deleteBtn);
+    
+    row.appendChild(actionsCell);
+    tbody.appendChild(row);
+  });
 }
 function openForm(p=null){
   const w=$('#form-wrap'); w.style.display='block';
   const d=p||{name:'',age:'',sex:'',room:'',admDate:'',dx:'',status:'פעיל'};
   w.innerHTML=`<div class="grid">
-    <div class="col-4"><label>שם</label><input id="f_name" value="${d.name||''}"></div>
-    <div class="col-2"><label>גיל</label><input id="f_age" type="number" value="${d.age||''}"></div>
+    <div class="col-4"><label>שם *</label><input id="f_name" value="${d.name||}" required></div>
+    <div class="col-2"><label>גיל *</label><input id="f_age" type="number" value="${d.age||}" min="0" max="150" step="1" required></div>
     <div class="col-2"><label>מין</label><select id="f_sex"><option ${d.sex==='ז'?'selected':''}> ז</option><option ${d.sex==='נ'?'selected':''}> נ</option><option ${(!d.sex||d.sex==='אחר')?'selected':''}> אחר</option></select></div>
-    <div class="col-4"><label>חדר/מיטה</label><input id="f_room" value="${d.room||''}"></div>
-    <div class="col-4"><label>תאריך קבלה</label><input id="f_adm" type="date" value="${d.admDate||''}"></div>
-    <div class="col-5"><label>אבחנה</label><input id="f_dx" value="${d.dx||''}"></div>
+    <div class="col-4"><label>חדר/מיטה</label><input id="f_room" value="${d.room||}" pattern="[0-9A-Za-z\s-/]+"></div>
+    <div class="col-4"><label>תאריך קבלה</label><input id="f_adm" type="date" value="${d.admDate||}"></div>
+    <div class="col-5"><label>אבחנה</label><input id="f_dx" value="${d.dx||}"></div>
     <div class="col-3"><label>סטטוס</label><select id="f_status"><option ${d.status==='פעיל'?'selected':''}> פעיל</option><option ${d.status==='שוחרר'?'selected':''}> שוחרר</option></select></div>
     <div class="col-12 btnbar"><button class="btn" id="f_save">${p?'עדכון':'הוספה'}</button><button class="btn ghost" id="f_cancel">ביטול</button></div>
   </div>`;
   $('#f_cancel').onclick=()=>w.style.display='none';
   $('#f_save').onclick=()=>{
-    const obj={id:p?.id||String(Date.now()),name:$('#f_name').value.trim(),age:$('#f_age').value.trim(),sex:$('#f_sex').value.trim(),room:$('#f_room').value.trim(),admDate:$('#f_adm').value.trim(),dx:$('#f_dx').value.trim(),status:$('#f_status').value.trim()};
+    // Validate mandatory fields
+    const name = $('#f_name').value.trim();
+    const age = $('#f_age').value.trim();
+    
+    if (!name) {
+      alert('שם המטופל הוא שדה חובה');
+      $('#f_name').focus();
+      return;
+    }
+    
+    if (!age || isNaN(age) || parseInt(age) <= 0 || parseInt(age) > 150) {
+      alert('נא להזין גיל תקין (1-150)');
+      $('#f_age').focus();
+      return;
+    }
+    
+    const obj={id:p?.id||String(Date.now()),name,age:parseInt(age),sex:$('#f_sex').value.trim(),room:$('#f_room').value.trim(),admDate:$('#f_adm').value.trim(),dx:$('#f_dx').value.trim(),status:$('#f_status').value.trim()};
     if(p){roster=roster.map(x=>x.id===p.id?obj:x)} else {roster.push(obj)}
     save(); render(); w.style.display='none';
   };
