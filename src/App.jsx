@@ -326,7 +326,7 @@ Keep the response practical and actionable for emergency/urgent care settings.
             flexWrap: 'wrap',
             justifyContent: 'center'
           }}>
-            {['dashboard', 'quiz', 'flashcards', 'ai-assistant', 'medications', 'protocols', 'calculators', 'emergency', 'articles', 'note-analyzer', 'textbooks', 'research', 'resources', 'patients', 'on-call', 'settings'].map(tab => (
+            {['dashboard', 'roster', 'quiz', 'flashcards', 'ai-assistant', 'medications', 'protocols', 'calculators', 'emergency', 'articles', 'note-analyzer', 'textbooks', 'research', 'resources', 'patients', 'on-call', 'settings'].map(tab => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
@@ -345,6 +345,7 @@ Keep the response practical and actionable for emergency/urgent care settings.
                 {tab === 'ai-assistant' ? t('navigation.aiAssistant', 'AI Assistant') : 
                  tab === 'calculators' ? t('navigation.calculators', 'Calculators') :
                  tab === 'patients' ? t('navigation.patients', 'Patients') :
+                 tab === 'roster' ? t('navigation.roster', 'רשימת מטופלים') :
                  tab === 'on-call' ? t('navigation.onCall', 'On-Call Kit') :
                  tab === 'textbooks' ? t('navigation.textbooks', 'Textbooks') :
                  tab === 'research' ? t('navigation.research', 'Research') :
@@ -373,6 +374,11 @@ Keep the response practical and actionable for emergency/urgent care settings.
             <div style={{ backgroundColor: 'white', padding: '20px', borderRadius: '8px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
               <h3 style={{ color: '#667eea', marginTop: 0 }}>Quick Actions</h3>
               <button 
+                onClick={() => setActiveTab('roster')}
+                style={{ width: '100%', padding: '12px', marginBottom: '10px', backgroundColor: '#059669', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>
+                🏥 Patient Roster & Protocols
+              </button>
+              <button 
                 onClick={() => setActiveTab('quiz')}
                 style={{ width: '100%', padding: '12px', marginBottom: '10px', backgroundColor: '#667eea', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>
                 Start Board Review Quiz
@@ -394,6 +400,53 @@ Keep the response practical and actionable for emergency/urgent care settings.
               <div style={{ marginTop: '15px', padding: '10px', backgroundColor: '#e7f3ff', borderRadius: '4px' }}>
                 <strong>Total: {allQuestions.length} Questions</strong>
               </div>
+            </div>
+          </div>
+        )}
+
+        {/* Patient Roster Tab */}
+        {activeTab === 'roster' && (
+          <div style={{ backgroundColor: 'white', padding: '20px', borderRadius: '8px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
+            <div style={{ marginBottom: '20px' }}>
+              <h2 style={{ color: '#667eea', marginTop: 0, display: 'flex', alignItems: 'center', gap: '10px' }}>
+                🏥 רשימת מטופלים ופרוטוקולים
+                <span style={{ fontSize: '14px', color: '#666', fontWeight: 'normal' }}>
+                  Patient Roster & Clinical Protocols
+                </span>
+              </h2>
+              <p style={{ color: '#666', marginBottom: '15px' }}>
+                מערכת ניהול רשימת מטופלים עם פרוטוקולים קליניים (4AT, Morse, Fried) ויצירת מסמכי קבלה.
+                <br />
+                <small>Patient management system with clinical protocols and admission documentation.</small>
+              </p>
+            </div>
+            
+            <div style={{ 
+              border: '2px solid #e5e7eb',
+              borderRadius: '12px',
+              overflow: 'hidden',
+              backgroundColor: '#f9fafb',
+              minHeight: '600px'
+            }}>
+              <iframe 
+                src="/roster.html"
+                style={{
+                  width: '100%',
+                  height: '80vh',
+                  minHeight: '600px',
+                  border: 'none',
+                  display: 'block'
+                }}
+                title="Patient Roster System"
+              />
+            </div>
+            
+            <div style={{ marginTop: '15px', padding: '10px', backgroundColor: '#fffbeb', border: '1px solid #fbbf24', borderRadius: '6px' }}>
+              <p style={{ margin: 0, fontSize: '13px', color: '#92400e' }}>
+                <strong>הערה:</strong> הנתונים נשמרים מקומית בדפדפן בלבד. אין להזין מידע מזהה אמיתי של מטופלים.
+                <br />
+                <strong>Note:</strong> Data is stored locally in browser only. Do not enter real patient identifying information.
+              </p>
             </div>
           </div>
         )}
