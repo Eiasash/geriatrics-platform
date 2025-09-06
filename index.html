@@ -1,62 +1,16 @@
 <!DOCTYPE html>
-<html lang="he" dir="rtl">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Geriatrics Platform — Hebrew</title>
-  <style>
-    body { font-family: Arial, sans-serif; margin: 0; background: #f6f7fb; }
-    .tabs { display: flex; background: #111827; color: #fff; }
-    .tab { flex: 1; padding: 14px; border: none; background: #111827; color: #fff; cursor: pointer; }
-    .tab:hover { background: #374151; }
-    .content { display: none; padding: 20px; }
-    .active { display: block; }
-  </style>
-</head>
-<body>
-  <div class="tabs">
-    <button class="tab" onclick="showTab('admission', this)">קבלה</button>
-    <button class="tab" onclick="showTab('discharge', this)">שחרור</button>
-    <button class="tab" onclick="showTab('complexity', this)">מחשבון מורכבות</button>
-    <button class="tab" onclick="showTab('research', this)">מחקר</button>
-    <button class="tab" onclick="showTab('education', this)">למידה</button>
-    <button class="tab" onclick="showTab('rosterTab', this)">רשימת מטופלים</button>
-  </div>
-
-  <div id="admission" class="content active">
-    <h2>טופס קבלה</h2>
-    <p>כאן יבוא הטופס...</p>
-  </div>
-  <div id="discharge" class="content">
-    <h2>טופס שחרור</h2>
-    <p>כאן יבוא הטופס...</p>
-  </div>
-  <div id="complexity" class="content">
-    <h2>מחשבון מורכבות</h2>
-    <p>כאן יבוא המחשבון...</p>
-  </div>
-  <div id="research" class="content">
-    <h2>מחקר</h2>
-    <p>כאן יבוא מחקר...</p>
-  </div>
-  <div id="education" class="content">
-    <h2>למידה</h2>
-    <p>כאן יבוא תוכן לימודי...</p>
-  </div>
-  <div id="rosterTab" class="content">
-    <h2 style="margin-top:0">רשימת מטופלים</h2>
-    <iframe src="/roster.html"
-            style="width:100%;height:80vh;border:0;border-radius:12px;background:#fff"
-            title="רשימת מטופלים"></iframe>
-  </div>
-
-  <script>
-    function showTab(id, el) {
-      document.querySelectorAll(".content").forEach(c => c.classList.remove("active"));
-      document.getElementById(id).classList.add("active");
-      document.querySelectorAll(".tab").forEach(b => b.style.background = "#111827");
-      el.style.background = "#374151";
-    }
-  </script>
-</body>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#2563eb" />
+    <meta name="description" content="Advanced Geriatrics Fellowship Platform - 100% Functional Medical Tools" />
+    <link rel="manifest" href="/manifest.json" />
+    <title>Geriatrics Platform - Live at geriatrics.me</title>
+  </head>
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+    <script type="module" src="/src/index.jsx"></script>
+  </body>
 </html>
