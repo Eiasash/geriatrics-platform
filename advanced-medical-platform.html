@@ -4,25 +4,178 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Advanced Medical Platform</title>
-  <meta http-equiv="refresh" content="0; url=/index.html">
-  <link rel="canonical" href="/index.html">
   <style>
-    body { font-family: Arial, sans-serif; margin: 40px; color: #111827; }
-    a { color: #2563eb; text-decoration: none; }
+    :root {
+      --brand: #667eea;
+      --brand2: #764ba2;
+      --bg: #f3f4f6;
+      --card: #ffffff;
+      --text: #111827;
+      --muted: #6b7280;
+      --ok: #059669;
+      --warn: #d97706;
+      --bad: #dc2626;
+      --link: #2563eb;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--bg); color: var(--text); font-family: Arial, sans-serif; }
+    header { background: linear-gradient(135deg, var(--brand) 0%, var(--brand2) 100%); color: #fff; padding: 24px 16px; }
+    .container { max-width: 1200px; margin: 0 auto; }
+    h1 { margin: 0; font-size: 28px; }
+    p.subtitle { margin: 6px 0 0 0; opacity: 0.95; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; }
+    .card { background: var(--card); border-radius: 12px; padding: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+    .card h3 { margin: 0 0 10px 0; color: var(--brand); display: flex; align-items: center; gap: 8px; }
+    .button { display: inline-flex; align-items: center; gap: 8px; padding: 10px 14px; border: 0; border-radius: 8px; cursor: pointer; background: var(--brand); color: #fff; font-weight: bold; }
+    .button.secondary { background: #059669; }
+    .button.linklike { background: transparent; color: var(--link); font-weight: bold; padding: 0; }
+    a { color: var(--link); text-decoration: none; }
     a:hover { text-decoration: underline; }
+    textarea, input[type="text"] { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #e5e7eb; font-family: inherit; font-size: 14px; }
+    .row { display: flex; gap: 8px; }
+    .row > * { flex: 1; }
+    .muted { color: var(--muted); font-size: 13px; }
+    .badge { display: inline-block; padding: 4px 8px; border-radius: 9999px; font-size: 12px; font-weight: 600; }
+    .badge.ok { background: #ecfdf5; color: var(--ok); border: 1px solid #a7f3d0; }
+    .badge.warn { background: #fffbeb; color: var(--warn); border: 1px solid #f59e0b; }
+    .badge.bad { background: #fef2f2; color: var(--bad); border: 1px solid #fecaca; }
+    iframe { width: 100%; border: 0; border-radius: 12px; background: #fff; }
+    footer { text-align: center; padding: 18px; color: var(--muted); font-size: 14px; }
   </style>
-  <script>
-    // Fallback JS redirect in case meta refresh is blocked
-    (function() {
-      try { window.location.replace('/index.html'); } catch (_) { window.location.href = '/index.html'; }
-    })();
-  </script>
-  <noscript>
-    <meta http-equiv="refresh" content="0; url=/index.html" />
-  </noscript>
 </head>
 <body>
-  <p>Redirecting to the Geriatrics Platform... If you are not redirected, <a href="/index.html">click here</a>.</p>
+  <header>
+    <div class="container">
+      <h1>Advanced Medical Platform</h1>
+      <p class="subtitle">Shaare Zedek Medical Center — Geriatrics Excellence</p>
+    </div>
+  </header>
+
+  <main class="container" style="padding: 18px;">
+    <section class="grid" style="margin-bottom: 16px;">
+      <div class="card">
+        <h3>🚀 Quick Access</h3>
+        <p class="muted" style="margin-top: 0">Common clinical tools and external systems</p>
+        <div class="row">
+          <button class="button" onclick="location.href='/index.html'">🏠 Main Dashboard</button>
+          <button class="button secondary" onclick="location.href='/roster.html'">🏥 Patient Roster</button>
+        </div>
+        <div style="margin-top: 10px;">
+          <a href="https://nextjs-with-supabasenew-ochre.vercel.app" target="_blank" rel="noopener noreferrer">↗ Open Next.js + Supabase app</a>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>🧠 AI Clinical Assistant</h3>
+        <p class="muted" style="margin-top: 0">Ask clinical questions (educational use only; no PHI)</p>
+        <label for="aiQuestion" class="muted">Question</label>
+        <textarea id="aiQuestion" rows="4" placeholder="e.g., Best delirium prevention measures post-hip fracture?" style="margin: 6px 0 10px 0"></textarea>
+        <div class="row">
+          <button id="aiAskBtn" class="button">Ask AI</button>
+          <button id="aiClearBtn" class="button secondary" type="button">Clear</button>
+        </div>
+        <div id="aiStatus" class="muted" style="margin-top: 8px;"></div>
+        <div id="aiAnswer" class="card" style="margin-top: 10px; display:none; background:#f8fafc;"></div>
+      </div>
+
+      <div class="card">
+        <h3>📊 System Health</h3>
+        <div style="display:flex; align-items:center; gap:10px;">
+          <button id="healthRefresh" class="button" type="button">Refresh</button>
+          <span id="healthBadge" class="badge warn">Unknown</span>
+        </div>
+        <pre id="healthJson" style="margin-top:10px; background:#f8fafc; padding:12px; border-radius:8px; max-height:220px; overflow:auto;"></pre>
+      </div>
+    </section>
+
+    <section class="card">
+      <h3>📋 Patient Roster</h3>
+      <p class="muted" style="margin-top: 0">Local-only demo data. Do not enter real patient identifiers.</p>
+      <iframe src="/roster.html" style="height: 70vh"></iframe>
+    </section>
+  </main>
+
+  <footer>
+    Shaare Zedek Medical Center — Educational platform for geriatric medicine training
+  </footer>
+
+  <script>
+    (function() {
+      const $ = (id) => document.getElementById(id);
+
+      // Health panel
+      async function loadHealth() {
+        const badge = $('healthBadge');
+        const out = $('healthJson');
+        try {
+          badge.textContent = 'Checking…';
+          badge.className = 'badge warn';
+          const res = await fetch('/api/health', { cache: 'no-store' });
+          if (!res.ok) throw new Error('HTTP ' + res.status);
+          const data = await res.json();
+          out.textContent = JSON.stringify(data, null, 2);
+          const state = (data.status || '').toLowerCase();
+          if (state === 'healthy' || state === 'ok') {
+            badge.textContent = 'Healthy';
+            badge.className = 'badge ok';
+          } else {
+            badge.textContent = data.status || 'Degraded';
+            badge.className = 'badge warn';
+          }
+        } catch (err) {
+          out.textContent = 'Error fetching health: ' + (err && err.message ? err.message : err);
+          badge.textContent = 'Down';
+          badge.className = 'badge bad';
+        }
+      }
+      $('healthRefresh').addEventListener('click', loadHealth);
+      loadHealth();
+
+      // AI Assistant
+      async function askAI() {
+        const btn = $('aiAskBtn');
+        const clearBtn = $('aiClearBtn');
+        const input = $('aiQuestion');
+        const status = $('aiStatus');
+        const answerBox = $('aiAnswer');
+        const question = (input.value || '').trim();
+        if (!question) {
+          status.textContent = 'Please enter a question.';
+          answerBox.style.display = 'none';
+          return;
+        }
+        btn.disabled = true; clearBtn.disabled = true; input.disabled = true;
+        status.textContent = 'Thinking…';
+        answerBox.style.display = 'none';
+        try {
+          const res = await fetch('/api/ask-ai', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ question })
+          });
+          if (!res.ok) throw new Error('HTTP ' + res.status);
+          const data = await res.json();
+          const response = data.response || 'No response.';
+          const confidence = typeof data.confidence === 'number' ? ' (' + Math.round(data.confidence * 100) + '% confidence)' : '';
+          answerBox.innerHTML = '<strong>AI:</strong> ' + response + '<br><span class="muted">' + (data.timestamp || '') + confidence + '</span>';
+          answerBox.style.display = 'block';
+          status.textContent = '';
+        } catch (err) {
+          status.textContent = 'Error: ' + (err && err.message ? err.message : err);
+          answerBox.style.display = 'none';
+        } finally {
+          btn.disabled = false; clearBtn.disabled = false; input.disabled = false;
+        }
+      }
+
+      $('aiAskBtn').addEventListener('click', askAI);
+      $('aiClearBtn').addEventListener('click', function() {
+        $('aiQuestion').value = '';
+        $('aiStatus').textContent = '';
+        $('aiAnswer').style.display = 'none';
+      });
+    })();
+  </script>
 </body>
 </html>
 
