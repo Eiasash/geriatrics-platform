@@ -6,8 +6,8 @@
   <title>Advanced Medical Platform</title>
   <style>
     :root {
-      --brand: #667eea;
-      --brand2: #764ba2;
+      --brand: #cc7722;
+      --brand2: #a16207;
       --bg: #f3f4f6;
       --card: #ffffff;
       --text: #111827;
@@ -15,7 +15,7 @@
       --ok: #059669;
       --warn: #d97706;
       --bad: #dc2626;
-      --link: #2563eb;
+      --link: #92400e;
     }
     * { box-sizing: border-box; }
     body { margin: 0; background: var(--bg); color: var(--text); font-family: Arial, sans-serif; }
@@ -61,7 +61,7 @@
           <button class="button secondary" onclick="location.href='/roster.html'">🏥 Patient Roster</button>
         </div>
         <div style="margin-top: 10px;">
-          <a href="https://nextjs-with-supabasenew-ochre.vercel.app" target="_blank" rel="noopener noreferrer">↗ Open Next.js + Supabase app</a>
+          <a id="vercelLink" href="https://nextjs-with-supabasenew-ochre.vercel.app" target="_blank" rel="noopener noreferrer">↗ Open Next.js + Supabase app</a>
         </div>
       </div>
 
@@ -85,6 +85,21 @@
           <span id="healthBadge" class="badge warn">Unknown</span>
         </div>
         <pre id="healthJson" style="margin-top:10px; background:#f8fafc; padding:12px; border-radius:8px; max-height:220px; overflow:auto;"></pre>
+      </div>
+
+      <div class="card">
+        <h3>🔐 Authentication (Next.js + Supabase)</h3>
+        <label for="vercelBaseInput" class="muted">Vercel App Base URL</label>
+        <div class="row" style="margin: 6px 0 10px 0;">
+          <input id="vercelBaseInput" type="text" placeholder="https://your-app.vercel.app" />
+          <button id="saveVercelBtn" class="button" type="button">Save</button>
+        </div>
+        <div class="row" style="margin-top: 6px;">
+          <button id="signinBtn" class="button" type="button">Sign In</button>
+          <button id="signupBtn" class="button secondary" type="button">Sign Up</button>
+          <button id="accountBtn" class="button" type="button">Account</button>
+        </div>
+        <p class="muted" style="margin-top: 8px;">Default paths: /auth/sign-in, /auth/sign-up, /account</p>
       </div>
     </section>
 
@@ -174,6 +189,32 @@
         $('aiStatus').textContent = '';
         $('aiAnswer').style.display = 'none';
       });
+
+      // Vercel base URL persistence and deep links
+      const defaultBase = 'https://nextjs-with-supabasenew-ochre.vercel.app';
+      const key = 'vercelBaseUrl';
+      const vercelInput = $('vercelBaseInput');
+      const saved = (localStorage.getItem(key) || '').trim();
+      const base = saved || defaultBase;
+      vercelInput.value = base;
+      const vercelLink = $('vercelLink');
+      if (vercelLink) vercelLink.href = base;
+
+      function openPath(path) {
+        const b = (vercelInput.value || '').trim() || defaultBase;
+        const url = b.replace(/\/$/, '') + path;
+        window.open(url, '_blank', 'noopener');
+      }
+
+      $('saveVercelBtn').addEventListener('click', function() {
+        const v = (vercelInput.value || '').trim();
+        if (!v) return;
+        localStorage.setItem(key, v);
+        if (vercelLink) vercelLink.href = v;
+      });
+      $('signinBtn').addEventListener('click', function() { openPath('/auth/sign-in'); });
+      $('signupBtn').addEventListener('click', function() { openPath('/auth/sign-up'); });
+      $('accountBtn').addEventListener('click', function() { openPath('/account'); });
     })();
   </script>
 </body>
