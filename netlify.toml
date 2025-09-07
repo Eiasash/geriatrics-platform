@@ -4,3 +4,21 @@
 
 [build.environment]
   NODE_VERSION = "20.11.1"
+
+[[redirects]]
+  from = "/api/ask-ai"
+  to = "/.netlify/functions/ask-ai"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/ask-ai-enhanced"
+  to = "/.netlify/functions/ask-ai-enhanced"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/health"
+  to = "/.netlify/functions/health"
+  status = 200
+  force = true
