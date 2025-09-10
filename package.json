@@ -21,7 +21,7 @@
     "eslint": "^9.33.0",
     "postcss": "^8.4.27",
     "tailwindcss": "^3.3.3",
-    "vite": "^4.4.4"
+    "vite": "^7.1.5"
   },
   "scripts": {
     "dev": "vite",
